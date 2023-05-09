@@ -1,0 +1,852 @@
+<div class="pageTitle">
+    <h1>頁面標題<nb-tag status="danger" appearance="outline" text="案件狀態"></nb-tag></h1>
+    <div class="rightBox">
+        <button nbButton status="control">按 鈕</button>
+        <button nbButton status="info">按 鈕</button>
+        <button nbButton status="primary">按 鈕</button>
+    </div>
+</div>
+
+<div class="pageContent">
+    <nb-card>
+        <nb-card-header>
+            <h2>卡片區塊大標題</h2>
+            <div class="rightBox">
+                <button nbButton size="small" status="info">功能案紐</button>
+            </div>
+        </nb-card-header>
+        <nb-card-header>
+            <div class="searchBar">
+                <input type="text" nbInput fullWidth status="basic" placeholder="請輸入篩選條件">
+                <button nbButton status="primary">搜 尋</button>
+            </div>
+        </nb-card-header>
+        <nb-card-header>
+            <div class="row">
+                <div class="fieldGroup col-12 col-lg-4">
+                    <div>
+                        <div>
+                            <nb-select fullWidth placeholder="請選擇">
+                                <nb-option value="item1">item1</nb-option>
+                                <nb-option value="item2">item2</nb-option>
+                            </nb-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="fieldGroup col-12 col-lg-4">
+                    <label class="textBold">標題radio：</label>
+                    <div>
+                        <nb-radio-group>
+                            <nb-radio value="1">通過</nb-radio>
+                            <nb-radio value="2">不通過</nb-radio>
+                        </nb-radio-group>
+                    </div>
+                </div>
+            </div>
+        </nb-card-header>
+        <nb-card-body>
+            <nb-tabset>
+                <nb-tab tabTitle="基本元件">
+                    <!-- 區塊內小標題 -->
+                    <div class="subTitle">
+                        <h3>卡片區塊內小標題 - 基本欄位</h3>
+                    </div>
+                    <!-- 一般輸入欄位結構 -->
+                    <div class="row">
+                        <!-- 基礎樣式 -->
+                        <div class="fieldGroup col-12 col-lg-4">
+                            <label>輸入欄位</label>
+                            <div>
+                                <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" />
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 自動帶入值：增加class="automatic" -->
+                        <div class="fieldGroup automatic col-12 col-lg-4">
+                            <label>自動帶入數值</label>
+                            <div>
+                                <input nbInput fullWidth status="basic" type="text" value="權限管理員" placeholder="請輸入" />
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 不可填寫的欄位：增加class="disabled" -->
+                        <div class="fieldGroup disabled col-12 col-lg-4">
+                            <label>不可編輯樣式</label>
+                            <div>
+                                <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" />
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 下拉式選單欄位結構 -->
+                    <div class="row">
+                        <!-- 基礎樣式 -->
+                        <div class="fieldGroup col-12 col-lg-4">
+                            <label>下拉式選單</label>
+                            <div>
+                                <nb-select fullWidth placeholder="請選擇">
+                                    <nb-option value="item1">item1</nb-option>
+                                    <nb-option value="item2">item2</nb-option>
+                                </nb-select>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 自動帶入值：增加class="automatic" -->
+                        <div class="fieldGroup automatic col-12 col-lg-4">
+                            <label>自動帶入數值</label>
+                            <div>
+                                <nb-select fullWidth placeholder="請選擇" [(selected)]="selected">
+                                    <nb-option value="1">item1</nb-option>
+                                    <nb-option value="2">item2</nb-option>
+                                </nb-select>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 不可選擇的欄位：增加class="disabled" -->
+                        <div class="fieldGroup disabled col-12 col-lg-4">
+                            <label>不可編輯樣式</label>
+                            <div>
+                                <nb-select fullWidth placeholder="請選擇">
+                                    <nb-option value="item1">item1</nb-option>
+                                    <nb-option value="item2">item2</nb-option>
+                                </nb-select>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AutoComplete欄位結構-->
+                    <div class="row">
+                        <!-- 基礎樣式 -->
+                        <div class="fieldGroup col-12 col-lg-4">
+                            <label>輸入查詢欄位</label>
+                            <div>
+                                <input #autoInput nbInput fullWidth type="text" (input)="onChange()" placeholder="請輸入"
+                                    [nbAutocomplete]="auto" />
+                                <nb-autocomplete #auto (selectedChange)="onSelectionChange($event)">
+                                    <nb-option *ngFor="let option of filteredOptions$ | async" [value]="option">{{
+                                        option }}</nb-option>
+                                </nb-autocomplete>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 不可填寫的欄位：增加class="disabled" -->
+                        <div class="fieldGroup disabled col-12 col-lg-4">
+                            <label>不可編輯樣式</label>
+                            <div>
+                                <input #autoInput nbInput fullWidth type="text" (input)="onChange()" placeholder="請輸入"
+                                    [nbAutocomplete]="auto" />
+                                <nb-autocomplete #auto (selectedChange)="onSelectionChange($event)">
+                                    <nb-option *ngFor="let option of filteredOptions$ | async" [value]="option">{{
+                                        option }}</nb-option>
+                                </nb-autocomplete>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 錯誤樣式 / 必填樣式 -->
+                        <!-- 必填：essential -->
+                        <!-- 錯誤：error ＋ status="danger" -->
+                        <div class="fieldGroup essential error col-12 col-lg-4">
+                            <label>輸入查詢欄位</label>
+                            <div>
+                                <input #autoInput nbInput fullWidth status="danger" type="text" (input)="onChange()"
+                                    placeholder="請輸入" [nbAutocomplete]="auto" />
+                                <nb-autocomplete #auto (selectedChange)="onSelectionChange($event)">
+                                    <nb-option *ngFor="let option of filteredOptions$ | async" [value]="option">{{
+                                        option }}</nb-option>
+                                </nb-autocomplete>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 日曆結構 -->
+                    <div class="row">
+                        <!-- 基礎樣式 -->
+                        <div class="fieldGroup col-12 col-lg-4">
+                            <label>日期元件</label>
+                            <div>
+                                <input nbInput fullWidth placeholder="請選擇日期" [nbDatepicker]="dateTimePicker">
+                                <nb-datepicker #dateTimePicker format="yyyy/MM/dd"></nb-datepicker>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 自動帶入值：增加class="automatic" -->
+                        <div class="fieldGroup automatic col-12 col-lg-4">
+                            <label>自動帶入數值</label>
+                            <div>
+                                <input nbInput fullWidth placeholder="請選擇日期" value="2022/11/11"
+                                    [nbDatepicker]="dateTimePicker1">
+                                <nb-datepicker #dateTimePicker1 format="yyyy/MM/dd"></nb-datepicker>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 不可選擇的欄位：增加class="disabled" -->
+                        <div class="fieldGroup disabled col-12 col-lg-4">
+                            <label>日期元件</label>
+                            <div>
+                                <input nbInput fullWidth placeholder="請選擇日期" [nbDatepicker]="dateTimePicker2">
+                                <nb-datepicker #dateTimePicker2 format="yyyy/MM/dd"></nb-datepicker>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 密碼結構 -->
+                    <div class="row">
+                        <!-- 基礎樣式 -->
+                        <div class="fieldGroup withButton col-12 col-lg-4">
+                            <label>密碼元件</label>
+                            <div>
+                                <input nbInput fullWidth status="basic" [type]="getInputType()" placeholder="請輸入" />
+                                <button nbSuffix nbButton ghost (click)="toggleShowPassword()">
+                                    <nb-icon [icon]="showPassword ? 'eye-outline' : 'eye-off-2-outline'" pack="eva"
+                                        [attr.aria-label]="showPassword ? 'hide password' : 'show password'">
+                                    </nb-icon>
+                                </button>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 自動帶入值：增加class="automatic" -->
+                        <div class="fieldGroup automatic withButton col-12 col-lg-4">
+                            <label>密碼元件</label>
+                            <div>
+                                <input nbInput fullWidth status="basic" [type]="getInputType()" value="password"
+                                    placeholder="請輸入" />
+                                <button nbSuffix nbButton ghost (click)="toggleShowPassword()">
+                                    <nb-icon [icon]="showPassword ? 'eye-outline' : 'eye-off-2-outline'" pack="eva"
+                                        [attr.aria-label]="showPassword ? 'hide password' : 'show password'">
+                                    </nb-icon>
+                                </button>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 不可選擇的欄位：增加class="disabled" -->
+                        <div class="fieldGroup disabled withButton col-12 col-lg-4">
+                            <label>密碼元件</label>
+                            <div>
+                                <input nbInput fullWidth status="basic" [type]="getInputType()" placeholder="請輸入" />
+                                <button nbSuffix nbButton ghost (click)="toggleShowPassword()">
+                                    <nb-icon [icon]="showPassword ? 'eye-outline' : 'eye-off-2-outline'" pack="eva"
+                                        [attr.aria-label]="showPassword ? 'hide password' : 'show password'">
+                                    </nb-icon>
+                                </button>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- radio結構 + 卡片內按鈕 -->
+                    <div class="row">
+                        <!-- 基礎樣式 -->
+                        <div class="fieldGroup col-12 col-lg-4">
+                            <label>radio</label>
+                            <div>
+                                <nb-radio-group>
+                                    <nb-radio value="1">選項1</nb-radio>
+                                    <nb-radio value="2">選項2</nb-radio>
+                                    <nb-radio value="3">選項3</nb-radio>
+                                    <nb-radio value="100">選項100</nb-radio>
+                                    <nb-radio value="more">選項字很多很多</nb-radio>
+                                </nb-radio-group>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 不可選擇的欄位：於 nb-radio-group 增加 disabled 屬性 -->
+                        <div class="fieldGroup col-12 col-lg-4">
+                            <label>不可編輯樣式</label>
+                            <div>
+                                <!-- 增加 disabled 屬性如下 -->
+                                <nb-radio-group disabled name="disabled">
+                                    <nb-radio value="1" [checked]="true">選項1</nb-radio>
+                                    <nb-radio value="2">選項2</nb-radio>
+                                    <nb-radio value="3">選項3</nb-radio>
+                                    <nb-radio value="100">選項100</nb-radio>
+                                    <nb-radio value="more">選項字很多很多</nb-radio>
+                                </nb-radio-group>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 卡片內按鈕基礎樣式 -->
+                        <div class="fieldGroup col-12 col-lg-4">
+                            <div class="btnGroup">
+                                <button nbButton status="basic">卡片內按鈕</button>
+                                <button nbButton status="primary">卡片內按鈕</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- checkbox結構 + 卡片內按鈕 -->
+                    <div class="row">
+                        <!-- 基礎樣式 -->
+                        <div class="fieldGroup col-12 col-lg-4">
+                            <label>checkbox</label>
+                            <div>
+                                <div class="checkboxGroup">
+                                    <nb-checkbox status="basic">選項1</nb-checkbox>
+                                    <nb-checkbox status="basic">選項2</nb-checkbox>
+                                    <nb-checkbox status="basic">選項3</nb-checkbox>
+                                    <nb-checkbox status="basic">選項100</nb-checkbox>
+                                    <nb-checkbox status="basic">選項字很多很多</nb-checkbox>
+                                </div>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 不可選擇的欄位：於 nb-checkbox 增加 disabled 屬性 -->
+                        <div class="fieldGroup col-12 col-lg-4">
+                            <label>不可編輯樣式</label>
+                            <div>
+                                <div class="checkboxGroup">
+                                    <!-- 增加 disabled 屬性如下 -->
+                                    <nb-checkbox [checked]="true" disabled status="basic">選項1</nb-checkbox>
+                                    <nb-checkbox [checked]="true" disabled status="basic">選項2</nb-checkbox>
+                                    <nb-checkbox disabled status="basic">選項3</nb-checkbox>
+                                    <nb-checkbox [checked]="true" disabled status="basic">選項100</nb-checkbox>
+                                    <nb-checkbox disabled status="basic">選項字很多很多</nb-checkbox>
+                                </div>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 卡片內按鈕不可點擊樣式 -->
+                        <div class="fieldGroup disabled col-12 col-lg-4">
+                            <div class="btnGroup">
+                                <!-- 於 button 加上class="disabled" -->
+                                <button nbButton status="basic" class="disabled">卡片內按鈕</button>
+                                <button nbButton status="primary" class="disabled">卡片內按鈕</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- textarea結構 -->
+                    <div class="row">
+                        <!-- 基礎樣式 -->
+                        <div class="fieldGroup col-12 col-lg-6">
+                            <label>textarea</label>
+                            <div>
+                                <textarea nbInput fullWidth placeholder="Textarea"></textarea>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 不可填寫的欄位：增加class="disabled" -->
+                        <div class="fieldGroup disabled col-12 col-lg-6">
+                            <label>不可編輯樣式</label>
+                            <div>
+                                <textarea nbInput fullWidth placeholder="Textarea"></textarea>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 文字編輯器結構 -->
+                    <div class="row">
+                        <!-- 基礎樣式 -->
+                        <div class="fieldGroup col-12">
+                            <label>文字編輯器</label>
+                            <div class="overflowHidden">
+                                <ckeditor [editor]="editor" data="<p>Hello, world!</p>"></ckeditor>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 區塊內小標題 -->
+                    <div class="subTitle">
+                        <h3>卡片區塊內小標題 - 欄位必填/錯誤樣式</h3>
+                    </div>
+                    <!-- 錯誤樣式 / 必填樣式 -->
+                    <!-- 必填：essential -->
+                    <!-- 錯誤：error ＋ status="danger" -->
+                    <div class="row">
+                        <!-- 基礎樣式 -->
+                        <div class="fieldGroup essential error col-12 col-lg-4">
+                            <label>輸入欄位</label>
+                            <div>
+                                <input nbInput fullWidth status="danger" type="text" placeholder="請輸入" />
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 基礎樣式 -->
+                        <div class="fieldGroup essential error col-12 col-lg-4">
+                            <label>下拉式選單</label>
+                            <div>
+                                <nb-select fullWidth status="danger" placeholder="請選擇">
+                                    <nb-option value="item1">item1</nb-option>
+                                    <nb-option value="item2">item2</nb-option>
+                                </nb-select>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 基礎樣式 -->
+                        <div class="fieldGroup essential error col-12 col-lg-4">
+                            <label>日期元件</label>
+                            <div>
+                                <input nbInput fullWidth status="danger" placeholder="請選擇日期"
+                                    [nbDatepicker]="dateTimePicker3">
+                                <nb-datepicker #dateTimePicker3 format="yyyy/MM/dd"></nb-datepicker>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 錯誤樣式 / 必填樣式 -->
+                    <!-- 必填：essential -->
+                    <!-- 錯誤：error -->
+                    <div class="row">
+                        <!-- 基礎樣式 -->
+                        <div class="fieldGroup essential error col-12 col-lg-4">
+                            <label>radio</label>
+                            <div>
+                                <nb-radio-group>
+                                    <nb-radio value="1">選項1</nb-radio>
+                                    <nb-radio value="2">選項2</nb-radio>
+                                    <nb-radio value="3">選項3</nb-radio>
+                                    <nb-radio value="100">選項100</nb-radio>
+                                    <nb-radio value="more">選項字很多很多</nb-radio>
+                                </nb-radio-group>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 基礎樣式 -->
+                        <div class="fieldGroup essential error col-12 col-lg-4">
+                            <label>checkbox</label>
+                            <div>
+                                <div class="checkboxGroup">
+                                    <nb-checkbox status="basic">選項1</nb-checkbox>
+                                    <nb-checkbox status="basic">選項2</nb-checkbox>
+                                    <nb-checkbox status="basic">選項3</nb-checkbox>
+                                    <nb-checkbox status="basic">選項100</nb-checkbox>
+                                    <nb-checkbox status="basic">選項字很多很多</nb-checkbox>
+                                </div>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 錯誤樣式 / 必填樣式 -->
+                    <!-- 必填：essential -->
+                    <!-- 錯誤：error ＋ status="danger" -->
+                    <div class="row">
+                        <!-- 基礎樣式 -->
+                        <div class="fieldGroup essential error col-12">
+                            <label>textarea</label>
+                            <div>
+                                <textarea nbInput fullWidth status="danger" placeholder="Textarea"></textarea>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 區塊內小標題 -->
+                    <div class="subTitle">
+                        <h3>卡片區塊內小標題 - 特殊排法</h3>
+                    </div>
+                    <!-- 特殊排法 -->
+                    <div class="row">
+                        <div class="fieldGroup col-12 col-lg-4">
+                            <label>欄位寬 1/3</label>
+                            <div>
+                                <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" />
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fieldGroup col-12 col-lg-8">
+                            <label>欄位寬 2/3</label>
+                            <div>
+                                <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" />
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 特殊排法 -->
+                    <div class="row">
+                        <div class="fieldGroup col-12 col-lg-6">
+                            <label>欄位寬 1/2</label>
+                            <div>
+                                <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" />
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fieldGroup col-12 col-lg-6">
+                            <label>欄位寬 1/2</label>
+                            <div>
+                                <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" />
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 特殊排法 -->
+                    <div class="row">
+                        <div class="fieldGroup col-12 col-lg-6">
+                            <label>欄位寬 1/2</label>
+                            <div>
+                                <div>
+                                    <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" />
+                                    <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" />
+                                </div>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 特殊排法 -->
+                    <div class="row">
+                        <div class="fieldGroup col-12 col-lg-8">
+                            <label>欄位寬 2/3</label>
+                            <div>
+                                <div>
+                                    <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" />
+                                    <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" />
+                                    <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" />
+                                </div>
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fieldGroup col-12 col-lg-4">
+                            <label>欄位寬 1/3</label>
+                            <div>
+                                <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" />
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 特殊排法 -->
+                    <div class="row">
+                        <div class="fieldGroup col-12">
+                            <label>欄位寬 1</label>
+                            <div>
+                                <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" />
+                                <div class="errorText">
+                                    <nb-icon icon="alert-triangle-outline"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 區塊內小標題 -->
+                    <div class="subTitle">
+                        <h3>卡片區塊內小標題 - 提示訊息</h3>
+                    </div>
+
+                    <!-- 提示訊息 -->
+                    <div class="alertText primary">
+                        <nb-icon icon="alert-circle-outline"></nb-icon>
+                        <p>提示訊息文字</p>
+                    </div>
+
+                    <!-- 小標題＋提示訊息 -->
+                    <div class="subTitle">
+                        <h3>小標題＋提示訊息</h3>
+                        <div class="alertText primary">
+                            <nb-icon icon="alert-circle-outline"></nb-icon>
+                            <p>提示訊息文字</p>
+                        </div>
+                    </div>
+
+                    <!-- 區塊內小標題 -->
+                    <div class="subTitle">
+                        <h3>卡片區塊內小標題 - 警告訊息</h3>
+                    </div>
+
+                    <!-- 警告訊息 -->
+                    <div class="alertText">
+                        <nb-icon icon="alert-triangle-outline"></nb-icon>
+                        <p>警告訊息文字</p>
+                    </div>
+
+                    <!-- 小標題＋警告訊息 -->
+                    <div class="subTitle">
+                        <h3>小標題＋警告訊息</h3>
+                        <div class="alertText">
+                            <nb-icon icon="alert-triangle-outline"></nb-icon>
+                            <p>警告訊息文字</p>
+                        </div>
+                    </div>
+
+
+                </nb-tab>
+                <nb-tab tabTitle="特殊元件">
+                    <!-- 區塊內小標題 -->
+                    <div class="subTitle">
+                        <h3>卡片區塊內小標題 - 歷程紀錄</h3>
+                    </div>
+                    <!-- 歷程區塊 -->
+                    <div class="historyList">
+                        <!-- 已完成或正在進行的增加class="active" -->
+                        <div class="historyItem active">
+                            <h4>已完成主要節點內容 1</h4>
+                        </div>
+
+                        <!-- 已完成或正在進行的增加class="active" -->
+                        <div class="historyItem active">
+                            <h4>已完成主要節點內容 2</h4>
+                            <div class="subItem">
+                                <div>
+                                    <p>YYYY/MM/BB</p>
+                                    <p>hh:mm:ss</p>
+                                </div>
+                                <div>
+                                    <p>子內容標題 1</p>
+                                    <p>子內容敘述文字</p>
+                                </div>
+                            </div>
+                            <div class="subItem">
+                                <div class="time">
+                                    <p>YYYY/MM/BB</p>
+                                    <p>hh:mm:ss</p>
+                                </div>
+                                <div class="content">
+                                    <p>子內容標題 2</p>
+                                    <p>子內容敘述文字</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 已完成或正在進行的增加class="active" -->
+                        <div class="historyItem">
+                            <h4>已完成主要節點內容 3</h4>
+                        </div>
+
+                        <!-- 已完成或正在進行的增加class="active" -->
+                        <div class="historyItem">
+                            <h4>已完成主要節點內容 4</h4>
+                        </div>
+                    </div>
+
+                    <!-- 區塊內小標題 -->
+                    <div class="subTitle">
+                        <h3>卡片區塊內小標題 - 關係圖</h3>
+                    </div>
+                    <div class="cardGroup row">
+                        <div class="col-12 col-lg-4">
+                            <nb-card>
+                                <nb-card-header>
+                                    <h2>卡片區塊大標題</h2>
+                                </nb-card-header>
+                                <nb-card-body>
+                                    <div class="textGroup">
+                                        <p>中文資料表名稱：</p>
+                                        <span>晉陞與考核管理</span>
+                                    </div>
+                                    <div class="textGroup">
+                                        <p>資料分類：</p>
+                                        <span>業務員相關資料</span>
+                                    </div>
+                                    <div class="textGroup">
+                                        <p>資料庫：</p>
+                                        <span>BDS</span>
+                                    </div>
+                                    <div class="textGroup">
+                                        <p>資料庫類型：</p>
+                                        <span>mysql</span>
+                                    </div>
+                                </nb-card-body>
+                            </nb-card>
+                        </div>
+                        <div class="col-12 col-lg-8">
+                            <nb-card>
+                                <nb-card-body>
+                                    <p class="nodata">尚缺關係圖元件</p>
+                                </nb-card-body>
+                            </nb-card>
+                        </div>
+                    </div>
+
+                    <!-- 區塊內小標題 -->
+                    <div class="subTitle">
+                        <h3>卡片區塊內小標題 - 上傳/匯入元件</h3>
+                    </div>
+                    <!-- TODO: 若只能上傳一個檔案，則於上傳檔案後於 uploaderBlock 階層增加class="upload"，隱藏上方上傳區塊；若上傳後點擊 X 移除檔案，則移除 class="upload" 使上傳區塊重新出現 -->
+                    <div class="uploaderBlock">
+                        <ngx-awesome-uploader [adapter]="adapter"></ngx-awesome-uploader>
+                        <div>
+                            <nb-icon icon="cloud-upload-outline"></nb-icon>
+                            <p>拖曳檔案至此或點擊上傳</p>
+                        </div>
+                    </div>
+                </nb-tab>
+            </nb-tabset>
+        </nb-card-body>
+    </nb-card>
+    <!-- 展開收合卡片 -->
+    <nb-accordion>
+        <nb-accordion-item>
+            <nb-accordion-item-header>展開收合卡片區塊大標題</nb-accordion-item-header>
+            <nb-accordion-item-body>
+                <!-- 區塊內小標題 -->
+                <!-- <div class="subTitle">
+                    <h3>卡片區塊內小標題 - 純文字</h3>
+                </div> -->
+                <!-- 純文字 -->
+                <div class="row">
+                    <div class="textGroup col-12 col-lg-4">
+                        <p>文字標題：</p>
+                        <span>文字內容</span>
+                    </div>
+                    <div class="textGroup col-12 col-lg-4">
+                        <p>文字標題：</p>
+                        <span>文字內容</span>
+                    </div>
+                    <div class="textGroup col-12 col-lg-4">
+                        <p>文字標題：</p>
+                        <span>文字內容</span>
+                    </div>
+                </div>
+                <!-- 純文字 -->
+                <div class="row">
+                    <div class="textGroup col-12 col-lg-4">
+                        <p>文字標題：</p>
+                        <span>文字內容</span>
+                        <button nbButton size="tiny" status="warning">功能按鈕</button>
+                    </div>
+                    <div class="textGroup col-12 col-lg-4">
+                        <p>文字標題很長很長很長：</p>
+                        <span>文字內容</span>
+                    </div>
+                    <div class="textGroup col-12 col-lg-4">
+                        <p>文字標題：</p>
+                        <a
+                            href="#">內容超長https://accounts.google.com/AccountChooser/signinchooser?service=mail&continue=https%3A%2F%2Fmail.google.com%2Fmail%2F&flowName=GlifWebSignIn&flowEntry=AccountChooser</a>
+                    </div>
+                </div>
+
+                <!-- 分隔線 -->
+                <hr>
+
+                <!-- 區塊內小標題 -->
+                <div class="subTitle">
+                    <h3>卡片區塊內小標題</h3>
+                </div>
+                <div>
+                    <button nbButton status="control">
+                        <nb-icon icon="edit-outline"></nb-icon>
+                    </button>
+                    <!-- 無異動：status="info" -->
+                    <!-- 未審核通過-新增：status="danger" -->
+                    <!-- 未審核通過-移除：status="basic" class="lineThrough" -->
+                    <nb-tag status="info" appearance="outline" text="A081"></nb-tag>
+                    <nb-tag status="basic" appearance="outline" text="E305" class="lineThrough"></nb-tag>
+                    <nb-tag status="danger" appearance="outline" text="E305"></nb-tag>
+                </div>
+            </nb-accordion-item-body>
+        </nb-accordion-item>
+    </nb-accordion>
+</div>

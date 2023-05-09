@@ -1,0 +1,14 @@
+<nb-layout windowMode [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
+    <nb-layout-header fixed>
+        <ngx-layout-header></ngx-layout-header>
+    </nb-layout-header>
+
+    <nb-sidebar class="menu-sidebar" tag="menu-sidebar" responsive>
+        <ng-content select="nb-menu"></ng-content>
+    </nb-sidebar>
+
+    <nb-layout-column>
+        <ng-content select="router-outlet"></ng-content>
+    </nb-layout-column>
+
+</nb-layout>
