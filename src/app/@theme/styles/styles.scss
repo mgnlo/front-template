@@ -1,5 +1,4 @@
 @import "themes";
-
 @import "~@nebular/theme/styles/globals";
 
 @import "./pace.theme";
@@ -18,3 +17,5 @@
 
     @include nb-overrides();
 }
+
+@import 'we-style';

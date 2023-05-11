@@ -16,6 +16,8 @@ import { map, takeUntil } from 'rxjs/operators';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
+  isActive = true;
+
   private destroy$: Subject<void> = new Subject<void>();
   public userPictureOnly: boolean = false;
   public header: any = {
@@ -78,7 +80,7 @@ export class HeaderComponent implements OnInit {
   public toggleSidebar(): boolean {
     this.sidebarService.toggle(true, 'menu-sidebar');
     this.layoutService.changeLayoutSize();
-
+    this.isActive = !this.isActive;
     return false;
   }
 

@@ -14,6 +14,13 @@ const routes: Routes = [
             (m) => m.ElementPageModule
           ),
       },
+      {
+        path: 'element2',
+        loadChildren: () =>
+          import('@pages/element2/element2.module').then(
+            (m) => m.Element2PageModule
+          ),
+      },
     ],
   },
 ];

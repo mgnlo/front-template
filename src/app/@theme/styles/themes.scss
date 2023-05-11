@@ -1,29 +1,117 @@
 // @nebular theming framework
 @import "~@nebular/theme/styles/theming";
 // @nebular out of the box themes
-@import "~@nebular/theme/styles/themes";
+@import "~@nebular/theme/styles/themes/default";
 
 $nb-themes: nb-register-theme(
     (
-        layout-padding-top: 2.25rem,
+        // color-setting
+        color-primary-100: #D6F0F9,
+        color-primary-200: #AEDEF4,
+        color-primary-300: #7FBBDE,
+        color-primary-400: #5893BD,
+        color-primary-500: #2A6191,
+        color-primary-600: #1E4B7C,
+        color-primary-700: #153868,
+        color-primary-800: #0D2754,
+        color-primary-900: #081B45,
 
-        menu-item-icon-margin: 0 0.5rem 0 0,
+        color-success-100: #CAFCD8,
+        color-success-200: #96FABB,
+        color-success-300: #61F2A5,
+        color-success-400: #39E69C,
+        color-success-500: #00D68F,
+        color-success-600: #00B88D,
+        color-success-700: #009A85,
+        color-success-800: #007C77,
+        color-success-900: #006066,
+        
+        color-info-100: #D4FAFD,
+        color-info-200: #A9F0FC,
+        color-info-300: #7DDEF7,
+        color-info-400: #5CC8F0,
+        color-info-500: #29A7E6,
+        color-info-600: #1D83C5,
+        color-info-700: #1462A5,
+        color-info-800: #0D4685,
+        color-info-900: #07316E,
 
-        card-height-tiny: 13.5rem,
-        card-height-small: 21.1875rem,
-        card-height-medium: 28.875rem,
-        card-height-large: 36.5625rem,
-        card-height-giant: 44.25rem,
-        card-margin-bottom: 1.875rem,
-        card-header-with-select-padding-top: 0.5rem,
-        card-header-with-select-padding-bottom: 0.5rem,
+        color-primary-hover: #008CD0,
+        color-primary-focus: #29A7E6,
+        color-primary-active: #29A7E6,
+        color-primary-disabled: color-primary-500,
+        color-success-hover: #00AD74,
+        color-success-focus: #01dd94,
+        color-success-active: #01dd94,
+        color-success-disabled: color-success-500,
+        color-info-hover: #0078B2,
+        color-info-focus: #66CAFC,
+        color-info-active: #66CAFC,
+        color-info-disabled: color-info-500,
+        color-warning-hover: #FFC653,
+        color-warning-focus: #FFD800,
+        color-warning-active: #FFD800,
+        color-warning-disabled: color-warning-500,
+        color-danger-hover: #FF0044,
+        color-danger-focus: #FF85A6,
+        color-danger-active: #FF85A6,
+        color-danger-disabled: color-danger-500,
+        color-basic-hover: #808486,
+        color-basic-focus: #65696B,
+        color-basic-active: #65696B,
+        color-basic-disabled: color-basic-500,
 
-        select-min-width: 6rem,
+        // text-setting
+        text-basic-color: #121A23,
 
-        slide-out-background: #f7f9fc,
-        slide-out-shadow-color: 0 4px 14px 0 #8f9bb3,
-        slide-out-shadow-color-rtl: 0 4px 14px 0 #8f9bb3,
+        //link-seting
+        link-text-color: color-success-500,
+        link-text-focus-color: color-success-focus,
+        link-text-hover-color: color-success-hover,
+
+        // menu-setting
+        sidebar-background-color: color-primary-500,
+        menu-text-color: #FFFFFF,
+        menu-item-icon-color: #FFFFFF,
+        menu-item-active-background-color: #FFFFFF,
+        menu-item-active-text-color: color-primary-500,
+        menu-item-icon-active-color:  color-primary-500,
+        menu-item-hover-background-color: rgba(#FFFFFF, 0.08),
+        menu-item-hover-text-color: #FFFFFF,
+        menu-item-icon-hover-color: #FFFFFF,
+        menu-item-divider-width: 0,
+
+        // card-setting
+        card-divider-color: #DBDEE1,
+
+        // input-setting
+        input-basic-text-color: #121A23,
+        input-basic-placeholder-text-color: rgba(#121A23, 0.5),
+        input-basic-hover-background-color: #FAFAFA,
+        input-basic-hover-border-color: #C5E2F2,
+        input-basic-focus-background-color: #FAFAFA,
+        input-basic-focus-border-color: #66CAFC,
+        input-basic-disabled-background-color: #FAFAFA,
+        input-basic-disabled-border-color: #E4E9EB,
+        input-basic-disabled-text-color: #121A23,
+        input-danger-text-color: #121A23,
+        input-danger-placeholder-text-color: rgba(#121A23, 0.5),
+        input-danger-hover-background-color: #FAFAFA,
+        input-danger-hover-border-color: #ffc3d3,
+        input-danger-focus-background-color: #FAFAFA,
+        input-danger-focus-border-color: #FF3D71,
+        input-medium-text-font-weight: 400,
+
+        // button-basic
+        button-filled-basic-background-color: #BBC1C5,
+        button-filled-basic-border-color: #BBC1C5,
     ),
     default,
     default
 );
+
+$text-color: #121A23;
+$title-color: #0B3255;
+$label-color: #393C3E;
+$option-color: #82878B;
+$scrollbar: #BBC1C5;

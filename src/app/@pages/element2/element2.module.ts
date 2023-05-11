@@ -1,16 +1,16 @@
 import { NgModule } from "@angular/core"
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { NbEvaIconsModule } from "@nebular/eva-icons"
-import { NbAccordionModule, NbAutocompleteModule, NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbIconModule, NbInputModule, NbListModule, NbRadioModule, NbSelectModule, NbTabsetModule, NbTagModule } from "@nebular/theme"
+import { NbAccordionModule, NbAutocompleteModule, NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbIconModule, NbInputModule, NbRadioModule, NbSelectModule, NbTabsetModule, NbTagModule, NbTimepickerModule, NbToggleModule } from "@nebular/theme"
 import { FilePickerModule } from "ngx-awesome-uploader";
-import { ElementRoutingModule } from "./element-routing.module"
+import { Element2RoutingModule } from "./element2-routing.module"
+import { Element2Component } from "./element2.component"
 import { CommonModule } from '@angular/common';
-import { ElementComponent } from "./element.component";
 
 @NgModule({
     imports: [
         CommonModule,
-        ElementRoutingModule,
+        Element2RoutingModule,
         NbButtonModule,
         NbCardModule,
         NbInputModule,
@@ -18,7 +18,9 @@ import { ElementComponent } from "./element.component";
         NbEvaIconsModule,
         NbIconModule,
         NbSelectModule,
+        NbTimepickerModule,
         NbDatepickerModule.forRoot(),
+        NbTimepickerModule.forRoot(),
         NbRadioModule,
         NbCheckboxModule,
         CKEditorModule,
@@ -27,10 +29,10 @@ import { ElementComponent } from "./element.component";
         NbSelectModule,
         NbAutocompleteModule,
         NbAccordionModule,
-        NbListModule,
+        NbToggleModule
     ],
     declarations: [
-        ElementComponent,
+        Element2Component,
     ]
 })
-export class ElementPageModule { }
+export class Element2PageModule { }

@@ -6,14 +6,12 @@ import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
-  selector: "app-page-element",
-  templateUrl: "./element.component.html",
-  styleUrls: ["./element.component.scss"]
+  selector: "app-page-element2",
+  templateUrl: "./element2.component.html",
+  styleUrls: ["./element2.component.scss"]
 })
-export class ElementComponent implements OnInit {
-
-  isOpen = true;
-
+export class Element2Component implements OnInit {  
+  public editor = ClassicEditor;
   @ViewChild('autoInput') txnInput: { nativeElement: { value: string; }; };
   options: string[];
   filteredOptions$: Observable<string[]>;
@@ -24,7 +22,24 @@ export class ElementComponent implements OnInit {
 
   adapter = new DemoFilePickerAdapter(this.http);
   constructor(private http: HttpClient) { }
-  
+
+  private filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.options.filter(optionValue => optionValue.toLowerCase().includes(filterValue));
+  }
+
+  getFilteredOptions(value: string): Observable<string[]> {
+    return of(value).pipe(
+      map((filterString: any) => this.filter(filterString)),
+    );
+  }
+  onChange() {
+    this.filteredOptions$ = this.getFilteredOptions(this.txnInput.nativeElement.value);
+  }
+  onSelectionChange($event: any) {
+    this.filteredOptions$ = this.getFilteredOptions($event);
+  }
+
   // 密碼欄位設定
   showPassword = false;
   getInputType() {
@@ -39,3 +54,4 @@ export class ElementComponent implements OnInit {
   // 下拉是選單自動帶入值
   selected = '1';
 }
+

@@ -9,7 +9,7 @@ import { NbMenuItem } from '@nebular/theme';
 export class PagesComponent implements OnInit {
   basicMenu: NbMenuItem[] = [];
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit(): void {
     this.initMenu();
@@ -17,11 +17,25 @@ export class PagesComponent implements OnInit {
 
   initMenu() {
     this.basicMenu = [
+      // {
+      //   title: '元件庫',
+      //   icon: 'layout-outline',
+      //   link: '/pages/element',
+      //   home: true,
+      // },
       {
-        title: '元件庫',
-        icon: 'code-outline',
-        link: '/pages/element',
-        home: true,
+        title: "元件庫",
+        icon: "color-palette-outline",
+        children: [
+          {
+            title: "基本元件",
+            link: "/pages/element",
+          },
+          {
+            title: "表單元件",
+            link: "/pages/element2",
+          },
+        ]
       },
     ];
   }
