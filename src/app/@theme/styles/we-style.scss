@@ -4,6 +4,13 @@ body { overflow: hidden; }
 .colorGray { color: $option-color !important; }
 .textBold { font-weight: bold !important; }
 .textLine { text-decoration: underline !important; }
+.textItalic { font-style: italic !important; }
+.textLarge {
+    font-size: 1.25rem !important;
+    line-height: 1.5 !important;
+}
+.textSmall { font-size: 0.75rem !important; }
+.textSmall { font-size: 0.75rem !important; }
 .displayNone { display: none !important; }
 .flexBetween { justify-content: space-between !important; }
 .alignStretch { align-items: stretch !important; }
@@ -931,9 +938,16 @@ p { margin: 0; }
 .textBlock {
     padding: 0 0.625rem;
     margin-bottom: 0.75rem;
-    p, a { margin-bottom: 0.5rem; }
-    a { display: inline-block; }
+    p, a {
+        width: fit-content;
+        margin-bottom: 0.5rem;
+    }
+    a {
+        word-break: break-all;
+        display: inline-block;
+    }
     ul {
+        width: 100%;
         list-style-type: decimal;
         padding: 0 0 0 1rem;
         li {
@@ -960,6 +974,24 @@ p { margin: 0; }
             list-style-type: none;
             padding-left: 0;
         }
+    }
+    .bgRed {
+        color: #FFFFFF !important;
+        background-color: nb-theme(color-danger-500);
+        padding: 0.125rem 0.25rem;
+        line-height: 1.8;
+    }
+    .bgBlue {
+        color: #FFFFFF !important;
+        background-color: nb-theme(color-primary-500);
+        padding: 0.125rem 0.25rem;
+        line-height: 1.8;
+    }
+    .bgGray {
+        color: #FFFFFF !important;
+        background-color: $option-color;
+        padding: 0.125rem 0.25rem;
+        line-height: 1.8;
     }
 }
 .listBlock {

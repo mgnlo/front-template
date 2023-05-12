@@ -12,11 +12,13 @@
         <p>小標題 - 提示訊息</p>
     </div>
 
-    <!-- 提示/警告訊息 -->
+    <!-- 提示訊息 -->
     <div class="noteText">
         <nb-icon icon="info-outline"></nb-icon>
         <p>提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息</p>
     </div>
+
+    <!-- 警告訊息 -->
     <div class="noteText alert">
         <nb-icon icon="info-outline"></nb-icon>
         <p>警告訊息警告訊息警告訊息警告訊息警告訊息警告訊息警告訊息警告訊息警告訊息警告訊息警告訊息警告訊息警告訊息警告訊息警告訊息</p>
@@ -140,30 +142,59 @@
                     <p>我打開了！</p>
                 </div>
             </div>
+        </nb-card-body>
+    </nb-card>
 
-            <!-- 區塊內小標題 -->
-            <div class="subTitle">
-                <p>卡片區塊內小標題 - 按鈕說明</p>
+
+    <!-- 小標題 -->
+    <div class="subTitle">
+        <p>小標題 - 卡片區塊按鈕</p>
+    </div>
+
+    <!-- 卡片區塊 - 按鈕 -->
+    <nb-card>
+        <!-- 卡片區塊按鈕 -->
+        <nb-card-body>
+            <!-- 卡片右側小按鈕 - 單個按鈕 -->
+            <div class="rightBox">
+                <button nbButton status="primary" size="small"><nb-icon icon="search-outline"></nb-icon>右側藍色小按鈕</button>
             </div>
-            
-            <!-- 卡片右側小按鈕 -->
+
+            <!-- 卡片右側小按鈕 - 兩個按鈕 -->
             <div class="rightBox">
                 <button nbButton status="basic" size="small"><nb-icon icon="attach-outline"></nb-icon>右側灰色小按鈕</button>
-                <button nbButton status="primary" size="small"><nb-icon icon="book-open-outline"></nb-icon>右側藍色小按鈕</button>
+                <button nbButton status="primary" size="small"><nb-icon
+                        icon="book-open-outline"></nb-icon>右側藍色小按鈕</button>
             </div>
 
-            <!-- 卡片右側按鈕 -->
+            <!-- 卡片右側按鈕 - 單個按鈕 -->
+            <div class="rightBox">
+                <button nbButton status="primary" size="medium">右側藍色按鈕</button>
+            </div>
+
+            <!-- 卡片右側按鈕 - 兩個按鈕 -->
             <div class="rightBox">
                 <button nbButton status="basic" size="medium"><nb-icon icon="share-outline"></nb-icon>右側灰色按鈕</button>
                 <button nbButton status="primary" size="medium"><nb-icon icon="sync-outline"></nb-icon>右側藍色按鈕</button>
             </div>
 
-            <!-- 卡片置中按鈕 -->
+            <!-- 卡片置中按鈕 - 單個按鈕 -->
+            <div class="btnGroup">
+                <button nbButton status="info" size="medium">置中藍色按鈕</button>
+            </div>
+
+            <!-- 卡片置中按鈕 - 兩個按鈕 -->
             <div class="btnGroup">
                 <button nbButton status="basic" size="medium">置中灰色按鈕</button>
                 <button nbButton status="info" size="medium">置中藍色按鈕</button>
             </div>
 
+            <!-- 卡片置中按鈕 - 三個按鈕 -->
+            <div class="btnGroup">
+                <button nbButton status="basic" size="medium">置中灰色按鈕</button>
+                <button nbButton status="danger" size="medium">置中紅色按鈕</button>
+                <button nbButton status="info" size="medium">置中藍色按鈕</button>
+            </div>
         </nb-card-body>
     </nb-card>
 
@@ -180,11 +211,12 @@
                 <p>卡片區塊內小標題 - 提示訊息</p>
             </div>
 
-            <!-- 區塊內提示/警告訊息 -->
+            <!-- 提示訊息 -->
             <div class="noteText">
                 <nb-icon icon="info-outline"></nb-icon>
                 <p>提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息</p>
             </div>
+            <!-- 警告訊息 -->
             <div class="noteText alert">
                 <nb-icon icon="info-outline"></nb-icon>
                 <p>警告訊息警告訊息警告訊息警告訊息警告訊息警告訊息警告訊息警告訊息警告訊息警告訊息警告訊息警告訊息警告訊息警告訊息警告訊息</p>
@@ -365,7 +397,7 @@
         <p>小標題 - 文字區塊</p>
     </div>
 
-    <!-- 卡片區塊 -->
+    <!-- 卡片區塊 - 純文字 -->
     <nb-card>
         <nb-card-body>
             <!-- 區塊內小標題 -->
@@ -375,31 +407,44 @@
 
             <!-- 純文字 -->
             <div class="textBlock">
-                <p>可依需求放置放置文案，文案使用範例如下：</p>
-                <p><span class="textBold">粗體</span>：class="textBold"、<span class="textLine">底線</span>：class="textLine"。
+                <p>文字皆可依需求增加class變換樣式，說明如下：</p>
+
+                <!-- 文字樣式說明 -->
+                <p>
+                    <span class="textBold">粗體：textBold</span>、
+                    <span class="textItalic">斜體：textItalic</span>、
+                    <span class="textLine">底線：textLine</span>、
+                    <span class="textSmall">較小文字(14px)：textSmall</span>、
+                    <span class="textLarge">較大文字(20px)：textLarge</span>、
+                    <a href="#">連結文字</a>。
                 </p>
-                <p>文字顏色使用說明：
-                    <span class="colorGray">灰色文字</span>：class="colorGray"、
-                    <span class="colorBlue">藍色文字</span>：class="colorBlue"、
-                    <span class="colorRed">紅色文字</span>：class="colorRed"。
+                <p>
+                    <span class="colorRed">紅字(#ff3d71)：colorRed</span>、
+                    <span class="colorBlue">藍字(#2A6191)：colorBlue</span>、
+                    <span class="colorGray">灰字(#82878B)：colorGray</span>、
+                    <span class="bgRed">紅底白字：bgRed</span>、
+                    <span class="bgBlue">藍底白字：bgBlue</span>、
+                    <span class="bgGray">灰底白字：bgGray</span>。
                 </p>
-                <a href="#">連結文字</a>
-                <p>也可組合一起使用，如：
-                    <span class="colorRed textBold">紅色粗體文字</span>：class="colorBlue textBold"、
-                    <span class="colorBlue textBold">藍色粗體文字</span>：class="colorBlue textBold"、
-                    <span class="colorGray textLine">灰色底線文字</span>：class="colorGray textLine"
+                
+                <!-- 組合範例 -->
+                <p>
+                    <span class="colorRed textBold">紅色粗體文字：class="colorBlue textBold"</span>、
+                    <span class="colorBlue textBold textLarge">藍色粗體較大文字：class="colorBlue textBold textLarge"</span>、
+                    <span class="colorGray textLine">灰色底線文字：class="colorGray textLine"</span>
                 </p>
 
                 <!-- 分隔線 -->
                 <hr>
 
+                <!-- 條列式文案 -->
                 <p>也可放置條列式文案，並可使用文字變化樣式。</p>
                 <ul>
-                    <li>第一層項目樣式預設為<span class="colorBlue textBold">「數字1、2、3」</span>、第二層項目樣式預設為<span
-                            class="colorBlue textBold">「點列式」</span>。</li>
-                    <li>建議階層數為兩層以內，樣式說明如下：
+                    <li>第一層項目樣式預設為<span class="colorBlue textBold">「 阿拉伯數字 」</span>、第二層項目樣式預設為<span
+                            class="colorBlue textBold">「 實心圓點 」</span>。</li>
+                    <li>建議階層數為兩層以內，項目樣式說明如下：
                         <ul>
-                            <li>點列式：class="<span class="textBold">disc</span>"。</li>
+                            <li>實心圓點：class="<span class="textBold">disc</span>"。</li>
                             <li>數字1、2、3：class="<span class="textBold">dec</span>"。</li>
                             <li>數字01、02、03：class="<span class="textBold">dec-zero</span>"。</li>
                             <li>小寫ａ、ｂ、ｃ：class="<span class="textBold">lowerAlpha</span>"。</li>
@@ -408,7 +453,7 @@
                             <li>無樣式：class="<span class="textBold">none</span>"。</li>
                         </ul>
                     </li>
-                    <li>各階層之項目樣式皆可依需求，使用上述class名稱調整，如下：
+                    <li>各階層之項目樣式皆可依需求，使用上述class名稱調整。
                         <ul class="upperAlpha">
                             <li>使用class="upperAlpha"，樣式為大寫Ａ、Ｂ、Ｃ。</li>
                             <li>第二層項目內容</li>
