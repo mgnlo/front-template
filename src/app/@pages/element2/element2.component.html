@@ -684,7 +684,7 @@
                             <label>輸入欄位</label>
                             <div>
                                 <input nbInput fullWidth type="text" placeholder="請輸入" />
-                                <button nbButton status="primary" size="tiny" class="iconBtn btnBlue">
+                                <button nbButton status="info" size="tiny" class="iconBtn">
                                     <nb-icon icon="cloud-upload-outline"></nb-icon>
                                 </button>
                             </div>
@@ -700,7 +700,7 @@
                             <label>輸入欄位</label>
                             <div>
                                 <input nbInput fullWidth type="text" placeholder="請輸入" />
-                                <button nbButton status="primary" size="tiny" class="iconBtn btnOrange">
+                                <button nbButton status="warning" size="tiny" class="iconBtn">
                                     <nb-icon icon="file-add-outline"></nb-icon>
                                 </button>
                             </div>
@@ -715,16 +715,16 @@
                             <label>輸入欄位</label>
                             <div>
                                 <input nbInput fullWidth type="text" placeholder="請輸入" />
-                                <button nbButton status="primary" size="tiny" class="iconBtn btnRed">
+                                <button nbButton status="danger" size="tiny" class="iconBtn">
                                     <nb-icon icon="minus-outline"></nb-icon>
                                 </button>
                             </div>
                             <div>
                                 <input nbInput fullWidth type="text" placeholder="請輸入" />
-                                <button nbButton status="primary" size="tiny" class="iconBtn btnRed">
+                                <button nbButton status="danger" size="tiny" class="iconBtn">
                                     <nb-icon icon="minus-outline"></nb-icon>
                                 </button>
-                                <button nbButton status="primary" size="tiny" class="iconBtn btnGreen">
+                                <button nbButton status="success" size="tiny" class="iconBtn">
                                     <nb-icon icon="plus-outline"></nb-icon>
                                 </button>
                             </div>
@@ -862,6 +862,93 @@
                         </div>
                     </div>
 
+                    <!-- 區塊內小標題 -->
+                    <div class="subTitle">
+                        <p>卡片區塊內小標題 - 上下組合(群組)</p>
+                    </div>
+
+                    <!-- 上下組合(群組) -->
+                    <div class="row">
+                        <div class="fieldGroups col-12 col-md-6">
+                            <!-- 基礎樣式 -->
+                            <div class="fieldGroup toggleBasic">
+                                <label>toggele</label>
+                                <div>
+                                    <!-- 不可填寫：disabled -->
+                                    <!-- 自動帶入值：增加class="automatic" -->
+                                    <!-- 欄位錯誤：status 改為 "danger" -->
+                                    <p>啟用狀態</p>
+                                    <nb-toggle></nb-toggle>
+                                </div>
+                                <!-- 欄位錯誤訊息 -->
+                                <div class="note errorText">
+                                    <nb-icon icon="alert-triangle"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+
+                            <div class="fieldGroup">
+                                <label>輸入欄位</label>
+                                <div>
+                                    <input nbInput fullWidth type="text" placeholder="請輸入" />
+                                </div>
+                                <!-- 欄位錯誤訊息 -->
+                                <div class="note errorText">
+                                    <nb-icon icon="alert-triangle"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                            
+                            <div class="fieldGroup">
+                                <label>下拉式選單欄位結構</label>
+                                <div>
+                                    <nb-select fullWidth placeholder="請選擇">
+                                        <nb-option value="item1">item1</nb-option>
+                                        <nb-option value="item2">item2</nb-option>
+                                    </nb-select>
+                                </div>
+                                <!-- 欄位錯誤訊息 -->
+                                <div class="note errorText">
+                                    <nb-icon icon="alert-triangle"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="fieldGroups col-12 col-md-6">
+                            <!-- 基礎樣式 -->
+                            <div class="fieldGroup toggleBasic">
+                                <label>toggele</label>
+                                <div>
+                                    <!-- 不可填寫：disabled -->
+                                    <!-- 自動帶入值：增加class="automatic" -->
+                                    <!-- 欄位錯誤：status 改為 "danger" -->
+                                    <p>啟用狀態</p>
+                                    <nb-toggle></nb-toggle>
+                                </div>
+                                <!-- 欄位錯誤訊息 -->
+                                <div class="note errorText">
+                                    <nb-icon icon="alert-triangle"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                            
+                            <div class="fieldGroup">
+                                <label>下拉式選單欄位結構</label>
+                                <div>
+                                    <nb-select fullWidth placeholder="請選擇">
+                                        <nb-option value="item1">item1</nb-option>
+                                        <nb-option value="item2">item2</nb-option>
+                                    </nb-select>
+                                </div>
+                                <!-- 欄位錯誤訊息 -->
+                                <div class="note errorText">
+                                    <nb-icon icon="alert-triangle"></nb-icon>
+                                    <p>欄位錯誤訊息</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!-- 區塊內小標題 -->
                     <div class="subTitle">
                         <p>卡片區塊內小標題 - 左右組合</p>
@@ -1221,7 +1308,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- 欄位寬度 -->
                     <div class="row">
                         <div class="fieldGroup col-12 col-lg-9">

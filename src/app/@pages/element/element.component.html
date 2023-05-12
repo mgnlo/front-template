@@ -1,7 +1,7 @@
 <!-- 頁面標題（可視需求增減功能按鈕）-->
 <div class="pageTitle">
     <h1>頁面標題</h1>
-    <button nbButton status="primary" size="small">+ 功能按鈕</button>
+    <button nbButton status="primary" size="small"><nb-icon icon="paper-plane-outline"></nb-icon>功能按鈕</button>
 </div>
 
 <!-- 頁面內容 -->
@@ -24,7 +24,7 @@
 
     <!-- 小標題 -->
     <div class="subTitle">
-        <p>小標題 - 卡片大小標題</p>
+        <p>小標題 - 卡片大小標題/按鈕</p>
     </div>
 
     <!-- 卡片區塊 - 大小標題 -->
@@ -69,11 +69,12 @@
         <!-- 卡片區塊大標題 + 按鈕（可視需求增減按鈕） -->
         <nb-card-header>
             <h2>卡片區塊大標題 + 按鈕</h2>
-            <button nbButton status="primary" size="tiny" class="iconBtn btnGreen">
-                <nb-icon icon="plus-outline"></nb-icon>
-            </button>
-            <button nbButton status="primary" size="tiny" class="iconBtn btnRed">
+            <!-- 按鈕顏色用status控制：藍-info、綠-success、紅-danger、橘-warning、灰-basic -->
+            <button nbButton status="danger" size="tiny" class="iconBtn">
                 <nb-icon icon="trash-2-outline"></nb-icon>
+            </button>
+            <button nbButton status="success" size="tiny" class="iconBtn">
+                <nb-icon icon="plus-outline"></nb-icon>
             </button>
         </nb-card-header>
 
@@ -81,13 +82,14 @@
         <nb-card-header>
             <h2>卡片區塊大標題 + 右側按鈕</h2>
             <div class="rightBox">
-                <button nbButton status="primary" size="tiny" class="iconBtn btnBlue">
+                <!-- 按鈕顏色用status控制：藍-info、綠-success、紅-danger、橘-warning、灰-basic -->
+                <button nbButton status="info" size="tiny" class="iconBtn">
                     <nb-icon icon="edit-outline"></nb-icon>
                 </button>
-                <button nbButton status="primary" size="tiny" class="iconBtn btnOrange">
+                <button nbButton status="warning" size="tiny" class="iconBtn">
                     <nb-icon icon="settings-outline"></nb-icon>
                 </button>
-                <button nbButton status="primary" size="tiny" class="iconBtn btnSwitch">
+                <button nbButton status="basic" size="tiny" class="iconBtn">
                     <nb-icon icon="search-outline"></nb-icon>
                 </button>
             </div>
@@ -97,9 +99,10 @@
         <nb-card-header>
             <h2>卡片區塊大標題 + 右側下拉式選單</h2>
             <div class="rightBox">
-                <nb-select fullWidth placeholder="請選擇">
-                    <nb-option value="item1">item1</nb-option>
-                    <nb-option value="item2">item2</nb-option>
+                <nb-select size="medium" placeholder="請選擇">
+                    <nb-option value="week">week</nb-option>
+                    <nb-option value="month">month</nb-option>
+                    <nb-option value="year">year</nb-option>
                 </nb-select>
             </div>
         </nb-card-header>
@@ -114,10 +117,11 @@
             <!-- 區塊內小標題 + 按鈕 -->
             <div class="subTitle">
                 <p>卡片區塊內小標題 + 按鈕</p>
-                <button nbButton status="primary" size="tiny" class="iconBtn btnRed">
+                <!-- 按鈕顏色用status控制：藍-info、綠-success、紅-danger、橘-warning、灰-basic -->
+                <button nbButton status="danger" size="tiny" class="iconBtn">
                     <nb-icon icon="trash-2-outline"></nb-icon>
                 </button>
-                <button nbButton status="primary" size="tiny" class="iconBtn btnGreen">
+                <button nbButton status="success" size="tiny" class="iconBtn">
                     <nb-icon icon="plus-outline"></nb-icon>
                 </button>
             </div>
@@ -125,14 +129,41 @@
             <!-- 區塊內小標題 + 展開收合按鈕 -->
             <div class="subTitle">
                 <p>卡片區塊內小標題 + 展開收合按鈕</p>
-                <button nbButton status="primary" size="tiny" class="iconBtn btnSwitch"
+                <button nbButton status="basic" size="tiny" class="iconBtn btnSwitch"
                     [ngClass]="isOpen ? 'btnClick' : ''" (click)="isOpen = !isOpen">
                     <nb-icon icon="arrow-ios-forward-outline"></nb-icon>
                 </button>
             </div>
             <div [ngClass]="isOpen ? '' : 'displayNone'">
-                <p>我打開了！</p>
+                <div class="noteText alert">
+                    <nb-icon icon="info-outline"></nb-icon>
+                    <p>我打開了！</p>
+                </div>
             </div>
+
+            <!-- 區塊內小標題 -->
+            <div class="subTitle">
+                <p>卡片區塊內小標題 - 按鈕說明</p>
+            </div>
+            
+            <!-- 卡片右側小按鈕 -->
+            <div class="rightBox">
+                <button nbButton status="basic" size="small"><nb-icon icon="attach-outline"></nb-icon>右側灰色小按鈕</button>
+                <button nbButton status="primary" size="small"><nb-icon icon="book-open-outline"></nb-icon>右側藍色小按鈕</button>
+            </div>
+
+            <!-- 卡片右側按鈕 -->
+            <div class="rightBox">
+                <button nbButton status="basic" size="medium"><nb-icon icon="share-outline"></nb-icon>右側灰色按鈕</button>
+                <button nbButton status="primary" size="medium"><nb-icon icon="sync-outline"></nb-icon>右側藍色按鈕</button>
+            </div>
+
+            <!-- 卡片置中按鈕 -->
+            <div class="btnGroup">
+                <button nbButton status="basic" size="medium">置中灰色按鈕</button>
+                <button nbButton status="info" size="medium">置中藍色按鈕</button>
+            </div>
+
         </nb-card-body>
     </nb-card>
 
@@ -285,28 +316,28 @@
                                 <label>輸入欄位</label>
                                 <div>
                                     <input nbInput fullWidth type="text" placeholder="請輸入" />
-                                    <button nbButton status="primary" size="tiny" class="iconBtn btnRed">
+                                    <button nbButton status="danger" size="tiny" class="iconBtn">
                                         <nb-icon icon="minus-outline"></nb-icon>
                                     </button>
                                 </div>
                                 <div>
                                     <input nbInput fullWidth type="text" placeholder="請輸入" />
-                                    <button nbButton status="primary" size="tiny" class="iconBtn btnRed">
+                                    <button nbButton status="danger" size="tiny" class="iconBtn">
                                         <nb-icon icon="minus-outline"></nb-icon>
                                     </button>
                                 </div>
                                 <div>
                                     <input nbInput fullWidth type="text" placeholder="請輸入" />
-                                    <button nbButton status="primary" size="tiny" class="iconBtn btnRed">
+                                    <button nbButton status="danger" size="tiny" class="iconBtn">
                                         <nb-icon icon="minus-outline"></nb-icon>
                                     </button>
                                 </div>
                                 <div>
                                     <input nbInput fullWidth type="text" placeholder="請輸入" />
-                                    <button nbButton status="primary" size="tiny" class="iconBtn btnRed">
+                                    <button nbButton status="danger" size="tiny" class="iconBtn">
                                         <nb-icon icon="minus-outline"></nb-icon>
                                     </button>
-                                    <button nbButton status="primary" size="tiny" class="iconBtn btnGreen">
+                                    <button nbButton status="success" size="tiny" class="iconBtn">
                                         <nb-icon icon="plus-outline"></nb-icon>
                                     </button>
                                 </div>
@@ -344,7 +375,7 @@
 
             <!-- 純文字 -->
             <div class="textBlock">
-                <p>可依需求放置放置文案，文案使用範例如下。</p>
+                <p>可依需求放置放置文案，文案使用範例如下：</p>
                 <p><span class="textBold">粗體</span>：class="textBold"、<span class="textLine">底線</span>：class="textLine"。
                 </p>
                 <p>文字顏色使用說明：
@@ -353,7 +384,7 @@
                     <span class="colorRed">紅色文字</span>：class="colorRed"。
                 </p>
                 <a href="#">連結文字</a>
-                <p>可組合一起使用，如：
+                <p>也可組合一起使用，如：
                     <span class="colorRed textBold">紅色粗體文字</span>：class="colorBlue textBold"、
                     <span class="colorBlue textBold">藍色粗體文字</span>：class="colorBlue textBold"、
                     <span class="colorGray textLine">灰色底線文字</span>：class="colorGray textLine"
@@ -426,6 +457,51 @@
                         href="#">內容超長https://accounts.google.com/AccountChooser/signinchooser?service=mail&continue=https%3A%2F%2Fmail.google.com%2Fmail%2F&flowName=GlifWebSignIn&flowEntry=AccountChooser</a>
                 </div>
             </div>
+
+            <!-- 項目清單 -->
+            <div class="col-12">
+                <nb-card size="small" class="listBlock">
+                    <nb-list>
+                        <nb-list-item>
+                            <p>項目A</p>
+                            <p class="textBold">1080</p>
+                        </nb-list-item>
+                        <nb-list-item>
+                            <p>項目B</p>
+                            <p class="textBold">5000</p>
+                        </nb-list-item>
+                        <nb-list-item>
+                            <p>項目C</p>
+                            <p class="textBold">520</p>
+                        </nb-list-item>
+                        <nb-list-item>
+                            <p>項目D</p>
+                            <p class="textBold">4880</p>
+                        </nb-list-item>
+                        <nb-list-item>
+                            <p>項目E</p>
+                            <p class="textBold">270</p>
+                        </nb-list-item>
+                        <nb-list-item>
+                            <p>項目F</p>
+                            <p class="textBold">1500</p>
+                        </nb-list-item>
+                        <nb-list-item>
+                            <p>項目G</p>
+                            <p class="textBold">2900</p>
+                        </nb-list-item>
+                        <nb-list-item>
+                            <p>項目H</p>
+                            <p class="textBold">500</p>
+                        </nb-list-item>
+                        <nb-list-item>
+                            <p>項目I</p>
+                            <p class="textBold">1000</p>
+                        </nb-list-item>
+                    </nb-list>
+                </nb-card>
+            </div>
+
         </nb-card-body>
     </nb-card>
 
@@ -519,30 +595,30 @@
     <!-- 按鈕區塊 - 單個按鈕 -->
     <!-- status 控制 按鈕顏色樣式，basic(灰)、danger(紅)、info(藍)、warning(橘) -->
     <div class="btnGroup">
-        <button nbButton status="info">按 鈕</button>
+        <button nbButton status="info">藍色按鈕</button>
     </div>
 
     <!-- 按鈕區塊 - 兩個按鈕 -->
     <!-- status 控制 按鈕顏色樣式，basic(灰)、danger(紅)、info(藍)、warning(橘) -->
     <div class="btnGroup">
-        <button nbButton status="basic">按 鈕</button>
-        <button nbButton status="info">按 鈕</button>
+        <button nbButton status="basic">灰色按鈕</button>
+        <button nbButton status="info">藍色按鈕</button>
     </div>
 
     <!-- 按鈕區塊 - 三個按鈕-->
     <!-- status 控制 按鈕顏色樣式，basic(灰)、danger(紅)、info(藍)、warning(橘) -->
     <div class="btnGroup">
-        <button nbButton status="basic">按 鈕</button>
-        <button nbButton status="danger">按 鈕</button>
-        <button nbButton status="info">按 鈕</button>
+        <button nbButton status="basic">灰色按鈕</button>
+        <button nbButton status="danger">紅色按鈕</button>
+        <button nbButton status="info">藍色按鈕</button>
     </div>
 
     <!-- 按鈕區塊 - 四個按鈕-->
     <!-- status 控制 按鈕顏色樣式，basic(灰)、danger(紅)、info(藍)、warning(橘) -->
     <div class="btnGroup">
-        <button nbButton status="basic">按 鈕</button>
-        <button nbButton status="warning">按 鈕</button>
-        <button nbButton status="danger">按 鈕</button>
-        <button nbButton status="info">按 鈕</button>
+        <button nbButton status="basic">灰色按鈕</button>
+        <button nbButton status="warning">橘色按鈕</button>
+        <button nbButton status="danger">紅色按鈕</button>
+        <button nbButton status="info">藍色按鈕</button>
     </div>
 </div>

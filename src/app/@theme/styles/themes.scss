@@ -37,28 +37,23 @@ $nb-themes: nb-register-theme(
         color-info-900: #07316E,
 
         color-primary-hover: #008CD0,
-        color-primary-focus: #29A7E6,
         color-primary-active: #29A7E6,
         color-primary-disabled: color-primary-500,
         color-success-hover: #00AD74,
-        color-success-focus: #01dd94,
         color-success-active: #01dd94,
         color-success-disabled: color-success-500,
         color-info-hover: #0078B2,
-        color-info-focus: #66CAFC,
         color-info-active: #66CAFC,
         color-info-disabled: color-info-500,
         color-warning-hover: #FFC653,
-        color-warning-focus: #FFD800,
         color-warning-active: #FFD800,
         color-warning-disabled: color-warning-500,
         color-danger-hover: #FF0044,
-        color-danger-focus: #FF85A6,
         color-danger-active: #FF85A6,
         color-danger-disabled: color-danger-500,
-        color-basic-hover: #808486,
-        color-basic-focus: #65696B,
-        color-basic-active: #65696B,
+        color-basic-default: #BBC1C5,
+        color-basic-hover: #60676D,
+        color-basic-active: #B2B9BE,
         color-basic-disabled: color-basic-500,
 
         // text-setting
@@ -82,35 +77,49 @@ $nb-themes: nb-register-theme(
         menu-item-divider-width: 0,
 
         // card-setting
-        card-divider-color: #DBDEE1,
+        divider-color: #DBDEE1,
 
         // input-setting
-        input-basic-text-color: #121A23,
+        input-basic-text-color: text-basic-color,
         input-basic-placeholder-text-color: rgba(#121A23, 0.5),
-        input-basic-hover-background-color: #FAFAFA,
+        input-basic-background-color: #FAFAFA,
+        input-basic-hover-background-color: #FFFFFF,
         input-basic-hover-border-color: #C5E2F2,
-        input-basic-focus-background-color: #FAFAFA,
-        input-basic-focus-border-color: #66CAFC,
-        input-basic-disabled-background-color: #FAFAFA,
+        input-basic-focus-background-color: input-basic-background-color,
+        input-basic-focus-border-color: color-info-active,
+        input-basic-disabled-background-color: input-basic-background-color,
         input-basic-disabled-border-color: #E4E9EB,
-        input-basic-disabled-text-color: #121A23,
-        input-danger-text-color: #121A23,
+        input-basic-disabled-text-color: text-basic-color,
+        input-danger-text-color: text-basic-color,
         input-danger-placeholder-text-color: rgba(#121A23, 0.5),
-        input-danger-hover-background-color: #FAFAFA,
-        input-danger-hover-border-color: #ffc3d3,
-        input-danger-focus-background-color: #FAFAFA,
+        input-danger-hover-background-color: input-basic-background-color,
+        input-danger-hover-border-color: #FFC3D3,
+        input-danger-focus-background-color: input-basic-background-color,
         input-danger-focus-border-color: #FF3D71,
         input-medium-text-font-weight: 400,
 
-        // button-basic
-        button-filled-basic-background-color: #BBC1C5,
-        button-filled-basic-border-color: #BBC1C5,
+        select-outline-basic-background-color: #FAFAFA,
+        select-outline-basic-placeholder-text-color: rgba(#121A23, 0.5),
+        select-outline-basic-hover-background-color: #FFFFFF,
+        select-outline-basic-hover-border-color: #C5E2F2,
+        select-outline-basic-focus-background-color: #FFFFFF,
+        select-outline-basic-focus-border-color: color-info-active,
+        select-outline-basic-disabled-background-color: select-outline-basic-background-color,
+        select-outline-basic-disabled-border-color: #E4E9EB,
+        select-outline-basic-disabled-text-color: text-basic-color,
+        select-outline-danger-text-color: text-basic-color,
+        select-outline-danger-placeholder-text-color: rgba(#121A23, 0.5),
+        select-outline-danger-hover-background-color: select-outline-basic-background-color,
+        select-outline-danger-hover-border-color: #FFC3D3,
+        select-outline-danger-focus-background-color: select-outline-basic-background-color,
+        select-outline-danger-focus-border-color: #FF3D71,
+        select-medium-text-font-weight: 400,
+
     ),
     default,
     default
 );
 
-$text-color: #121A23;
 $title-color: #0B3255;
 $label-color: #393C3E;
 $option-color: #82878B;
