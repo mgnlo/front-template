@@ -299,6 +299,28 @@ body { overflow: hidden; }
                 &:disabled { color: #FFFFFF; }
             }
         }
+        &.appearance-outline {
+            &.status-primary {
+                background: #FFFFFF;
+                &:hover { background: rgba(51, 102, 255, 0.08) }
+            }
+            &.status-success {
+                background: #FFFFFF;
+                &:hover { background: rgba(0, 214, 143, 0.08) }
+            }
+            &.status-info {
+                background: #FFFFFF;
+                &:hover { background: rgba(0, 149, 255, 0.08); }
+            }
+            &.status-warning {
+                background: #FFFFFF;
+                &:hover { background: rgba(255, 170, 0, 0.08) }
+            }
+            &.status-danger {
+                background: #FFFFFF;
+                &:hover { background: rgba(255, 61, 113, 0.08); }
+            }
+        }
         &.size-small nb-icon {
             width: 0.875rem;
             height: 0.875rem;
@@ -760,7 +782,7 @@ p { margin: 0; }
 .fieldGroup {
     display: flex;
     flex-direction: column;
-    padding: 0.5rem !important;
+    padding: 0.5rem 0.625rem !important;
     > label {
         position: relative;
         width: fit-content;
@@ -778,9 +800,8 @@ p { margin: 0; }
             input:not(:nth-last-child(1)){ margin-bottom: 0.5rem; }
         }
         [nbButton] {
-            margin: 0.5rem;
-            &:nth-child(1){ margin-right: 0.25rem; }
-            &:nth-last-child(1) {margin-right: 0.5rem;}
+            font-weight: 400;
+            margin: 0 0.5rem;
         }
         input[type="file"] {
             cursor:  pointer;
@@ -840,9 +861,11 @@ p { margin: 0; }
                 padding-right: 0;
                 margin-right: 0 !important;
             }
+            span { white-space: nowrap; }
             &.tel {
-                input:nth-child(1){ width: 3.5rem; }
-                nb-select:nth-child(1) { width: 7rem; }
+                input:nth-child(1){ width: 7rem; }
+                nb-select { min-width: 7rem; }
+                input.ext { width: 6rem; }
             }
         }
     }
