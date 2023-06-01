@@ -781,6 +781,9 @@ p { margin: 0; }
     background-color: #F1F3F5 !important;
     padding: 1rem 1.5rem;
     margin-bottom: 0.75rem;
+    &.change {
+        background-color: #FFEBF0 !important;
+    }
 }
 .fieldGroups {
     padding: 1rem 0.5rem;
@@ -1307,4 +1310,45 @@ p { margin: 0; }
     padding: 0.2rem 0.5rem 0.2rem 1rem;
     p { color: #222B45; }
     &:not(:nth-last-of-type(1)) { margin-bottom: 10px; }
+}
+
+// CDP特殊樣式
+.colorInfo {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    p, span { font-size: 12px; }
+    p {
+        font-weight: bold;
+        margin-right: 1rem;
+    }
+    > div {
+        position: relative;
+        display: flex;
+        align-items: center;
+        .gradient, .colorBlock {
+            height: 12px;
+            border-radius: 2px;
+            margin: 0 5px;
+        }
+        .gradient {
+            width: 85px;
+            background: linear-gradient(to right, #9EDAF8 0%, #0078B2 100%);
+        }
+        .colorBlock {
+            width: 12px;
+            background: $scrollbar;
+        }
+        &:not(:nth-last-of-type(1)) { padding-right: 1rem; }
+        &:nth-last-of-type(1) { padding-left: 1rem;}
+        &:not(:nth-last-of-type(1)):after {
+            position: absolute;
+            content: '';
+            top: 2px;
+            bottom: 2px;
+            right: 0;
+            width: 2px;
+            background: #E0E6E8;
+        }
+    }
 }
