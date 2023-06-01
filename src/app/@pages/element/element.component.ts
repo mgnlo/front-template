@@ -13,6 +13,7 @@ import { map } from 'rxjs/operators';
 export class ElementComponent implements OnInit {
 
   isOpen = true;
+  isOpen2 = true;
 
   @ViewChild('autoInput') txnInput: { nativeElement: { value: string; }; };
   options: string[];

@@ -756,15 +756,25 @@
 
                 <!-- 歷程區塊 -->
                 <div class="historyList">
-                    <!-- 已完成或正在進行的增加class="active" -->
+                    <!-- 已完成或正在進行的增加class="active"，有子項目加cl3ss="moreBtn"(視需求，可加可不加) -->
                     <div class="historyItem active">
-                        <h4>已完成主要節點內容 1</h4>
+                        <div class="mainItem">
+                            <h4>已完成主要節點內容 1</h4>
+                            <button nbButton status="control" size="tiny" class="iconBtn">
+                                <nb-icon icon="chevron-down-outline"></nb-icon>
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- 已完成或正在進行的增加class="active" -->
-                    <div class="historyItem active">
-                        <h4>已完成主要節點內容 2</h4>
-                        <div class="subItem">
+                    <!-- 已完成或正在進行的增加class="active"，有子項目加cl3ss="moreBtn"(視需求，可加可不加) -->
+                    <div class="historyItem active moreBtn" [ngClass]="isOpen2 ? 'closeSubItem' : ''">
+                        <div class="mainItem">
+                            <h4 (click)="isOpen2 = !isOpen2">已完成主要節點內容 2</h4>
+                            <button nbButton status="control" size="tiny" class="iconBtn" (click)="isOpen2 = !isOpen2">
+                                <nb-icon icon="chevron-down-outline"></nb-icon>
+                            </button>
+                        </div>
+                        <div class="subItem" [ngClass]="isOpen2 ? '' : 'displayNone'">
                             <div>
                                 <p>YYYY/MM/BB</p>
                                 <p>hh:mm:ss</p>
@@ -773,6 +783,26 @@
                                 <p>子內容標題 1</p>
                                 <p>子內容敘述文字</p>
                             </div>
+                        </div>
+                        <div class="subItem"  [ngClass]="isOpen2 ? '' : 'displayNone'">
+                            <div class="time">
+                                <p>YYYY/MM/BB</p>
+                                <p>hh:mm:ss</p>
+                            </div>
+                            <div class="content">
+                                <p>子內容標題 2</p>
+                                <p>子內容敘述文字</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 已完成或正在進行的增加class="active"，有子項目加cl3ss="moreBtn"(視需求，可加可不加) -->
+                    <div class="historyItem active">
+                        <div class="mainItem">
+                            <h4>主要節點內容 3</h4>
+                            <button nbButton status="control" size="tiny" class="iconBtn">
+                                <nb-icon icon="chevron-down-outline"></nb-icon>
+                            </button>
                         </div>
                         <div class="subItem">
                             <div class="time">
@@ -786,14 +816,14 @@
                         </div>
                     </div>
 
-                    <!-- 已完成或正在進行的增加class="active" -->
+                    <!-- 已完成或正在進行的增加class="active"，有子項目加cl3ss="moreBtn"(視需求，可加可不加) -->
                     <div class="historyItem">
-                        <h4>已完成主要節點內容 3</h4>
-                    </div>
-
-                    <!-- 已完成或正在進行的增加class="active" -->
-                    <div class="historyItem">
-                        <h4>已完成主要節點內容 4</h4>
+                        <div class="mainItem">
+                            <h4>主要節點內容 4</h4>
+                            <button nbButton status="control" size="tiny" class="iconBtn">
+                                <nb-icon icon="chevron-down-outline"></nb-icon>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </nb-accordion-item-body>
