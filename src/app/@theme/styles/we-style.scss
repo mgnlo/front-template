@@ -1169,10 +1169,19 @@ p { margin: 0; }
             }
         }
         &:nth-last-of-type(1) {
-            h4:after { bottom: 8px; }
+            h4 {
+                &:after { bottom: 8px; }
+                
+            }
+            .mainItem {
+                ~ .subItem {
+                    &::after { top: -8px; }
+                    &:nth-last-of-type(1)::after { bottom: 20px; }
+                }
+            }
             .subItem {
-                &:after { display: none; }
-                div:nth-of-type(1):before { display: none; }
+                // &:after { display: none; }
+                // div:nth-of-type(1):before { display: none; }
             }
         }
     }
