@@ -7,32 +7,30 @@
             <h2>查詢設定值</h2>
         </nb-card-header>
         <nb-card-body>
-            <form [formGroup]="queryForm">
-                <div class="row">
-                    <div class="fieldGroup col-12 col-lg-6">
-                        <label>會員號碼</label>
-                        <div><input nbInput fullWidth status="basic" type="text" placeholder="請輸入" formControlName="custId"/></div>
-                        <div class="note errorText">
-                            <nb-icon icon="alert-triangle"></nb-icon>
-                            <p>欄位錯誤訊息</p>
-                        </div>
-                    </div>
-                    <div class="fieldGroup col-12 col-lg-6">
-                        <label>手機號碼</label>
-                        <div><input nbInput fullWidth status="basic" type="text" placeholder="請輸入" formControlName="mobile"/></div>
-                        <div class="note errorText">
-                            <nb-icon icon="alert-triangle"></nb-icon>
-                            <p>欄位錯誤訊息</p>
-                        </div>
+            <div class="row">
+                <div class="fieldGroup col-12 col-lg-6">
+                    <label>會員號碼</label>
+                    <div><input nbInput fullWidth status="basic" type="text" placeholder="請輸入" [(ngModel)]="params.filter.custId"/></div>
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
                     </div>
                 </div>
-            </form>
+                <div class="fieldGroup col-12 col-lg-6">
+                    <label>手機號碼</label>
+                    <div><input nbInput fullWidth status="basic" type="text" placeholder="請輸入" [(ngModel)]="params.filter.mobile"/></div>
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+            </div>
         </nb-card-body>
     </nb-card>
     <div class="row">
         <div class="btnGroup">
             <button nbButton status="basic" size="medium" (click)="reset()">清除</button>
-            <button nbButton status="primary" size="medium" type="submit" (click)="submit()">查詢</button>
+            <button nbButton status="primary" size="medium" (click)="submit()">查詢</button>
         </div>
     </div>
     <hr/>
@@ -42,7 +40,7 @@
         </nb-card-header>
         <nb-card-body>
             <ng2-smart-table [settings]="gridDefine" [source]="userListSource"></ng2-smart-table>
-            <div class="paginator">
+            <div class="paginator" [ngClass]="{'only' : paginator.nowPage >= paginator.totalPage}">
                 <span class="colorBlue">顯示 {{paginator.rowStart}} 到 {{paginator.rowEnd}} 筆資料，共 {{paginator.totalCount}} 筆資料</span>
             </div>
         </nb-card-body>

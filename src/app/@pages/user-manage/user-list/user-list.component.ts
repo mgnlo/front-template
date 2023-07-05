@@ -1,8 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { UserList } from '@api/models/user-list.model';
-import { BaseComponent } from '@pages/base.component';
 import { UserListMock } from '@common/mock-data/user-list-mock';
+import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({
@@ -15,43 +14,24 @@ export class UserListComponent extends BaseComponent implements OnInit {
     constructor() {
       super();
     }
-    
-    queryForm: FormGroup;
     mockData: Array<UserList> = UserListMock;
     userListSource = new LocalDataSource();
 
-    param = {
+    params = {
       filter: { // 篩選條件
-        name: '', // 範本名稱
-        questionType: '', // 題目類別
-        description: '', // 題目名稱
-      },
-      search: { // 搜尋條件(打API)
-        startDate: new Date(),
-        endDate: new Date(),
-      },
-      activeTab: 'template',
-      templateTab: {
-        page: 1,
-        sort: [],
-      },
-      questionTab: {
-        page: 1,
-        sort: [],
-      },
+        custId: '',
+        mobile: '',
+      }
     };
 
     ngOnInit(): void {
       this.userListSource.load(this.mockData);
       this.paginator.totalCount = this.mockData.length;
 
-      this.queryForm = new FormGroup({
-        custId: new FormControl('', []),
-        mobile: new FormControl('', []),
-      });
-
       this.userListSource.onChanged().subscribe(()=>{
+        this.paginator.totalCount = this.userListSource.count();
         let page =this.userListSource.getPaging().page;
+        this.paginator.nowPage = page;
         let perPage = this.userListSource.getPaging().perPage;
         this.paginator.totalPage = Math.ceil(this.paginator.totalCount/perPage);
         this.paginator.rowStart = (page - 1) * perPage + 1;
@@ -110,11 +90,14 @@ export class UserListComponent extends BaseComponent implements OnInit {
     };
       
     reset(){
-      this.queryForm.reset();
+      this.params.filter = {custId: '', mobile: ''};
+      this.userListSource.reset();
     }
 
     submit() {
-      console.info(this.queryForm.getRawValue());
+      for (const [k, v] of Object.entries(this.params.filter)) {
+        this.userListSource.addFilter({field: k, filter: undefined, search: v});
+      }
     }
 }
 

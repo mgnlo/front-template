@@ -127,9 +127,17 @@ $scrollbar: #BBC1C5;
 
 //table設定
 .paginator {
-    position: relative;
-    bottom: 40px;
+    display: flex;
+    justify-content: flex-start;
     width: 300px;
+    margin: 1rem 0;
+    &:not(.only) {
+        display: unset;
+        justify-content: unset;
+        position: absolute;
+        bottom: 40px;
+        margin: unset;
+    }
 }
 ng2-smart-table {
     nav.ng2-smart-pagination-nav {

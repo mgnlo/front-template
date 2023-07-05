@@ -1,8 +1,8 @@
 import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { Activity } from '@api/models/activity-list.model';
-import { BaseComponent } from '@pages/base.component';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
+import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
 import { UserManageService } from '../user-manage.service';
 
@@ -23,9 +23,9 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
     mockData: Array<Activity> = ActivityListMock;
     activityListSource = new LocalDataSource();
     // 頁面參數
-    param = {
+    params = {
       filter: { // 篩選條件
-        activityName: '',
+        activity_name: '',
         status: '',
       },
       search: { // 搜尋條件(打API)
@@ -39,12 +39,12 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
     public ngOnInit(): void {
       this.activityListSource.load(this.mockData);
       this.activityListSource.onChanged().subscribe(()=>{
-        this.activityListSource.getAll().then((total)=>{this.paginator.totalCount = total.length});
+        this.paginator.totalCount = this.activityListSource.count();
         let page =this.activityListSource.getPaging().page;
         let perPage = this.activityListSource.getPaging().perPage;
+        this.paginator.nowPage = page;
         this.paginator.totalPage = Math.ceil(this.paginator.totalCount/perPage);
         this.paginator.rowStart = (page - 1) * perPage + 1;
-        console.info(this.paginator.totalPage)
         this.paginator.rowEnd = this.paginator.totalPage !== page ? page * perPage : (page-1) * perPage + this.paginator.totalCount % perPage;
       });
     }
@@ -135,6 +135,23 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
           search: search,
         });
         
+      }
+
+      reset(){
+        this.params.filter = { activity_name: '', status: ''};
+        this.activityListSource.reset();
+      }
+  
+      submit() {
+        for (const [k, v] of Object.entries(this.params.filter)) {
+          if(v !== ''){
+            this.activityListSource.addFilter({
+              field: k,
+              filter: undefined,
+              search: v,
+            });
+          }
+        }
       }
 }
 

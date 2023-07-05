@@ -11,7 +11,7 @@
                 <div class="fieldGroup col-12 col-lg-6">
                     <label>活動名稱</label>
                     <div>
-                        <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" [(ngModel)]="param.filter.activityName" (ngModelChange)="filter('activity_name', param.filter.activityName)"/>
+                        <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" [(ngModel)]="params.filter.activity_name"/>
                     </div>
                     <div class="note errorText">
                         <nb-icon icon="alert-triangle"></nb-icon>
@@ -21,7 +21,7 @@
                 <div class="fieldGroup col-12 col-lg-6">
                     <label>狀態</label>
                     <div>
-                        <nb-select fullWidth placeholder="請選擇" [(ngModel)]="param.filter.status" (selectedChange)="filter('status', $event)">
+                        <nb-select fullWidth placeholder="請選擇" [(ngModel)]="params.filter.status">
                             <nb-option value="">全部</nb-option>
                             <nb-option value="active">啟用</nb-option>
                             <nb-option value="processing">審查中</nb-option>
@@ -59,8 +59,8 @@
     </nb-card>
     <div class="row">
         <div class="btnGroup">
-            <button nbButton status="basic" size="medium">清除</button>
-            <button nbButton status="primary" size="medium" type="submit">查詢</button>
+            <button nbButton status="basic" size="medium" (click)="reset()">清除</button>
+            <button nbButton status="primary" size="medium" (click)="submit()">查詢</button>
         </div>
     </div>
     <hr/>
@@ -70,8 +70,8 @@
         </nb-card-header>
         <nb-card-body>
             <div class="rightBox"><button nbButton status="primary" size="medium">新增</button></div>
-            <ng2-smart-table [settings]="gridDefine" [source]="activityListSource" style="padding-bottom: 30px;"></ng2-smart-table>
-            <div class="paginator">
+            <ng2-smart-table [settings]="gridDefine" [source]="activityListSource"></ng2-smart-table>
+            <div class="paginator" [ngClass]="{'only' : paginator.nowPage >= paginator.totalPage}">
                 <span class="colorBlue">顯示 {{paginator.rowStart}} 到 {{paginator.rowEnd}} 筆資料，共 {{paginator.totalCount}} 筆資料</span>
             </div>
         </nb-card-body>
