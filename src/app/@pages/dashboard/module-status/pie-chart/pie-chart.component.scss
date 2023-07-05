@@ -1,0 +1,61 @@
+@import '../../../../@theme/styles/themes';
+
+.chartArea {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  &.expand {
+    .chartTitle > div { display: none; }
+    .chartContent { display: block !important; }
+  }
+  .chartTitle {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    h4 {
+      width: calc(100% - 4rem);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 0.9375rem;
+      white-space: nowrap;
+      margin: 0;
+    }
+    > div {
+      span {
+        font-size: 0.75rem;
+        font-weight: 400;
+        &.lamp {
+          width: 12px;
+          height: 12px;
+          display: inline-block;
+          vertical-align: middle;
+          border-radius: 100%;
+          margin: 0 5px;
+        }
+      }
+      &.red span {
+        color: map-get($color-theme, red);
+        &.lamp { background-color: map-get($color-theme, red); }
+      }
+      &.green span {
+        color: map-get($color-theme, green);
+        &.lamp { background-color: map-get($color-theme, green); }
+      }
+    }
+  }
+  .chartContent {
+    display: none !important;
+    .echart {
+      width: 140px;
+      height: 140px;
+      display: block;
+      margin: 0.5rem auto 1.5rem;
+    }
+    .legendArea { flex-wrap: nowrap; }
+    @media (max-width: 1100px) {
+      align-items: center;
+      .echart { margin: 0.5rem auto; }
+    }
+  }
+}

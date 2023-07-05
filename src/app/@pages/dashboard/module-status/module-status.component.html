@@ -1,0 +1,27 @@
+<ng-container *ngIf="moduleDataRes && moduleDataRes.data; else loading">
+  <nb-card class="moduleArea" *ngFor="let moduleData of moduleDataRes.data" [class.expand]="openDiv.includes(moduleData.hostName)">
+    <nb-card-header>
+      {{moduleData.hostName}}
+      <div class="toggle" (click)="toggleDiv(moduleData.hostName)">
+        <span></span>
+        <span></span>
+      </div>
+    </nb-card-header>
+    <nb-card-body class="plr0">
+      <div *ngIf="moduleData.videoModule as videoModule" class="row board">
+        <div class="col-sm-4 col-4" *ngFor="let data of videoModule | keyvalue">
+          <ngx-echarts-pie [value]="data.value" [color]="'#FF9D00'" [isExpand]="openDiv.includes(moduleData.hostName)" [title]="'視訊模組 - ' + (('common.enum.system_module_data_type.' + data.key) | translate)"></ngx-echarts-pie>
+        </div>
+      </div>
+      <div *ngIf="moduleData.recordingModule as recordingModule" class="row board">
+        <div class="col-sm-4 col-4" *ngFor="let data of recordingModule | keyvalue">
+          <ngx-echarts-pie [value]="data.value" [color]="'#FF9D00'" [isExpand]="openDiv.includes(moduleData.hostName)" [title]="'錄影模組 - ' + (('common.enum.system_module_data_type.' + data.key) | translate)"></ngx-echarts-pie>
+        </div>
+      </div>
+    </nb-card-body>
+  </nb-card>
+</ng-container>
+<ng-template #loading>
+  <nb-card nb-card class="moduleArea" [nbSpinner]="true" style="height: 150px;">
+  </nb-card>
+</ng-template>

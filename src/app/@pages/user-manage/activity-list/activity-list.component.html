@@ -1,0 +1,79 @@
+<div class="pageTitle">
+    <h1>客群活動名單</h1>
+</div>
+<div class="pageContent">
+    <nb-card>
+        <nb-card-header>
+            <h2>查詢設定值</h2>
+        </nb-card-header>
+        <nb-card-body>
+            <div class="row">
+                <div class="fieldGroup col-12 col-lg-6">
+                    <label>活動名稱</label>
+                    <div>
+                        <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" [(ngModel)]="param.filter.activityName" (ngModelChange)="filter('activity_name', param.filter.activityName)"/>
+                    </div>
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+                <div class="fieldGroup col-12 col-lg-6">
+                    <label>狀態</label>
+                    <div>
+                        <nb-select fullWidth placeholder="請選擇" [(ngModel)]="param.filter.status" (selectedChange)="filter('status', $event)">
+                            <nb-option value="">全部</nb-option>
+                            <nb-option value="active">啟用</nb-option>
+                            <nb-option value="processing">審查中</nb-option>
+                            <nb-option value="stop">停用</nb-option>
+                        </nb-select>
+                    </div>
+                    <!-- 欄位錯誤訊息 -->
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+                <div class="fieldGroup col-12 col-lg-6">
+                    <label>起始時間</label>
+                    <div>
+                        <input nbInput fullWidth status="basic" type="text" placeholder="請輸入"/>
+                    </div>
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+                <div class="fieldGroup col-12 col-lg-6">
+                    <label>結束時間</label>
+                    <div>
+                        <input nbInput fullWidth status="basic" type="text" placeholder="請輸入"/>
+                    </div>
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+            </div>
+        </nb-card-body>
+    </nb-card>
+    <div class="row">
+        <div class="btnGroup">
+            <button nbButton status="basic" size="medium">清除</button>
+            <button nbButton status="primary" size="medium" type="submit">查詢</button>
+        </div>
+    </div>
+    <hr/>
+    <nb-card>
+        <nb-card-header>
+            <h2>活動列表</h2>
+        </nb-card-header>
+        <nb-card-body>
+            <div class="rightBox"><button nbButton status="primary" size="medium">新增</button></div>
+            <ng2-smart-table [settings]="gridDefine" [source]="activityListSource" style="padding-bottom: 30px;"></ng2-smart-table>
+            <div class="paginator">
+                <span class="colorBlue">顯示 {{paginator.rowStart}} 到 {{paginator.rowEnd}} 筆資料，共 {{paginator.totalCount}} 筆資料</span>
+            </div>
+        </nb-card-body>
+    </nb-card>
+</div>

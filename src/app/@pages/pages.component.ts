@@ -37,6 +37,63 @@ export class PagesComponent implements OnInit {
           },
         ]
       },
+      {
+        title: "儀表板",
+        icon: "pie-chart-outline",
+        link: "/pages/dashboard"
+      },
+      {
+        title: "用戶管理",
+        icon: "people-outline",
+        children: [
+          {
+            title: "用戶列表",
+            link: "/pages/user-manage/user-list",
+          },
+          {
+            title: "客群活動名單",
+            link: "/pages/user-manage/activity-list",
+          },
+        ]
+      },
+      {
+        title: "標籤管理",
+        icon: "pricetags-outline",
+        link: "/pages/dashboard"
+      },
+      {
+        title: "審核管理",
+        icon: "checkmark-square-outline",
+        children: [
+          {
+            title: "標籤審核",
+            link: "/pages/element",
+          },
+          {
+            title: "客群名單審核",
+            link: "/pages/element2",
+          },
+          {
+            title: "排程審核",
+            link: "/pages/element2",
+          },
+        ]
+      },
+      {
+        title: "排程管理",
+        icon: "file-text-outline",
+        link: "/pages/dashboard"
+      },
+      {
+        title: "帳號管理",
+        icon: "lock-outline",
+        children: [
+          {
+            title: "標籤審核",
+            link: "/pages/element",
+          },
+        ]
+      },
     ];
   }
 }

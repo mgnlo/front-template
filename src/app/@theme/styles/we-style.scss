@@ -385,6 +385,11 @@ body { overflow: hidden; }
             }
         }
     }
+    nb-button-group {
+        [nbButton] {
+            margin: unset;
+        }
+    }
     nb-select {
         .select-button { min-width: unset; }
         &:disabled { pointer-events: none; }

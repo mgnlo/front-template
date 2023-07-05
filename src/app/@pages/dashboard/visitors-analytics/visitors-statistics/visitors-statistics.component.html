@@ -1,0 +1,19 @@
+<div class="visitors-statistics">
+  <h4 class="h1">{{this.total}}</h4>
+  <div class="visitors-title">案件核身狀態/總筆數</div>
+  <div class="statistics-chart">
+    <div echarts *ngIf="total !== 0"
+         [options]="option"
+         class="echart"
+         (chartInit)="onChartInit($event)">
+    </div>
+  </div>
+  <div class="statistics-footer">
+    <div class="chart-values h5">
+      <span class="chart-value">{{approvePercent}}%</span>
+      <span class="chart-value">{{rejectPercent}}%</span>
+      <span class="chart-value">{{auditPercent}}%</span>
+    </div>
+    <ngx-legend-chart class="visitors-statistics-legend" [legendItems]="chartLegend"></ngx-legend-chart>
+  </div>
+</div>

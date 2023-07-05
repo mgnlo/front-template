@@ -124,3 +124,56 @@ $title-color: #0B3255;
 $label-color: #393C3E;
 $option-color: #82878B;
 $scrollbar: #BBC1C5;
+
+//table設定
+.paginator {
+    position: relative;
+    bottom: 40px;
+    width: 300px;
+}
+ng2-smart-table {
+    nav.ng2-smart-pagination-nav {
+        justify-content: flex-end !important;
+    }
+    nav.ng2-smart-pagination-nav .pagination li {
+        height: 2rem;
+        a {
+            color: #009FEB !important;
+            padding: 0;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        span {
+            padding: 0;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        &.active>span { background-color: #009FEB !important; }
+    }
+    table tr td {
+        padding: 0rem 1.25rem !important;
+    }
+}
+nb-layout .layout .layout-container .content .columns nb-layout-column {
+    padding: 2.25rem !important;
+    @media (max-width: 767.98px) {
+        padding: 1rem 1rem 1rem !important;
+    }
+}
+nb-toggle.status-basic {
+    .toggle.checked {
+        background-color: #009FEB !important;
+        border-color: #009FEB !important;
+    }
+    .native-input:enabled + .toggle:hover, .native-input:enabled:focus + .toggle {
+        background-color: rgba(#009FEB, 0.16) !important;
+        border-color: #009FEB !important;
+    }
+    .toggle-switcher nb-icon { color: #009FEB !important; }
+}

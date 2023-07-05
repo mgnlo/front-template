@@ -21,7 +21,7 @@ export class HeaderComponent implements OnInit {
   private destroy$: Subject<void> = new Subject<void>();
   public userPictureOnly: boolean = false;
   public header: any = {
-    title: 'Console Frontend',
+    title: 'Webcomm',
   };
   public user: any = {
     account: 'administrator',
