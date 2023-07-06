@@ -481,7 +481,8 @@ local.properties
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -692,3 +693,4 @@ dist
 *.sass.map
 *.scss.map
 
+package-lock.json
