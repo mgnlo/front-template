@@ -1,5 +1,5 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
-import { LoadingService } from './services/loading.service';
+import { LoadingService } from '../@api/services/loading.service';
 
 @NgModule({
   declarations: [],

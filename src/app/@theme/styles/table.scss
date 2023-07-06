@@ -1,0 +1,68 @@
+.paginator {
+  display: flex;
+  justify-content: flex-start;
+  width: 300px;
+  margin: 1rem 0;
+  &:not(.only) {
+      display: unset;
+      justify-content: unset;
+      position: absolute;
+      bottom: 40px;
+      margin: unset;
+  }
+}
+
+ng2-smart-table {
+  nb-checkbox .label {
+    padding: 0.375rem 0 !important;
+  }
+
+  table tr {
+    &.ng2-smart-titles th{
+      font-weight: bold;
+      padding-right: 1.25rem !important;
+      &:not(.left){
+        text-align: center;
+      }
+      &:has(.left){
+        text-align: left;
+      }
+    }
+    td {
+      padding: 0rem 1.25rem !important;
+      &:not(.left){
+        text-align: center;
+      }
+      &:has(.left){
+        text-align: left;
+      }
+      &:has(.date){
+        white-space: nowrap;
+      }
+    }
+  }
+  nav.ng2-smart-pagination-nav {
+      justify-content: flex-end !important;
+  }
+  nav.ng2-smart-pagination-nav .pagination li {
+      height: 2rem;
+      a {
+          color: #009FEB !important;
+          padding: 0;
+          width: 2rem;
+          height: 2rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
+      span {
+          padding: 0;
+          width: 2rem;
+          height: 2rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
+      &.active>span { background-color: #009FEB !important; }
+  }
+}

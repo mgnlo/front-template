@@ -14,7 +14,6 @@ import {
   NbLayoutModule,
   NbMenuModule,
   NbSidebarModule,
-  NbThemeModule,
   NbToastrModule,
 } from '@nebular/theme';
 import { HttpClientModule } from '@angular/common/http';
@@ -24,7 +23,6 @@ import { ApiModule } from '@api/api.module';
 const NG_MODULES = [BrowserModule, BrowserAnimationsModule, HttpClientModule];
 
 const NB_MODULES = [
-  NbThemeModule.forRoot({ name: 'corporate' }),
   NbMenuModule.forRoot(),
   NbToastrModule.forRoot({
     position: NbGlobalPhysicalPosition.BOTTOM_RIGHT,

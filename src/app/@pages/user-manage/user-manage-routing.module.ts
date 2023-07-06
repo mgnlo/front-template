@@ -1,6 +1,8 @@
 import { NgModule } from "@angular/core"
 import { RouterModule, Routes } from "@angular/router"
-import { ActivityButtonComponent, ActivityListComponent, CeckboxComponent} from "./activity-list/activity-list.component"
+import { ActivityAddComponent } from "./activity-add/activity-add.component"
+import { ActivityConfirmComponent } from "./activity-confirm/activity-confirm.component"
+import { ActivityButtonComponent, ActivityListComponent, CeckboxComponent } from "./activity-list/activity-list.component"
 import { ButtonComponent, TagComponent, UserListComponent } from "./user-list/user-list.component"
 import { UserManageComponent } from "./user-manage.component"
 
@@ -9,17 +11,14 @@ const routes: Routes = [
         path: "", component: UserManageComponent, 
         children: [
             { path: "user-list", component: UserListComponent },
-            { path: "activity-list", component: ActivityListComponent },
-            // { path: "", redirectTo: "prmote-list", pathMatch: "full" },
             // {
             //   path: 'edit/:id',
             //   component: SystemManageEditComponent, //編輯
             // },
-            {
-              path: '',
-              redirectTo: 'list',
-              pathMatch: 'full',
-            },
+            { path: '', redirectTo: 'user-list', pathMatch: 'full'},
+            { path: 'activity-list', component: ActivityListComponent},
+            { path: 'activity-add', component: ActivityAddComponent},
+            { path: 'activity-confirm', component: ActivityConfirmComponent},
         ]
     }
 ]
@@ -34,8 +33,10 @@ export const routedComponents = [
   UserManageComponent,
   UserListComponent,
   ActivityListComponent,
-  TagComponent,
-  ButtonComponent,
+  ActivityAddComponent,
+  ActivityConfirmComponent,
+  ActivityButtonComponent,
   CeckboxComponent,
-  ActivityButtonComponent
+  ButtonComponent,
+  TagComponent,
 ];

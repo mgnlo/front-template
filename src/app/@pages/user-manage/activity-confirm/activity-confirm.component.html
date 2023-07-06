@@ -1,0 +1,214 @@
+<div class="pageTitle">
+    <h1>客群活動名單</h1>
+    <button nbButton status="info" size="tiny" class="iconBtn" (click)="edit()">
+        <nb-icon icon="edit-outline"></nb-icon>
+    </button>
+</div>
+<div class="pageContent">
+    <nb-card>
+        <nb-card-body>
+            <div class="row">
+                <div class="fieldGroup essential col-12 col-lg-6">
+                    <label>活動名稱</label>
+                    <div>
+                        <input nbInput fullWidth status="basic" type="text" placeholder="請輸入"/>
+                    </div>
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+                <div class="fieldGroup essential col-12 col-lg-6">
+                    <label>狀態</label>
+                    <div>
+                        <nb-radio-group>
+                            <nb-radio value="true">啟用</nb-radio>
+                            <nb-radio value="false">停用</nb-radio>
+                        </nb-radio-group>
+                    </div>
+                    <!-- 欄位錯誤訊息 -->
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+                <div class="fieldGroup col-12 col-lg-6">
+                    <label>名單上限</label>
+                    <div>
+                        <input nbInput fullWidth status="basic" type="text" placeholder="請輸入"/>
+                    </div>
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+                <div class="fieldGroup col-12 col-lg-6">
+                    <label>名單差異過濾</label>
+                    <div>
+                        <nb-checkbox status="basic">啟用</nb-checkbox>
+                    </div>
+                    <!-- 欄位錯誤訊息 -->
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+                <div class="fieldGroup essential col-12 col-lg-6">
+                    <label>起始時間</label>
+                    <div>
+                        <input nbInput fullWidth placeholder="請選擇日期" [nbDatepicker]="startDatePicker">
+                        <nb-datepicker #startDatePicker format="yyyy-MM-dd"></nb-datepicker>
+                    </div>
+                    <!-- 欄位錯誤訊息 -->
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+                <div class="fieldGroup essential col-12 col-lg-6">
+                    <label>結束時間</label>
+                    <div>
+                        <input nbInput fullWidth placeholder="請選擇日期" [nbDatepicker]="endDatePicker">
+                        <nb-datepicker #endDatePicker format="yyyy-MM-dd" max=""></nb-datepicker>
+                    </div>
+                    <!-- 欄位錯誤訊息 -->
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+                <div class="fieldGroup essential col-12 col-lg-6">
+                    <label>排程設定</label>
+                    <div>
+                        <nb-select fullWidth placeholder="請選擇">
+                            <nb-option *ngFor="let schedule of scheduleList" [value]="schedule.key">{{ schedule.val }}</nb-option>
+                        </nb-select>
+                    </div>
+                    <!-- 欄位錯誤訊息 -->
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+                <div class="fieldGroup col-12 col-lg-6">
+                    <label>描述說明</label>
+                    <div>
+                        <input nbInput fullWidth status="basic" type="text" placeholder="請輸入"/>
+                    </div>
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+            </div>
+            <div class="subTitle">
+                <p>活動名單條件1</p>
+                <button nbButton status="basic" size="tiny" class="iconBtn btnSwitch"
+                    [ngClass]="isOpen ? 'btnClick' : ''" (click)="isOpen = !isOpen">
+                    <nb-icon icon="arrow-ios-forward-outline"></nb-icon>
+                </button>
+            </div>
+            <div [ngClass]="isOpen ? '' : 'displayNone'">
+                <div class="grayCard">
+                    <div class="row">
+                        <div class="textGroup col-12 col-lg-12">
+                            <p>偵測條件:</p>
+                            <span>近一個月_基金_定期定額手續費-高</span>
+                        </div>
+                        <div class="textGroup col-12 col-lg-12">
+                            <p>偵測條件:</p>
+                            <span>近三個月_基金_手續費-低</span>
+                        </div>
+                        <div class="textGroup col-12 col-lg-12">
+                            <p>偵測條件:</p>
+                            <span>近一個月_換匯_交易金額-高</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nb-card-body>
+    </nb-card>
+    <nb-card>
+        <nb-card-header>
+            <h2>異動歷程</h2>
+        </nb-card-header>
+        <nb-card-body>
+            <div class="historyList">
+                <!-- 已完成或正在進行的增加class="active"，有子項目加cl3ss="moreBtn"(視需求，可加可不加) -->
+                <div class="historyItem active">
+                    <div class="mainItem">
+                        <h4>已完成主要節點內容 1</h4>
+                        <button nbButton status="control" size="tiny" class="iconBtn">
+                            <nb-icon icon="chevron-down-outline"></nb-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 已完成或正在進行的增加class="active"，有子項目加cl3ss="moreBtn"(視需求，可加可不加) -->
+                <div class="historyItem active moreBtn" [ngClass]="isOpen2 ? 'closeSubItem' : ''">
+                    <div class="mainItem">
+                        <h4 (click)="isOpen2 = !isOpen2">已完成主要節點內容 2</h4>
+                        <button nbButton status="control" size="tiny" class="iconBtn" (click)="isOpen2 = !isOpen2">
+                            <nb-icon icon="chevron-down-outline"></nb-icon>
+                        </button>
+                    </div>
+                    <div class="subItem" [ngClass]="isOpen2 ? '' : 'displayNone'">
+                        <div>
+                            <p>YYYY/MM/BB</p>
+                            <p>hh:mm:ss</p>
+                        </div>
+                        <div>
+                            <p>子內容標題 1</p>
+                            <p>子內容敘述文字</p>
+                        </div>
+                    </div>
+                    <div class="subItem"  [ngClass]="isOpen2 ? '' : 'displayNone'">
+                        <div class="time">
+                            <p>YYYY/MM/BB</p>
+                            <p>hh:mm:ss</p>
+                        </div>
+                        <div class="content">
+                            <p>子內容標題 2</p>
+                            <p>子內容敘述文字</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 已完成或正在進行的增加class="active"，有子項目加cl3ss="moreBtn"(視需求，可加可不加) -->
+                <div class="historyItem active">
+                    <div class="mainItem">
+                        <h4>主要節點內容 3</h4>
+                        <button nbButton status="control" size="tiny" class="iconBtn">
+                            <nb-icon icon="chevron-down-outline"></nb-icon>
+                        </button>
+                    </div>
+                    <div class="subItem">
+                        <div class="time">
+                            <p>YYYY/MM/BB</p>
+                            <p>hh:mm:ss</p>
+                        </div>
+                        <div class="content">
+                            <p>子內容標題 2</p>
+                            <p>子內容敘述文字</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 已完成或正在進行的增加class="active"，有子項目加cl3ss="moreBtn"(視需求，可加可不加) -->
+                <div class="historyItem">
+                    <div class="mainItem">
+                        <h4>主要節點內容 4</h4>
+                        <button nbButton status="control" size="tiny" class="iconBtn">
+                            <nb-icon icon="chevron-down-outline"></nb-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nb-card-body>
+    </nb-card>
+    <div class="row">
+        <div class="btnGroup">
+            <button nbButton status="basic" size="medium" (click)="cancel()">取消</button>
+        </div>
+    </div>
+</div>

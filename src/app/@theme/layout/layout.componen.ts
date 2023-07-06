@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LoadingService } from '@common/services/loading.service';
+import { LoadingService } from '@api/services/loading.service';
 
 @Component({
   selector: 'ngx-column-layout',

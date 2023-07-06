@@ -1,0 +1,142 @@
+<div class="pageTitle">
+    <h1>客群活動名單</h1>
+</div>
+<div class="pageContent">
+    <nb-card>
+        <nb-card-header>
+            <h2>新增活動</h2>
+        </nb-card-header>
+        <nb-card-body>
+            <div class="row">
+                <div class="fieldGroup essential col-12 col-lg-6">
+                    <label>活動名稱</label>
+                    <div>
+                        <input nbInput fullWidth status="basic" type="text" placeholder="請輸入"/>
+                    </div>
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+                <div class="fieldGroup essential col-12 col-lg-6">
+                    <label>狀態</label>
+                    <div>
+                        <nb-radio-group>
+                            <nb-radio value="true">啟用</nb-radio>
+                            <nb-radio value="false">停用</nb-radio>
+                        </nb-radio-group>
+                    </div>
+                    <!-- 欄位錯誤訊息 -->
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+                <div class="fieldGroup col-12 col-lg-6">
+                    <label>名單上限</label>
+                    <div>
+                        <input nbInput fullWidth status="basic" type="text" placeholder="請輸入"/>
+                    </div>
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+                <div class="fieldGroup col-12 col-lg-6">
+                    <label>名單差異過濾</label>
+                    <div>
+                        <nb-checkbox status="basic">啟用</nb-checkbox>
+                    </div>
+                    <!-- 欄位錯誤訊息 -->
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+                <div class="fieldGroup essential col-12 col-lg-6">
+                    <label>起始時間</label>
+                    <div>
+                        <input nbInput fullWidth placeholder="請選擇日期" [nbDatepicker]="startDatePicker">
+                        <nb-datepicker #startDatePicker format="yyyy-MM-dd"></nb-datepicker>
+                    </div>
+                    <!-- 欄位錯誤訊息 -->
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+                <div class="fieldGroup essential col-12 col-lg-6">
+                    <label>結束時間</label>
+                    <div>
+                        <input nbInput fullWidth placeholder="請選擇日期" [nbDatepicker]="endDatePicker">
+                        <nb-datepicker #endDatePicker format="yyyy-MM-dd" max=""></nb-datepicker>
+                    </div>
+                    <!-- 欄位錯誤訊息 -->
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+                <div class="fieldGroup essential col-12 col-lg-6">
+                    <label>排程設定</label>
+                    <div>
+                        <nb-select fullWidth placeholder="請選擇">
+                            <nb-option *ngFor="let schedule of scheduleList" [value]="schedule.key">{{ schedule.val }}</nb-option>
+                        </nb-select>
+                    </div>
+                    <!-- 欄位錯誤訊息 -->
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+                <div class="fieldGroup col-12 col-lg-6">
+                    <label>描述說明</label>
+                    <div>
+                        <input nbInput fullWidth status="basic" type="text" placeholder="請輸入"/>
+                    </div>
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+            </div>
+            <div class="subTitle">
+                <p>活動名單條件1</p>
+                <button nbButton status="success" size="tiny" class="iconBtn">
+                    <nb-icon icon="plus-outline"></nb-icon>
+                </button>
+            </div>
+            <div class="grayCard">
+                <div class="row">
+                    <div class="fieldGroup col-11 col-lg-11">
+                        <div>
+                            <nb-select fullWidth placeholder="請選擇">
+                                <nb-option value="item1">item1</nb-option>
+                                <nb-option value="item2">item2</nb-option>
+                            </nb-select>
+                        </div>
+                        <!-- 欄位錯誤訊息 -->
+                        <div class="note errorText">
+                            <nb-icon icon="alert-triangle"></nb-icon>
+                            <p>欄位錯誤訊息</p>
+                        </div>
+                    </div>
+                    <div class="fieldBtn justifyContentEnd col-1 col-lg-1">
+                        <span class="and colorGreen">and</span>
+                        <button nbButton status="success" size="tiny" class="iconBtn">
+                            <nb-icon icon="plus-outline"></nb-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nb-card-body>
+    </nb-card>
+    <div class="row">
+        <div class="btnGroup">
+            <button nbButton status="basic" size="medium" (click)="cancel()">取消</button>
+            <button nbButton status="success" size="medium" (click)="preview()">預覽名單</button>
+            <button nbButton status="primary" size="medium" (click)="submit()">送出</button>
+        </div>
+    </div>
+</div>

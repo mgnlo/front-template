@@ -36,7 +36,7 @@ const THEME_MODULE = NbThemeModule.forRoot(
 );
 
 const NB_MODULES = [
-  THEME_MODULE,
+  // THEME_MODULE,
   NbSpinnerModule,
   NbLayoutModule,
   NbMenuModule,

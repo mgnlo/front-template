@@ -18,4 +18,5 @@
     @include nb-overrides();
 }
 
-@import 'we-style';
+@import './we-style';
+@import './table';

@@ -1,6 +1,7 @@
-import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Activity } from '@api/models/activity-list.model';
+import { Status } from '@common/enums/activity-list-enum';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
@@ -15,10 +16,11 @@ import { UserManageService } from '../user-manage.service';
 export class ActivityListComponent extends BaseComponent implements OnInit {
 
     constructor(
-        private datePipe: DatePipe,
-        private userManageService: UserManageService) {
+        private userManageService: UserManageService,
+        private router: Router) {
         super();
     }
+    statusList: Array<{key: string; val: string}> = Object.entries(Status).map(([k, v]) => ({ key: k, val: v }))
     selected: string = '';
     mockData: Array<Activity> = ActivityListMock;
     activityListSource = new LocalDataSource();
@@ -59,15 +61,21 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
         columns: {
           activity_name: {
             title: '活動名稱',
-            type: 'string',
-            class: 'col-2',
-            sort: false
+            type: 'html',
+            class: 'col-2 left',
+            sort: false,
+            valuePrepareFunction: (cell:string) => {
+              return `<p class="left">${cell}</p>`;
+            },
           },
           activity_description: {
             title: '活動說明',
-            type: 'string',
-            class: 'col-3',
+            type: 'html',
+            class: 'col-3 left',
             sort: false,
+            valuePrepareFunction: (cell:string) => {
+              return `<p class="left">${cell}</p>`;
+            },
           },
           filter_options: {
             title: '差異過濾',
@@ -85,27 +93,18 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
           status: {
             title: '狀態',
             type: 'string',
-            class: 'col-1',
+            class: 'col-1 alignCenter',
             valuePrepareFunction: (cell:string) => {
-              switch (cell) {
-                case 'active':
-                  return '啟用'
-                case 'stop':
-                  return '停用'
-                case 'processing':
-                  return '審查中'
-                default:
-                  return '';
-              }
+              return this.statusList.filter(status => status.key === cell)[0].val;
             },
             sort: false,
           },
           during: {
             title: '起訖時間',
-            type: 'string',
+            type: 'html',
             class: 'col-3',
             valuePrepareFunction: (cell:any, row: Activity) => {
-              return `${row.start_date}~${row.end_date}`;
+              return `<span class="date">${row.start_date}~${row.end_date}</span>`;
             },
             sort: false,
           },
@@ -123,6 +122,10 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
           edit: false,
           delete: false,
         },
+        // rowClassFunction: (row: Row) => {
+        //   console.info(row.getData().status)
+        //   return row.getData().status === 'ing' ? 'aa' : '';
+        // },
       };
 
       filter(field: string, search: any): void {
@@ -137,6 +140,10 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
         
       }
 
+      add(){
+        this.router.navigate(['pages', 'user-manage', 'activity-add']);
+      }
+
       reset(){
         this.params.filter = { activity_name: '', status: ''};
         this.activityListSource.reset();
@@ -144,13 +151,11 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
   
       submit() {
         for (const [k, v] of Object.entries(this.params.filter)) {
-          if(v !== ''){
-            this.activityListSource.addFilter({
-              field: k,
-              filter: undefined,
-              search: v,
-            });
-          }
+          this.activityListSource.addFilter({
+            field: k,
+            filter: undefined,
+            search: v,
+          });
         }
       }
 }
@@ -172,7 +177,7 @@ export class ActivityButtonComponent implements OnInit {
 
 @Component({
     selector: 'ngx-ceckbox',
-    template: '<nb-checkbox [checked]="bool" status="basic"></nb-checkbox>',
+    template: '<nb-checkbox [checked]="bool" status="basic" ></nb-checkbox>',
 })
 export class CeckboxComponent implements OnInit {
 

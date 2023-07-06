@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { UserList } from '@api/models/user-list.model';
 import { UserListMock } from '@common/mock-data/user-list-mock';
 import { BaseComponent } from '@pages/base.component';
+import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({
@@ -16,6 +17,7 @@ export class UserListComponent extends BaseComponent implements OnInit {
     }
     mockData: Array<UserList> = UserListMock;
     userListSource = new LocalDataSource();
+    updateTime: string = moment(new Date()).format('YYYY/MM/DD');
 
     params = {
       filter: { // 篩選條件
@@ -67,7 +69,7 @@ export class UserListComponent extends BaseComponent implements OnInit {
           sort: false,
         },
         userTag: {
-          title: '用戶標籤',
+          title: `用戶標籤 (更新時間: ${this.updateTime})`,
           type: 'custom',
           class: 'col-8',
           renderComponent: TagComponent,
@@ -97,13 +99,14 @@ export class UserListComponent extends BaseComponent implements OnInit {
     submit() {
       for (const [k, v] of Object.entries(this.params.filter)) {
         this.userListSource.addFilter({field: k, filter: undefined, search: v});
+        this.updateTime = moment(new Date()).format('YYYY/MM/DD');
       }
     }
 }
 
 @Component({
     selector: 'ngx-custom-button',
-    template: '<button nbButton ghost status="info" size="small"><nb-icon icon="search"></nb-icon></button>',
+    template: '<button nbButton ghost status="info" size="medium"><nb-icon icon="search"></nb-icon></button>',
 })
 export class ButtonComponent implements OnInit {
 
@@ -117,7 +120,7 @@ export class ButtonComponent implements OnInit {
 
 @Component({
   selector: 'tmp-tag',
-  template: '<span *ngFor="let tag of value"><button nbButton status="info" size="small">{{tag}}</button></span>'
+  template: '<button class="left" *ngFor="let tag of value" nbButton status="info" size="small">{{tag}}</button>'
 })
 export class TagComponent implements OnInit {
 
