@@ -33,6 +33,13 @@ const routes: Routes = [
             (m) => m.UserManageModule
           ),
       },
+      {
+        path: 'tag-manage',
+        loadChildren: () =>
+          import('@pages/tag-manage/tag-manage.module').then(
+            (m) => m.TagManageModule
+          ),
+      },
     ],
   },
 ];

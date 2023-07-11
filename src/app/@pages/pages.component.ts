@@ -59,7 +59,7 @@ export class PagesComponent implements OnInit {
       {
         title: "標籤管理",
         icon: "pricetags-outline",
-        link: "/pages/dashboard"
+        link: "/pages/tag-manage/tag-list"
       },
       {
         title: "審核管理",
