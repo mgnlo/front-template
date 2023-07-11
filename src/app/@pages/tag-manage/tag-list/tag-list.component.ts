@@ -35,6 +35,22 @@ export class TagListComponent extends BaseComponent implements OnInit {
     sort: [],
   };
 
+
+  ngOnInit(): void {
+    this.tagListSource.load(this.mockData);
+      this.paginator.totalCount = this.mockData.length;
+
+      this.tagListSource.onChanged().subscribe(()=>{
+        this.paginator.totalCount = this.tagListSource.count();
+        let page =this.tagListSource.getPaging().page;
+        this.paginator.nowPage = page;
+        let perPage = this.tagListSource.getPaging().perPage;
+        this.paginator.totalPage = Math.ceil(this.paginator.totalCount/perPage);
+        this.paginator.rowStart = (page - 1) * perPage + 1;
+        this.paginator.rowEnd = this.paginator.totalPage !== page ? page * perPage : (page-1) * perPage + this.paginator.totalCount % perPage;
+      });
+  }
+
   gridDefine = {
     pager: {
       display: true,
@@ -81,9 +97,9 @@ export class TagListComponent extends BaseComponent implements OnInit {
         title: '異動時間',
         type: 'html',
         class: 'col-2',
-        valuePrepareFunction: (cell: any, row: Activity) => {
-          return `<span class="date">${row.start_date}~${row.end_date}</span>`;
-        },
+        // valuePrepareFunction: (cell: any, row: Activity) => {
+        //   return `<span class="date">${row.start_date}~${row.end_date}</span>`;
+        // },
         sort: false,
       },
       status: {
@@ -111,9 +127,6 @@ export class TagListComponent extends BaseComponent implements OnInit {
     },
   };
 
-  ngOnInit(): void {
-  }
-
   reset() {
     this.params.filter = { tagId: '', status: '' };
   }
@@ -121,6 +134,11 @@ export class TagListComponent extends BaseComponent implements OnInit {
   submit() {
 
   }
+
+  add(){
+    this.router.navigate(['pages', 'tag-manage', 'tag-manage']);
+  }
+
 }
 
 @Component({
