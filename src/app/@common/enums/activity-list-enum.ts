@@ -11,3 +11,8 @@ export enum Schedule {
   quarterly = '每季',
   annually = '每年',
 }
+
+export enum Filter{
+  true = '啟用',
+  false = '停用'
+}

@@ -1,6 +1,8 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DialogService } from '@api/services/dialog.service';
+import { CommonModule } from '@common/common.module';
+import { ComponentModule } from '@component/component.module';
 import { NbDateFnsDateModule } from '@nebular/date-fns';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import {
@@ -13,30 +15,36 @@ import { ThemeModule } from '../../@theme/theme.module';
 import { routedComponents, UserManageRoutingModule } from './user-manage-routing.module';
 import { UserManageService } from './user-manage.service';
 
+export const NB_MODULES = [
+  NbSpinnerModule,
+  NbCardModule,
+  NbTreeGridModule,
+  NbIconModule,
+  NbEvaIconsModule,
+  NbCheckboxModule,
+  NbRadioModule,
+  NbInputModule,
+  NbButtonModule,
+  NbSelectModule,
+  NbDatepickerModule,
+  NbDateFnsDateModule.forChild({ format: 'yyyy/MM/dd' }),
+  NbAccordionModule,
+];
+
 @NgModule({
   imports: [
     CommonModule,
-    NbSpinnerModule,
-    NbCardModule,
-    NbTreeGridModule,
-    NbIconModule,
-    NbEvaIconsModule,
-    NbCheckboxModule,
-    NbRadioModule,
-    NbInputModule,
-    NbButtonModule,
-    NbSelectModule,
-    NbDatepickerModule,
-    NbDateFnsDateModule.forChild({ format: 'yyyy/MM/dd' }),
     FormsModule,
     ReactiveFormsModule,
     ThemeModule,
     UserManageRoutingModule,
     Ng2SmartTableModule,
-    NbAccordionModule,
+    ComponentModule,
+    ...NB_MODULES
   ],
   providers: [
     UserManageService,
+    DialogService,
   ],
   declarations: [
     ...routedComponents,

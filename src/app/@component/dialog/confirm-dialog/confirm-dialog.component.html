@@ -1,0 +1,13 @@
+<nb-card>
+  <nb-card-header>{{ option.title }}
+    <a *ngIf="option.isCloseBtn" nbButton hero size="small" ghost (click)="close()">X</a>
+  </nb-card-header>
+  <nb-card-body *ngIf="option.content">{{option.content}}</nb-card-body>
+  <nb-card-footer>
+    <div class="btnGroup">
+      <button nbButton status="basic" size="medium" (click)="option.leftCallback()">{{option.leftButtonName}}</button>
+      <button nbButton status="success" size="medium" (click)="option.midCallback()">{{option.midButtonName}}</button>
+      <button nbButton status="primary" size="medium" (click)="option.rightCallback()">{{option.rightButtonName}}</button>
+    </div>
+  </nb-card-footer>
+</nb-card>

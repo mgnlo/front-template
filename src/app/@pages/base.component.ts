@@ -1,5 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
+import { Paginator } from '@component/table/paginator/paginator.component';
 // import { OAuth2BaseComponent, OAuth2Service } from '@module/oauth2';
 import { Subject } from 'rxjs';
 
@@ -42,13 +43,11 @@ export class BaseComponent implements OnDestroy {
         return undefined;
     }
   }
-}
-
-export class Paginator {
-  totalCount: number
-  totalPage: number
-  perPage: number
-  nowPage: number
-  rowStart?: number
-  rowEnd?: number
+  
+  groupBy<T>(datas: T[], key: string) {
+    return datas.reduce(function(group, data) {
+      (group[data[key]] = group[data[key]] || []).push(data);
+      return group;
+    }, {});
+  }
 }

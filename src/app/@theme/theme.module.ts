@@ -60,7 +60,7 @@ const COMPONENTS = [LayoutComponet, HeaderComponent];
   declarations: [...COMPONENTS],
   imports: [CommonModule, ...NGX_MODULES, ...NB_MODULES],
   providers: [LayoutService],
-  exports: [...COMPONENTS],
+  exports: [CommonModule, ...COMPONENTS],
 })
 export class ThemeModule {
   public static forRoot(): ModuleWithProviders<ThemeModule> {

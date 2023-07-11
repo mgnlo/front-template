@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core"
 import { RouterModule, Routes } from "@angular/router"
 import { ActivityAddComponent } from "./activity-add/activity-add.component"
-import { ActivityConfirmComponent } from "./activity-confirm/activity-confirm.component"
+import { ActivityDetailComponent } from "./activity-detail/activity-detail.component"
 import { ActivityButtonComponent, ActivityListComponent, CeckboxComponent } from "./activity-list/activity-list.component"
 import { ButtonComponent, TagComponent, UserListComponent } from "./user-list/user-list.component"
 import { UserManageComponent } from "./user-manage.component"
@@ -18,7 +18,7 @@ const routes: Routes = [
             { path: '', redirectTo: 'user-list', pathMatch: 'full'},
             { path: 'activity-list', component: ActivityListComponent},
             { path: 'activity-add', component: ActivityAddComponent},
-            { path: 'activity-confirm', component: ActivityConfirmComponent},
+            { path: 'activity-detail', component: ActivityDetailComponent},
         ]
     }
 ]
@@ -34,7 +34,7 @@ export const routedComponents = [
   UserListComponent,
   ActivityListComponent,
   ActivityAddComponent,
-  ActivityConfirmComponent,
+  ActivityDetailComponent,
   ActivityButtonComponent,
   CeckboxComponent,
   ButtonComponent,

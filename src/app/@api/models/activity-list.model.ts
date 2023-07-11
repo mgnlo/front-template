@@ -1,33 +1,134 @@
-export class Activity {
-  activity_id: string
-  activity_name: string
-  activity_description: string
-  filter_options: string
-  list_limit: number
-  status: string
-  start_date: string
-  end_date: string
-  modification_time: string
-  schedule_settings: string
-  batch_update_time: string
-  activity_list_condition: Array<activityListCondition>
-  change_history: Array<changeHistory>
+export interface ActivitySetting {
+  activityId: string;
+  activityName: string;
+  activityDescription: string;
+  filterOptions: string;
+  listLimit: number;
+  status: string;
+  startDate: string;
+  endDate: string;
+  modificationTime: string;
+  scheduleSettings: string;
+  batchUpdateTime: string;
+  activityListCondition: Array<ActivityListCondition>;
+  activityReviewHistory: Array<ActivityReviewHistory>;
+}
+export class ActivityListCondition {
+  activityId: string;
+  conditionId: number;
+  tagGroup: number;
+  tagName: string;
+  tagKey: string;
+}
+export class ActivityReviewHistory {
+  historyId: string;
+  referenceId: string;
+  groupId: number;
+  time: string;
+  title: string;
+  detail: string;
+  type: string;
+  // reviewStatus?: string;
+  // reviewer?: string;
+  // reviewComment?: string;
+  // activityName?: string;
+  // activityDescription?: string;
+  // filterOptions?: string;
+  // listLimit?: number;
+  // status?: string;
+  // startDate?: string;
+  // endDate?: string;
+  // modificationTime?: string;
+  // scheduleSettings?: string;
+  // batchUpdateTime?: string;
+}
+export class TagSetting {
+  tagId: string;
+  tagName: string;
+  tagDescription: string;
+  tagType: string;
+  department: string;
+  owner: string;
+  modificationTime: string;
+  status: string;
+  startDate: string;
+  endDate: string;
+  conditionSettingMethod: string;
+  conditionSettingQuery: string;
+  tagDimension: string;
+  tagSubdimension: string;
+  scheduleSettings: string;
+  uploadType: string;
+  filePath: string;
+}
+export class TagConditionSetting {
+  tagId: string;
+  conditionKey: string;
+  groupId: number;
+  detectionCondition: string;
+  conditionValue: string;
+  thresholdValue: string;
 }
 
-export class activityListCondition {
-  activity_id: string
-  condition_id: number
-  tag_group: number
-  tag_name: string
-  tag_key: string
+export class TagReviewHistory {
+  historyId: string;
+  referenceId: string;
+  groupId: number;
+  time: string;
+  title: string;
+  detail: string;
+  type: string;
+  reviewStatus: string;
+  reviewer: string;
+  reviewComment: string;
+  tagName: string;
+  tagDescription: string;
+  tagType: string;
+  department: string;
+  owner: string;
+  modificationTime: string;
+  status: string;
+  startDate: string;
+  endDate: string;
+  conditionSettingMethod: string;
+  conditionSettingQuery: string;
+  tagDimension: string;
+  tagSubdimension: string;
+  scheduleSettings: string;
+  uploadType: string;
+  filePath: string;
 }
 
-export class changeHistory {
-  history_id: string
-  activity_id: string
-  group_id: number
-  time: string
-  title: string
-  detail: string
-  type: string
+//for HTML diaplay
+export interface ActivityDetail {
+  activityId: string;
+  activityName: string;
+  activityDescription: string;
+  filterOptions: string;
+  listLimit: number;
+  status: string;
+  startDate: string;
+  endDate: string;
+  modificationTime: string;
+  scheduleSettings: string;
+  batchUpdateTime: string;
+  historyGroupView: {[x: number]: HistoryGroupView};
+  tagGroupView: {[x: number]: TagGroupView[]};
+}
+
+//for HTML diaplay
+export interface TagGroupView {
+  conditionId: number;
+  tagKey: string;
+  tagName: string;
+}
+
+//for HTML diaplay
+export interface HistoryGroupView {
+  type: string;
+  flows: {
+    time: string;
+    title: string;
+    detail: string;
+  }[]
 }
