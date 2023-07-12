@@ -1,9 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { Activity } from '@api/models/activity-list.model';
+import { NavigationExtras, Router } from '@angular/router';
+import { ActivitySetting } from '@api/models/activity-list.model';
 import { Status } from '@common/enums/activity-list-enum';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { BaseComponent } from '@pages/base.component';
+import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
 import { UserManageService } from '../user-manage.service';
 
@@ -22,24 +23,28 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
     }
     statusList: Array<{key: string; val: string}> = Object.entries(Status).map(([k, v]) => ({ key: k, val: v }))
     selected: string = '';
-    mockData: Array<Activity> = ActivityListMock;
+    mockData: Array<ActivitySetting> = ActivityListMock;
     activityListSource = new LocalDataSource();
     // 頁面參數
     params = {
       filter: { // 篩選條件
-        activity_name: '',
+        activityName: '',
         status: '',
-      },
-      search: { // 搜尋條件(打API)
-        startDate: new Date(),
-        endDate: new Date(),
+        startDate: null,
+        endDate: null,
       },
       page: 1,
       sort: [],
     };
 
     public ngOnInit(): void {
+      this.mockData = this.mockData.map(mock => {
+        return {...mock, during:`${mock.startDate}~${mock.endDate}`} //起訖日查詢篩選要用到
+      })
       this.activityListSource.load(this.mockData);
+    }
+
+    ngDoCheck() {
       this.activityListSource.onChanged().subscribe(()=>{
         this.paginator.totalCount = this.activityListSource.count();
         let page =this.activityListSource.getPaging().page;
@@ -51,15 +56,13 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
       });
     }
 
-    ngDoCheck() {}
-
     gridDefine = {
         pager: {
           display: true,
-          perPage: 10,
+          perPage: 10,          
         },
         columns: {
-          activity_name: {
+          activityName: {
             title: '活動名稱',
             type: 'html',
             class: 'col-2 left',
@@ -68,7 +71,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
               return `<p class="left">${cell}</p>`;
             },
           },
-          activity_description: {
+          activityDescription: {
             title: '活動說明',
             type: 'html',
             class: 'col-3 left',
@@ -77,14 +80,14 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
               return `<p class="left">${cell}</p>`;
             },
           },
-          filter_options: {
+          filterOptions: {
             title: '差異過濾',
             type: 'custom',
             class: 'col-1',
             sort: false,
             renderComponent: CeckboxComponent,
           },
-          list_limit: {
+          listLimit: {
             title: '名單上限',
             type: 'string',
             class: 'col-1',
@@ -103,20 +106,48 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
             title: '起訖時間',
             type: 'html',
             class: 'col-3',
-            valuePrepareFunction: (cell:any, row: Activity) => {
-              return `<span class="date">${row.start_date}~${row.end_date}</span>`;
+            valuePrepareFunction: (cell:any) => {
+              return `<span class="date">${cell}</span>`;
             },
             sort: false,
+            filterFunction: (cell?: string, search?: string[]) => {
+              let cellSDate = cell.split('~')[0];
+              let cellEDate = cell.split('~')[1];
+              let sDate = search[0];
+              let eDate = search[1];
+              let isSDate = sDate !== null;
+              let isEDate = eDate !== null;
+              if(
+                (!isSDate && !isEDate) ||
+                ((isSDate && isEDate) && (
+                  moment(cellSDate).isBetween(sDate, eDate, undefined, '[]') ||
+                  moment(cellEDate).isBetween(sDate, eDate, undefined, '[]') ||
+                  moment(sDate).isBetween(cellSDate, cellEDate, undefined, '[]') ||
+                  moment(eDate).isBetween(cellSDate, cellEDate, undefined, '[]')
+                )) ||
+                ((isSDate && !isEDate) && (
+                  moment(sDate).isBetween(cellSDate, cellEDate, undefined, '[]')
+                )) ||
+                ((!isSDate && isEDate) && (
+                  moment(eDate).isBetween(cellSDate, cellEDate, undefined, '[]')
+                ))
+              ){
+                return true
+              }  else {
+                return false
+              }
+            }   
           },
           action: {
             title: '查看',
             type: 'custom',
             class: 'col-1',
+            valuePrepareFunction: (cell, row: ActivitySetting) => row,
             renderComponent: ActivityButtonComponent,
             sort: false,
           },
         },
-        hideSubHeader: true,
+        hideSubHeader: false, //起訖日查詢要用到
         actions: {
           add: false,
           edit: false,
@@ -128,29 +159,27 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
         // },
       };
 
-      filter(field: string, search: any): void {
-        if (typeof search === 'number') {
-          search = search.toString(10);
-        }
-        this.activityListSource.addFilter({
-          field: field,
-          filter: undefined,
-          search: search,
-        });
-        
-      }
-
       add(){
         this.router.navigate(['pages', 'user-manage', 'activity-add']);
       }
 
       reset(){
-        this.params.filter = { activity_name: '', status: ''};
+        this.params.filter = { activityName: '', status: '', startDate: null, endDate: null};
         this.activityListSource.reset();
       }
   
-      submit() {
-        for (const [k, v] of Object.entries(this.params.filter)) {
+      search() {
+        this.activityListSource.reset();
+        //search during
+        let sDate = this.params.filter.startDate !== null? moment(this.params.filter.startDate).format('YYYY-MM-DD') : null;
+        let eDate = this.params.filter.endDate !== null? moment(this.params.filter.endDate).format('YYYY-MM-DD') : null;
+        this.activityListSource.addFilter({
+          field: 'during',
+          filter: undefined,
+          search: [sDate, eDate],
+        });
+        //search other
+        for (const [k, v] of Object.entries(this.params.filter).filter(([key, val])=> !key.includes('Date'))) {
           this.activityListSource.addFilter({
             field: k,
             filter: undefined,
@@ -162,15 +191,20 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
 
 @Component({
     selector: 'ngx-activity-button',
-    template: '<button nbButton ghost status="info" size="medium"><nb-icon icon="search"></nb-icon></button>'
+    template: '<button nbButton ghost status="info" size="medium" (click)="search()"><nb-icon icon="search"></nb-icon></button>'
 })
 export class ActivityButtonComponent implements OnInit {
 
-    constructor() { }
+    constructor(private router: Router) { }
 
-    @Input() value: {id: string, writeScope: boolean};
+    @Input() value: ActivitySetting;
 
     ngOnInit() {}
+    
+    search(){
+      let passData: NavigationExtras = {state: this.value};
+      this.router.navigate(['pages', 'user-manage', 'activity-detail'], passData);
+    }
 
     edit(): void {}
 }

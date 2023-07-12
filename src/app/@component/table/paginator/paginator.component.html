@@ -1,0 +1,3 @@
+<div class="paginator" [ngClass]="{'only' : paginator.totalPage <=1 && paginator.nowPage >= paginator.totalPage}">
+  <span class="colorBlue">顯示 {{paginator.rowStart}} 到 {{paginator.rowEnd}} 筆資料，共 {{paginator.totalCount}} 筆資料</span>
+</div>

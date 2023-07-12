@@ -1,0 +1,13 @@
+.paginator {
+  display: flex;
+  justify-content: flex-start;
+  width: 300px;
+  margin: 1rem 0;
+  &:not(.only) {
+      display: unset;
+      justify-content: unset;
+      position: absolute;
+      bottom: 40px;
+      margin: unset;
+  }
+}

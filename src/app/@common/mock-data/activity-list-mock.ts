@@ -1,1114 +1,1128 @@
-import { Activity } from "@api/models/activity-list.model";
+import { ActivitySetting } from "@api/models/activity-list.model";
 
-export const ActivityListMock: Array<Activity> = [
+export const ActivityListMock: Array<ActivitySetting> = [
+    {
+      activityId: "abcdefg123456",
+      activityName: "女王節活動",
+      activityDescription: "女王節活動 EDM 名單",
+      filterOptions: "true",
+      listLimit: 100,
+      status: "active",
+      startDate: "2023-07-01",
+      endDate: "2023-07-10",
+      modificationTime: "2023-07-03 15:30:00",
+      scheduleSettings: "daily",
+      batchUpdateTime: "2023-07-03 12:00:00",
+      activityListCondition: [
+        {
+            activityId: "abcdefg123456",
+            conditionId: 1,
+            tagGroup: 1,
+            tagName: "近一個月_基金_定期定額手續費-高",
+            tagKey: "tag-123"
+        },
+        {
+            activityId: "abcdefg123456",
+            conditionId: 2,
+            tagGroup: 1,
+            tagName: "近三個月_基金_手續費-低",
+            tagKey: "tag-456"
+        },
+        {
+            activityId: "abcdefg123456",
+            conditionId: 3,
+            tagGroup: 2,
+            tagName: "近一個月_換匯_交易金額-高",
+            tagKey: "tag-789"
+        }
+      ],
+      activityReviewHistory: [
+        {
+            historyId: "h123456",
+            referenceId: "abcdefg123456",
+            groupId: 1,
+            time: "2023-07-01 09:00:00",
+            title: "建立條件送審",
+            detail: "送程主管",
+            type: "建立活動"
+        },
+        {
+            historyId: "h123457",
+            referenceId: "abcdefg123456",
+            groupId: 1,
+            time: "2023-07-01 08:30:00",
+            title: "審核",
+            detail: "不同意",
+            type: "建立活動"
+        },
+        {
+            historyId: "h123458",
+            referenceId: "abcdefg123456",
+            groupId: 1,
+            time: "2023-07-01 07:43:00",
+            title: "審核",
+            detail: "同意",
+            type: "建立活動"
+        },
+        {
+            historyId: "h123459",
+            referenceId: "abcdefg123456",
+            groupId: 2,
+            time: "2023-07-01 09:00:00",
+            title: "修改",
+            detail: "上線人數",
+            type: "修改活動"
+        },
+        {
+            historyId: "h123460",
+            referenceId: "abcdefg123456",
+            groupId: 2,
+            time: "2023-07-01 09:00:00",
+            title: "審核",
+            detail: "同意",
+            type: "修改活動"
+        },
+        {
+            historyId: "h123461",
+            referenceId: "abcdefg123456",
+            groupId: 3,
+            time: "2023-07-01 09:00:00",
+            title: "修改",
+            detail: "排程設定",
+            type: "修改活動"
+        },
+        {
+            historyId: "h123462",
+            referenceId: "abcdefg123456",
+            groupId: 3,
+            time: "2023-07-01 09:00:00",
+            title: "審核",
+            detail: "同意",
+            type: "修改活動"
+        }
+      ]
+  },
   {
-    "activity_id": "abcdefg123456",
-    "activity_name": "女王節活動",
-    "activity_description": "女王節活動 EDM 名單",
-    "filter_options": "true",
-    "list_limit": 100,
-    "status": "active",
-    "start_date": "2023-07-01",
-    "end_date": "2023-07-10",
-    "modification_time": "2023-07-03 15:30:00",
-    "schedule_settings": "daily",
-    "batch_update_time": "2023-07-03 12:00:00",
-    "activity_list_condition": [
+    activityId: "abcdefg123456",
+    activityName: "快閃活動",
+    activityDescription: "-",
+    filterOptions: "true",
+    listLimit: 250,
+    status: "ing",
+    startDate: "2023-07-01",
+    endDate: "2023-07-01",
+    modificationTime: "2023-07-03 15:30:00",
+    scheduleSettings: "daily",
+    batchUpdateTime: "2023-08-02 12:00:00",
+    activityListCondition: [
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 1,
-          "tag_group": 1,
-          "tag_name": "近一個月_基金_定期定額手續費-高",
-          "tag_key": "tag-123"
+          activityId: "abcdefg123456",
+          conditionId: 1,
+          tagGroup: 1,
+          tagName: "近一個月_基金_定期定額手續費-高",
+          tagKey: "tag-123"
         },
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 2,
-          "tag_group": 1,
-          "tag_name": "近三個月_基金_手續費-低",
-          "tag_key": "tag-456"
+          activityId: "abcdefg123456",
+          conditionId: 2,
+          tagGroup: 1,
+          tagName: "近三個月_基金_手續費-低",
+          tagKey: "tag-456"
         },
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 3,
-          "tag_group": 2,
-          "tag_name": "近一個月_換匯_交易金額-高",
-          "tag_key": "tag-789"
+          activityId: "abcdefg123456",
+          conditionId: 3,
+          tagGroup: 2,
+          tagName: "近一個月_換匯_交易金額-高",
+          tagKey: "tag-789"
         }
     ],
-    "change_history": [
+    activityReviewHistory: [
         {
-          "history_id": "h123456",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "建立條件送審",
-          "detail": "送程主管",
-          "type": "建立活動"
+          historyId: "h123456",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "建立條件送審",
+          detail: "送程主管",
+          type: "建立活動"
         },
         {
-          "history_id": "h123457",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "不同意",
-          "type": "建立活動"
+          historyId: "h123457",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "不同意",
+          type: "建立活動"
         },
         {
-          "history_id": "h123458",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "建立活動"
+          historyId: "h123458",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "建立活動"
         },
         {
-          "history_id": "h123459",
-          "activity_id": "abcdefg123456",
-          "group_id": 2,
-          "time": "2023-07-01 09:00:00",
-          "title": "修改",
-          "detail": "上線人數",
-          "type": "修改活動"
+          historyId: "h123459",
+          referenceId: "abcdefg123456",
+          groupId: 2,
+          time: "2023-07-01 09:00:00",
+          title: "修改",
+          detail: "上線人數",
+          type: "修改活動"
         },
         {
-          "history_id": "h123460",
-          "activity_id": "abcdefg123456",
-          "group_id": 2,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "修改活動"
+          historyId: "h123460",
+          referenceId: "abcdefg123456",
+          groupId: 2,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "修改活動"
         },
         {
-          "history_id": "h123461",
-          "activity_id": "abcdefg123456",
-          "group_id": 3,
-          "time": "2023-07-01 09:00:00",
-          "title": "修改",
-          "detail": "排程設定",
-          "type": "修改活動"
+          historyId: "h123461",
+          referenceId: "abcdefg123456",
+          groupId: 3,
+          time: "2023-07-01 09:00:00",
+          title: "修改",
+          detail: "排程設定",
+          type: "修改活動"
         },
         {
-          "history_id": "h123462",
-          "activity_id": "abcdefg123456",
-          "group_id": 3,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "修改活動"
+          historyId: "h123462",
+          referenceId: "abcdefg123456",
+          groupId: 3,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "修改活動"
         }
     ]
   },
   {
-    "activity_id": "abcdefg123456",
-    "activity_name": "快閃活動",
-    "activity_description": "-",
-    "filter_options": "true",
-    "list_limit": 250,
-    "status": "active",
-    "start_date": "2023-07-01",
-    "end_date": "2023-07-01",
-    "modification_time": "2023-07-03 15:30:00",
-    "schedule_settings": "daily",
-    "batch_update_time": "2023-08-02 12:00:00",
-    "activity_list_condition": [
+    activityId: "abcdefg123456",
+    activityName: "每日EDM活動發送",
+    activityDescription: "-",
+    filterOptions: "true",
+    listLimit: 1000,
+    status: "active",
+    startDate: "2023-10-10",
+    endDate: "2023-10-10",
+    modificationTime: "2023-07-03 15:30:00",
+    scheduleSettings: "daily",
+    batchUpdateTime: "2023-07-03 12:00:00",
+    activityListCondition: [
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 1,
-          "tag_group": 1,
-          "tag_name": "近一個月_基金_定期定額手續費-高",
-          "tag_key": "tag-123"
+          activityId: "abcdefg123456",
+          conditionId: 1,
+          tagGroup: 1,
+          tagName: "近一個月_基金_定期定額手續費-高",
+          tagKey: "tag-123"
         },
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 2,
-          "tag_group": 1,
-          "tag_name": "近三個月_基金_手續費-低",
-          "tag_key": "tag-456"
+          activityId: "abcdefg123456",
+          conditionId: 2,
+          tagGroup: 1,
+          tagName: "近三個月_基金_手續費-低",
+          tagKey: "tag-456"
         },
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 3,
-          "tag_group": 2,
-          "tag_name": "近一個月_換匯_交易金額-高",
-          "tag_key": "tag-789"
+          activityId: "abcdefg123456",
+          conditionId: 3,
+          tagGroup: 2,
+          tagName: "近一個月_換匯_交易金額-高",
+          tagKey: "tag-789"
         }
     ],
-    "change_history": [
+    activityReviewHistory: [
         {
-          "history_id": "h123456",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "建立條件送審",
-          "detail": "送程主管",
-          "type": "建立活動"
+          historyId: "h123456",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "建立條件送審",
+          detail: "送程主管",
+          type: "建立活動"
         },
         {
-          "history_id": "h123457",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "不同意",
-          "type": "建立活動"
+          historyId: "h123457",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "不同意",
+          type: "建立活動"
         },
         {
-          "history_id": "h123458",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "建立活動"
+          historyId: "h123458",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "建立活動"
         },
         {
-          "history_id": "h123459",
-          "activity_id": "abcdefg123456",
-          "group_id": 2,
-          "time": "2023-07-01 09:00:00",
-          "title": "修改",
-          "detail": "上線人數",
-          "type": "修改活動"
+          historyId: "h123459",
+          referenceId: "abcdefg123456",
+          groupId: 2,
+          time: "2023-07-01 09:00:00",
+          title: "修改",
+          detail: "上線人數",
+          type: "修改活動"
         },
         {
-          "history_id": "h123460",
-          "activity_id": "abcdefg123456",
-          "group_id": 2,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "修改活動"
+          historyId: "h123460",
+          referenceId: "abcdefg123456",
+          groupId: 2,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "修改活動"
         },
         {
-          "history_id": "h123461",
-          "activity_id": "abcdefg123456",
-          "group_id": 3,
-          "time": "2023-07-01 09:00:00",
-          "title": "修改",
-          "detail": "排程設定",
-          "type": "修改活動"
+          historyId: "h123461",
+          referenceId: "abcdefg123456",
+          groupId: 3,
+          time: "2023-07-01 09:00:00",
+          title: "修改",
+          detail: "排程設定",
+          type: "修改活動"
         },
         {
-          "history_id": "h123462",
-          "activity_id": "abcdefg123456",
-          "group_id": 3,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "修改活動"
+          historyId: "h123462",
+          referenceId: "abcdefg123456",
+          groupId: 3,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "修改活動"
         }
     ]
   },
   {
-    "activity_id": "abcdefg123456",
-    "activity_name": "每日EDM活動發送",
-    "activity_description": "-",
-    "filter_options": "true",
-    "list_limit": 1000,
-    "status": "active",
-    "start_date": "2023-10-10",
-    "end_date": "2023-10-10",
-    "modification_time": "2023-07-03 15:30:00",
-    "schedule_settings": "daily",
-    "batch_update_time": "2023-07-03 12:00:00",
-    "activity_list_condition": [
+    activityId: "abcdefg123456",
+    activityName: "父親節活動",
+    activityDescription: "-",
+    filterOptions: "false",
+    listLimit: 180,
+    status: "ing",
+    startDate: "2023-07-01",
+    endDate: "2023-07-19",
+    modificationTime: "2023-07-03 15:30:00",
+    scheduleSettings: "daily",
+    batchUpdateTime: "2023-07-03 12:00:00",
+    activityListCondition: [
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 1,
-          "tag_group": 1,
-          "tag_name": "近一個月_基金_定期定額手續費-高",
-          "tag_key": "tag-123"
+          activityId: "abcdefg123456",
+          conditionId: 1,
+          tagGroup: 1,
+          tagName: "近一個月_基金_定期定額手續費-高",
+          tagKey: "tag-123"
         },
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 2,
-          "tag_group": 1,
-          "tag_name": "近三個月_基金_手續費-低",
-          "tag_key": "tag-456"
+          activityId: "abcdefg123456",
+          conditionId: 2,
+          tagGroup: 1,
+          tagName: "近三個月_基金_手續費-低",
+          tagKey: "tag-456"
         },
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 3,
-          "tag_group": 2,
-          "tag_name": "近一個月_換匯_交易金額-高",
-          "tag_key": "tag-789"
+          activityId: "abcdefg123456",
+          conditionId: 3,
+          tagGroup: 2,
+          tagName: "近一個月_換匯_交易金額-高",
+          tagKey: "tag-789"
         }
     ],
-    "change_history": [
+    activityReviewHistory: [
         {
-          "history_id": "h123456",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "建立條件送審",
-          "detail": "送程主管",
-          "type": "建立活動"
+          historyId: "h123456",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "建立條件送審",
+          detail: "送程主管",
+          type: "建立活動"
         },
         {
-          "history_id": "h123457",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "不同意",
-          "type": "建立活動"
+          historyId: "h123457",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "不同意",
+          type: "建立活動"
         },
         {
-          "history_id": "h123458",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "建立活動"
+          historyId: "h123458",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "建立活動"
         },
         {
-          "history_id": "h123459",
-          "activity_id": "abcdefg123456",
-          "group_id": 2,
-          "time": "2023-07-01 09:00:00",
-          "title": "修改",
-          "detail": "上線人數",
-          "type": "修改活動"
+          historyId: "h123459",
+          referenceId: "abcdefg123456",
+          groupId: 2,
+          time: "2023-07-01 09:00:00",
+          title: "修改",
+          detail: "上線人數",
+          type: "修改活動"
         },
         {
-          "history_id": "h123460",
-          "activity_id": "abcdefg123456",
-          "group_id": 2,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "修改活動"
+          historyId: "h123460",
+          referenceId: "abcdefg123456",
+          groupId: 2,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "修改活動"
         },
         {
-          "history_id": "h123461",
-          "activity_id": "abcdefg123456",
-          "group_id": 3,
-          "time": "2023-07-01 09:00:00",
-          "title": "修改",
-          "detail": "排程設定",
-          "type": "修改活動"
+          historyId: "h123461",
+          referenceId: "abcdefg123456",
+          groupId: 3,
+          time: "2023-07-01 09:00:00",
+          title: "修改",
+          detail: "排程設定",
+          type: "修改活動"
         },
         {
-          "history_id": "h123462",
-          "activity_id": "abcdefg123456",
-          "group_id": 3,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "修改活動"
+          historyId: "h123462",
+          referenceId: "abcdefg123456",
+          groupId: 3,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "修改活動"
         }
     ]
   },
   {
-    "activity_id": "abcdefg123456",
-    "activity_name": "父親節活動",
-    "activity_description": "-",
-    "filter_options": "false",
-    "list_limit": 180,
-    "status": "ing",
-    "start_date": "2023-07-01",
-    "end_date": "2023-07-19",
-    "modification_time": "2023-07-03 15:30:00",
-    "schedule_settings": "daily",
-    "batch_update_time": "2023-07-03 12:00:00",
-    "activity_list_condition": [
+    activityId: "abcdefg123456",
+    activityName: "情人節活動",
+    activityDescription: "-",
+    filterOptions: "false",
+    listLimit: 500,
+    status: "active",
+    startDate: "2023-07-07",
+    endDate: "2023-07-31",
+    modificationTime: "2023-07-03 15:30:00",
+    scheduleSettings: "daily",
+    batchUpdateTime: "2023-07-03 12:00:00",
+    activityListCondition: [
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 1,
-          "tag_group": 1,
-          "tag_name": "近一個月_基金_定期定額手續費-高",
-          "tag_key": "tag-123"
+          activityId: "abcdefg123456",
+          conditionId: 1,
+          tagGroup: 1,
+          tagName: "近一個月_基金_定期定額手續費-高",
+          tagKey: "tag-123"
         },
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 2,
-          "tag_group": 1,
-          "tag_name": "近三個月_基金_手續費-低",
-          "tag_key": "tag-456"
+          activityId: "abcdefg123456",
+          conditionId: 2,
+          tagGroup: 1,
+          tagName: "近三個月_基金_手續費-低",
+          tagKey: "tag-456"
         },
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 3,
-          "tag_group": 2,
-          "tag_name": "近一個月_換匯_交易金額-高",
-          "tag_key": "tag-789"
+          activityId: "abcdefg123456",
+          conditionId: 3,
+          tagGroup: 2,
+          tagName: "近一個月_換匯_交易金額-高",
+          tagKey: "tag-789"
         }
     ],
-    "change_history": [
+    activityReviewHistory: [
         {
-          "history_id": "h123456",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "建立條件送審",
-          "detail": "送程主管",
-          "type": "建立活動"
+          historyId: "h123456",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "建立條件送審",
+          detail: "送程主管",
+          type: "建立活動"
         },
         {
-          "history_id": "h123457",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "不同意",
-          "type": "建立活動"
+          historyId: "h123457",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "不同意",
+          type: "建立活動"
         },
         {
-          "history_id": "h123458",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "建立活動"
+          historyId: "h123458",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "建立活動"
         },
         {
-          "history_id": "h123459",
-          "activity_id": "abcdefg123456",
-          "group_id": 2,
-          "time": "2023-07-01 09:00:00",
-          "title": "修改",
-          "detail": "上線人數",
-          "type": "修改活動"
+          historyId: "h123459",
+          referenceId: "abcdefg123456",
+          groupId: 2,
+          time: "2023-07-01 09:00:00",
+          title: "修改",
+          detail: "上線人數",
+          type: "修改活動"
         },
         {
-          "history_id": "h123460",
-          "activity_id": "abcdefg123456",
-          "group_id": 2,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "修改活動"
+          historyId: "h123460",
+          referenceId: "abcdefg123456",
+          groupId: 2,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "修改活動"
         },
         {
-          "history_id": "h123461",
-          "activity_id": "abcdefg123456",
-          "group_id": 3,
-          "time": "2023-07-01 09:00:00",
-          "title": "修改",
-          "detail": "排程設定",
-          "type": "修改活動"
+          historyId: "h123461",
+          referenceId: "abcdefg123456",
+          groupId: 3,
+          time: "2023-07-01 09:00:00",
+          title: "修改",
+          detail: "排程設定",
+          type: "修改活動"
         },
         {
-          "history_id": "h123462",
-          "activity_id": "abcdefg123456",
-          "group_id": 3,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "修改活動"
+          historyId: "h123462",
+          referenceId: "abcdefg123456",
+          groupId: 3,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "修改活動"
         }
     ]
   },
   {
-    "activity_id": "abcdefg123456",
-    "activity_name": "情人節活動",
-    "activity_description": "-",
-    "filter_options": "false",
-    "list_limit": 500,
-    "status": "active",
-    "start_date": "2023-07-07",
-    "end_date": "2023-07-31",
-    "modification_time": "2023-07-03 15:30:00",
-    "schedule_settings": "daily",
-    "batch_update_time": "2023-07-03 12:00:00",
-    "activity_list_condition": [
+    activityId: "abcdefg123456",
+    activityName: "春節慶祝活動",
+    activityDescription: "-",
+    filterOptions: "false",
+    listLimit: 100,
+    status: "stop",
+    startDate: "2024-01-01",
+    endDate: "2024-01-19",
+    modificationTime: "2023-07-03 15:30:00",
+    scheduleSettings: "daily",
+    batchUpdateTime: "2023-07-03 12:00:00",
+    activityListCondition: [
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 1,
-          "tag_group": 1,
-          "tag_name": "近一個月_基金_定期定額手續費-高",
-          "tag_key": "tag-123"
+          activityId: "abcdefg123456",
+          conditionId: 1,
+          tagGroup: 1,
+          tagName: "近一個月_基金_活存定額手續費-高",
+          tagKey: "tag-123"
         },
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 2,
-          "tag_group": 1,
-          "tag_name": "近三個月_基金_手續費-低",
-          "tag_key": "tag-456"
+          activityId: "abcdefg123456",
+          conditionId: 2,
+          tagGroup: 1,
+          tagName: "近五個月_基金_手續費-低",
+          tagKey: "tag-456"
         },
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 3,
-          "tag_group": 2,
-          "tag_name": "近一個月_換匯_交易金額-高",
-          "tag_key": "tag-789"
-        }
+          activityId: "abcdefg123456",
+          conditionId: 3,
+          tagGroup: 2,
+          tagName: "近六個月_換匯_交易金額-中",
+          tagKey: "tag-789"
+        },
+        {
+          activityId: "abcdefg123456",
+          conditionId: 4,
+          tagGroup: 2,
+          tagName: "近一個月_換匯_美金換匯頻率-低",
+          tagKey: "tag-234"
+        },
+        {
+          activityId: "abcdefg123456",
+          conditionId: 5,
+          tagGroup: 2,
+          tagName: "近六個月_換匯_日幣換匯頻率-低",
+          tagKey: "tag-345"
+        },
     ],
-    "change_history": [
+    activityReviewHistory: [
         {
-          "history_id": "h123456",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "建立條件送審",
-          "detail": "送程主管",
-          "type": "建立活動"
+          historyId: "h123456",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "建立條件送審",
+          detail: "送程主管",
+          type: "建立活動"
         },
         {
-          "history_id": "h123457",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "不同意",
-          "type": "建立活動"
+          historyId: "h123457",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "不同意",
+          type: "建立活動"
         },
         {
-          "history_id": "h123458",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "建立活動"
+          historyId: "h123458",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "建立活動"
         },
         {
-          "history_id": "h123459",
-          "activity_id": "abcdefg123456",
-          "group_id": 2,
-          "time": "2023-07-01 09:00:00",
-          "title": "修改",
-          "detail": "上線人數",
-          "type": "修改活動"
+          historyId: "h123459",
+          referenceId: "abcdefg123456",
+          groupId: 2,
+          time: "2023-07-01 09:00:00",
+          title: "修改",
+          detail: "上線人數",
+          type: "修改活動"
         },
         {
-          "history_id": "h123460",
-          "activity_id": "abcdefg123456",
-          "group_id": 2,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "修改活動"
+          historyId: "h123460",
+          referenceId: "abcdefg123456",
+          groupId: 2,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "修改活動"
         },
         {
-          "history_id": "h123461",
-          "activity_id": "abcdefg123456",
-          "group_id": 3,
-          "time": "2023-07-01 09:00:00",
-          "title": "修改",
-          "detail": "排程設定",
-          "type": "修改活動"
+          historyId: "h123461",
+          referenceId: "abcdefg123456",
+          groupId: 3,
+          time: "2023-07-01 09:00:00",
+          title: "修改",
+          detail: "排程設定",
+          type: "修改活動"
         },
         {
-          "history_id": "h123462",
-          "activity_id": "abcdefg123456",
-          "group_id": 3,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "修改活動"
+          historyId: "h123462",
+          referenceId: "abcdefg123456",
+          groupId: 3,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "修改活動"
         }
     ]
   },
   {
-    "activity_id": "abcdefg123456",
-    "activity_name": "春節慶祝活動",
-    "activity_description": "-",
-    "filter_options": "false",
-    "list_limit": 100,
-    "status": "stop",
-    "start_date": "2024-01-01",
-    "end_date": "2024-01-19",
-    "modification_time": "2023-07-03 15:30:00",
-    "schedule_settings": "daily",
-    "batch_update_time": "2023-07-03 12:00:00",
-    "activity_list_condition": [
+    activityId: "abcdefg123456",
+    activityName: "七夕情人節活動",
+    activityDescription: "-",
+    filterOptions: "true",
+    listLimit: 140,
+    status: "active",
+    startDate: "2023-07-01",
+    endDate: "2023-07-14",
+    modificationTime: "2023-07-03 15:30:00",
+    scheduleSettings: "daily",
+    batchUpdateTime: "2023-07-03 12:00:00",
+    activityListCondition: [
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 1,
-          "tag_group": 1,
-          "tag_name": "近一個月_基金_定期定額手續費-高",
-          "tag_key": "tag-123"
+          activityId: "abcdefg123456",
+          conditionId: 1,
+          tagGroup: 1,
+          tagName: "近一個月_基金_定期定額手續費-高",
+          tagKey: "tag-123"
         },
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 2,
-          "tag_group": 1,
-          "tag_name": "近三個月_基金_手續費-低",
-          "tag_key": "tag-456"
+          activityId: "abcdefg123456",
+          conditionId: 2,
+          tagGroup: 1,
+          tagName: "近三個月_基金_手續費-低",
+          tagKey: "tag-456"
         },
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 3,
-          "tag_group": 2,
-          "tag_name": "近一個月_換匯_交易金額-高",
-          "tag_key": "tag-789"
+          activityId: "abcdefg123456",
+          conditionId: 3,
+          tagGroup: 2,
+          tagName: "近一個月_換匯_交易金額-高",
+          tagKey: "tag-789"
         }
     ],
-    "change_history": [
+    activityReviewHistory: [
         {
-          "history_id": "h123456",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "建立條件送審",
-          "detail": "送程主管",
-          "type": "建立活動"
+          historyId: "h123456",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "建立條件送審",
+          detail: "送程主管",
+          type: "建立活動"
         },
         {
-          "history_id": "h123457",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "不同意",
-          "type": "建立活動"
+          historyId: "h123457",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "不同意",
+          type: "建立活動"
         },
         {
-          "history_id": "h123458",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "建立活動"
+          historyId: "h123458",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "建立活動"
         },
         {
-          "history_id": "h123459",
-          "activity_id": "abcdefg123456",
-          "group_id": 2,
-          "time": "2023-07-01 09:00:00",
-          "title": "修改",
-          "detail": "上線人數",
-          "type": "修改活動"
+          historyId: "h123459",
+          referenceId: "abcdefg123456",
+          groupId: 2,
+          time: "2023-07-01 09:00:00",
+          title: "修改",
+          detail: "上線人數",
+          type: "修改活動"
         },
         {
-          "history_id": "h123460",
-          "activity_id": "abcdefg123456",
-          "group_id": 2,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "修改活動"
+          historyId: "h123460",
+          referenceId: "abcdefg123456",
+          groupId: 2,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "修改活動"
         },
         {
-          "history_id": "h123461",
-          "activity_id": "abcdefg123456",
-          "group_id": 3,
-          "time": "2023-07-01 09:00:00",
-          "title": "修改",
-          "detail": "排程設定",
-          "type": "修改活動"
+          historyId: "h123461",
+          referenceId: "abcdefg123456",
+          groupId: 3,
+          time: "2023-07-01 09:00:00",
+          title: "修改",
+          detail: "排程設定",
+          type: "修改活動"
         },
         {
-          "history_id": "h123462",
-          "activity_id": "abcdefg123456",
-          "group_id": 3,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "修改活動"
+          historyId: "h123462",
+          referenceId: "abcdefg123456",
+          groupId: 3,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "修改活動"
         }
     ]
   },
   {
-    "activity_id": "abcdefg123456",
-    "activity_name": "七夕情人節活動",
-    "activity_description": "-",
-    "filter_options": "true",
-    "list_limit": 140,
-    "status": "active",
-    "start_date": "2023-07-01",
-    "end_date": "2023-07-14",
-    "modification_time": "2023-07-03 15:30:00",
-    "schedule_settings": "daily",
-    "batch_update_time": "2023-07-03 12:00:00",
-    "activity_list_condition": [
+    activityId: "abcdefg123456",
+    activityName: "新商品快閃體驗活動",
+    activityDescription: "-",
+    filterOptions: "true",
+    listLimit: 530,
+    status: "active",
+    startDate: "2024-03-20",
+    endDate: "2024-03-20",
+    modificationTime: "2023-07-03 15:30:00",
+    scheduleSettings: "daily",
+    batchUpdateTime: "2023-07-03 12:00:00",
+    activityListCondition: [
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 1,
-          "tag_group": 1,
-          "tag_name": "近一個月_基金_定期定額手續費-高",
-          "tag_key": "tag-123"
+          activityId: "abcdefg123456",
+          conditionId: 1,
+          tagGroup: 1,
+          tagName: "近一個月_基金_定期定額手續費-高",
+          tagKey: "tag-123"
         },
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 2,
-          "tag_group": 1,
-          "tag_name": "近三個月_基金_手續費-低",
-          "tag_key": "tag-456"
+          activityId: "abcdefg123456",
+          conditionId: 2,
+          tagGroup: 1,
+          tagName: "近三個月_基金_手續費-低",
+          tagKey: "tag-456"
         },
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 3,
-          "tag_group": 2,
-          "tag_name": "近一個月_換匯_交易金額-高",
-          "tag_key": "tag-789"
+          activityId: "abcdefg123456",
+          conditionId: 3,
+          tagGroup: 2,
+          tagName: "近一個月_換匯_交易金額-高",
+          tagKey: "tag-789"
         }
     ],
-    "change_history": [
+    activityReviewHistory: [
         {
-          "history_id": "h123456",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "建立條件送審",
-          "detail": "送程主管",
-          "type": "建立活動"
+          historyId: "h123456",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "建立條件送審",
+          detail: "送程主管",
+          type: "建立活動"
         },
         {
-          "history_id": "h123457",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "不同意",
-          "type": "建立活動"
+          historyId: "h123457",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "不同意",
+          type: "建立活動"
         },
         {
-          "history_id": "h123458",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "建立活動"
+          historyId: "h123458",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "建立活動"
         },
         {
-          "history_id": "h123459",
-          "activity_id": "abcdefg123456",
-          "group_id": 2,
-          "time": "2023-07-01 09:00:00",
-          "title": "修改",
-          "detail": "上線人數",
-          "type": "修改活動"
+          historyId: "h123459",
+          referenceId: "abcdefg123456",
+          groupId: 2,
+          time: "2023-07-01 09:00:00",
+          title: "修改",
+          detail: "上線人數",
+          type: "修改活動"
         },
         {
-          "history_id": "h123460",
-          "activity_id": "abcdefg123456",
-          "group_id": 2,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "修改活動"
+          historyId: "h123460",
+          referenceId: "abcdefg123456",
+          groupId: 2,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "修改活動"
         },
         {
-          "history_id": "h123461",
-          "activity_id": "abcdefg123456",
-          "group_id": 3,
-          "time": "2023-07-01 09:00:00",
-          "title": "修改",
-          "detail": "排程設定",
-          "type": "修改活動"
+          historyId: "h123461",
+          referenceId: "abcdefg123456",
+          groupId: 3,
+          time: "2023-07-01 09:00:00",
+          title: "修改",
+          detail: "排程設定",
+          type: "修改活動"
         },
         {
-          "history_id": "h123462",
-          "activity_id": "abcdefg123456",
-          "group_id": 3,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "修改活動"
+          historyId: "h123462",
+          referenceId: "abcdefg123456",
+          groupId: 3,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "修改活動"
         }
     ]
   },
   {
-    "activity_id": "abcdefg123456",
-    "activity_name": "新商品快閃體驗活動",
-    "activity_description": "-",
-    "filter_options": "true",
-    "list_limit": 530,
-    "status": "active",
-    "start_date": "2024-03-20",
-    "end_date": "2024-03-20",
-    "modification_time": "2023-07-03 15:30:00",
-    "schedule_settings": "daily",
-    "batch_update_time": "2023-07-03 12:00:00",
-    "activity_list_condition": [
+    activityId: "abcdefg123456",
+    activityName: "商品EDM雙週發送",
+    activityDescription: "雙週發送公司每期商品資訊",
+    filterOptions: "false",
+    listLimit: 320,
+    status: "stop",
+    startDate: "2023-11-01",
+    endDate: "2023-12-01",
+    modificationTime: "2023-07-03 15:30:00",
+    scheduleSettings: "daily",
+    batchUpdateTime: "2023-07-03 12:00:00",
+    activityListCondition: [
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 1,
-          "tag_group": 1,
-          "tag_name": "近一個月_基金_定期定額手續費-高",
-          "tag_key": "tag-123"
+          activityId: "abcdefg123456",
+          conditionId: 1,
+          tagGroup: 1,
+          tagName: "近一個月_基金_定期定額手續費-高",
+          tagKey: "tag-123"
         },
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 2,
-          "tag_group": 1,
-          "tag_name": "近三個月_基金_手續費-低",
-          "tag_key": "tag-456"
+          activityId: "abcdefg123456",
+          conditionId: 2,
+          tagGroup: 1,
+          tagName: "近三個月_基金_手續費-低",
+          tagKey: "tag-456"
         },
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 3,
-          "tag_group": 2,
-          "tag_name": "近一個月_換匯_交易金額-高",
-          "tag_key": "tag-789"
+          activityId: "abcdefg123456",
+          conditionId: 3,
+          tagGroup: 2,
+          tagName: "近一個月_換匯_交易金額-高",
+          tagKey: "tag-789"
         }
     ],
-    "change_history": [
+    activityReviewHistory: [
         {
-          "history_id": "h123456",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "建立條件送審",
-          "detail": "送程主管",
-          "type": "建立活動"
+          historyId: "h123456",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "建立條件送審",
+          detail: "送程主管",
+          type: "建立活動"
         },
         {
-          "history_id": "h123457",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "不同意",
-          "type": "建立活動"
+          historyId: "h123457",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "不同意",
+          type: "建立活動"
         },
         {
-          "history_id": "h123458",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "建立活動"
+          historyId: "h123458",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "建立活動"
         },
         {
-          "history_id": "h123459",
-          "activity_id": "abcdefg123456",
-          "group_id": 2,
-          "time": "2023-07-01 09:00:00",
-          "title": "修改",
-          "detail": "上線人數",
-          "type": "修改活動"
+          historyId: "h123459",
+          referenceId: "abcdefg123456",
+          groupId: 2,
+          time: "2023-07-01 09:00:00",
+          title: "修改",
+          detail: "上線人數",
+          type: "修改活動"
         },
         {
-          "history_id": "h123460",
-          "activity_id": "abcdefg123456",
-          "group_id": 2,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "修改活動"
+          historyId: "h123460",
+          referenceId: "abcdefg123456",
+          groupId: 2,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "修改活動"
         },
         {
-          "history_id": "h123461",
-          "activity_id": "abcdefg123456",
-          "group_id": 3,
-          "time": "2023-07-01 09:00:00",
-          "title": "修改",
-          "detail": "排程設定",
-          "type": "修改活動"
+          historyId: "h123461",
+          referenceId: "abcdefg123456",
+          groupId: 3,
+          time: "2023-07-01 09:00:00",
+          title: "修改",
+          detail: "排程設定",
+          type: "修改活動"
         },
         {
-          "history_id": "h123462",
-          "activity_id": "abcdefg123456",
-          "group_id": 3,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "修改活動"
+          historyId: "h123462",
+          referenceId: "abcdefg123456",
+          groupId: 3,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "修改活動"
         }
     ]
   },
   {
-    "activity_id": "abcdefg123456",
-    "activity_name": "商品EDM雙週發送",
-    "activity_description": "雙週發送公司每期商品資訊",
-    "filter_options": "false",
-    "list_limit": 320,
-    "status": "stop",
-    "start_date": "2023-11-01",
-    "end_date": "2023-12-01",
-    "modification_time": "2023-07-03 15:30:00",
-    "schedule_settings": "daily",
-    "batch_update_time": "2023-07-03 12:00:00",
-    "activity_list_condition": [
+    activityId: "abcdefg123456",
+    activityName: "中秋節感恩活動",
+    activityDescription: "-",
+    filterOptions: "false",
+    listLimit: 380,
+    status: "stop",
+    startDate: "2023-09-20",
+    endDate: "2023-09-29",
+    modificationTime: "2023-07-03 15:30:00",
+    scheduleSettings: "daily",
+    batchUpdateTime: "2023-07-03 12:00:00",
+    activityListCondition: [
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 1,
-          "tag_group": 1,
-          "tag_name": "近一個月_基金_定期定額手續費-高",
-          "tag_key": "tag-123"
+          activityId: "abcdefg123456",
+          conditionId: 1,
+          tagGroup: 1,
+          tagName: "近一個月_基金_定期定額手續費-高",
+          tagKey: "tag-123"
         },
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 2,
-          "tag_group": 1,
-          "tag_name": "近三個月_基金_手續費-低",
-          "tag_key": "tag-456"
+          activityId: "abcdefg123456",
+          conditionId: 2,
+          tagGroup: 1,
+          tagName: "近三個月_基金_手續費-低",
+          tagKey: "tag-456"
         },
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 3,
-          "tag_group": 2,
-          "tag_name": "近一個月_換匯_交易金額-高",
-          "tag_key": "tag-789"
+          activityId: "abcdefg123456",
+          conditionId: 3,
+          tagGroup: 2,
+          tagName: "近一個月_換匯_交易金額-高",
+          tagKey: "tag-789"
         }
     ],
-    "change_history": [
+    activityReviewHistory: [
         {
-          "history_id": "h123456",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "建立條件送審",
-          "detail": "送程主管",
-          "type": "建立活動"
+          historyId: "h123456",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "建立條件送審",
+          detail: "送程主管",
+          type: "建立活動"
         },
         {
-          "history_id": "h123457",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "不同意",
-          "type": "建立活動"
+          historyId: "h123457",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "不同意",
+          type: "建立活動"
         },
         {
-          "history_id": "h123458",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "建立活動"
+          historyId: "h123458",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "建立活動"
         },
         {
-          "history_id": "h123459",
-          "activity_id": "abcdefg123456",
-          "group_id": 2,
-          "time": "2023-07-01 09:00:00",
-          "title": "修改",
-          "detail": "上線人數",
-          "type": "修改活動"
+          historyId: "h123459",
+          referenceId: "abcdefg123456",
+          groupId: 2,
+          time: "2023-07-01 09:00:00",
+          title: "修改",
+          detail: "上線人數",
+          type: "修改活動"
         },
         {
-          "history_id": "h123460",
-          "activity_id": "abcdefg123456",
-          "group_id": 2,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "修改活動"
+          historyId: "h123460",
+          referenceId: "abcdefg123456",
+          groupId: 2,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "修改活動"
         },
         {
-          "history_id": "h123461",
-          "activity_id": "abcdefg123456",
-          "group_id": 3,
-          "time": "2023-07-01 09:00:00",
-          "title": "修改",
-          "detail": "排程設定",
-          "type": "修改活動"
+          historyId: "h123461",
+          referenceId: "abcdefg123456",
+          groupId: 3,
+          time: "2023-07-01 09:00:00",
+          title: "修改",
+          detail: "排程設定",
+          type: "修改活動"
         },
         {
-          "history_id": "h123462",
-          "activity_id": "abcdefg123456",
-          "group_id": 3,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "修改活動"
+          historyId: "h123462",
+          referenceId: "abcdefg123456",
+          groupId: 3,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "修改活動"
         }
     ]
   },
   {
-    "activity_id": "abcdefg123456",
-    "activity_name": "中秋節感恩活動",
-    "activity_description": "-",
-    "filter_options": "false",
-    "list_limit": 380,
-    "status": "stop",
-    "start_date": "2023-09-20",
-    "end_date": "2023-09-29",
-    "modification_time": "2023-07-03 15:30:00",
-    "schedule_settings": "daily",
-    "batch_update_time": "2023-07-03 12:00:00",
-    "activity_list_condition": [
+    activityId: "abcdefg123456",
+    activityName: "中秋節感恩活動",
+    activityDescription: "-",
+    filterOptions: "false",
+    listLimit: 320,
+    status: "ing",
+    startDate: "2023-09-20",
+    endDate: "2023-09-29",
+    modificationTime: "2023-07-03 15:30:00",
+    scheduleSettings: "daily",
+    batchUpdateTime: "2023-07-03 12:00:00",
+    activityListCondition: [
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 1,
-          "tag_group": 1,
-          "tag_name": "近一個月_基金_定期定額手續費-高",
-          "tag_key": "tag-123"
+          activityId: "abcdefg123456",
+          conditionId: 1,
+          tagGroup: 1,
+          tagName: "近一個月_基金_定期定額手續費-高",
+          tagKey: "tag-123"
         },
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 2,
-          "tag_group": 1,
-          "tag_name": "近三個月_基金_手續費-低",
-          "tag_key": "tag-456"
+          activityId: "abcdefg123456",
+          conditionId: 2,
+          tagGroup: 1,
+          tagName: "近三個月_基金_手續費-低",
+          tagKey: "tag-456"
         },
         {
-          "activity_id": "abcdefg123456",
-          "condition_id": 3,
-          "tag_group": 2,
-          "tag_name": "近一個月_換匯_交易金額-高",
-          "tag_key": "tag-789"
+          activityId: "abcdefg123456",
+          conditionId: 3,
+          tagGroup: 2,
+          tagName: "近一個月_換匯_交易金額-高",
+          tagKey: "tag-789"
         }
     ],
-    "change_history": [
+    activityReviewHistory: [
         {
-          "history_id": "h123456",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "建立條件送審",
-          "detail": "送程主管",
-          "type": "建立活動"
+          historyId: "h123456",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "建立條件送審",
+          detail: "送程主管",
+          type: "建立活動"
         },
         {
-          "history_id": "h123457",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "不同意",
-          "type": "建立活動"
+          historyId: "h123457",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "不同意",
+          type: "建立活動"
         },
         {
-          "history_id": "h123458",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "建立活動"
+          historyId: "h123458",
+          referenceId: "abcdefg123456",
+          groupId: 1,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "建立活動"
         },
         {
-          "history_id": "h123459",
-          "activity_id": "abcdefg123456",
-          "group_id": 2,
-          "time": "2023-07-01 09:00:00",
-          "title": "修改",
-          "detail": "上線人數",
-          "type": "修改活動"
+          historyId: "h123459",
+          referenceId: "abcdefg123456",
+          groupId: 2,
+          time: "2023-07-01 09:00:00",
+          title: "修改",
+          detail: "上線人數",
+          type: "修改活動"
         },
         {
-          "history_id": "h123460",
-          "activity_id": "abcdefg123456",
-          "group_id": 2,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "修改活動"
+          historyId: "h123460",
+          referenceId: "abcdefg123456",
+          groupId: 2,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "修改活動"
         },
         {
-          "history_id": "h123461",
-          "activity_id": "abcdefg123456",
-          "group_id": 3,
-          "time": "2023-07-01 09:00:00",
-          "title": "修改",
-          "detail": "排程設定",
-          "type": "修改活動"
+          historyId: "h123461",
+          referenceId: "abcdefg123456",
+          groupId: 3,
+          time: "2023-07-01 09:00:00",
+          title: "修改",
+          detail: "排程設定",
+          type: "修改活動"
         },
         {
-          "history_id": "h123462",
-          "activity_id": "abcdefg123456",
-          "group_id": 3,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "修改活動"
-        }
-    ]
-  },
-  {
-    "activity_id": "abcdefg123456",
-    "activity_name": "中秋節感恩活動",
-    "activity_description": "-",
-    "filter_options": "false",
-    "list_limit": 320,
-    "status": "ing",
-    "start_date": "2023-09-20",
-    "end_date": "2023-09-29",
-    "modification_time": "2023-07-03 15:30:00",
-    "schedule_settings": "daily",
-    "batch_update_time": "2023-07-03 12:00:00",
-    "activity_list_condition": [
-        {
-          "activity_id": "abcdefg123456",
-          "condition_id": 1,
-          "tag_group": 1,
-          "tag_name": "近一個月_基金_定期定額手續費-高",
-          "tag_key": "tag-123"
-        },
-        {
-          "activity_id": "abcdefg123456",
-          "condition_id": 2,
-          "tag_group": 1,
-          "tag_name": "近三個月_基金_手續費-低",
-          "tag_key": "tag-456"
-        },
-        {
-          "activity_id": "abcdefg123456",
-          "condition_id": 3,
-          "tag_group": 2,
-          "tag_name": "近一個月_換匯_交易金額-高",
-          "tag_key": "tag-789"
-        }
-    ],
-    "change_history": [
-        {
-          "history_id": "h123456",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "建立條件送審",
-          "detail": "送程主管",
-          "type": "建立活動"
-        },
-        {
-          "history_id": "h123457",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "不同意",
-          "type": "建立活動"
-        },
-        {
-          "history_id": "h123458",
-          "activity_id": "abcdefg123456",
-          "group_id": 1,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "建立活動"
-        },
-        {
-          "history_id": "h123459",
-          "activity_id": "abcdefg123456",
-          "group_id": 2,
-          "time": "2023-07-01 09:00:00",
-          "title": "修改",
-          "detail": "上線人數",
-          "type": "修改活動"
-        },
-        {
-          "history_id": "h123460",
-          "activity_id": "abcdefg123456",
-          "group_id": 2,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "修改活動"
-        },
-        {
-          "history_id": "h123461",
-          "activity_id": "abcdefg123456",
-          "group_id": 3,
-          "time": "2023-07-01 09:00:00",
-          "title": "修改",
-          "detail": "排程設定",
-          "type": "修改活動"
-        },
-        {
-          "history_id": "h123462",
-          "activity_id": "abcdefg123456",
-          "group_id": 3,
-          "time": "2023-07-01 09:00:00",
-          "title": "審核",
-          "detail": "同意",
-          "type": "修改活動"
+          historyId: "h123462",
+          referenceId: "abcdefg123456",
+          groupId: 3,
+          time: "2023-07-01 09:00:00",
+          title: "審核",
+          detail: "同意",
+          type: "修改活動"
         }
     ]
   },

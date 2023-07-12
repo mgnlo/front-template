@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Schedule, Status } from '@common/enums/activity-list-enum';
+import { ActivityListCondition, ActivitySetting, TagGroupView } from '@api/models/activity-list.model';
+import { Filter, Schedule } from '@common/enums/activity-list-enum';
 import { BaseComponent } from '@pages/base.component';
-
 
 @Component({
   selector: 'activity-add',
@@ -11,23 +12,88 @@ import { BaseComponent } from '@pages/base.component';
 })
 export class ActivityAddComponent extends BaseComponent implements OnInit {
 
-  constructor(private router: Router) {
+  filterList: Array<{key: string; val: string}> = Object.entries(Filter).map(([k, v]) => ({ key: k, val: v }));
+  scheduleList: Array<{key: string; val: string}> = Object.entries(Schedule).map(([k, v]) => ({ key: k, val: v }));
+
+  constructor(private router: Router, private formBuilder: FormBuilder) {
     super();
-  }
 
-  statusList: Array<{key: string; val: string}> = Object.entries(Status).map(([k, v]) => ({ key: k, val: v }))
-  scheduleList: Array<{key: string; val: string}> = Object.entries(Schedule).map(([k, v]) => ({ key: k, val: v }))
+    this.validateForm = new FormGroup({
+      activityName: new FormControl(null, Validators.required),
+      status: new FormControl(null, Validators.required),
+      listLimit: new FormControl(null),
+      filterOptions: new FormControl(null),
+      startDate: new FormControl(new Date(), Validators.required),
+      endDate: new FormControl(new Date(), Validators.required),
+      scheduleSettings: new FormControl(null, Validators.required),
+      activityDescription: new FormControl(null),
+      activityListCondition: new FormArray([
+        new FormGroup({
+            1: new FormControl(null, Validators.required)
+        })
+      ], Validators.required),
+    });
 
-  public ngOnInit(): void {
-  }
-
-  ngDoCheck() { }
-
-  filter(field: string, search: any): void {
-    if (typeof search === 'number') {
-      search = search.toString(10);
+    if(!!this.router.getCurrentNavigation().extras){
+      let editData = this.router.getCurrentNavigation().extras.state as ActivitySetting;
+      if(!!editData){
+        Object.keys(editData).forEach(key => {
+          if(!!this.validateForm.controls[key]){
+            switch (key) {
+              case 'startDate':
+              case 'endDate':
+                this.validateForm.controls[key].setValue(new Date(editData[key]))
+                break;
+              case 'activityListCondition':
+                this.conditions.removeAt(0);
+                let groupData = this.groupBy(editData[key], 'tagGroup');
+                Object.keys(groupData).forEach(key => {
+                  let fg = new FormGroup({});
+                  let condition = groupData[key] as Array<ActivityListCondition>;
+                  condition.forEach(con => {
+                    fg.setControl(con.tagKey.replace('tag-',''), new FormControl(con.tagName, Validators.required));
+                  });
+                  this.conditions.push(fg);
+                })
+                break;
+              default:
+                this.validateForm.controls[key].setValue(editData[key]);
+                break;
+            }
+          }
+        })
+      }
     }
+  }
 
+  or(action: 'add' | 'remove', key: number) {
+    if(action === 'add') {
+      let ctlName = !!key ? key++ : 1;
+      this.conditions.push(new FormGroup({
+        [ctlName]: new FormControl(null, Validators.required)
+      }));
+    } else {
+      this.conditions.removeAt(key)
+    }
+    // console.info('or', this.conditions.getRawValue())
+  }
+  
+  and(i: number, action: 'add' | 'remove', key: number) {
+    let fg = this.conditions.at(i) as FormGroup;
+    if (action === 'add') {
+      fg.setControl(`${key+1}`, new FormControl(null, Validators.required));
+    } else {
+      fg.removeControl(`${key}`);
+    }
+    // console.info('and', this.conditions.getRawValue())
+  }
+
+  get conditions() : FormArray {
+    return this.validateForm.get('activityListCondition') as FormArray
+  }
+  
+  err: boolean = false;
+  public ngOnInit(): void {
   }
 
   cancel() {

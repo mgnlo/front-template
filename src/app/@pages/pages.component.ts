@@ -89,7 +89,11 @@ export class PagesComponent implements OnInit {
         icon: "lock-outline",
         children: [
           {
-            title: "標籤審核",
+            title: "使用者管理",
+            link: "/pages/element",
+          },
+          {
+            title: "權限管理",
             link: "/pages/element",
           },
         ]

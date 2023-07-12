@@ -1,0 +1,9 @@
+<nb-card>
+  <!-- <nb-card-header>{{option.title}}
+    <a *ngIf="option.hasCloseButton" nbButton hero size="small" ghost class="float-right" (click)="close()">X</a>
+  </nb-card-header> -->
+  <nb-card-body *ngIf="option.content">{{option.content}}</nb-card-body>
+  <nb-card-footer>
+    <button nbButton status="primary" size="medium" (click)="option.callback()">{{option.buttonName}}</button>
+  </nb-card-footer>
+</nb-card>
