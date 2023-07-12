@@ -127,7 +127,7 @@ export class UserListButtonComponent implements OnInit {
 
 @Component({
   selector: 'tmp-tag',
-  template: '<div class="tag"><nb-tag status="info" appearance="filled" *ngFor="let tag of tags" [text]="tag.tagTitle"></nb-tag></div>'
+  template: '<div class="tag left"><nb-tag status="info" appearance="filled" size="medium" *ngFor="let tag of tags" [text]="tag.tagTitle"></nb-tag></div>'
 })
 export class UserListTagComponent implements OnInit {
 
