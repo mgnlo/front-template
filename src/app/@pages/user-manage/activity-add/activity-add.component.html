@@ -53,28 +53,30 @@
                         <p>欄位錯誤訊息</p>
                     </div>
                 </div>
-                <div class="fieldGroup essential col-12 col-lg-6">
+                <div class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': this.validateForm.errors?.range}">
                     <label>起始時間</label>
                     <div>
-                        <input nbInput fullWidth placeholder="請選擇日期" [nbDatepicker]="startDatePicker" formControlName="startDate">
-                        <nb-datepicker #startDatePicker format="yyyy-MM-dd"></nb-datepicker>
+                        <input nbInput fullWidth [status]="this.validateForm.errors?.range ? 'danger' : ''"
+                            placeholder="請選擇日期" [nbDatepicker]="startDatePicker" formControlName="startDate">
+                        <nb-datepicker #startDatePicker format="yyyy-MM-dd" [max]="this.validateForm.get('endDate').value"></nb-datepicker>
                     </div>
                     <!-- 欄位錯誤訊息 -->
-                    <div class="note errorText">
+                    <div class="note errorText" *ngIf="this.validateForm.errors?.range">
                         <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>欄位錯誤訊息</p>
+                        <p>結束時間不得大於起始時間</p>
                     </div>
                 </div>
-                <div class="fieldGroup essential col-12 col-lg-6">
+                <div class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': this.validateForm.errors?.range}">
                     <label>結束時間</label>
                     <div>
-                        <input nbInput fullWidth placeholder="請選擇日期" [nbDatepicker]="endDatePicker" formControlName="endDate">
-                        <nb-datepicker #endDatePicker format="yyyy-MM-dd" max=""></nb-datepicker>
+                        <input nbInput fullWidth [status]="this.validateForm.errors?.range ? 'danger' : ''"
+                            placeholder="請選擇日期" [nbDatepicker]="endDatePicker" formControlName="endDate">
+                        <nb-datepicker #endDatePicker format="yyyy-MM-dd" [min]="this.validateForm.get('startDate').value"></nb-datepicker>
                     </div>
                     <!-- 欄位錯誤訊息 -->
-                    <div class="note errorText">
+                    <div class="note errorText" *ngIf="this.validateForm.errors?.range">
                         <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>欄位錯誤訊息</p>
+                        <p>結束時間不得大於起始時間</p>
                     </div>
                 </div>
                 <div class="fieldGroup essential col-12 col-lg-6">

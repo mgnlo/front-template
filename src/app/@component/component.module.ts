@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { DialogService } from '@api/services/dialog.service';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { NbButtonModule, NbCardModule, NbIconModule, NbSelectModule, NbSpinnerModule } from '@nebular/theme';
 import { AlertDialogComponent } from './dialog/alert-dialog/alert-dialog.component';

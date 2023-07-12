@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ActivityListCondition, ActivitySetting, TagGroupView } from '@api/models/activity-list.model';
+import { ActivityListCondition, ActivitySetting } from '@api/models/activity-list.model';
 import { Filter, Schedule } from '@common/enums/activity-list-enum';
+import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
+import * as moment from 'moment';
 
 @Component({
   selector: 'activity-add',
@@ -20,11 +22,11 @@ export class ActivityAddComponent extends BaseComponent implements OnInit {
 
     this.validateForm = new FormGroup({
       activityName: new FormControl(null, Validators.required),
-      status: new FormControl(null, Validators.required),
-      listLimit: new FormControl(null),
+      status: new FormControl('stop', Validators.required),
+      listLimit: new FormControl(null, Validators.pattern("^[0-9]*$")),
       filterOptions: new FormControl(null),
       startDate: new FormControl(new Date(), Validators.required),
-      endDate: new FormControl(new Date(), Validators.required),
+      endDate: new FormControl(moment(new Date()).add(3, 'months').toDate(), Validators.required),
       scheduleSettings: new FormControl(null, Validators.required),
       activityDescription: new FormControl(null),
       activityListCondition: new FormArray([
@@ -32,7 +34,7 @@ export class ActivityAddComponent extends BaseComponent implements OnInit {
             1: new FormControl(null, Validators.required)
         })
       ], Validators.required),
-    });
+    }, ValidatorsUtil.dateRange);
 
     if(!!this.router.getCurrentNavigation().extras){
       let editData = this.router.getCurrentNavigation().extras.state as ActivitySetting;
@@ -64,6 +66,9 @@ export class ActivityAddComponent extends BaseComponent implements OnInit {
         })
       }
     }
+  }
+
+  ngDoCheck() {
   }
 
   or(action: 'add' | 'remove', key: number) {

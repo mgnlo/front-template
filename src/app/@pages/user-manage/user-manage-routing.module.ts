@@ -3,7 +3,8 @@ import { RouterModule, Routes } from "@angular/router"
 import { ActivityAddComponent } from "./activity-add/activity-add.component"
 import { ActivityDetailComponent } from "./activity-detail/activity-detail.component"
 import { ActivityButtonComponent, ActivityListComponent, CeckboxComponent } from "./activity-list/activity-list.component"
-import { ButtonComponent, TagComponent, UserListComponent } from "./user-list/user-list.component"
+import { DetailDialogComponent } from "./user-list/detail-dialog/detail.dialog.component"
+import { TagComponent, UserListButtonComponent, UserListComponent } from "./user-list/user-list.component"
 import { UserManageComponent } from "./user-manage.component"
 
 const routes: Routes = [
@@ -36,7 +37,8 @@ export const routedComponents = [
   ActivityAddComponent,
   ActivityDetailComponent,
   ActivityButtonComponent,
+  UserListButtonComponent,
   CeckboxComponent,
-  ButtonComponent,
   TagComponent,
+  DetailDialogComponent
 ];

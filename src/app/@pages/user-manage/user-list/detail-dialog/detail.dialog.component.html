@@ -1,0 +1,59 @@
+<nb-card class="list-card" nbSpinnerStatus="info" nbSpinnerSize="giant" size="large">
+    <nb-card-header class="text-h-center">
+      <p>用戶明細資訊-{{title}}</p>
+    </nb-card-header>
+    <nb-card-body>
+      <div class="row">
+        <div class="textGroup col-6 col-lg-6">
+            <p class="textBold">姓名：</p>
+            <span>{{datas.userName}}</span>
+        </div>
+        <div class="textGroup col-6 col-lg-6">
+            <p class="textBold">手機號碼：</p>
+            <span>{{datas.mobile}}</span>
+        </div>
+        <div class="textGroup col-6 col-lg-6">
+            <p class="textBold">生日：</p>
+            <span>{{datas.birth}}</span>
+        </div>
+        <div class="textGroup col-6 col-lg-6">
+            <p class="textBold">性別：</p>
+            <span>{{datas.gender | gender}}</span>
+        </div>
+        <div class="textGroup col-6 col-lg-6">
+            <p class="textBold">交易總金額：</p>
+            <span>{{datas.totalTxAmount | number: '1.0-3'}}</span>
+        </div>
+        <div class="textGroup col-6 col-lg-6">
+            <p class="textBold">開戶分行：</p>
+            <span>{{datas.branchName}}</span>
+        </div>
+        <div class="textGroup col-6 col-lg-6">
+            <p class="textBold">地址：</p>
+            <span>{{datas.addr}}</span>
+        </div>
+      </div>
+      <div class="subTitle">
+        <p>用戶標籤輪廓</p>
+      </div>
+      <div class="rightBox">
+        <p class="textBold colorBlue">標籤所屬單位: {{datas.tagDept}}</p>
+        <!-- <nb-select size="medium" placeholder="請選擇">
+            <nb-option [value]="datas.tagDept" selected>{{datas.tagDept}}</nb-option>
+            <nb-option value="month">item</nb-option>
+        </nb-select> -->
+      </div>
+      <div class="tagBlock">
+        <div class="tagItem" *ngFor="let tag of datas.userTag">
+            <nb-tag status="info" appearance="filled" [text]="tag.tagTitle"></nb-tag>
+            <p class="tagContent">{{tag.tagRule}}</p>
+        </div>
+      </div>
+      <div class="subTitle">
+        <p>標籤歷程</p>
+      </div>
+    </nb-card-body>
+    <nb-card-footer>
+      <button nbButton status="basic" size="medium" (click)="close()">關閉</button>
+    </nb-card-footer>
+</nb-card>

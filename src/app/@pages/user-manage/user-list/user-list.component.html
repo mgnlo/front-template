@@ -6,22 +6,24 @@
         <nb-card-header>
             <h2>查詢設定值</h2>
         </nb-card-header>
-        <nb-card-body>
+        <nb-card-body [formGroup]="validateForm">
             <div class="row">
-                <div class="fieldGroup col-12 col-lg-6">
+                <div class="fieldGroup col-12 col-lg-6" [ngClass]="{'error': validateForm.get('custId').invalid}">
                     <label>會員號碼</label>
-                    <div><input nbInput fullWidth status="basic" type="text" placeholder="請輸入" [(ngModel)]="params.filter.custId"/></div>
+                    <div><input nbInput fullWidth [status]="validateForm.get('custId').invalid ? 'danger': 'basic'"
+                        type="text" placeholder="請輸入" formControlName="custId" maxlength="10"/></div>
                     <div class="note errorText">
                         <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>欄位錯誤訊息</p>
+                        <p>請輸入有效會員號碼，大寫英文字母或數字</p>
                     </div>
                 </div>
-                <div class="fieldGroup col-12 col-lg-6">
+                <div class="fieldGroup col-12 col-lg-6" [ngClass]="{'error': validateForm.get('mobile').invalid}">
                     <label>手機號碼</label>
-                    <div><input nbInput fullWidth status="basic" type="text" placeholder="請輸入" [(ngModel)]="params.filter.mobile"/></div>
+                    <div><input nbInput fullWidth [status]="validateForm.get('mobile').invalid ? 'danger': 'basic'"
+                        type="text" placeholder="請輸入" formControlName="mobile" maxlength="10"/></div>
                     <div class="note errorText">
                         <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>欄位錯誤訊息</p>
+                        <p>請輸入數字</p>
                     </div>
                 </div>
             </div>
@@ -30,7 +32,7 @@
     <div class="row">
         <div class="btnGroup">
             <button nbButton status="basic" size="medium" (click)="reset()">清除</button>
-            <button nbButton status="primary" size="medium" (click)="submit()">查詢</button>
+            <button nbButton status="primary" size="medium" [disabled]="validateForm.invalid" (click)="search()">查詢</button>
         </div>
     </div>
     <hr/>
