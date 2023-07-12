@@ -57,49 +57,40 @@ export class TagListComponent extends BaseComponent implements OnInit {
       perPage: 10,
     },
     columns: {
-      // tagId: {
-      //   title: '標籤Id',
-      //   type: 'string',
-      //   class: 'col-1',
-      //   sort: false
-      // },
       tagName: {
         title: '標籤名稱',
         type: 'string',
         class: 'col-1',
         sort: false
       },
-      type: {
+      tagType: {
         title: '類型',
         type: 'string',
         class: 'col-1',
         sort: false,
       },
-      responsibleUnit: {
+      department: {
         title: '所屬單位',
         type: 'string',
         class: 'col-1',
         sort: false,
       },
-      principal: {
+      owner: {
         title: '負責人',
         type: 'string',
         class: 'col-1',
         sort: false,
       },
-      directions: {
+      tagDescription: {
         title: '說明',
         type: 'string',
         class: 'col-2',
         sort: false,
       },
-      updateTime: {
+      modificationTime: {
         title: '異動時間',
         type: 'html',
         class: 'col-2',
-        // valuePrepareFunction: (cell: any, row: Activity) => {
-        //   return `<span class="date">${row.start_date}~${row.end_date}</span>`;
-        // },
         sort: false,
       },
       status: {
