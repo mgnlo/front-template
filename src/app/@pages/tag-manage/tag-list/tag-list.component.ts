@@ -4,7 +4,6 @@ import { BaseComponent } from '@pages/base.component';
 import { Status } from '@common/enums/activity-list-enum';
 import { TagManageService } from '../tag-manage.service';
 import { LocalDataSource } from 'ng2-smart-table';
-import { Activity } from '@api/models/activity-list.model';
 import * as moment from 'moment';
 import { TagList } from '@api/models/tag-list.model';
 import { TagListMock } from '@common/mock-data/tag-list-mock';
@@ -59,8 +58,11 @@ export class TagListComponent extends BaseComponent implements OnInit {
     columns: {
       tagName: {
         title: '標籤名稱',
-        type: 'string',
+        type: 'html',
         class: 'col-1',
+        valuePrepareFunction: (cell:string) => {
+          return `<p class="left">${cell}</p>`;
+        },
         sort: false
       },
       tagType: {
@@ -83,8 +85,11 @@ export class TagListComponent extends BaseComponent implements OnInit {
       },
       tagDescription: {
         title: '說明',
-        type: 'string',
+        type: 'html',
         class: 'col-2',
+        valuePrepareFunction: (cell:string) => {
+          return `<p class="left">${cell}</p>`;
+        },
         sort: false,
       },
       modificationTime: {
@@ -127,7 +132,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
   }
 
   add(){
-    this.router.navigate(['pages', 'tag-manage', 'tag-manage']);
+    this.router.navigate(['pages', 'tag-manage', 'tag-add']);
   }
 
 }

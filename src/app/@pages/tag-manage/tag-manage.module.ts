@@ -13,7 +13,6 @@ import { ThemeModule } from '../../@theme/theme.module';
 import { routedComponents, TagManageRoutingModule } from './tag-manage-routing.module';
 import { TagManageService } from './tag-manage.service';
 
-
 @NgModule({
   imports: [
     CommonModule,
