@@ -13,27 +13,31 @@ import { ThemeModule } from '../../@theme/theme.module';
 import { routedComponents, TagManageRoutingModule } from './tag-manage-routing.module';
 import { TagManageService } from './tag-manage.service';
 
+export const NB_MODULES = [
+  NbSpinnerModule,
+  NbCardModule,
+  NbTreeGridModule,
+  NbIconModule,
+  NbEvaIconsModule,
+  NbCheckboxModule,
+  NbRadioModule,
+  NbInputModule,
+  NbButtonModule,
+  NbSelectModule,
+  NbDatepickerModule,
+  NbAccordionModule,
+  NbDateFnsDateModule.forChild({ format: 'yyyy/MM/dd' }),
+];
+
 @NgModule({
   imports: [
     CommonModule,
-    NbSpinnerModule,
-    NbCardModule,
-    NbTreeGridModule,
-    NbIconModule,
-    NbEvaIconsModule,
-    NbCheckboxModule,
-    NbRadioModule,
-    NbInputModule,
-    NbButtonModule,
-    NbSelectModule,
-    NbDatepickerModule,
-    NbDateFnsDateModule.forChild({ format: 'yyyy/MM/dd' }),
     FormsModule,
     ReactiveFormsModule,
     ThemeModule,
     Ng2SmartTableModule,
-    NbAccordionModule,
     TagManageRoutingModule,
+    ...NB_MODULES
   ],
   providers: [
     TagManageService

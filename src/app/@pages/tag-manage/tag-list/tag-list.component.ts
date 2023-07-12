@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { BaseComponent } from '@pages/base.component';
-import { Status } from '@common/enums/activity-list-enum';
+import { Status } from '@common/enums/commom-enum';
 import { TagManageService } from '../tag-manage.service';
 import { LocalDataSource } from 'ng2-smart-table';
 import * as moment from 'moment';
@@ -14,21 +14,23 @@ import { TagListMock } from '@common/mock-data/tag-list-mock';
   styleUrls: ['./tag-list.component.scss']
 })
 export class TagListComponent extends BaseComponent implements OnInit {
-
   constructor(
     private tagManageService: TagManageService,
     private router: Router) {
     super();
   }
+
   statusList: Array<{ key: string; val: string }> = Object.entries(Status).map(([k, v]) => ({ key: k, val: v }))
   updateTime: string = moment(new Date()).format('YYYY/MM/DD');
   mockData: Array<TagList> = TagListMock;
   tagListSource = new LocalDataSource();
 
   params = {
-    filter: { // 篩選條件
-      tagId: '',
+    filter: {
+      tagName: '',
       status: '',
+      startDate: null,
+      endDate: null,
     },
     page: 1,
     sort: [],
@@ -37,17 +39,17 @@ export class TagListComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.tagListSource.load(this.mockData);
-      this.paginator.totalCount = this.mockData.length;
+    this.paginator.totalCount = this.mockData.length;
 
-      this.tagListSource.onChanged().subscribe(()=>{
-        this.paginator.totalCount = this.tagListSource.count();
-        let page =this.tagListSource.getPaging().page;
-        this.paginator.nowPage = page;
-        let perPage = this.tagListSource.getPaging().perPage;
-        this.paginator.totalPage = Math.ceil(this.paginator.totalCount/perPage);
-        this.paginator.rowStart = (page - 1) * perPage + 1;
-        this.paginator.rowEnd = this.paginator.totalPage !== page ? page * perPage : (page-1) * perPage + this.paginator.totalCount % perPage;
-      });
+    this.tagListSource.onChanged().subscribe(() => {
+      this.paginator.totalCount = this.tagListSource.count();
+      let page = this.tagListSource.getPaging().page;
+      this.paginator.nowPage = page;
+      let perPage = this.tagListSource.getPaging().perPage;
+      this.paginator.totalPage = Math.ceil(this.paginator.totalCount / perPage);
+      this.paginator.rowStart = (page - 1) * perPage + 1;
+      this.paginator.rowEnd = this.paginator.totalPage !== page ? page * perPage : (page - 1) * perPage + this.paginator.totalCount % perPage;
+    });
   }
 
   gridDefine = {
@@ -60,7 +62,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
         title: '標籤名稱',
         type: 'html',
         class: 'col-1',
-        valuePrepareFunction: (cell:string) => {
+        valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
         sort: false
@@ -87,10 +89,24 @@ export class TagListComponent extends BaseComponent implements OnInit {
         title: '說明',
         type: 'html',
         class: 'col-2',
-        valuePrepareFunction: (cell:string) => {
+        valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
         sort: false,
+      },
+      startDate: {
+        title: '起始時間',
+        type: 'html',
+        class: 'col-2',
+        sort: false,
+        hide: true
+      },
+      endDate: {
+        title: '結束時間',
+        type: 'html',
+        class: 'col-2',
+        sort: false,
+        hide: true
       },
       modificationTime: {
         title: '異動時間',
@@ -124,14 +140,56 @@ export class TagListComponent extends BaseComponent implements OnInit {
   };
 
   reset() {
-    this.params.filter = { tagId: '', status: '' };
+    this.params.filter = { tagName: '', status: '', startDate: null, endDate: null, };
+    this.tagListSource.reset();
   }
 
-  submit() {
+  search() {
+    this.tagListSource.reset();
+    const { startDate, endDate } = this.params.filter;
 
+    //search startDate And endDate Filter
+    const addRangeFilter = (field: string, startValue: Date | null, endValue: Date | null, filterFn: (value: string, searchValue: string[]) => boolean) => {
+      const startFormatDate = startValue !== null ? moment(startValue).format('YYYY-MM-DD') : null;
+      const endFormatDate = endValue !== null ? moment(endValue).format('YYYY-MM-DD') : null;
+
+      if (startFormatDate && endFormatDate) {
+        this.tagListSource.addFilter({
+          field,
+          filter: filterFn,
+          search: [startFormatDate, endFormatDate],
+        });
+      }
+    };
+    addRangeFilter('startDate', startDate, endDate, (value, searchValue) => new Date(value) >= new Date(searchValue[0]) && new Date(value) <= new Date(searchValue[1]));
+    addRangeFilter('endDate', startDate, endDate, (value, searchValue) => new Date(value) >= new Date(searchValue[0]) && new Date(value) <= new Date(searchValue[1]));
+
+    //search only date filter
+    const addDateFilter = (field: string, value: Date | null, filterFn: (value: string, searchValue: string[]) => boolean) => {
+      const formatDate = value !== null ? moment(value).format('YYYY-MM-DD') : null;
+
+      if (formatDate) {
+        this.tagListSource.addFilter({
+          field,
+          filter: filterFn,
+          search: [formatDate],
+        });
+      }
+    };
+    addDateFilter('startDate', startDate, (value, searchValue) => new Date(value) >= new Date(searchValue[0]));
+    addDateFilter('endDate', endDate, (value, searchValue) => new Date(value) <= new Date(searchValue[0]));
+
+    //search other
+    for (const [k, v] of Object.entries(this.params.filter).filter(([key, val]) => !key.includes('Date'))) {
+      this.tagListSource.addFilter({
+        field: k,
+        filter: undefined,
+        search: v,
+      });
+    }
   }
 
-  add(){
+  add() {
     this.router.navigate(['pages', 'tag-manage', 'tag-add']);
   }
 
@@ -160,5 +218,5 @@ export class TagComponent implements OnInit {
   renderValue: string;
   @Input() value: Array<string>;
 
-  ngOnInit() {}
+  ngOnInit() { }
 }

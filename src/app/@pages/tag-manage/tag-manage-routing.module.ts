@@ -10,21 +10,21 @@ const routes: Routes = [
     path: "", component: TagManageComponent,
     children: [
       { path: "tag-list", component: TagListComponent },
-      //{ path: '', redirectTo: 'tag-list', pathMatch: 'full'},
-      { path: 'tag-add', component: TagAddComponent},
-  ]
+      { path: '', redirectTo: 'tag-list', pathMatch: 'full' },
+      { path: 'tag-add', component: TagAddComponent },
+    ]
   }
 ]
 
 @NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
 })
 export class TagManageRoutingModule { }
 
 export const routedComponents = [
   TagManageComponent,
-  TagAddComponent,
   TagListComponent,
+  TagAddComponent,
   ButtonComponent,
 ];
