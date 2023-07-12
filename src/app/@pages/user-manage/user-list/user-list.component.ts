@@ -25,22 +25,11 @@ export class UserListComponent extends BaseComponent implements OnInit {
     }
 
     mockData: Array<UserList> = UserListMock;
-    userListSource = new LocalDataSource();
     updateTime: string = moment(new Date()).format('YYYY/MM/DD');
-
+    
     ngOnInit(): void {
-      this.userListSource.load(this.mockData);
-      this.paginator.totalCount = this.mockData.length;
-
-      this.userListSource.onChanged().subscribe(()=>{
-        this.paginator.totalCount = this.userListSource.count();
-        let page =this.userListSource.getPaging().page;
-        this.paginator.nowPage = page;
-        let perPage = this.userListSource.getPaging().perPage;
-        this.paginator.totalPage = Math.ceil(this.paginator.totalCount/perPage);
-        this.paginator.rowStart = (page - 1) * perPage + 1;
-        this.paginator.rowEnd = this.paginator.totalPage !== page ? page * perPage : (page-1) * perPage + this.paginator.totalCount % perPage;
-      });
+      this.dataSource = new LocalDataSource();
+      this.dataSource.load(this.mockData);
     }
 
     ngDoCheck(): void {
@@ -95,13 +84,12 @@ export class UserListComponent extends BaseComponent implements OnInit {
       
     reset(){
       this.validateForm.reset({custId: '', mobile: ''});
-      this.userListSource.reset();
     }
 
     search() {
       let filter = this.validateForm.getRawValue();
       for (const [k, v] of Object.entries(filter)) {
-        this.userListSource.addFilter({field: k, filter: undefined, search: v});
+        this.dataSource.addFilter({field: k, filter: undefined, search: v});
         this.updateTime = moment(new Date()).format('YYYY/MM/DD');
       }
     }

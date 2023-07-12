@@ -27,30 +27,19 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
           startDate: new FormControl(null),
           endDate: new FormControl(null),
         });
+
     }
 
     statusList: Array<{key: string; val: string}> = Object.entries(Status).map(([k, v]) => ({ key: k, val: v }))
     selected: string = '';
     mockData: Array<ActivitySetting> = ActivityListMock;
-    activityListSource = new LocalDataSource();
 
     ngOnInit(): void {
       this.mockData = this.mockData.map(mock => {
         return {...mock, during:`${mock.startDate}~${mock.endDate}`} //起訖日查詢篩選要用到
       })
-      this.activityListSource.load(this.mockData);
-    }
-
-    ngDoCheck() {
-      this.activityListSource.onChanged().subscribe(()=>{
-        this.paginator.totalCount = this.activityListSource.count();
-        let page =this.activityListSource.getPaging().page;
-        let perPage = this.activityListSource.getPaging().perPage;
-        this.paginator.nowPage = page;
-        this.paginator.totalPage = Math.ceil(this.paginator.totalCount/perPage);
-        this.paginator.rowStart = (page - 1) * perPage + 1;
-        this.paginator.rowEnd = this.paginator.totalPage !== page ? page * perPage : (page-1) * perPage + this.paginator.totalCount % perPage;
-      });
+      this.dataSource = new LocalDataSource();
+      this.dataSource.load(this.mockData);
     }
 
     gridDefine = {
@@ -93,7 +82,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
           status: {
             title: '狀態',
             type: 'string',
-            class: 'col-1 alignCenter',
+            class: 'col-1',
             valuePrepareFunction: (cell:string) => {
               return this.statusList.filter(status => status.key === cell)[0].val;
             },
@@ -162,23 +151,21 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
 
       reset(){
         this.validateForm.reset({ activityName: '', status: '', startDate: null, endDate: null});
-        this.activityListSource.reset();
       }
   
       search() {
-        this.activityListSource.reset();
         let filter = this.validateForm.getRawValue();
         //search during
         let sDate = filter.startDate !== null? moment(filter.startDate).format('YYYY-MM-DD') : null;
         let eDate = filter.endDate !== null? moment(filter.endDate).format('YYYY-MM-DD') : null;
-        this.activityListSource.addFilter({
+        this.dataSource.addFilter({
           field: 'during',
           filter: undefined,
           search: [sDate, eDate],
         });
         //search other
         for (const [k, v] of Object.entries(filter).filter(([key, val])=> !key.includes('Date'))) {
-          this.activityListSource.addFilter({
+          this.dataSource.addFilter({
             field: k,
             filter: undefined,
             search: v,
