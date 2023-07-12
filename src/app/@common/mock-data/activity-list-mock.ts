@@ -34,7 +34,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
             tagGroup: 2,
             tagName: "近一個月_換匯_交易金額-高",
             tagKey: "tag-789"
-        }
+        },
       ],
       activityReviewHistory: [
         {

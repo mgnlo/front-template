@@ -24,7 +24,7 @@ export class ActivityAddComponent extends BaseComponent implements OnInit {
       activityName: new FormControl(null, Validators.required),
       status: new FormControl('stop', Validators.required),
       listLimit: new FormControl(null, Validators.pattern("^[0-9]*$")),
-      filterOptions: new FormControl(null),
+      filterOptions: new FormControl(false),
       startDate: new FormControl(new Date(), Validators.required),
       endDate: new FormControl(moment(new Date()).add(3, 'months').toDate(), Validators.required),
       scheduleSettings: new FormControl(null, Validators.required),

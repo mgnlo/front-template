@@ -19,7 +19,7 @@ export class UserListComponent extends BaseComponent implements OnInit {
       super();
       // 篩選條件
       this.validateForm = new FormGroup({
-        custId: new FormControl('', Validators.pattern("^[A-Z]{0,2}[0-9]{0,8}$")),
+        custId: new FormControl('', Validators.pattern("^[A-Z]{0,2}[0-9]{0,9}$")),
         mobile: new FormControl('', Validators.pattern("^[0-9]*$")),
       });
     }
@@ -74,7 +74,7 @@ export class UserListComponent extends BaseComponent implements OnInit {
           title: `用戶標籤 (更新時間: ${this.updateTime})`,
           type: 'custom',
           class: 'col-8',
-          renderComponent: TagComponent,
+          renderComponent: UserListTagComponent,
           sort: false,
         },
         action: {
@@ -127,9 +127,9 @@ export class UserListButtonComponent implements OnInit {
 
 @Component({
   selector: 'tmp-tag',
-  template: '<button class="left" *ngFor="let tag of tags" nbButton status="info" size="small">{{tag.tagTitle}}</button>'
+  template: '<div class="tag"><nb-tag status="info" appearance="filled" *ngFor="let tag of tags" [text]="tag.tagTitle"></nb-tag></div>'
 })
-export class TagComponent implements OnInit {
+export class UserListTagComponent implements OnInit {
 
   constructor() { }
   renderValue: string;

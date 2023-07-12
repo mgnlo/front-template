@@ -37,11 +37,13 @@
         <p>用戶標籤輪廓</p>
       </div>
       <div class="rightBox">
-        <p class="textBold colorBlue">標籤所屬單位: {{datas.tagDept}}</p>
-        <!-- <nb-select size="medium" placeholder="請選擇">
+        <p class="textBold colorBlue">標籤所屬單位:</p>
+        <nb-select size="small" placeholder="請選擇">
             <nb-option [value]="datas.tagDept" selected>{{datas.tagDept}}</nb-option>
-            <nb-option value="month">item</nb-option>
-        </nb-select> -->
+            <nb-option value="month">item 1</nb-option>
+            <nb-option value="month">item 2</nb-option>
+            <nb-option value="month">item 3</nb-option>
+        </nb-select>
       </div>
       <div class="tagBlock">
         <div class="tagItem" *ngFor="let tag of datas.userTag">

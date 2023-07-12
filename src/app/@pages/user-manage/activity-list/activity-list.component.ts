@@ -82,7 +82,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
             type: 'custom',
             class: 'col-1',
             sort: false,
-            renderComponent: CeckboxComponent,
+            renderComponent: ActivityListCeckboxComponent,
           },
           listLimit: {
             title: '名單上限',
@@ -209,9 +209,9 @@ export class ActivityButtonComponent implements OnInit {
 
 @Component({
     selector: 'ngx-ceckbox',
-    template: '<nb-checkbox [checked]="bool" status="basic" ></nb-checkbox>',
+    template: '<nb-icon *ngIf="bool" status="info" icon="checkmark-square-2"></nb-icon>',
 })
-export class CeckboxComponent implements OnInit {
+export class ActivityListCeckboxComponent implements OnInit {
 
     @Input() value: string;
     bool: boolean;

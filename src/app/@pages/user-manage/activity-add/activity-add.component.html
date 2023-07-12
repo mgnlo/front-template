@@ -106,28 +106,22 @@
             <ng-container *ngFor="let condition of conditions.controls; let i=index; let first1 = first; let last1 = last" formArrayName="activityListCondition">
                 <div class="subTitle">
                     <p>活動名單條件{{i+1}}</p>
-                    <button nbButton status="danger" size="tiny" class="iconBtn" (click)="or('remove', i)" *ngIf="!first1 || first1 !== last1">
-                        <nb-icon icon="trash-2-outline"></nb-icon>
-                    </button>
-                    <button nbButton status="success" size="tiny" class="iconBtn" *ngIf="last1" (click)="or('add', i)">
-                        <nb-icon icon="plus-outline"></nb-icon>
+                    <button nbButton [status]="last1 ? 'success': 'danger'" size="tiny" class="iconBtn"
+                        (click)="or(last1 ? 'add' : 'remove', i)">
+                        <nb-icon [icon]="last1 ? 'plus-outline':'trash-2-outline'"></nb-icon>
                     </button>
                 </div>
-                <div class="grayCard" [formGroupName]="i">
-                    <div class="fieldGroup" *ngFor="let con of condition.value | keyvalue; let first2 = first; let last2 = last">
+                <div class="grayCard" [formGroupName]="i" *ngFor="let con of condition.value | keyvalue; let first2 = first; let last2 = last">
+                    <div class="fieldGroup">
                         <div class="mb_0">
                             <nb-select fullWidth placeholder="請選擇" [formControlName]="''+con.key">
                                 <nb-option [value]="con.value">{{con.value}}</nb-option>
                                 <nb-option value="item2">item2</nb-option>
                             </nb-select>
                             <span class="and colorGreen">and</span>
-                            <button nbButton status="danger" size="tiny" class="iconBtn" *ngIf="!first2 || first2 !== last2"
-                                (click)="and(i, 'remove', +con.key)">
-                                <nb-icon icon="trash-2-outline"></nb-icon>
-                            </button>
-                            <button nbButton status="success" size="tiny" class="iconBtn" *ngIf="last2"
-                                (click)="and(i, 'add', +con.key)">
-                                <nb-icon icon="plus-outline"></nb-icon>
+                            <button nbButton [status]="last2 ? 'success': 'danger'" size="tiny" class="iconBtn"
+                                (click)="and(i, last2 ? 'add' : 'remove', +con.key)">
+                                <nb-icon [icon]="last2 ? 'plus-outline':'trash-2-outline'"></nb-icon>
                             </button>
                         </div>
                         <div class="note errorText">
