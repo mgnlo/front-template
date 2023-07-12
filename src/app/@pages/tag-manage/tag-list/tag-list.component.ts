@@ -148,23 +148,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
     this.tagListSource.reset();
     const { startDate, endDate } = this.params.filter;
 
-    //search startDate And endDate Filter
-    const addRangeFilter = (field: string, startValue: Date | null, endValue: Date | null, filterFn: (value: string, searchValue: string[]) => boolean) => {
-      const startFormatDate = startValue !== null ? moment(startValue).format('YYYY-MM-DD') : null;
-      const endFormatDate = endValue !== null ? moment(endValue).format('YYYY-MM-DD') : null;
-
-      if (startFormatDate && endFormatDate) {
-        this.tagListSource.addFilter({
-          field,
-          filter: filterFn,
-          search: [startFormatDate, endFormatDate],
-        });
-      }
-    };
-    addRangeFilter('startDate', startDate, endDate, (value, searchValue) => new Date(value) >= new Date(searchValue[0]) && new Date(value) <= new Date(searchValue[1]));
-    addRangeFilter('endDate', startDate, endDate, (value, searchValue) => new Date(value) >= new Date(searchValue[0]) && new Date(value) <= new Date(searchValue[1]));
-
-    //search only date filter
+    //search date
     const addDateFilter = (field: string, value: Date | null, filterFn: (value: string, searchValue: string[]) => boolean) => {
       const formatDate = value !== null ? moment(value).format('YYYY-MM-DD') : null;
 
