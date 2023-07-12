@@ -1,13 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { NavigationExtras, Router } from '@angular/router';
 import { ActivitySetting } from '@api/models/activity-list.model';
 import { Status } from '@common/enums/activity-list-enum';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
+import { NbDateService } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
-import { UserManageService } from '../user-manage.service';
-
 
 @Component({
     selector: 'activity-list',
@@ -17,43 +17,29 @@ import { UserManageService } from '../user-manage.service';
 export class ActivityListComponent extends BaseComponent implements OnInit {
 
     constructor(
-        private userManageService: UserManageService,
-        private router: Router) {
+        private router: Router,
+        private dateService: NbDateService<Date>) {
         super();
+        // 篩選條件
+        this.validateForm = new FormGroup({
+          activityName: new FormControl(''),
+          status: new FormControl(''),
+          startDate: new FormControl(null),
+          endDate: new FormControl(null),
+        });
+
     }
+
     statusList: Array<{key: string; val: string}> = Object.entries(Status).map(([k, v]) => ({ key: k, val: v }))
     selected: string = '';
     mockData: Array<ActivitySetting> = ActivityListMock;
-    activityListSource = new LocalDataSource();
-    // 頁面參數
-    params = {
-      filter: { // 篩選條件
-        activityName: '',
-        status: '',
-        startDate: null,
-        endDate: null,
-      },
-      page: 1,
-      sort: [],
-    };
 
-    public ngOnInit(): void {
+    ngOnInit(): void {
       this.mockData = this.mockData.map(mock => {
         return {...mock, during:`${mock.startDate}~${mock.endDate}`} //起訖日查詢篩選要用到
       })
-      this.activityListSource.load(this.mockData);
-    }
-
-    ngDoCheck() {
-      this.activityListSource.onChanged().subscribe(()=>{
-        this.paginator.totalCount = this.activityListSource.count();
-        let page =this.activityListSource.getPaging().page;
-        let perPage = this.activityListSource.getPaging().perPage;
-        this.paginator.nowPage = page;
-        this.paginator.totalPage = Math.ceil(this.paginator.totalCount/perPage);
-        this.paginator.rowStart = (page - 1) * perPage + 1;
-        this.paginator.rowEnd = this.paginator.totalPage !== page ? page * perPage : (page-1) * perPage + this.paginator.totalCount % perPage;
-      });
+      this.dataSource = new LocalDataSource();
+      this.dataSource.load(this.mockData);
     }
 
     gridDefine = {
@@ -85,7 +71,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
             type: 'custom',
             class: 'col-1',
             sort: false,
-            renderComponent: CeckboxComponent,
+            renderComponent: ActivityListCeckboxComponent,
           },
           listLimit: {
             title: '名單上限',
@@ -96,7 +82,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
           status: {
             title: '狀態',
             type: 'string',
-            class: 'col-1 alignCenter',
+            class: 'col-1',
             valuePrepareFunction: (cell:string) => {
               return this.statusList.filter(status => status.key === cell)[0].val;
             },
@@ -164,23 +150,22 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
       }
 
       reset(){
-        this.params.filter = { activityName: '', status: '', startDate: null, endDate: null};
-        this.activityListSource.reset();
+        this.validateForm.reset({ activityName: '', status: '', startDate: null, endDate: null});
       }
   
       search() {
-        this.activityListSource.reset();
+        let filter = this.validateForm.getRawValue();
         //search during
-        let sDate = this.params.filter.startDate !== null? moment(this.params.filter.startDate).format('YYYY-MM-DD') : null;
-        let eDate = this.params.filter.endDate !== null? moment(this.params.filter.endDate).format('YYYY-MM-DD') : null;
-        this.activityListSource.addFilter({
+        let sDate = filter.startDate !== null? moment(filter.startDate).format('YYYY-MM-DD') : null;
+        let eDate = filter.endDate !== null? moment(filter.endDate).format('YYYY-MM-DD') : null;
+        this.dataSource.addFilter({
           field: 'during',
           filter: undefined,
           search: [sDate, eDate],
         });
         //search other
-        for (const [k, v] of Object.entries(this.params.filter).filter(([key, val])=> !key.includes('Date'))) {
-          this.activityListSource.addFilter({
+        for (const [k, v] of Object.entries(filter).filter(([key, val])=> !key.includes('Date'))) {
+          this.dataSource.addFilter({
             field: k,
             filter: undefined,
             search: v,
@@ -211,9 +196,9 @@ export class ActivityButtonComponent implements OnInit {
 
 @Component({
     selector: 'ngx-ceckbox',
-    template: '<nb-checkbox [checked]="bool" status="basic" ></nb-checkbox>',
+    template: '<nb-icon *ngIf="bool" status="info" icon="checkmark-square-2"></nb-icon>',
 })
-export class CeckboxComponent implements OnInit {
+export class ActivityListCeckboxComponent implements OnInit {
 
     @Input() value: string;
     bool: boolean;

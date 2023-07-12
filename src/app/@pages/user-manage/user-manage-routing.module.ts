@@ -2,8 +2,9 @@ import { NgModule } from "@angular/core"
 import { RouterModule, Routes } from "@angular/router"
 import { ActivityAddComponent } from "./activity-add/activity-add.component"
 import { ActivityDetailComponent } from "./activity-detail/activity-detail.component"
-import { ActivityButtonComponent, ActivityListComponent, CeckboxComponent } from "./activity-list/activity-list.component"
-import { ButtonComponent, TagComponent, UserListComponent } from "./user-list/user-list.component"
+import { ActivityButtonComponent, ActivityListCeckboxComponent, ActivityListComponent } from "./activity-list/activity-list.component"
+import { DetailDialogComponent } from "./user-list/detail-dialog/detail.dialog.component"
+import { UserListTagComponent, UserListButtonComponent, UserListComponent } from "./user-list/user-list.component"
 import { UserManageComponent } from "./user-manage.component"
 
 const routes: Routes = [
@@ -32,11 +33,12 @@ export class UserManageRoutingModule { }
 export const routedComponents = [
   UserManageComponent,
   UserListComponent,
+  UserListButtonComponent,
+  UserListTagComponent,
   ActivityListComponent,
   ActivityAddComponent,
   ActivityDetailComponent,
   ActivityButtonComponent,
-  CeckboxComponent,
-  ButtonComponent,
-  TagComponent,
+  ActivityListCeckboxComponent,
+  DetailDialogComponent
 ];

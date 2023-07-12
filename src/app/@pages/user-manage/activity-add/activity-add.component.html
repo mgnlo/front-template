@@ -53,28 +53,30 @@
                         <p>欄位錯誤訊息</p>
                     </div>
                 </div>
-                <div class="fieldGroup essential col-12 col-lg-6">
+                <div class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': this.validateForm.errors?.range}">
                     <label>起始時間</label>
                     <div>
-                        <input nbInput fullWidth placeholder="請選擇日期" [nbDatepicker]="startDatePicker" formControlName="startDate">
-                        <nb-datepicker #startDatePicker format="yyyy-MM-dd"></nb-datepicker>
+                        <input nbInput fullWidth [status]="this.validateForm.errors?.range ? 'danger' : 'basic'"
+                            placeholder="請選擇日期" [nbDatepicker]="startDatePicker" formControlName="startDate">
+                        <nb-datepicker #startDatePicker format="yyyy-MM-dd" [max]="this.validateForm.get('endDate').value"></nb-datepicker>
                     </div>
                     <!-- 欄位錯誤訊息 -->
-                    <div class="note errorText">
+                    <div class="note errorText" *ngIf="this.validateForm.errors?.range">
                         <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>欄位錯誤訊息</p>
+                        <p>結束時間不得大於起始時間</p>
                     </div>
                 </div>
-                <div class="fieldGroup essential col-12 col-lg-6">
+                <div class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': this.validateForm.errors?.range}">
                     <label>結束時間</label>
                     <div>
-                        <input nbInput fullWidth placeholder="請選擇日期" [nbDatepicker]="endDatePicker" formControlName="endDate">
-                        <nb-datepicker #endDatePicker format="yyyy-MM-dd" max=""></nb-datepicker>
+                        <input nbInput fullWidth [status]="this.validateForm.errors?.range ? 'danger' : 'basic'"
+                            placeholder="請選擇日期" [nbDatepicker]="endDatePicker" formControlName="endDate">
+                        <nb-datepicker #endDatePicker format="yyyy-MM-dd" [min]="this.validateForm.get('startDate').value"></nb-datepicker>
                     </div>
                     <!-- 欄位錯誤訊息 -->
-                    <div class="note errorText">
+                    <div class="note errorText" *ngIf="this.validateForm.errors?.range">
                         <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>欄位錯誤訊息</p>
+                        <p>結束時間不得大於起始時間</p>
                     </div>
                 </div>
                 <div class="fieldGroup essential col-12 col-lg-6">
@@ -104,27 +106,25 @@
             <ng-container *ngFor="let condition of conditions.controls; let i=index; let first1 = first; let last1 = last" formArrayName="activityListCondition">
                 <div class="subTitle">
                     <p>活動名單條件{{i+1}}</p>
-                    <button nbButton status="danger" size="tiny" class="iconBtn" (click)="or('remove', i)" *ngIf="!first1 || first1 !== last1">
+                    <button nbButton status="danger" *ngIf="!first1 || first1 !== last1" size="tiny" class="iconBtn" (click)="or('remove', i)">
                         <nb-icon icon="trash-2-outline"></nb-icon>
                     </button>
-                    <button nbButton status="success" size="tiny" class="iconBtn" *ngIf="last1" (click)="or('add', i)">
+                    <button nbButton status="success" *ngIf="last1" size="tiny" class="iconBtn" (click)="or('add', i)">
                         <nb-icon icon="plus-outline"></nb-icon>
                     </button>
                 </div>
-                <div class="grayCard" [formGroupName]="i">
-                    <div class="fieldGroup" *ngFor="let con of condition.value | keyvalue; let first2 = first; let last2 = last">
+                <div class="grayCard" [formGroupName]="i" *ngFor="let con of condition.value | keyvalue; let first2 = first; let last2 = last">
+                    <div class="fieldGroup">
                         <div class="mb_0">
                             <nb-select fullWidth placeholder="請選擇" [formControlName]="''+con.key">
                                 <nb-option [value]="con.value">{{con.value}}</nb-option>
                                 <nb-option value="item2">item2</nb-option>
                             </nb-select>
                             <span class="and colorGreen">and</span>
-                            <button nbButton status="danger" size="tiny" class="iconBtn" *ngIf="!first2 || first2 !== last2"
-                                (click)="and(i, 'remove', +con.key)">
+                            <button nbButton status="danger" *ngIf="!first2 || first2 !== last2" size="tiny" class="iconBtn" (click)="and(i, 'remove', +con.key)">
                                 <nb-icon icon="trash-2-outline"></nb-icon>
                             </button>
-                            <button nbButton status="success" size="tiny" class="iconBtn" *ngIf="last2"
-                                (click)="and(i, 'add', +con.key)">
+                            <button nbButton status="success" *ngIf="last2" size="tiny" class="iconBtn" (click)="and(i, 'add', +con.key)">
                                 <nb-icon icon="plus-outline"></nb-icon>
                             </button>
                         </div>

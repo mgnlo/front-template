@@ -4,7 +4,9 @@ import { AlertDialogComponent, AlertDialogOption } from '@component/dialog/alert
 import { ConfirmDialogComponent, ConfirmDialogOption } from '@component/dialog/confirm-dialog/confirm-dialog.component';
 import { NbDialogService } from '@nebular/theme';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class DialogService {
 
   constructor(

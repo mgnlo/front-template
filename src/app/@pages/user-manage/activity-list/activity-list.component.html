@@ -6,12 +6,12 @@
         <nb-card-header>
             <h2>查詢設定值</h2>
         </nb-card-header>
-        <nb-card-body>
+        <nb-card-body [formGroup]="validateForm">
             <div class="row">
                 <div class="fieldGroup col-12 col-lg-6">
                     <label>活動名稱</label>
                     <div>
-                        <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" [(ngModel)]="params.filter.activityName"/>
+                        <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" formControlName="activityName"/>
                     </div>
                     <div class="note errorText">
                         <nb-icon icon="alert-triangle"></nb-icon>
@@ -21,7 +21,7 @@
                 <div class="fieldGroup col-12 col-lg-6">
                     <label>狀態</label>
                     <div>
-                        <nb-select fullWidth placeholder="請選擇" [(ngModel)]="params.filter.status">
+                        <nb-select fullWidth placeholder="請選擇" formControlName="status">
                             <nb-option value="">全部</nb-option>
                             <nb-option *ngFor="let status of statusList" [value]="status.key">{{ status.val }}</nb-option>
                         </nb-select>
@@ -32,28 +32,30 @@
                         <p>欄位錯誤訊息</p>
                     </div>
                 </div>
-                <div class="fieldGroup col-12 col-lg-6">
+                <div class="fieldGroup col-12 col-lg-6" [ngClass]="{'error': this.validateForm.errors?.range}">
                     <label>起始時間</label>
                     <div>
-                        <input nbInput fullWidth placeholder="請選擇日期" [nbDatepicker]="startDatePicker" [(ngModel)]="params.filter.startDate">
-                        <nb-datepicker #startDatePicker format="yyyy-MM-dd"></nb-datepicker>
+                        <input nbInput fullWidth [status]="this.validateForm.errors?.range ? 'danger' : 'basic'"
+                            placeholder="請選擇日期" [nbDatepicker]="startDatePicker" formControlName="startDate" readonly>
+                        <nb-datepicker #startDatePicker format="yyyy-MM-dd" [max]="this.validateForm.get('endDate').value"></nb-datepicker>
                     </div>
                     <!-- 欄位錯誤訊息 -->
-                    <div class="note errorText">
+                    <div class="note errorText" *ngIf="this.validateForm.errors?.range">
                         <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>欄位錯誤訊息</p>
+                        <p>結束時間不得大於起始時間</p>
                     </div>
                 </div>
-                <div class="fieldGroup col-12 col-lg-6">
+                <div class="fieldGroup col-12 col-lg-6" [ngClass]="{'error': this.validateForm.errors?.range}">
                     <label>結束時間</label>
                     <div>
-                        <input nbInput fullWidth placeholder="請選擇日期" [nbDatepicker]="endDatePicker" [(ngModel)]="params.filter.endDate">
-                        <nb-datepicker #endDatePicker format="yyyy-MM-dd" max=""></nb-datepicker>
+                        <input nbInput fullWidth [status]="this.validateForm.errors?.range ? 'danger' : 'basic'"
+                            placeholder="請選擇日期" [nbDatepicker]="endDatePicker" formControlName="endDate" readonly>
+                        <nb-datepicker #endDatePicker format="yyyy-MM-dd" [min]="this.validateForm.get('startDate').value"></nb-datepicker>
                     </div>
                     <!-- 欄位錯誤訊息 -->
-                    <div class="note errorText">
+                    <div class="note errorText" *ngIf="this.validateForm.errors?.range">
                         <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>欄位錯誤訊息</p>
+                        <p>結束時間不得大於起始時間</p>
                     </div>
                 </div>
             </div>
@@ -72,8 +74,8 @@
         </nb-card-header>
         <nb-card-body>
             <div class="rightBox"><button nbButton status="primary" size="medium" (click)="add()">新增</button></div>
-            <ng2-smart-table [settings]="gridDefine" [source]="activityListSource"></ng2-smart-table>
-            <paginator [source]="activityListSource" [paginator]="paginator"></paginator>
+            <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
+            <paginator [source]="dataSource" [paginator]="paginator"></paginator>
         </nb-card-body>
     </nb-card>
 </div>

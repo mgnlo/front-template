@@ -16,3 +16,8 @@ export enum Filter{
   true = '啟用',
   false = '停用'
 }
+
+export enum Gender{
+  M = '男',
+  F = '女'
+}
