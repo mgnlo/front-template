@@ -83,10 +83,12 @@ export class UserListComponent extends BaseComponent implements OnInit {
     };
       
     reset(){
+      this.dataSource.reset();
       this.validateForm.reset({custId: '', mobile: ''});
     }
 
     search() {
+      this.dataSource.reset();
       let filter = this.validateForm.getRawValue();
       for (const [k, v] of Object.entries(filter)) {
         this.dataSource.addFilter({field: k, filter: undefined, search: v});
