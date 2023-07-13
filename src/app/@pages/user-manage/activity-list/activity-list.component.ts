@@ -150,14 +150,16 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
       }
 
       reset(){
+        this.dataSource.reset();
         this.validateForm.reset({ activityName: '', status: '', startDate: null, endDate: null});
       }
   
       search() {
+        this.dataSource.reset();
         let filter = this.validateForm.getRawValue();
         //search during
-        let sDate = filter.startDate !== null? moment(filter.startDate).format(this.dateFormat) : null;
-        let eDate = filter.endDate !== null? moment(filter.endDate).format(this.dateFormat) : null;
+        let sDate = filter.startDate !== null?  this.dateService.format(filter.startDate, this.dateFormat) : null;
+        let eDate = filter.endDate !== null? this.dateService.format(filter.endDate, this.dateFormat) : null;
         this.dataSource.addFilter({
           field: 'during',
           filter: undefined,
