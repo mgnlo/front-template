@@ -1,9 +1,10 @@
 import { NgModule } from "@angular/core"
 import { RouterModule, Routes } from "@angular/router"
 import { TagManageComponent } from "./tag-manage.component"
-import { TagAddComponent } from "./tag-add/tag-add.component"
 import { TagListComponent } from "./tag-list/tag-list.component"
-import { ButtonComponent } from "./tag-list/tag-list.component"
+import { TagButtonComponent } from "./tag-list/tag-list.component"
+import { TagAddComponent } from "./tag-add/tag-add.component"
+import { TagDetailComponent } from "./tag-detail/tag-detail.component"
 
 const routes: Routes = [
   {
@@ -12,6 +13,7 @@ const routes: Routes = [
       { path: "tag-list", component: TagListComponent },
       { path: '', redirectTo: 'tag-list', pathMatch: 'full' },
       { path: 'tag-add', component: TagAddComponent },
+      { path: 'tag-detail', component: TagDetailComponent },
     ]
   }
 ]
@@ -25,6 +27,7 @@ export class TagManageRoutingModule { }
 export const routedComponents = [
   TagManageComponent,
   TagListComponent,
+  TagButtonComponent,
   TagAddComponent,
-  ButtonComponent,
+  TagDetailComponent,
 ];

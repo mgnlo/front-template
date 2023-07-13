@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { BaseComponent } from '@pages/base.component';
 import { Status } from '@common/enums/commom-enum';
 import { TagManageService } from '../tag-manage.service';
@@ -127,7 +127,8 @@ export class TagListComponent extends BaseComponent implements OnInit {
         title: '查看',
         type: 'custom',
         class: 'col-1',
-        renderComponent: ButtonComponent,
+        valuePrepareFunction: (cell, row: TagList) => row,
+        renderComponent: TagButtonComponent,
         sort: false,
       },
     },
@@ -180,16 +181,23 @@ export class TagListComponent extends BaseComponent implements OnInit {
 }
 
 @Component({
-  selector: 'ngx-custom-button',
-  template: '<button nbButton ghost status="info" size="medium"><nb-icon icon="search"></nb-icon></button>',
+  selector: 'ngx-tag-button',
+  template: '<button nbButton ghost status="info" size="medium" (click)="search()"><nb-icon icon="search"></nb-icon></button>'
 })
-export class ButtonComponent implements OnInit {
-  constructor() { }
-  @Input() rowData: Array<string>;
+export class TagButtonComponent implements OnInit {
+
+  constructor(private router: Router) { }
+
+  @Input() value: TagList;
+
   ngOnInit() { }
-  edit(): void {
-    // this.router.navigate(['/pages/system-setting/system-manage/edit', this.value.id]);
+
+  search() {
+    let passData: NavigationExtras = { state: this.value };
+    this.router.navigate(['pages', 'tag-manage', 'tag-detail'], passData);
   }
+
+  edit(): void { }
 }
 
 @Component({
