@@ -21,9 +21,9 @@
               <div class="fieldGroup essential col-12 col-lg-6">
                   <label>狀態</label>
                   <div>
-                      <nb-radio-group formControlName="status">
-                          <nb-radio value="active">啟用</nb-radio>
-                          <nb-radio value="stop">停用</nb-radio>
+                      <nb-radio-group name="status" formControlName="status">
+                          <nb-radio value="active">{{Status.active}}</nb-radio>
+                          <nb-radio value="stop">{{Status.stop}}</nb-radio>
                       </nb-radio-group>
                   </div>
                   <div class="note errorText">
@@ -31,7 +31,114 @@
                       <p>欄位錯誤訊息</p>
                   </div>
               </div>
-
+              <div class="fieldGroup essential col-12 col-lg-6">
+                <label>標籤類型</label>
+                <div>
+                    <nb-radio-group name="tagType" formControlName="tagType">
+                        <nb-radio value="normal">{{TagType.normal}}</nb-radio>
+                        <nb-radio value="document">{{TagType.document}}</nb-radio>
+                    </nb-radio-group>
+                </div>
+                <div class="note errorText">
+                    <nb-icon icon="alert-triangle"></nb-icon>
+                    <p>欄位錯誤訊息</p>
+                </div>
+              </div>
+              <div class="fieldGroup essential col-12 col-lg-6">
+                <label>條件設定方式</label>
+                <div>
+                    <nb-radio-group name="setCondition" formControlName="setCondition">
+                        <nb-radio value="normal">{{SetCondition.normal}}</nb-radio>
+                        <nb-radio value="field">{{SetCondition.field}}</nb-radio>
+                    </nb-radio-group>
+                </div>
+                <div class="note errorText">
+                    <nb-icon icon="alert-triangle"></nb-icon>
+                    <p>欄位錯誤訊息</p>
+                </div>
+              </div>
+              <div class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': this.validateForm.errors?.range}">
+                <label>起始時間</label>
+                <div>
+                    <input nbInput fullWidth [status]="this.validateForm.errors?.range ? 'danger' : 'basic'"
+                        placeholder="請選擇日期" [nbDatepicker]="startDatePicker" formControlName="startDate">
+                    <nb-datepicker #startDatePicker format="yyyy-MM-dd" [max]="this.validateForm.get('endDate').value"></nb-datepicker>
+                </div>
+                <div class="note errorText" *ngIf="this.validateForm.errors?.range">
+                    <nb-icon icon="alert-triangle"></nb-icon>
+                    <p>結束時間不得大於起始時間</p>
+                </div>
+            </div>
+            <div class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': this.validateForm.errors?.range}">
+                <label>結束時間</label>
+                <div>
+                    <input nbInput fullWidth [status]="this.validateForm.errors?.range ? 'danger' : 'basic'"
+                        placeholder="請選擇日期" [nbDatepicker]="endDatePicker" formControlName="endDate">
+                    <nb-datepicker #endDatePicker format="yyyy-MM-dd" [min]="this.validateForm.get('startDate').value"></nb-datepicker>
+                </div>
+                <div class="note errorText" *ngIf="this.validateForm.errors?.range">
+                    <nb-icon icon="alert-triangle"></nb-icon>
+                    <p>結束時間不得大於起始時間</p>
+                </div>
+            </div>
+            <div class="fieldGroup essential col-12 col-lg-6">
+              <label>標籤構面</label>
+              <div>
+                  <nb-select fullWidth placeholder="請選擇" formControlName="tagDimension">
+                      <nb-option value="">全部</nb-option>
+                      <nb-option *ngFor="let status of categoryList" [value]="status.key">{{ status.val }}</nb-option>
+                  </nb-select>
+              </div>
+              <div class="note errorText">
+                  <nb-icon icon="alert-triangle"></nb-icon>
+                  <p>欄位錯誤訊息</p>
+              </div>
+            </div>
+            <div class="fieldGroup essential col-12 col-lg-6">
+              <label>標籤子構面</label>
+              <div>
+                  <nb-select fullWidth placeholder="請選擇" formControlName="tagSubDimension">
+                      <nb-option value="">全部</nb-option>
+                      <nb-option *ngFor="let status of subCategoryList" [value]="status.key">{{ status.val }}</nb-option>
+                  </nb-select>
+              </div>
+              <div class="note errorText">
+                  <nb-icon icon="alert-triangle"></nb-icon>
+                  <p>欄位錯誤訊息</p>
+              </div>
+            </div>
+            <div class="fieldGroup essential col-12 col-lg-6">
+                <label>排程設定</label>
+                <div>
+                    <nb-select fullWidth placeholder="請選擇" formControlName="scheduleSettings">
+                        <nb-option *ngFor="let schedule of scheduleList" [value]="schedule.key">{{ schedule.val }}</nb-option>
+                    </nb-select>
+                </div>
+                <div class="note errorText">
+                    <nb-icon icon="alert-triangle"></nb-icon>
+                    <p>欄位錯誤訊息</p>
+                </div>
+            </div>
+            <div class="fieldGroup col-12 col-lg-6">
+                <label>描述說明</label>
+                <div>
+                    <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" formControlName="activityDescription"/>
+                </div>
+                <div class="note errorText">
+                    <nb-icon icon="alert-triangle"></nb-icon>
+                    <p>欄位錯誤訊息</p>
+                </div>
+            </div>
+            <div class="fieldGroup essential col-12">
+                <label>條件設定</label>
+                <div>
+                    <textarea nbInput fullWidth status="basic" type="text" formControlName="setLimit" placeholder="請輸入"></textarea>
+                </div>
+                <div class="note errorText">
+                    <nb-icon icon="alert-triangle"></nb-icon>
+                    <p>欄位錯誤訊息</p>
+                </div>
+            </div>
           </div>
       </nb-card-body>
   </nb-card>
