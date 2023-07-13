@@ -34,7 +34,7 @@
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p class="textBold">異動時間：</p>
-                    <span>{{detail.modificationTime | date:'yyyy-MM-dd'}}</span>
+                    <span>{{detail.modificationTime | date:dateFormat}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p class="textBold">排成設定：</p>
@@ -83,7 +83,7 @@
                         </div>
                         <div class="subItem" [ngClass]="isHistoryOpen[hg.key] ? '' : 'displayNone'" *ngFor="let flow of history.flows">
                             <div>
-                                <p>{{flow.time | date:'yyyy-MM-dd'}}</p>
+                                <p>{{flow.time | date:dateFormat}}</p>
                                 <p>{{flow.time | date:'hh:mm:ss'}}</p>
                             </div>
                             <div>

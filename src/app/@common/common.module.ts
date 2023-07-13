@@ -1,10 +1,9 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { LoadingService } from '../@api/services/loading.service';
 import { FilterPipe, GenderPipe, SchedulePipe, StatusPipe } from './pipes/enum.pipe';
-import { HistoryPipe } from './pipes/history.pipe';
 
 const PIPES = [
-  StatusPipe, SchedulePipe, FilterPipe, HistoryPipe, GenderPipe
+  StatusPipe, SchedulePipe, FilterPipe, GenderPipe
 ]
 @NgModule({
   declarations: [ ...PIPES],
