@@ -1,0 +1,47 @@
+<nb-card class="list-card" nbSpinnerStatus="info" nbSpinnerSize="giant" size="large">
+    <nb-card-header class="text-h-center">
+      <p>預覽名單</p>
+    </nb-card-header>
+    <nb-card-body>
+      <div class="fieldGroup col-6 col-lg-6">
+        <label>名單上限</label>
+        <div>
+            <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" [(ngModel)]="dataList['listLimit']"/>
+        </div>
+        <div class="note errorText">
+            <nb-icon icon="alert-triangle"></nb-icon>
+            <p>欄位錯誤訊息</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="fieldGroup col-6 col-lg-6">
+          <label>資料排序方式</label>
+          <div>
+              <nb-select fullWidth placeholder="請選擇" [(ngModel)]="orderBy">
+                  <nb-option value="">全部</nb-option>
+                  <nb-option *ngFor="let order of orderList | keyvalue" [value]="order.key">{{ order.value }}</nb-option>
+              </nb-select>
+          </div>
+        </div>
+        <div class="fieldGroup essential col-6 col-lg-6">
+          <label>排序順序</label>
+          <div>
+              <nb-radio-group [(ngModel)]="orderType">
+                  <nb-radio value="asc">升冪</nb-radio>
+                  <nb-radio value="desc">降冪</nb-radio>
+              </nb-radio-group>
+          </div>
+          <!-- 欄位錯誤訊息 -->
+          <div class="note errorText">
+              <nb-icon icon="alert-triangle"></nb-icon>
+              <p>欄位錯誤訊息</p>
+          </div>
+        </div>
+      </div>
+      <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
+      <paginator [source]="dataSource" [paginator]="paginator"></paginator>
+    </nb-card-body>
+    <nb-card-footer>
+      <button nbButton status="basic" size="medium" (click)="close()">關閉</button>
+    </nb-card-footer>
+</nb-card>

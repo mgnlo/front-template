@@ -1,13 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DataSource } from 'ng2-smart-table/lib/lib/data-source/data-source';
 
-export class Paginator {
+export interface Paginator {
   totalCount: number
   totalPage: number
   perPage: number
   nowPage: number
-  rowStart?: number
-  rowEnd?: number
+  rowStart: number
+  rowEnd: number
 }
 
 @Component({
@@ -22,14 +22,16 @@ export class PaginatorComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.source.onChanged().subscribe(()=>{
-      this.paginator.totalCount = this.source.count();
-      let page =this.source.getPaging().page;
-      let perPage = this.source.getPaging().perPage;
-      this.paginator.nowPage = page;
-      this.paginator.totalPage = Math.ceil(this.paginator.totalCount/perPage);
-      this.paginator.rowStart = (page - 1) * perPage + 1;
-      this.paginator.rowEnd = this.paginator.totalPage !== page ? page * perPage : (page-1) * perPage + this.paginator.totalCount % perPage;
-    });
+    if(!!this.source){
+      this.source.onChanged().subscribe(()=>{
+        this.paginator.totalCount = this.source.count();
+        let page =this.source.getPaging().page;
+        let perPage = this.source.getPaging().perPage;
+        this.paginator.nowPage = page;
+        this.paginator.totalPage = Math.ceil(this.paginator.totalCount/perPage);
+        this.paginator.rowStart = (page - 1) * perPage + 1;
+        this.paginator.rowEnd = this.paginator.totalPage !== page ? page * perPage : (page-1) * perPage + this.paginator.totalCount % perPage;
+      });
+    }
   }
 }

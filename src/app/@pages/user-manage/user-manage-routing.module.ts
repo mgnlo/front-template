@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core"
 import { RouterModule, Routes } from "@angular/router"
 import { ActivityAddComponent } from "./activity-add/activity-add.component"
+import { PreviewDialogComponent } from "./activity-add/preview-dialog/preview.dialog.component"
 import { ActivityDetailComponent } from "./activity-detail/activity-detail.component"
 import { ActivityButtonComponent, ActivityListCeckboxComponent, ActivityListComponent } from "./activity-list/activity-list.component"
 import { DetailDialogComponent } from "./user-list/detail-dialog/detail.dialog.component"
@@ -40,5 +41,6 @@ export const routedComponents = [
   ActivityDetailComponent,
   ActivityButtonComponent,
   ActivityListCeckboxComponent,
-  DetailDialogComponent
+  DetailDialogComponent,
+  PreviewDialogComponent
 ];

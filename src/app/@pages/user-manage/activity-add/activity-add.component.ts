@@ -2,10 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ActivityListCondition, ActivitySetting } from '@api/models/activity-list.model';
+import { DialogService } from '@api/services/dialog.service';
 import { Filter, Schedule } from '@common/enums/activity-list-enum';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
+import { PreviewDialogComponent } from './preview-dialog/preview.dialog.component';
 
 @Component({
   selector: 'activity-add',
@@ -17,7 +19,7 @@ export class ActivityAddComponent extends BaseComponent implements OnInit {
   filterList: Array<{key: string; val: string}> = Object.entries(Filter).map(([k, v]) => ({ key: k, val: v }));
   scheduleList: Array<{key: string; val: string}> = Object.entries(Schedule).map(([k, v]) => ({ key: k, val: v }));
 
-  constructor(private router: Router, private formBuilder: FormBuilder) {
+  constructor(private router: Router, private dialogService: DialogService) {
     super();
 
     this.validateForm = new FormGroup({
@@ -106,6 +108,9 @@ export class ActivityAddComponent extends BaseComponent implements OnInit {
   }
 
   preview() {
+    this.dialogService.open(PreviewDialogComponent, {
+      dataList: this.validateForm.getRawValue()
+    });
   }
 
   submit() {

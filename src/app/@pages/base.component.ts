@@ -9,13 +9,14 @@ import { Subject } from 'rxjs';
 export class BaseComponent implements OnDestroy {
 
   unsubscribe$ = new Subject();
+  readonly dateFormat = 'yyyy-MM-dd';
 
   // constructor(oauth2Service: OAuth2Service) {
   //   super(oauth2Service);
   // }
 
   dataSource: LocalDataSource; //table
-  paginator: Paginator = {totalCount: 1, nowPage: 1, perPage:10, totalPage: 1};  //table筆數顯示
+  paginator: Paginator = {totalCount: 0, nowPage: 1, perPage:10, totalPage: 1, rowStart: 0, rowEnd:0};  //table筆數顯示
   validateForm: FormGroup;     // 共用表單名稱
   isSubmit: boolean = false;   // 確認是否送出表單 -> 初始化時須設定為false
   validationMessages: any;     // 欄位檢核提示訊息 -> 初始化時須各別設定
