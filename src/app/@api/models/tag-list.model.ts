@@ -1,4 +1,4 @@
-export class TagList {
+export interface TagList {
   tagId: string
   tagName: string
   tagDescription: string

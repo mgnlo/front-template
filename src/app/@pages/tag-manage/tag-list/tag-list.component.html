@@ -8,43 +8,43 @@
       </nb-card-header>
       <nb-card-body>
           <div class="row">
-              <div class="fieldGroup col-12 col-lg-6">
-                  <label>標籤名稱</label>
-                  <div><input nbInput fullWidth status="basic" type="text" placeholder="請輸入" [(ngModel)]="params.filter.tagName"/></div>
-                  <div class="note errorText">
-                      <nb-icon icon="alert-triangle"></nb-icon>
-                      <p>欄位錯誤訊息</p>
-                  </div>
-              </div>
-              <div class="fieldGroup col-12 col-lg-6">
-                <label>狀態</label>
-                <div>
-                    <nb-select fullWidth placeholder="請選擇" [(ngModel)]="params.filter.status">
-                        <nb-option value="">全部</nb-option>
-                        <nb-option *ngFor="let status of statusList" [value]="status.key">{{ status.val }}</nb-option>
-                    </nb-select>
-                </div>
-                <div class="note errorText">
-                    <nb-icon icon="alert-triangle"></nb-icon>
-                    <p>欄位錯誤訊息</p>
-                </div>
-              </div>
-              <div class="fieldGroup col-12 col-lg-6">
-                <label>起始時間</label>
-                <div>
-                    <input nbInput fullWidth placeholder="請選擇日期" [nbDatepicker]="startDatePicker" [(ngModel)]="params.filter.startDate">
-                    <nb-datepicker #startDatePicker format="yyyy-MM-dd"></nb-datepicker>
-                </div>
+            <div class="fieldGroup col-12 col-lg-6">
+                <label>標籤名稱</label>
+                <div><input nbInput fullWidth status="basic" type="text" placeholder="請輸入" [(ngModel)]="params.filter.tagName"/></div>
                 <div class="note errorText">
                     <nb-icon icon="alert-triangle"></nb-icon>
                     <p>欄位錯誤訊息</p>
                 </div>
             </div>
             <div class="fieldGroup col-12 col-lg-6">
+              <label>狀態</label>
+              <div>
+                  <nb-select fullWidth placeholder="請選擇" [(ngModel)]="params.filter.status">
+                      <nb-option value="">全部</nb-option>
+                      <nb-option *ngFor="let status of statusList" [value]="status.key">{{ status.val }}</nb-option>
+                  </nb-select>
+              </div>
+              <div class="note errorText">
+                  <nb-icon icon="alert-triangle"></nb-icon>
+                  <p>欄位錯誤訊息</p>
+              </div>
+            </div>
+            <div class="fieldGroup col-12 col-lg-6">
+              <label>起始時間</label>
+              <div>
+                  <input nbInput fullWidth placeholder="請選擇日期" [nbDatepicker]="startDatePicker" [(ngModel)]="params.filter.startDate">
+                  <nb-datepicker #startDatePicker [format]="dateFormat"></nb-datepicker>
+              </div>
+              <div class="note errorText">
+                  <nb-icon icon="alert-triangle"></nb-icon>
+                  <p>欄位錯誤訊息</p>
+              </div>
+            </div>
+            <div class="fieldGroup col-12 col-lg-6">
                 <label>結束時間</label>
                 <div>
                     <input nbInput fullWidth placeholder="請選擇日期" [nbDatepicker]="endDatePicker" [(ngModel)]="params.filter.endDate">
-                    <nb-datepicker #endDatePicker format="yyyy-MM-dd" max=""></nb-datepicker>
+                    <nb-datepicker #endDatePicker [format]="dateFormat" max=""></nb-datepicker>
                 </div>
                 <div class="note errorText">
                     <nb-icon icon="alert-triangle"></nb-icon>
@@ -67,7 +67,7 @@
       </nb-card-header>
       <nb-card-body>
           <div class="rightBox"><button nbButton status="primary" size="medium" (click)="add()">新增</button></div>
-          <ng2-smart-table [settings]="gridDefine" [source]="tagListSource"></ng2-smart-table>
+          <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
           <div class="paginator" [ngClass]="{'only' : paginator.totalPage <=1 && paginator.nowPage >= paginator.totalPage}">
               <span class="colorBlue">顯示 {{paginator.rowStart}} 到 {{paginator.rowEnd}} 筆資料，共 {{paginator.totalCount}} 筆資料</span>
           </div>

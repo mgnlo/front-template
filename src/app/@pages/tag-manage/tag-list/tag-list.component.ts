@@ -7,6 +7,7 @@ import { LocalDataSource } from 'ng2-smart-table';
 import * as moment from 'moment';
 import { TagList } from '@api/models/tag-list.model';
 import { TagListMock } from '@common/mock-data/tag-list-mock';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'tag-list',
@@ -23,7 +24,6 @@ export class TagListComponent extends BaseComponent implements OnInit {
   statusList: Array<{ key: string; val: string }> = Object.entries(Status).map(([k, v]) => ({ key: k, val: v }))
   updateTime: string = moment(new Date()).format('YYYY/MM/DD');
   mockData: Array<TagList> = TagListMock;
-  tagListSource = new LocalDataSource();
 
   params = {
     filter: {
@@ -38,18 +38,8 @@ export class TagListComponent extends BaseComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.tagListSource.load(this.mockData);
-    this.paginator.totalCount = this.mockData.length;
-
-    this.tagListSource.onChanged().subscribe(() => {
-      this.paginator.totalCount = this.tagListSource.count();
-      let page = this.tagListSource.getPaging().page;
-      this.paginator.nowPage = page;
-      let perPage = this.tagListSource.getPaging().perPage;
-      this.paginator.totalPage = Math.ceil(this.paginator.totalCount / perPage);
-      this.paginator.rowStart = (page - 1) * perPage + 1;
-      this.paginator.rowEnd = this.paginator.totalPage !== page ? page * perPage : (page - 1) * perPage + this.paginator.totalCount % perPage;
-    });
+    this.dataSource = new LocalDataSource();
+    this.dataSource.load(this.mockData);
   }
 
   gridDefine = {
@@ -61,7 +51,8 @@ export class TagListComponent extends BaseComponent implements OnInit {
       tagName: {
         title: '標籤名稱',
         type: 'html',
-        class: 'col-1',
+        class: 'left',
+        width: '20%',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
@@ -70,25 +61,26 @@ export class TagListComponent extends BaseComponent implements OnInit {
       tagType: {
         title: '類型',
         type: 'string',
-        class: 'col-1',
+        width: '10%',
         sort: false,
       },
       department: {
         title: '所屬單位',
         type: 'string',
-        class: 'col-1',
+        width: '15%',
         sort: false,
       },
       owner: {
         title: '負責人',
         type: 'string',
-        class: 'col-1',
+        width: '3%',
         sort: false,
       },
       tagDescription: {
         title: '說明',
         type: 'html',
-        class: 'col-2',
+        class: 'left',
+        width: '39%',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
@@ -97,27 +89,30 @@ export class TagListComponent extends BaseComponent implements OnInit {
       startDate: {
         title: '起始時間',
         type: 'html',
-        class: 'col-2',
         sort: false,
         hide: true
       },
       endDate: {
         title: '結束時間',
         type: 'html',
-        class: 'col-2',
         sort: false,
         hide: true
       },
       modificationTime: {
         title: '異動時間',
         type: 'html',
-        class: 'col-2',
+        width: '10%',
+        valuePrepareFunction: (cell: string) => {
+          const datepipe: DatePipe = new DatePipe('en-US');
+          return `<p class="date">${datepipe.transform(cell, this.dateFormat)}</p>`;
+        },
         sort: false,
       },
       status: {
         title: '狀態',
         type: 'string',
-        class: 'col-1 alignCenter',
+        width: '5%',
+        class: 'alignCenter',
         valuePrepareFunction: (cell: string) => {
           return this.statusList.filter(status => status.key === cell)[0].val;
         },
@@ -126,7 +121,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
       action: {
         title: '查看',
         type: 'custom',
-        class: 'col-1',
+        width: '1%',
         valuePrepareFunction: (cell, row: TagList) => row,
         renderComponent: TagButtonComponent,
         sort: false,
@@ -142,19 +137,19 @@ export class TagListComponent extends BaseComponent implements OnInit {
 
   reset() {
     this.params.filter = { tagName: '', status: '', startDate: null, endDate: null, };
-    this.tagListSource.reset();
+    this.dataSource.reset();
   }
 
   search() {
-    this.tagListSource.reset();
+    this.dataSource.reset();
     const { startDate, endDate } = this.params.filter;
 
     //search date
     const addDateFilter = (field: string, value: Date | null, filterFn: (value: string, searchValue: string[]) => boolean) => {
-      const formatDate = value !== null ? moment(value).format('YYYY-MM-DD') : null;
+      const formatDate = value !== null ? moment(value).format(this.dateFormat) : null;
 
       if (formatDate) {
-        this.tagListSource.addFilter({
+        this.dataSource.addFilter({
           field,
           filter: filterFn,
           search: [formatDate],
@@ -166,7 +161,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
 
     //search other
     for (const [k, v] of Object.entries(this.params.filter).filter(([key, val]) => !key.includes('Date'))) {
-      this.tagListSource.addFilter({
+      this.dataSource.addFilter({
         field: k,
         filter: undefined,
         search: v,

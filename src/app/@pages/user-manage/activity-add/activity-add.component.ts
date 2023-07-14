@@ -84,7 +84,7 @@ export class ActivityAddComponent extends BaseComponent implements OnInit {
     }
     // console.info('or', this.conditions.getRawValue())
   }
-  
+
   and(i: number, action: 'add' | 'remove', key: number) {
     let fg = this.conditions.at(i) as FormGroup;
     if (action === 'add') {
@@ -98,7 +98,7 @@ export class ActivityAddComponent extends BaseComponent implements OnInit {
   get conditions() : FormArray {
     return this.validateForm.get('activityListCondition') as FormArray
   }
-  
+
   err: boolean = false;
   public ngOnInit(): void {
   }
