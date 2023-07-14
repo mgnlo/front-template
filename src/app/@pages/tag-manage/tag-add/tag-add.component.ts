@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TagList } from '@api/models/tag-list.model';
 import { Filter, Status, Schedule } from '@common/enums/commom-enum';
 import { TagType, TagSetCondition, TagDimension, TagSubDimension } from '@common/enums/tag-enum';
 import { BaseComponent } from '@pages/base.component';
@@ -25,8 +26,10 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   fileName: string;
   isFile: boolean = true;//是否上傳檔案
   err: boolean = false;
+  // maxSizeInMB = 5;//檔案大小
+  // isFileSize = false;//檔案大小是否錯誤
 
-  constructor(private router: Router, private formBuilder: FormBuilder) {
+  constructor(private router: Router) {
     super();
     this.validateForm = new FormGroup({
       tagName: new FormControl(null, Validators.required),
@@ -41,34 +44,35 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       tagDescription: new FormControl(null),
       setLimit: new FormControl(null, Validators.required),
     });
+
   }
 
   //檔案判斷(白名單)
-  static isPassFile(file: File): boolean {
-    const allowedFormats = ['csv'];
-    const fileExt = file.name.split('.').pop().toLowerCase();
-    return allowedFormats.includes(fileExt);
-  }
+  // static isPassFile(file: File): boolean {
+  //   const allowedTypes = ['text/csv'];
+  //   var aa = allowedTypes.includes(file.type);
+  //   debugger
+  //   return allowedTypes.includes(file.type);
+  // }
 
   ngOnInit(): void {
   }
 
   //標籤類型 更動時切換驗證
-  changeTagType() {
+  changeTagType(key: string) {
     this.isFile = true;
     this.fileName = '';
-    const tagType = this.validateForm.get('tagType').value;
-
-    if (tagType === 'normal') {
-      this.addField('uploadFile', null, [Validators.required, this.fileFormatValidator]);
-      this.removeField('setCondition');
-    } else if (tagType === 'document') {
-      this.addField('setCondition', 'normal', [Validators.required]);
+    if (key === 'normal') {
       this.removeField('uploadFile');
+      this.addField('setCondition', 'normal', [Validators.required]);
+    } else if (key === 'document') {
+      this.removeField('setCondition');
+      this.addField('uploadFile', null, [Validators.required]);
+      //this.addField('uploadFile', null, [Validators.required,this.validateFileType]);
     }
   }
 
-  addField(fieldName: string, formState, fileFormatValidator) {
+  addField(fieldName: string, formState: any, fileFormatValidator: any) {
     this.validateForm.addControl(fieldName, new FormControl(formState, fileFormatValidator));
   }
 
@@ -81,20 +85,45 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     if (file) {
       this.isFile = true;
       this.fileName = file.name;
+      //this.validateFileSize(event, this.maxSizeInMB)
+      //this.validateForm.updateValueAndValidity();
+      // const uploadFile = this.validateForm.get('uploadFile');
+      // const uploadFile_Form = uploadFile as FormControl;
 
-      if (!TagAddComponent.isPassFile(file)) {
-        this.isFile = false;
-      }
+      // if (!TagAddComponent.isPassFile(file)) {
+      //   this.isFile = false;
+      // }
     }
   }
 
-  fileFormatValidator(control: AbstractControl): { [key: string]: boolean } | null {
-    const file: File = control.value;
-    if (file && !TagAddComponent.isPassFile(file)) {
-      return { invalidFormat: true };
-    }
-    return null;
-  }
+  //檔案大小限制
+  // validateFileSize(event: any, maxSizeInMB: number) {
+  //   const file = event.target.files[0];
+  //   const maxSize = maxSizeInMB * 1024 * 1024; // MB
+  //   if (file && file.size < maxSize) {
+  //     this.isFileSize = true;
+  //   } else {
+  //     this.isFileSize = false;
+  //   }
+  // }
+
+  // validateFileSize(control: AbstractControl) {
+  //   const file = control.value;
+  //   const maxSize = 5 * 1024 * 1024; // 5MB
+  //   if (file && file.size > maxSize) {
+  //     return { maxSize: true };
+  //   }
+  //   return null;
+  // }
+
+  //檔案限制(副檔名)
+  // validateFileType(control: AbstractControl): { [key: string]: boolean } | null {
+  //   const file: File = control.value;
+  //   if (file && !TagAddComponent.isPassFile(file)) {
+  //     return { invalidFormat: true };
+  //   }
+  //   return null;
+  // }
 
   cancel() {
     this.router.navigate(['pages', 'tag-manage', 'tag-list']);
