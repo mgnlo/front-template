@@ -5,8 +5,8 @@ import { Status } from '@common/enums/commom-enum';
 import { TagManageService } from '../tag-manage.service';
 import { LocalDataSource } from 'ng2-smart-table';
 import * as moment from 'moment';
-import { TagList } from '@api/models/tag-list.model';
-import { TagListMock } from '@common/mock-data/tag-list-mock';
+import { TagSetting } from '@api/models/tag-list.model';
+import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -14,7 +14,7 @@ import { DatePipe } from '@angular/common';
   templateUrl: './tag-list.component.html',
   styleUrls: ['./tag-list.component.scss']
 })
-export class TagListComponent extends BaseComponent implements OnInit {
+export class TagSettingComponent extends BaseComponent implements OnInit {
   constructor(
     private tagManageService: TagManageService,
     private router: Router) {
@@ -23,7 +23,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
 
   statusList: Array<{ key: string; val: string }> = Object.entries(Status).map(([k, v]) => ({ key: k, val: v }))
   updateTime: string = moment(new Date()).format('YYYY/MM/DD');
-  mockData: Array<TagList> = TagListMock;
+  mockData: Array<TagSetting> = TagSettingMock;
 
   params = {
     filter: {
@@ -122,7 +122,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
         title: '查看',
         type: 'custom',
         width: '1%',
-        valuePrepareFunction: (cell, row: TagList) => row,
+        valuePrepareFunction: (cell, row: TagSetting) => row,
         renderComponent: TagButtonComponent,
         sort: false,
       },
@@ -183,7 +183,7 @@ export class TagButtonComponent implements OnInit {
 
   constructor(private router: Router) { }
 
-  @Input() value: TagList;
+  @Input() value: TagSetting;
 
   ngOnInit() { }
 

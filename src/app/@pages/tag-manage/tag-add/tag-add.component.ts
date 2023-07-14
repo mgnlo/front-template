@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { TagList } from '@api/models/tag-list.model';
 import { Filter, Status, Schedule } from '@common/enums/commom-enum';
 import { TagType, TagSetCondition, TagDimension, TagSubDimension } from '@common/enums/tag-enum';
 import { BaseComponent } from '@pages/base.component';

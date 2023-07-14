@@ -1,6 +1,6 @@
-import { TagList } from "@api/models/tag-list.model";
+import { TagSetting } from "@api/models/tag-list.model";
 
-export const TagListMock: Array<TagList> = [
+export const TagSettingMock: Array<TagSetting> = [
   {
     "tagId": "cccccc123456",
     "tagName": "標籤名稱A",
