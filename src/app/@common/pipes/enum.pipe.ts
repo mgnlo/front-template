@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Gender } from '@common/enums/activity-list-enum';
+import { TagDimension, TagSubDimension } from '@common/enums/tag-enum';
 import { Filter, Schedule, Status } from '@common/enums/common-enum';
 import { ReviewStatus } from '@common/enums/review-enum';
 
@@ -45,5 +46,23 @@ export class FilterPipe implements PipeTransform {
 export class GenderPipe implements PipeTransform {
   transform(value: string): number {
     return Gender[value];
+  }
+}
+
+@Pipe({
+  name: 'tagDimension'
+})
+export class TagDimensionPipe implements PipeTransform {
+  transform(value: string): number {
+    return TagDimension[value];
+  }
+}
+
+@Pipe({
+  name: 'tagSubDimension'
+})
+export class TagSubDimensionPipe implements PipeTransform {
+  transform(value: string): number {
+    return TagSubDimension[value];
   }
 }

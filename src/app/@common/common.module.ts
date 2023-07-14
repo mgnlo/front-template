@@ -1,12 +1,16 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { LoadingService } from '../@api/services/loading.service';
-import { FilterPipe, GenderPipe, ReviewStatusPipe, SchedulePipe, StatusPipe } from './pipes/enum.pipe';
+import {
+  FilterPipe, GenderPipe, ReviewStatusPipe,
+  SchedulePipe, StatusPipe, TagDimensionPipe,
+  TagSubDimensionPipe
+} from './pipes/enum.pipe';
 
 const PIPES = [
-  StatusPipe, SchedulePipe, FilterPipe, GenderPipe, ReviewStatusPipe
+  StatusPipe, SchedulePipe, FilterPipe, GenderPipe, ReviewStatusPipe, TagDimensionPipe, TagSubDimensionPipe
 ]
 @NgModule({
-  declarations: [ ...PIPES],
+  declarations: [...PIPES],
   exports: [...PIPES],
 })
 export class CommonModule {
