@@ -126,7 +126,7 @@ export const TagSettingMock: Array<TagSetting> = [
     "conditionSettingQuery": "條件設定語法",
     "tagDimension": "A",
     "tagSubdimension": "A",
-    "scheduleSettings": "排成設定",
+    "scheduleSettings": "daily",
     "uploadType": "名單上傳類型",
     "filePath": "上傳檔案路徑",
     "tagConditionSetting": [
