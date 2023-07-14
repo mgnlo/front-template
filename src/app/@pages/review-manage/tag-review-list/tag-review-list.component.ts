@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { NavigationExtras, Router } from '@angular/router';
-import { TagList } from '@api/models/tag-list.model';
+import { TagSetting } from '@api/models/tag-list.model';
 import { TagReview } from '@api/models/tag-review.model';
 import { ReviewStatus } from '@common/enums/review-enum';
 import { TagReviewListMock } from '@common/mock-data/tag-review-mock';
@@ -116,7 +116,7 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
           }  else {
             return false
           }
-        } 
+        }
       },
       reviewStatus: {
         title: '狀態',
@@ -133,7 +133,7 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
         title: '查看',
         type: 'custom',
         width: '5%',
-        valuePrepareFunction: (cell, row: TagList) => row,
+        valuePrepareFunction: (cell, row: TagSetting) => row,
         renderComponent: ReviewTagButtonComponent,
         sort: false,
       },
