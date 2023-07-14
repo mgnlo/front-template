@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { BaseComponent } from '@pages/base.component';
-import { Status } from '@common/enums/commom-enum';
+import { Status } from '@common/enums/common-enum';
 import { TagManageService } from '../tag-manage.service';
 import { LocalDataSource } from 'ng2-smart-table';
 import * as moment from 'moment';

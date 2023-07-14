@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { NavigationExtras, Router } from '@angular/router';
 import { ActivitySetting } from '@api/models/activity-list.model';
-import { Status } from '@common/enums/activity-list-enum';
+import { Status } from '@common/enums/common-enum';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { NbDateService } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';

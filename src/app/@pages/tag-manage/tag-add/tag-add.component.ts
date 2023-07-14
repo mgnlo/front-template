@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Filter, Status, Schedule } from '@common/enums/commom-enum';
+import { Filter, Status, Schedule } from '@common/enums/common-enum';
 import { TagType, TagSetCondition, TagDimension, TagSubDimension } from '@common/enums/tag-enum';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';

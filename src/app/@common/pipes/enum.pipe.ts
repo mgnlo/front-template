@@ -1,5 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Filter, Gender, Schedule, Status } from '@common/enums/activity-list-enum';
+import { Gender } from '@common/enums/activity-list-enum';
+import { Filter, Schedule, Status } from '@common/enums/common-enum';
+import { ReviewStatus } from '@common/enums/review-enum';
 
 @Pipe({
   name: 'status'
@@ -7,6 +9,15 @@ import { Filter, Gender, Schedule, Status } from '@common/enums/activity-list-en
 export class StatusPipe implements PipeTransform {
   transform(value: string): number {
     return Status[value];
+  }
+}
+
+@Pipe({
+  name: 'reviewStatus'
+})
+export class ReviewStatusPipe implements PipeTransform {
+  transform(value: string): number {
+    return ReviewStatus[value];
   }
 }
 
