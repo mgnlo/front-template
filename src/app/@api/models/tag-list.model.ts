@@ -60,14 +60,6 @@ export interface TagDetailView {
   uploadType: string
   filePath: string
   historyGroupView: {[x: number]: HistoryGroupView};
-  tagGroupView: {[x: number]: TagGroupView[]};
-}
-
-//for HTML diaplay ViewModel
-export interface TagGroupView {
-  conditionId: number;
-  tagKey: string;
-  tagName: string;
 }
 
 //for HTML diaplay ViewModel
