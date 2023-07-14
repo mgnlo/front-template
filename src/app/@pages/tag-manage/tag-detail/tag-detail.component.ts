@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TagDetailView, TagSetting } from '@api/models/tag-list.model';
-import { Schedule, Status } from '@common/enums/common-enum';
 import { BaseComponent } from '@pages/base.component';
 
 @Component({
@@ -40,9 +39,6 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
     }
 
   }
-
-  statusList: Array<{key: string; val: string}> = Object.entries(Status).map(([k, v]) => ({ key: k, val: v }))
-  scheduleList: Array<{key: string; val: string}> = Object.entries(Schedule).map(([k, v]) => ({ key: k, val: v }))
 
   ngOnInit(): void {
   }
