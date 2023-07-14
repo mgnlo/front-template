@@ -12,15 +12,12 @@ const routes: Routes = [
     {
         path: "", component: UserManageComponent, 
         children: [
-            { path: "user-list", component: UserListComponent },
-            // {
-            //   path: 'edit/:id',
-            //   component: SystemManageEditComponent, //編輯
-            // },
             { path: '', redirectTo: 'user-list', pathMatch: 'full'},
+            { path: "user-list", component: UserListComponent },
             { path: 'activity-list', component: ActivityListComponent},
-            { path: 'activity-add', component: ActivityAddComponent},
             { path: 'activity-detail', component: ActivityDetailComponent},
+            { path: 'activity-add', component: ActivityAddComponent}, //新增
+            { path: 'activity-add/:activityId', component: ActivityAddComponent}, //編輯
         ]
     }
 ]

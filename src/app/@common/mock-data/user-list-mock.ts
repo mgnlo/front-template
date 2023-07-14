@@ -75,7 +75,7 @@ export const UserListMock: Array<UserList> = [
     totalTxAmount: 197312,
     branchName: '板橋北門分行',
     addr: '新北市板橋區北門街10號',
-    tagDept: '數位金融服務處'
+    tagDept: '數位金融處'
   },
   {
     custId: 'B185810128',
@@ -158,7 +158,7 @@ export const UserListMock: Array<UserList> = [
     totalTxAmount: 426200,
     branchName: '信義分行',
     addr: '台北市信義區忠孝東路五段68號',
-    tagDept: '信用卡暨支付處'
+    tagDept: '財富管理處'
   },
   {
     custId: 'C164346864',
@@ -174,7 +174,7 @@ export const UserListMock: Array<UserList> = [
     totalTxAmount: 50200,
     branchName: '信義分行',
     addr: '台北市信義區基隆路一段147巷5弄13號',
-    tagDept: '信用卡暨支付處'
+    tagDept: '財富管理處'
   },
   {
     custId: 'A123456789',
@@ -189,7 +189,7 @@ export const UserListMock: Array<UserList> = [
     totalTxAmount: 190200,
     branchName: '萬華分行',
     addr: '台北市萬華區和平西路三段120號龍山美食廣場1樓',
-    tagDept: '信用卡暨支付處'
+    tagDept: '財富管理處'
   },
   {
     custId: 'F124491189',
@@ -205,7 +205,7 @@ export const UserListMock: Array<UserList> = [
     totalTxAmount: 43913250,
     branchName: '萬華分行',
     addr: '台北市萬華區和平西路三段120號龍山美食廣場1樓',
-    tagDept: '信用卡暨支付處'
+    tagDept: '數位金融處'
   },
   {
     custId: 'A126400921',
@@ -222,7 +222,7 @@ export const UserListMock: Array<UserList> = [
     totalTxAmount: 426200,
     branchName: '永和分行',
     addr: '新北市永和區永利路108號1樓',
-    tagDept: '信用卡暨支付處'
+    tagDept: '數位金融處'
   },
   {
     custId: 'A237772047',

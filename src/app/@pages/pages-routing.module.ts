@@ -40,6 +40,13 @@ const routes: Routes = [
             (m) => m.TagManageModule
           ),
       },
+      {
+        path: 'review-manage',
+        loadChildren: () =>
+          import('@pages/review-manage/review-manage.module').then(
+            (m) => m.ReviewManageModule
+          ),
+      },
     ],
   },
 ];

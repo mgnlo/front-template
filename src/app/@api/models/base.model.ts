@@ -1,5 +1,6 @@
-export class BaseModel<T> {
-  data: T;
-  isError: boolean;
+export class ResponseModel<T> {
+  success: boolean;
+  code: number;
   message: string;
+  result: T;
 }

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Navigation, Router } from '@angular/router';
 import { ActivityDetail, ActivitySetting } from '@api/models/activity-list.model';
-import { Schedule, Status } from '@common/enums/activity-list-enum';
 import { BaseComponent } from '@pages/base.component';
 
 @Component({
@@ -45,17 +44,11 @@ export class ActivityDetailComponent extends BaseComponent implements OnInit {
     }
   }
 
-  info<T>(obj: T){
-    console.info(obj);
-  }
-  statusList: Array<{key: string; val: string}> = Object.entries(Status).map(([k, v]) => ({ key: k, val: v }))
-  scheduleList: Array<{key: string; val: string}> = Object.entries(Schedule).map(([k, v]) => ({ key: k, val: v }))
-
   public ngOnInit(): void {
   }
 
   edit() {
-    this.router.navigate(['pages', 'user-manage', 'activity-add'],{state: this.editData});
+    this.router.navigate(['pages', 'user-manage', 'activity-add', this.editData.activityId],{state: this.editData});
   }
 
   cancel() {

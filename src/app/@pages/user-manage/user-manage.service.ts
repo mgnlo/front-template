@@ -1,23 +1,30 @@
-import { Injectable } from "@angular/core"
-import { HttpClient } from "@angular/common/http"
-import { Observable } from "rxjs"
-import { environment } from "../../../environments/environment"
+import { Injectable } from "@angular/core";
+import { ActivitySettingEditReq, ActivitySettingListRes, ActivitySettingRowRes } from "@api/models/activity-list.model";
+import { ResponseModel } from "@api/models/base.model";
+import { ApiService } from "@api/services/api.service";
+import { Observable } from "rxjs";
 
 @Injectable()
 export class UserManageService {
 
-    // protected prefix: string = environment.OAUTH_SERVER_URL + environment.OAUTH_API_URL
+    readonly activityFunc = 'activity-settings/';
 
-    constructor(private http: HttpClient) {
+    constructor(private service: ApiService) {}
 
+    getActivitySettingList(): Observable<ResponseModel<ActivitySettingListRes>> {
+        return this.service.doGet(this.activityFunc + 'activitySettingList');
     }
 
-    // public getUsers(): Observable<PermissionResponse<UserList>> {
-    //     return this.http.get<PermissionResponse<UserList>>(this.prefix + "/users")
-    // }
+    getActivitySettingRow(id: number): Observable<ResponseModel<ActivitySettingRowRes>> {
+        return this.service.doGet(this.activityFunc + 'activitySettingRow', {'activityId': id});
+    }
 
-    // public updateUser(user: UserManageDetail): Observable<PermissionResponse<UserManageDetail>> {
-    //     return this.http.put<PermissionResponse<UserManageDetail>>(this.prefix + "/user/" + user.userId, user);
-    // }
+    activitySettingSave(data: ActivitySettingEditReq): Observable<ResponseModel<any>> {
+        return this.service.doPost(this.activityFunc + 'activitySettingSave', data);
+    }
+
+    activitySettingUpdate(data: ActivitySettingEditReq): Observable<ResponseModel<any>> {
+        return this.service.doPut(this.activityFunc + 'activitySettingUpdate', data);
+    }
 
 }

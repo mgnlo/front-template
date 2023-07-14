@@ -67,22 +67,22 @@ export class PagesComponent implements OnInit {
         children: [
           {
             title: "標籤審核",
-            link: "/pages/element",
+            link: "/pages/review-manage/tag-review",
           },
           {
             title: "客群名單審核",
-            link: "/pages/element2",
+            link: "/pages/review-manage/list-review",
           },
           {
             title: "排程審核",
-            link: "/pages/element2",
+            link: "/pages/review-manage/schedule-review",
           },
         ]
       },
       {
         title: "排程管理",
         icon: "file-text-outline",
-        link: "/pages/dashboard"
+        link: "/pages/schedule"
       },
       {
         title: "帳號管理",
