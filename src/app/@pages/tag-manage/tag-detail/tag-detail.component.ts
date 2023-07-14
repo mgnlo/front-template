@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TagDetailView, TagSetting } from '@api/models/tag-list.model';
-import { Schedule, Status } from '@common/enums/commom-enum';
+import { Schedule, Status } from '@common/enums/common-enum';
 import { BaseComponent } from '@pages/base.component';
 
 @Component({
