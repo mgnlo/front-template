@@ -104,7 +104,7 @@ export class ActivityAddComponent extends BaseComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate(['pages', 'user-manage', 'activity-list']);
+    this.router.navigate(['pages', 'customer-manage', 'activity-list']);
   }
 
   preview() {

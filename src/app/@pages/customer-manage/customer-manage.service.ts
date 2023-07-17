@@ -5,7 +5,7 @@ import { ApiService } from "@api/services/api.service";
 import { Observable } from "rxjs";
 
 @Injectable()
-export class UserManageService {
+export class CustomerManageService {
 
     readonly activityFunc = 'activity-settings/';
 

@@ -4,16 +4,16 @@ import { ActivityAddComponent } from "./activity-add/activity-add.component"
 import { PreviewDialogComponent } from "./activity-add/preview-dialog/preview.dialog.component"
 import { ActivityDetailComponent } from "./activity-detail/activity-detail.component"
 import { ActivityButtonComponent, ActivityListCeckboxComponent, ActivityListComponent } from "./activity-list/activity-list.component"
-import { DetailDialogComponent } from "./user-list/detail-dialog/detail.dialog.component"
-import { UserListTagComponent, UserListButtonComponent, UserListComponent } from "./user-list/user-list.component"
-import { UserManageComponent } from "./user-manage.component"
+import { CustomerManageComponent } from "./customer-manage.component"
+import { CustomerListButtonComponent, CustomerListComponent, CustomerListTagComponent } from "./customer-list/customer-list.component"
+import { DetailDialogComponent } from "./customer-list/detail-dialog/detail.dialog.component"
 
 const routes: Routes = [
     {
-        path: "", component: UserManageComponent, 
+        path: "", component: CustomerManageComponent, 
         children: [
-            { path: '', redirectTo: 'user-list', pathMatch: 'full'},
-            { path: "user-list", component: UserListComponent },
+            { path: '', redirectTo: 'customer-list', pathMatch: 'full'},
+            { path: "customer-list", component: CustomerListComponent },
             { path: 'activity-list', component: ActivityListComponent},
             { path: 'activity-detail', component: ActivityDetailComponent},
             { path: 'activity-add', component: ActivityAddComponent}, //新增
@@ -29,10 +29,10 @@ const routes: Routes = [
 export class UserManageRoutingModule { }
 
 export const routedComponents = [
-  UserManageComponent,
-  UserListComponent,
-  UserListButtonComponent,
-  UserListTagComponent,
+  CustomerManageComponent,
+  CustomerListComponent,
+  CustomerListButtonComponent,
+  CustomerListTagComponent,
   ActivityListComponent,
   ActivityAddComponent,
   ActivityDetailComponent,

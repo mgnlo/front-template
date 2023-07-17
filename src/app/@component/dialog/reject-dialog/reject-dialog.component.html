@@ -1,0 +1,25 @@
+<nb-card size="small">
+  <nb-card-header class="text-h-center">
+    <p>{{option.title}}</p>
+  </nb-card-header>
+  <nb-card-body [formGroup]="form">
+    <p>請敘述異動駁回原因以利人員調整/修改：</p>
+    <div class="row">
+      <div class="fieldGroup col-12" [ngClass]="{'error': form.touched && form.get('reason').invalid}">
+        <div>
+            <textarea nbInput fullWidth type="text" class="textBox" placeholder="請輸入" formControlName="reason"
+              [status]="form.touched && form.get('reason').invalid ? 'danger': 'basic'"></textarea>
+        </div>
+        <!-- 欄位錯誤訊息 -->
+        <div class="note errorText">
+            <nb-icon icon="alert-triangle"></nb-icon>
+            <p>請輸入異動駁回原因</p>
+        </div>
+      </div>
+    </div>
+  </nb-card-body>
+  <nb-card-footer>
+    <button nbButton status="basic" size="medium" (click)="cancel()">取消</button>
+    <button nbButton status="info" size="medium" (click)="submit()" [disabled]="form.touched && form.get('reason').invalid">送出</button>
+  </nb-card-footer>
+</nb-card>

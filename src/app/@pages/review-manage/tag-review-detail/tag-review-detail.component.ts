@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Navigation, Router } from '@angular/router';
 import { TagReview, TagReviewDetail } from '@api/models/tag-review.model';
-import { Schedule, Status } from '@common/enums/common-enum';
+import { DialogService } from '@api/services/dialog.service';
 import { BaseComponent } from '@pages/base.component';
 
 @Component({
@@ -15,8 +15,9 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   detail: TagReviewDetail;
   isConditionOpen: {[x: number]: boolean} = {}; //活動名單條件收合
   isHistoryOpen: {[x: number]: boolean} = []; //異動歷程收合
+  isBefore: boolean = false;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private dialogService: DialogService) {
     super();
     if(!!this.router.getCurrentNavigation()?.extras){
       let tagReview = this.router.getCurrentNavigation().extras.state as TagReview;
@@ -47,16 +48,16 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   public ngOnInit(): void {
   }
 
-  viewBefore() {
-
+  viewToggle() {
+    this.isBefore = !this.isBefore;
   }
 
   agree() {
-    this.router.navigate(['pages', 'review-manage', 'tag-review']);
+    this.dialogService.openAgree('tag-review');
   }
 
-  disagree() {
-    this.router.navigate(['pages', 'review-manage', 'tag-review']);
+  reject() {
+    this.dialogService.openReject({title: '標籤異動駁回說明', backTo: 'tag-review'});
   }
 
   cancel() {

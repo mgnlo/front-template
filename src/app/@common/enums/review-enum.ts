@@ -1,5 +1,5 @@
 export enum ReviewStatus {
-  R = '待審查',
-  A = '同意',
-  D = '不同意',
+  REVIEW = '待審查',
+  AGREE = '同意',
+  REJECT = '不同意',
 }

@@ -12,8 +12,8 @@ import {
 } from '@nebular/theme';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { ThemeModule } from '../../@theme/theme.module';
-import { routedComponents, UserManageRoutingModule } from './user-manage-routing.module';
-import { UserManageService } from './user-manage.service';
+import { routedComponents, UserManageRoutingModule } from './customer-manage-routing.module';
+import { CustomerManageService } from './customer-manage.service';
 
 export const NB_MODULES = [
   NbSpinnerModule,
@@ -46,10 +46,10 @@ export const NB_MODULES = [
   ],
   providers: [
     DialogService,
-    UserManageService
+    CustomerManageService
   ],
   declarations: [
     ...routedComponents,
   ],
 })
-export class UserManageModule { }
+export class CustomerManageModule { }

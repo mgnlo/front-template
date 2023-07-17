@@ -48,11 +48,11 @@ export class PagesComponent implements OnInit {
         children: [
           {
             title: "用戶列表",
-            link: "/pages/user-manage/user-list",
+            link: "/pages/customer-manage/customer-list",
           },
           {
             title: "客群活動名單",
-            link: "/pages/user-manage/activity-list",
+            link: "/pages/customer-manage/activity-list",
           },
         ]
       },

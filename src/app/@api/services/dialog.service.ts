@@ -1,7 +1,7 @@
 import { Injectable, TemplateRef, Type } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertDialogComponent, AlertDialogOption } from '@component/dialog/alert-dialog/alert-dialog.component';
-import { ConfirmDialogComponent, ConfirmDialogOption } from '@component/dialog/confirm-dialog/confirm-dialog.component';
+import { AgreeDialogComponent } from '@component/dialog/agree-dialog/agree-dialog.component';
+import { RejectDialogComponent, RejectDialogOption } from '@component/dialog/reject-dialog/reject-dialog.component';
 import { NbDialogService } from '@nebular/theme';
 
 @Injectable({
@@ -21,9 +21,9 @@ export class DialogService {
     });
   }
 
-  openConfirm(option: ConfirmDialogOption): void {
+  openReject(option: RejectDialogOption): void {
 
-    this.dialogService.open(ConfirmDialogComponent, {
+    this.dialogService.open(RejectDialogComponent, {
       context: {
         option: option,
       },
@@ -31,29 +31,29 @@ export class DialogService {
     });
   }
 
-  openAlert(option: AlertDialogOption): void {
+  openAgree(backTo: string): void {
 
-    this.dialogService.open(AlertDialogComponent, {
+    this.dialogService.open(AgreeDialogComponent, {
       context: {
-        option: option,
+        backTo: backTo,
       },
       closeOnBackdropClick: false,
     });
   }
 
-  alertAndBackToList(title: string, content: string, url: string): void {
-    this.dialogService.open(AlertDialogComponent, {
-      context: {
-        option: {
-          title: title,
-          content: content,
-          buttonName: '確定',
-          callback: () => {
-            this.router.navigate([url]);
-          },
-        },
-      },
-      closeOnBackdropClick: false,
-    });
-  }
+  // alertAndBackToList(title: string, content: string, url: string): void {
+  //   this.dialogService.open(AlertDialogComponent, {
+  //     context: {
+  //       option: {
+  //         title: title,
+  //         content: content,
+  //         buttonName: '確定',
+  //         callback: () => {
+  //           this.router.navigate([url]);
+  //         },
+  //       },
+  //     },
+  //     closeOnBackdropClick: false,
+  //   });
+  // }
 }

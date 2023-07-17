@@ -1,6 +1,7 @@
 <div class="pageTitle">
     <h1>標籤審核</h1>
-    <button nbButton status="primary" size="small" (click)="viewBefore()">查看異動前內容</button>
+    <button nbButton status="primary" size="small" (click)="viewToggle()" *ngIf="isBefore">查看異動前內容</button>
+    <button nbButton status="primary" size="small" (click)="viewToggle()" *ngIf="!isBefore">返回本次異動內容</button>
 </div>
 <div class="pageContent">
     <nb-card>
@@ -11,7 +12,7 @@
                     <span>{{detail.tagName}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold">狀態：</p>
+                    <p class="textBold" [ngClass]="isBefore ? 'colorBlue': 'colorRed'">狀態：</p>
                     <span>{{detail.reviewStatus | reviewStatus}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
@@ -47,7 +48,7 @@
                     <span>{{detail.tagDescription}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-12">
-                    <p class="textBold">條件設定：</p>
+                    <p class="textBold" [ngClass]="isBefore ? 'colorBlue': 'colorRed'">條件設定：</p>
                     <span class="bgGray">{{detail.conditionSettingQuery}}</span>
                 </div>
             </div>
@@ -56,7 +57,7 @@
     <div class="row">
         <div class="btnGroup">
             <button nbButton status="basic" size="medium" (click)="cancel()">返回</button>
-            <button nbButton status="danger" size="medium" (click)="disagree()">不同意</button>
+            <button nbButton status="danger" size="medium" (click)="reject()">不同意</button>
             <button nbButton status="info" size="medium" (click)="agree()">同意</button>
         </div>
     </div>

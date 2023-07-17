@@ -146,7 +146,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
       };
 
       add(){
-        this.router.navigate(['pages', 'user-manage', 'activity-add']);
+        this.router.navigate(['pages', 'customer-manage', 'activity-add']);
       }
 
       reset(){
@@ -190,7 +190,7 @@ export class ActivityButtonComponent implements OnInit {
     
     search(){
       let passData: NavigationExtras = {state: this.value};
-      this.router.navigate(['pages', 'user-manage', 'activity-detail'], passData);
+      this.router.navigate(['pages', 'customer-manage', 'activity-detail'], passData);
     }
 
     edit(): void {}
