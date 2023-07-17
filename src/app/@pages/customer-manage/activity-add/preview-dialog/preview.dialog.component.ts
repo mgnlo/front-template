@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { UserListMock } from '@common/mock-data/user-list-mock';
+import { CustomerListMock } from '@common/mock-data/user-list-mock';
 import { NbDialogRef } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
@@ -28,7 +28,7 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
 
   ngOnInit() {
     this.dataSource = new LocalDataSource();
-    this.dataSource.load(UserListMock);
+    this.dataSource.load(CustomerListMock);
     console.info(this.dataList);
   }
 

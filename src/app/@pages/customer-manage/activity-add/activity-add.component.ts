@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ActivityListCondition, ActivitySetting } from '@api/models/activity-list.model';
 import { DialogService } from '@api/services/dialog.service';
 import { Filter, Schedule } from '@common/enums/common-enum';
+import { RegExp } from '@common/enums/reg-exp-enum';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
@@ -25,7 +26,7 @@ export class ActivityAddComponent extends BaseComponent implements OnInit {
     this.validateForm = new FormGroup({
       activityName: new FormControl(null, Validators.required),
       status: new FormControl('stop', Validators.required),
-      listLimit: new FormControl(null, Validators.pattern("^[0-9]*$")),
+      listLimit: new FormControl(null, Validators.pattern(RegExp.integer)),
       filterOptions: new FormControl(false),
       startDate: new FormControl(new Date(), Validators.required),
       endDate: new FormControl(moment(new Date()).add(3, 'months').toDate(), Validators.required),

@@ -1,4 +1,5 @@
 export class TagReview {
+  historyId: string;
   tagId: string
   tagName: string
   tagDescription: string
@@ -76,4 +77,11 @@ export interface TagReviewHistoryGroupView {
     title: string
     detail: string
   }[]
+}
+
+export class TagReviewListRes {
+  data: Array<TagReview>;
+}
+export class TagReviewRowRes {
+  data: TagReview;
 }

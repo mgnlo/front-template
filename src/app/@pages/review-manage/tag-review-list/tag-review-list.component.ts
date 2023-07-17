@@ -191,7 +191,7 @@ export class ReviewTagButtonComponent implements OnInit {
 
   search() {
     let passData: NavigationExtras = { state: this.value };
-    this.router.navigate(['pages', 'review-manage', 'tag-review-detail'], passData);
+    this.router.navigate(['pages', 'review-manage', 'tag-review-detail', this.value.historyId], passData);
   }
 
   edit(): void { }

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { UserList } from '@api/models/user-list.model';
+import { CustomerList } from '@api/models/customer-list.model';
 import { NbDialogRef } from '@nebular/theme';
 
 @Component({
@@ -13,7 +13,7 @@ export class DetailDialogComponent implements OnInit {
   @Input() title: string;
   @Input() dataList: Array<string>;
 
-  datas: UserList;
+  datas: CustomerList;
   constructor(
     protected ref: NbDialogRef<DetailDialogComponent>,
     ) {}

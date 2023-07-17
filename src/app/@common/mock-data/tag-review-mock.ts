@@ -2,6 +2,7 @@ import { TagReview } from "@api/models/tag-review.model";
 
 export const TagReviewListMock: Array<TagReview> = [
   {
+    historyId: "cccccc654321",
     tagId: "cccccc123456",
     tagName: "近一個月金申金額",
     tagDescription: "標籤說明標說明標籤說明",
@@ -112,6 +113,7 @@ export const TagReviewListMock: Array<TagReview> = [
     ]
   },
   {
+    historyId: "cccccc654321",
     tagId: "cccccc123456",
     tagName: "已婚",
     tagDescription: "標籤說明",
@@ -222,6 +224,7 @@ export const TagReviewListMock: Array<TagReview> = [
     ]
   },
   {
+    historyId: "cccccc123457",
     tagId: "cccccc123458",
     tagName: "非信用卡客戶",
     tagDescription: "標籤說明",

@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup, ValidationErrors } from '@angular/forms';
 import { Paginator } from '@component/table/paginator/paginator.component';
 import { LocalDataSource } from 'ng2-smart-table';
 // import { OAuth2BaseComponent, OAuth2Service } from '@module/oauth2';
@@ -45,24 +45,20 @@ export class BaseComponent implements OnDestroy {
     }
   }
 
-  getErrorMessage(field: string): string {
+  getErrorMsg(field: string): string {
 
     if (!this.isSubmit || this.validateForm == null || field == null || this.validationMessages == null) {
         return undefined;
     }
 
-    this.tmpCtrl = this.validateForm;
-    const fields = field.split('.');
-
-    fields.forEach(f => {
-        this.tmpCtrl = this.tmpCtrl.get(f);
-    });
-
-    if (this.tmpCtrl.invalid) {
-        return this.validationMessages[fields[0]][Object.keys(this.tmpCtrl.errors)[0]];
-    } else {
-        return undefined;
+    const ctlErrors: ValidationErrors = this.validateForm.get(field).errors;
+    if (ctlErrors != null) {
+      Object.keys(ctlErrors).forEach(keyError => {
+       console.info(keyError);
+       return keyError;
+      });
     }
+    return undefined;
   }
   
   groupBy<T>(datas: T[], key: string) {

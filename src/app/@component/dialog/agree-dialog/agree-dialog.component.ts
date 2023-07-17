@@ -20,6 +20,7 @@ export class AgreeDialogComponent implements OnInit {
       map(val => 1 - val),
       takeWhile(x => x >= 0)
     ).subscribe(() => {
+      //TODO: 送出審核同意
       this.router.navigate(['pages', 'review-manage', this.backTo]);
       this.ref.close();
     })

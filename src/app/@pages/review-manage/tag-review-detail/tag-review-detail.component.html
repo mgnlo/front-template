@@ -1,7 +1,7 @@
 <div class="pageTitle">
     <h1>標籤審核</h1>
-    <button nbButton status="primary" size="small" (click)="viewToggle()" *ngIf="isBefore">查看異動前內容</button>
-    <button nbButton status="primary" size="small" (click)="viewToggle()" *ngIf="!isBefore">返回本次異動內容</button>
+    <button nbButton status="primary" size="small" (click)="viewToggle()" *ngIf="!isBefore">查看異動前內容</button>
+    <button nbButton status="primary" size="small" (click)="viewToggle()" *ngIf="isBefore">返回本次異動內容</button>
 </div>
 <div class="pageContent">
     <nb-card>

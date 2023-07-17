@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ValidatorsUtil } from '@common/utils/validators-util';
 import { NbDialogRef } from '@nebular/theme';
 
 export class RejectDialogOption {
@@ -16,8 +17,8 @@ export class RejectDialogOption {
 export class RejectDialogComponent implements OnInit {
 
   @Input() option: RejectDialogOption;
-  form: FormGroup = new FormGroup({
-    reason: new FormControl('', Validators.required)
+  form = new FormGroup({
+    reason: new FormControl('', [Validators.required, ValidatorsUtil.blank])
   });
 
   constructor(protected ref: NbDialogRef<RejectDialogComponent>, protected router: Router) {}
