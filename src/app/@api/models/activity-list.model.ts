@@ -56,7 +56,7 @@ export class TagSetting {
   conditionSettingMethod: string;
   conditionSettingQuery: string;
   tagDimension: string;
-  tagSubdimension: string;
+  tagSubDimension: string;
   scheduleSettings: string;
   uploadType: string;
   filePath: string;
@@ -93,7 +93,7 @@ export class TagReviewHistory {
   conditionSettingMethod: string;
   conditionSettingQuery: string;
   tagDimension: string;
-  tagSubdimension: string;
+  tagSubDimension: string;
   scheduleSettings: string;
   uploadType: string;
   filePath: string;

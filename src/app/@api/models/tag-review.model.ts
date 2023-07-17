@@ -12,7 +12,7 @@ export class TagReview {
   conditionSettingMethod: string
   conditionSettingQuery: string
   tagDimension: string
-  tagSubdimension: string
+  tagSubDimension: string
   scheduleSettings: string
   uploadType: string
   filePath: string
@@ -53,7 +53,7 @@ export interface TagReviewDetail {
   conditionSettingMethod: string
   conditionSettingQuery: string
   tagDimension: string
-  tagSubdimension: string
+  tagSubDimension: string
   scheduleSettings: string
   uploadType: string
   filePath: string

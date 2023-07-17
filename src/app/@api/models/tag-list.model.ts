@@ -55,7 +55,7 @@ export interface TagDetailView {
   conditionSettingMethod: string
   conditionSettingQuery: string
   tagDimension: string
-  tagSubdimension: string
+  tagSubDimension: string
   scheduleSettings: string
   uploadType: string
   filePath: string
