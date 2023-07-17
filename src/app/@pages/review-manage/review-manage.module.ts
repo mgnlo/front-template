@@ -10,6 +10,7 @@ import {
   NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbDialogModule, NbIconModule,
   NbInputModule, NbRadioModule, NbSelectModule, NbSpinnerModule, NbTabsetModule, NbTagModule, NbTreeGridModule
 } from '@nebular/theme';
+import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { ThemeModule } from '../../@theme/theme.module';
 import { routedComponents, ReviewManageRoutingModule } from './review-manage-routing.module';
@@ -46,6 +47,7 @@ export const NB_MODULES = [
   ],
   providers: [
     DialogService,
+    CustomerManageService
   ],
   declarations: [
     ...routedComponents,

@@ -10,7 +10,7 @@ const routes: Routes = [
         children: [
             { path: '', redirectTo: 'tag-review', pathMatch: 'full'},
             { path: 'tag-review', component: TagReviewListComponent },
-            { path: 'tag-review-detail', component: TagReviewDetailComponent },
+            { path: 'tag-review-detail/:historyId', component: TagReviewDetailComponent },
             // {
             //   path: 'edit/:id',
             //   component: SystemManageEditComponent, //編輯

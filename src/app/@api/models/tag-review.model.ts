@@ -1,4 +1,5 @@
 export class TagReview {
+  historyId: string;
   tagId: string
   tagName: string
   tagDescription: string
