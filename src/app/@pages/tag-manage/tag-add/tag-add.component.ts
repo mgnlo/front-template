@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TagSetting, TagDetailView } from '@api/models/tag-list.model';
 import { Filter, Status, Schedule } from '@common/enums/common-enum';
 import { TagType, TagSetCondition, TagDimension, tagSubDimension } from '@common/enums/tag-enum';
+import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 
@@ -48,7 +49,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       scheduleSettings: new FormControl(null, Validators.required),
       tagDescription: new FormControl(null),
       conditionSettingQuery: new FormControl(null, Validators.required),
-    });
+    }, ValidatorsUtil.dateRange);
 
     this.params = this.activatedRoute.snapshot.params;
     if (!!this.router.getCurrentNavigation().extras) {
