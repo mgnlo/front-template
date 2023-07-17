@@ -27,10 +27,10 @@ const routes: Routes = [
         component: DashboardComponent
       },
       {
-        path: 'user-manage',
+        path: 'customer-manage',
         loadChildren: () =>
-          import('@pages/user-manage/user-manage.module').then(
-            (m) => m.UserManageModule
+          import('@pages/customer-manage/customer-manage.module').then(
+            (m) => m.CustomerManageModule
           ),
       },
       {

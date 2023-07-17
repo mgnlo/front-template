@@ -1,13 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
-import { NbButtonModule, NbCardModule, NbIconModule, NbSelectModule, NbSpinnerModule } from '@nebular/theme';
-import { AlertDialogComponent } from './dialog/alert-dialog/alert-dialog.component';
-import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
+import { NbButtonModule, NbCardModule, NbIconModule, NbInputModule, NbSelectModule, NbSpinnerModule } from '@nebular/theme';
+import { RejectDialogComponent } from './dialog/reject-dialog/reject-dialog.component';
+import { AgreeDialogComponent } from './dialog/agree-dialog/agree-dialog.component';
 import { PaginatorComponent } from './table/paginator/paginator.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
 
 export const COMPONENTS = [
-  AlertDialogComponent,
+  AgreeDialogComponent,
+  RejectDialogComponent,
   ConfirmDialogComponent,
   PaginatorComponent,
 ];
@@ -19,10 +22,11 @@ export const NB_MODULES = [
   NbIconModule,
   NbEvaIconsModule,
   NbCardModule,
+  NbInputModule,
 ];
 @NgModule({
   declarations: [...COMPONENTS],
-  imports: [CommonModule, ...NB_MODULES],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, ...NB_MODULES],
   providers: [],
   exports: [...COMPONENTS],
 })

@@ -1,8 +1,8 @@
 import { Component} from '@angular/core';
 
 @Component({
-  selector: 'app-user-manage',
+  selector: 'app-customer-manage',
   template: '<router-outlet></router-outlet>',
 })
-export class UserManageComponent {
+export class CustomerManageComponent {
 }

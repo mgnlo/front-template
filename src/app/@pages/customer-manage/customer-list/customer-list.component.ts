@@ -9,11 +9,11 @@ import { LocalDataSource } from 'ng2-smart-table';
 import { DetailDialogComponent } from './detail-dialog/detail.dialog.component';
 
 @Component({
-    selector: 'user-list',
-    templateUrl: './user-list.component.html',
-    styleUrls: ['./user-list.component.scss'],
+    selector: 'customer-list',
+    templateUrl: './customer-list.component.html',
+    styleUrls: ['./customer-list.component.scss'],
 })
-export class UserListComponent extends BaseComponent implements OnInit {
+export class CustomerListComponent extends BaseComponent implements OnInit {
 
     constructor() {
       super();
@@ -63,14 +63,14 @@ export class UserListComponent extends BaseComponent implements OnInit {
           title: `用戶標籤 (更新時間: ${this.updateTime})`,
           type: 'custom',
           class: 'col-8',
-          renderComponent: UserListTagComponent,
+          renderComponent: CustomerListTagComponent,
           sort: false,
         },
         action: {
           title: '查看',
           type: 'custom',
           class: 'col-1',
-          renderComponent: UserListButtonComponent,
+          renderComponent: CustomerListButtonComponent,
           sort: false,
         },
       },
@@ -98,10 +98,10 @@ export class UserListComponent extends BaseComponent implements OnInit {
 }
 
 @Component({
-    selector: 'ngx-user-list-button',
+    selector: 'customer-list-button',
     template: '<button nbButton ghost status="info" size="medium" (click)="detail()"><nb-icon icon="search"></nb-icon></button>'
 })
-export class UserListButtonComponent implements OnInit {
+export class CustomerListButtonComponent implements OnInit {
 
     constructor(private dialogService: DialogService) { }
     @Input() rowData: Array<string>;
@@ -116,10 +116,10 @@ export class UserListButtonComponent implements OnInit {
 }
 
 @Component({
-  selector: 'tmp-tag',
-  template: '<div class="tag left"><nb-tag status="info" appearance="filled" size="medium" *ngFor="let tag of tags" [text]="tag.tagTitle"></nb-tag></div>'
+  selector: 'customer-tag',
+  template: '<div class="tag left"><nb-tag status="info" appearance="filled" size="large" *ngFor="let tag of tags" [text]="tag.tagTitle"></nb-tag></div>'
 })
-export class UserListTagComponent implements OnInit {
+export class CustomerListTagComponent implements OnInit {
 
   constructor() { }
   renderValue: string;

@@ -124,7 +124,7 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
         width: '5%',
         valuePrepareFunction: (cell: string) => {
           const rStatus = new ReviewStatusPipe;
-          let style: string = cell === 'A' ? 'colorGreen': cell === 'D' ? 'colorRed' : '';
+          let style: string = cell === ReviewStatus.AGREE ? 'colorGreen': cell === ReviewStatus.REJECT ? 'colorRed' : '';
           return `<span class="${style}">${rStatus.transform(cell)}</span>`;
         },
         sort: false,
