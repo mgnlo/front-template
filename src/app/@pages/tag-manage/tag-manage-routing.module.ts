@@ -12,8 +12,9 @@ const routes: Routes = [
     children: [
       { path: "tag-list", component: TagSettingComponent },
       { path: '', redirectTo: 'tag-list', pathMatch: 'full' },
-      { path: 'tag-add', component: TagAddComponent },
       { path: 'tag-detail', component: TagDetailComponent },
+      { path: 'tag-add', component: TagAddComponent },
+      { path: 'tag-add/:changeRoute/:tagId', component: TagAddComponent}, //編輯 or 複製
     ]
   }
 ]

@@ -8,6 +8,7 @@ import * as moment from 'moment';
 import { TagSetting } from '@api/models/tag-list.model';
 import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { DatePipe } from '@angular/common';
+import { TagType } from '@common/enums/tag-enum';
 
 @Component({
   selector: 'tag-list',
@@ -42,6 +43,8 @@ export class TagSettingComponent extends BaseComponent implements OnInit {
     this.dataSource.load(this.mockData);
   }
 
+  TagType: TagType
+
   gridDefine = {
     pager: {
       display: true,
@@ -63,6 +66,9 @@ export class TagSettingComponent extends BaseComponent implements OnInit {
         type: 'string',
         width: '10%',
         sort: false,
+        valuePrepareFunction: (cell: string) => {
+          return `${TagType[cell]}`;
+        },
       },
       department: {
         title: '所屬單位',
