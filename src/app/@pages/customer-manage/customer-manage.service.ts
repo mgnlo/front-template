@@ -15,8 +15,8 @@ export class CustomerManageService {
         return this.service.doGet(this.activityFunc + 'activitySettingList');
     }
 
-    getActivitySettingRow(id: number): Observable<ResponseModel<ActivitySettingRowRes>> {
-        return this.service.doGet(this.activityFunc + 'activitySettingRow', {'activityId': id});
+    getActivitySettingRow(activityId: number): Observable<ResponseModel<ActivitySettingRowRes>> {
+        return this.service.doGet(this.activityFunc + 'activitySettingRow', {'activityId': activityId});
     }
 
     activitySettingSave(data: ActivitySettingEditReq): Observable<ResponseModel<any>> {

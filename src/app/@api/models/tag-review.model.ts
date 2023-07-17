@@ -77,3 +77,10 @@ export interface TagReviewHistoryGroupView {
     detail: string
   }[]
 }
+
+export class TagReviewListRes {
+  data: Array<TagReview>;
+}
+export class TagReviewRowRes {
+  data: TagReview;
+}

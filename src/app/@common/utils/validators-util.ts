@@ -1,4 +1,4 @@
-import { AbstractControl, ValidatorFn } from '@angular/forms';
+import { AbstractControl, ValidatorFn, Validators } from '@angular/forms';
 import { ValidateUtil } from './validate-util';
 
 export const ValidatorsUtil = {
@@ -112,10 +112,17 @@ export const ValidatorsUtil = {
         return null;
     },
     /** 檢查數字不為0 */
-    checkNotZero: (ctl: AbstractControl) => {
+    notZero: (ctl: AbstractControl) => {
       if ((ctl.dirty || ctl.touched) && +ctl.value === 0) {
           return {'creditLoan.calculate.query.remind4': true};
       }
       return null;
     },
+    blank: (ctl: AbstractControl) => {
+        const v: string = ctl.value;
+        if (v && (ctl.dirty || ctl.touched) && ((v || '').trim().length === 0)) {
+            return { 'blank': true };
+        }
+        return null;
+    }
 };

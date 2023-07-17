@@ -1,4 +1,4 @@
-export interface UserList {
+export interface CustomerList {
     custId: string
     userName: string
     mobile: string

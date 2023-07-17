@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { UserList } from '@api/models/user-list.model';
+import { CustomerList } from '@api/models/customer-list.model';
 import { DialogService } from '@api/services/dialog.service';
-import { UserListMock } from '@common/mock-data/user-list-mock';
+import { CustomerListMock } from '@common/mock-data/user-list-mock';
+import { RegExp } from '@common/enums/reg-exp-enum';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
@@ -19,12 +20,12 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
       super();
       // 篩選條件
       this.validateForm = new FormGroup({
-        custId: new FormControl('', Validators.pattern("^[A-Z]{0,2}[0-9]{0,9}$")),
-        mobile: new FormControl('', Validators.pattern("^[0-9]*$")),
+        custId: new FormControl('', Validators.pattern(RegExp.custIdSearch)),
+        mobile: new FormControl('', Validators.pattern(RegExp.integer)),
       });
     }
 
-    mockData: Array<UserList> = UserListMock;
+    mockData: Array<CustomerList> = CustomerListMock;
     updateTime: string = moment(new Date()).format('YYYY/MM/DD');
     
     ngOnInit(): void {

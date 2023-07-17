@@ -1,6 +1,6 @@
-import { UserList } from "@api/models/user-list.model";
+import { CustomerList } from "@api/models/customer-list.model";
 
-export const UserListMock: Array<UserList> = [
+export const CustomerListMock: Array<CustomerList> = [
   {
     custId: 'A130864804',
     userName: '唐XX',
