@@ -3,6 +3,9 @@
   <button nbButton status="info" size="tiny" class="iconBtn" (click)="edit()">
       <nb-icon icon="edit-outline"></nb-icon>
   </button>
+  <button nbButton status="success" size="tiny" class="iconBtn"  (click)="copy()">
+      <nb-icon icon="copy-outline"></nb-icon>
+  </button>
 </div>
 <div class="pageContent">
   <nb-card>
@@ -61,7 +64,6 @@
       </nb-card-header>
       <nb-card-body>
           <div class="historyList">
-              <!-- 已完成或正在進行的增加class="active"，有子項目加cl3ss="moreBtn"(視需求，可加可不加) -->
               <ng-container *ngFor="let hg of detail.historyGroupView | keyvalue; let i=index;">
                   <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
                       <div class="mainItem">

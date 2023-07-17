@@ -10,32 +10,29 @@ import { BaseComponent } from '@pages/base.component';
 })
 export class TagDetailComponent extends BaseComponent implements OnInit {
   detail: TagDetailView;
-  editData: TagSetting;
-  isHistoryOpen: {[x: number]: boolean} = []; //異動歷程收合
+  checkData: TagSetting;
+  isHistoryOpen: { [x: number]: boolean } = []; //異動歷程收合
 
   constructor(private router: Router) {
     super();
-    if(!!this.router.getCurrentNavigation()?.extras){
-      debugger
-      this.editData = this.router.getCurrentNavigation().extras.state as TagSetting;
-      if(!this.editData){ return null};
-      let tagSetting = this.editData
+    if (!!this.router.getCurrentNavigation()?.extras) {
+      this.checkData = this.router.getCurrentNavigation().extras.state as TagSetting;
+      if (!this.checkData) { return null };
+      let tagSetting = this.checkData
       this.detail = JSON.parse(JSON.stringify(tagSetting));
 
       this.detail.historyGroupView = {};
       tagSetting.tagReviewHistory.forEach(history => {
-        if(!this.detail.historyGroupView || !this.detail.historyGroupView[history.groupId]){
+        if (!this.detail.historyGroupView || !this.detail.historyGroupView[history.groupId]) {
           this.isHistoryOpen[history.groupId] = true;
           this.detail.historyGroupView[history.groupId] = {
             type: history.type,
-            flows: [{time: history.time, title: history.title, detail: history.detail}]
+            flows: [{ time: history.time, title: history.title, detail: history.detail }]
           };
         } else {
-          this.detail.historyGroupView[history.groupId].flows.push({time: history.time, title: history.title, detail: history.detail});
+          this.detail.historyGroupView[history.groupId].flows.push({ time: history.time, title: history.title, detail: history.detail });
         }
       });
-
-      console.info(this.detail)
     }
 
   }
@@ -44,9 +41,14 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
   }
 
   edit() {
+    this.router.navigate(['pages', 'tag-manage', 'tag-add', 'edit', this.checkData.tagId], { state: this.detail });
   }
 
-  cancel(){
+  copy() {
+    this.router.navigate(['pages', 'tag-manage', 'tag-add', 'copy', this.checkData.tagId], { state: this.checkData });
+  }
+
+  cancel() {
     this.router.navigate(['pages', 'tag-manage', 'tag-list']);
   }
 
