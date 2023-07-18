@@ -35,8 +35,8 @@
               <label>標籤類型</label>
               <div>
                   <nb-radio-group name="tagType" formControlName="tagType">
-                      <nb-radio value="normal" (click)="changeTagType('normal')">{{TagType.normal}}</nb-radio>
-                      <nb-radio value="document" (click)="changeTagType('document')">{{TagType.document}}</nb-radio>
+                      <nb-radio value="normal" (valueChange)="changeTagType('normal')">{{TagType.normal}}</nb-radio>
+                      <nb-radio value="document" (valueChange)="changeTagType('document')">{{TagType.document}}</nb-radio>
                   </nb-radio-group>
               </div>
               <div class="note errorText">
@@ -84,7 +84,7 @@
                 </div>
                 <div class="note errorText" *ngIf="this.validateForm.errors?.range">
                     <nb-icon icon="alert-triangle"></nb-icon>
-                    <p>結束時間不得大於起始時間</p>
+                    <p>{{this.validateForm.errors?.errMsg}}</p>
                 </div>
             </div>
             <div class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': this.validateForm.errors?.range}">
@@ -96,7 +96,7 @@
                 </div>
                 <div class="note errorText" *ngIf="this.validateForm.errors?.range">
                     <nb-icon icon="alert-triangle"></nb-icon>
-                    <p>結束時間不得大於起始時間</p>
+                    <p>{{this.validateForm.errors?.errMsg}}</p>
                 </div>
             </div>
             <div class="fieldGroup essential col-12 col-lg-6">

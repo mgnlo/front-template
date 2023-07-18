@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TagSetting, TagDetailView } from '@api/models/tag-list.model';
 import { Filter, Status, Schedule } from '@common/enums/common-enum';
 import { TagType, TagSetCondition, TagDimension, tagSubDimension } from '@common/enums/tag-enum';
+import { ValidateUtil } from '@common/utils/validate-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
@@ -42,16 +43,17 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       tagType: new FormControl('normal', Validators.required),
       setCondition: new FormControl('normal', Validators.required),
       uploadFile: new FormControl(null, Validators.required),
-      startDate: new FormControl(new Date(), Validators.required),
-      endDate: new FormControl(moment(new Date()).add(3, 'months').toDate(), Validators.required),
+      startDate: new FormControl(new Date(), [Validators.required]),
+      endDate: new FormControl(moment(new Date()).add(3, 'months').toDate(), [Validators.required]),
       tagDimension: new FormControl(null, Validators.required),
       tagSubDimension: new FormControl(null, Validators.required),
       scheduleSettings: new FormControl(null, Validators.required),
       tagDescription: new FormControl(null),
       conditionSettingQuery: new FormControl(null, Validators.required),
-    }, ValidatorsUtil.dateRange);
+    }, [ValidatorsUtil.dateRange]);
 
     this.params = this.activatedRoute.snapshot.params;
+    this.changeTagType(this.validateForm.get('tagType').value)
     if (!!this.router.getCurrentNavigation().extras) {
       let checkData = this.router.getCurrentNavigation().extras.state as TagSetting;
       if (!checkData) return
@@ -110,7 +112,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       if (!this.validateForm.contains('setCondition')) {
         this.addField('setCondition', 'normal', Validators.required);
       }
-      if (!this.validateForm.contains('uploadFile')) {
+      if (this.validateForm.contains('uploadFile')) {
         this.removeField('uploadFile');
       }
     }
@@ -119,11 +121,12 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       if (!this.validateForm.contains('uploadFile')) {
         this.addField('uploadFile', null, Validators.required);
       }
-      if (!this.validateForm.contains('setCondition')) {
+      if (this.validateForm.contains('setCondition')) {
         this.removeField('setCondition');
       }
       //this.addField('uploadFile', null, [Validators.required,this.validateFileType]);
     }
+
   }
 
   addField(fieldName: string, formState: any, fileFormatValidator: any) {
