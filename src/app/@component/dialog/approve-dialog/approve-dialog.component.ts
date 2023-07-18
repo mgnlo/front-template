@@ -4,6 +4,10 @@ import { NbDialogRef } from '@nebular/theme';
 import { interval } from 'rxjs';
 import { map, takeWhile } from 'rxjs/operators';
 
+export class ApproveDialogOption {
+  bool: boolean;
+  backTo: string;
+}
 @Component({
   selector: 'ngx-approve-dialog',
   templateUrl: 'approve-dialog.component.html',
@@ -11,8 +15,7 @@ import { map, takeWhile } from 'rxjs/operators';
 })
 export class ApproveDialogComponent implements OnInit {
 
-  @Input() backTo: string;
-  @Input() isSuccess: boolean;
+  @Input() option: ApproveDialogOption;
 
   constructor(protected ref: NbDialogRef<ApproveDialogComponent>, private router: Router) {}
 
@@ -21,8 +24,7 @@ export class ApproveDialogComponent implements OnInit {
       map(val => 1 - val),
       takeWhile(x => x >= 0)
     ).subscribe(() => {
-      //TODO: 送出審核同意
-      this.router.navigate(['pages', 'review-manage', this.backTo]);
+      this.router.navigate(['pages', 'review-manage', this.option.backTo]);
       this.ref.close();
     })
   }
