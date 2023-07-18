@@ -60,7 +60,7 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   }
 
   approve() {
-    this.dialogService.openApprove('tag-review-list', true);
+    this.dialogService.openApprove({bool: true, backTo: 'tag-review-list'});
   }
 
   reject() {

@@ -1,6 +1,6 @@
 import { Injectable, TemplateRef, Type } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApproveDialogComponent } from '@component/dialog/approve-dialog/approve-dialog.component';
+import { ApproveDialogComponent, ApproveDialogOption } from '@component/dialog/approve-dialog/approve-dialog.component';
 import { RejectDialogComponent, RejectDialogOption } from '@component/dialog/reject-dialog/reject-dialog.component';
 import { NbDialogService } from '@nebular/theme';
 
@@ -31,12 +31,11 @@ export class DialogService {
     });
   }
 
-  openApprove(backTo: string, isSuccess: boolean): void {
+  openApprove(option: ApproveDialogOption): void {
 
     this.dialogService.open(ApproveDialogComponent, {
       context: {
-        backTo: backTo,
-        isSuccess: isSuccess
+        option: option,
       },
       closeOnBackdropClick: false,
     });

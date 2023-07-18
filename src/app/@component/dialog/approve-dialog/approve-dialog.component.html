@@ -1,6 +1,6 @@
 <nb-card class="statusDialog">
   <nb-card-body>
-    <img [src]="isSuccess ? 'assets/images/dialog-success.svg' : 'assets/images/dialog-fail.svg'">
-    <p>{{isSuccess ? '執行成功！' : '執行失敗！'}}</p>
+    <img [src]="option.bool ? 'assets/images/dialog-success.svg' : 'assets/images/dialog-fail.svg'">
+    <p>{{option.bool ? '執行成功！' : '執行失敗！'}}</p>
   </nb-card-body>
 </nb-card>
