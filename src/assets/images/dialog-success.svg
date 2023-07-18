@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="68" height="68" viewBox="0 0 68 68">
+  <g id="Layer_2" data-name="Layer 2" transform="translate(0.413 0.413)">
+    <g id="checkmark-circle">
+      <rect id="Rectangle_2626" data-name="Rectangle 2626" width="68" height="68" transform="translate(-0.413 -0.413)" fill="#00d68f" opacity="0"/>
+      <path id="Path_8406" data-name="Path 8406" d="M12.794,20.747a2.81,2.81,0,0,0-3.974,3.974l8.4,8.4a2.716,2.716,0,0,0,4-.14L40.811,10.587a2.8,2.8,0,0,0-4.2-3.695L19.2,27.045Z" transform="translate(14.384 10.852)" fill="#00d68f"/>
+      <path id="Path_8407" data-name="Path 8407" d="M55.087,27.19a2.8,2.8,0,0,0-2.8,2.8A22.384,22.384,0,1,1,29.9,7.6a24.6,24.6,0,0,1,5.318.616,2.8,2.8,0,1,0,1.315-5.43A29.5,29.5,0,0,0,29.9,2,27.989,27.989,0,1,0,57.886,29.989a2.8,2.8,0,0,0-2.8-2.8Z" transform="translate(3.691 3.598)" fill="#00d68f"/>
+    </g>
+  </g>
+</svg>

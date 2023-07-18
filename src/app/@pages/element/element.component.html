@@ -42,6 +42,15 @@
             <div class="subTitle">
                 <p>卡片區塊內小標題 - 標籤</p>
             </div>
+            <div class="tagFilter">
+                <nb-select placeholder="請選擇標籤所屬單位" [(selected)]="selectedItem" size="small" shape="round" hero>
+                    <nb-option value="0">標籤所屬單位：全部</nb-option>
+                    <nb-option value="1">標籤所屬單位：數位金融處</nb-option>
+                    <nb-option value="2">標籤所屬單位：消金業務處</nb-option>
+                    <nb-option value="3">標籤所屬單位：財富管理處</nb-option>
+                    <nb-option value="4">標籤所屬單位：信用卡暨支付處</nb-option>
+                </nb-select>
+            </div>
             <div class="tagBlock">
                 <div class="tagItem">
                     <nb-tag status="info" appearance="filled" text="標籤"></nb-tag>
@@ -264,24 +273,44 @@
                 <p>卡片區塊內小標題 - 灰底區塊</p>
             </div>
 
+            <!-- 欄位檢視 -->
+            <div>
+                <div class="row">
+                    <div class="textGroup col-12 col-lg-4">
+                        <p>文字標題：</p>
+                        <span>文字內容</span>
+                    </div>
+                    <div class="textGroup col-12 col-lg-4">
+                        <p class="colorRed">欄位異動後：</p>
+                        <span>文字內容</span>
+                    </div>
+                    <div class="textGroup col-12 col-lg-4">
+                        <p class="colorSkyBlue">欄位異動前：</p>
+                        <span>文字內容</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="textGroup col-12 col-lg-4">
+                        <p>文字標題：</p>
+                        <span>文字內容</span>
+                    </div>
+                    <div class="textGroup col-12 col-lg-4">
+                        <p>文字標題：</p>
+                        <span>文字內容</span>
+                    </div>
+                    <div class="textGroup code col-12 col-12">
+                        <p>條件設定：</p>
+                        <pre [innerHtml]="mongoDB"></pre>
+                    </div>
+                </div>
+            </div>
+
             <!-- 灰底區塊 -->
             <div class="grayCard">
                 <!-- 欄位結構 -->
                 <div class="row">
-                    <!-- 一般輸入欄位結構 -->
-                    <div class="fieldGroup essential col-12 col-lg-4">
-                        <label>輸入欄位</label>
-                        <div>
-                            <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" />
-                        </div>
-                        <div class="note errorText">
-                            <nb-icon icon="alert-triangle"></nb-icon>
-                            <p>欄位錯誤訊息</p>
-                        </div>
-                    </div>
-
                     <!-- 下拉式選單欄位結構 -->
-                    <div class="fieldGroup essential col-12 col-lg-4">
+                    <div class="fieldGroup essential col-6 col-lg-4">
                         <label>下拉式選單</label>
                         <div>
                             <nb-select fullWidth placeholder="請選擇">
@@ -295,8 +324,94 @@
                             <p>欄位錯誤訊息</p>
                         </div>
                     </div>
+
+                    <!-- 一般輸入欄位結構 -->
+                    <div class="fieldGroup essential col-6 col-lg-4">
+                        <label>輸入欄位</label>
+                        <div>
+                            <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" />
+                        </div>
+                        <div class="note errorText">
+                            <nb-icon icon="alert-triangle"></nb-icon>
+                            <p>欄位錯誤訊息</p>
+                        </div>
+                    </div>
+
+                    <!-- radio欄位結構 -->
+                    <div class="fieldGroup col-11 col-lg-3">
+                        <label>radio</label>
+                        <div>
+                            <nb-radio-group>
+                                <nb-radio value="1">and</nb-radio>
+                                <nb-radio value="2">or</nb-radio>
+                            </nb-radio-group>
+                        </div>
+                        <!-- 欄位錯誤訊息 -->
+                        <div class="note errorText">
+                            <nb-icon icon="alert-triangle"></nb-icon>
+                            <p>欄位錯誤訊息</p>
+                        </div>
+                    </div>
+
+                    <div class="fieldBtn col-1 col-lg-1">
+                        <button nbButton status="success" size="tiny" class="iconBtn">
+                            <nb-icon icon="plus-outline"></nb-icon>
+                        </button>
+                    </div>
                 </div>
                 <div class="row">
+                    <!-- 下拉式選單欄位結構 -->
+                    <div class="fieldGroup essential col-6 col-lg-4">
+                        <label>下拉式選單</label>
+                        <div>
+                            <nb-select fullWidth placeholder="請選擇">
+                                <nb-option value="item1">item1</nb-option>
+                                <nb-option value="item2">item2</nb-option>
+                            </nb-select>
+                        </div>
+                        <!-- 欄位錯誤訊息 -->
+                        <div class="note errorText">
+                            <nb-icon icon="alert-triangle"></nb-icon>
+                            <p>欄位錯誤訊息</p>
+                        </div>
+                    </div>
+
+                    <!-- 一般輸入欄位結構 -->
+                    <div class="fieldGroup essential col-6 col-lg-4">
+                        <label>輸入欄位</label>
+                        <div>
+                            <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" />
+                        </div>
+                        <div class="note errorText">
+                            <nb-icon icon="alert-triangle"></nb-icon>
+                            <p>欄位錯誤訊息</p>
+                        </div>
+                    </div>
+
+                    <!-- radio欄位結構 -->
+                    <div class="fieldGroup col-11 col-lg-3">
+                        <label>radio</label>
+                        <div>
+                            <nb-radio-group>
+                                <nb-radio value="1">and</nb-radio>
+                                <nb-radio value="2">or</nb-radio>
+                            </nb-radio-group>
+                        </div>
+                        <!-- 欄位錯誤訊息 -->
+                        <div class="note errorText">
+                            <nb-icon icon="alert-triangle"></nb-icon>
+                            <p>欄位錯誤訊息</p>
+                        </div>
+                    </div>
+
+                    <!-- 增減按鈕 -->
+                    <div class="fieldBtn col-1 col-lg-1">
+                        <button nbButton status="danger" size="tiny" class="iconBtn">
+                            <nb-icon icon="minus-outline"></nb-icon>
+                        </button>
+                    </div>
+                </div>
+                <!-- <div class="row">
                     <div class="fieldBtn col-12 col-lg-6">
                         <button nbButton status="control">
                             <nb-icon icon="bar-chart-outline"></nb-icon>條件分佈級距
@@ -321,7 +436,7 @@
                             <nb-icon icon="trash-2-outline"></nb-icon>
                         </button>
                     </div>
-                </div>
+                </div> -->
             </div>
 
             <!-- 灰底區塊 -->
@@ -348,6 +463,18 @@
                     <div class="textGroup col-12 col-lg-4">
                         <p>文字標題：</p>
                         <span>文字內容</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="textGroup gather">
+                        <p>小於</p>
+                        <span>3000</span>
+                        <nb-tag appearance="filled" text="and" status="warning"></nb-tag>
+                    </div>
+                    <div class="textGroup gather">
+                        <p>小於</p>
+                        <span>3000</span>
+                        <nb-tag appearance="filled" text="or" status="info"></nb-tag>
                     </div>
                 </div>
             </div>
@@ -925,4 +1052,40 @@
         <button nbButton status="danger">紅色按鈕</button>
         <button nbButton status="info">藍色按鈕</button>
     </div>
+
+
+    <!-- 小標題 - 圖表類型 -->
+    <div class="subTitle">
+        <p>小標題 - 圖表類型</p>
+    </div>
+
+
+
+
+    <!-- 小標題 - 彈跳視窗 -->
+    <div class="subTitle">
+        <p>小標題 - 彈跳視窗</p>
+    </div>
+    <!-- 彈跳視窗 -->
+    <div class="btnGroup">
+        <button nbButton status="info" (click)="open(dialogSuccess)">執行成功視窗</button>
+        <button nbButton status="danger" (click)="open(dialogFail)">執行成功視窗</button>
+    </div>
+    <ng-template #dialogSuccess let-data let-ref="dialogRef">
+        <nb-card class="statusDialog">
+            <nb-card-body>
+            <img src="assets/images/dialog-success.svg" alt="">
+            <p>執行成功！</p>
+          </nb-card-body>
+        </nb-card>
+    </ng-template>
+    <ng-template #dialogFail let-data let-ref="dialogRef">
+        <nb-card class="statusDialog">
+          <nb-card-body>
+            <img src="assets/images/dialog-fail.svg" alt="">
+            <p>執行成功！</p>
+          </nb-card-body>
+        </nb-card>
+    </ng-template>
+
 </div>
