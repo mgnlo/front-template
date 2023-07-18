@@ -10,6 +10,7 @@ import { CommonModule } from '@common/common.module';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import {
   NbDatepickerModule,
+  NbDialogModule,
   NbGlobalPhysicalPosition,
   NbLayoutModule,
   NbMenuModule,
@@ -43,6 +44,7 @@ const NB_MODULES = [
     ApiModule,
     CommonModule.forRoot(),
     ThemeModule.forRoot(),
+    NbDialogModule.forRoot(),
     ...NG_MODULES,
     ...NB_MODULES,
   ],
