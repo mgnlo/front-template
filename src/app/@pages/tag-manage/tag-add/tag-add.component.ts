@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TagSetting, TagDetailView } from '@api/models/tag-list.model';
-import { Filter, Status, Schedule } from '@common/enums/common-enum';
-import { TagType, TagSetCondition, TagDimension, tagSubDimension } from '@common/enums/tag-enum';
-import { ValidateUtil } from '@common/utils/validate-util';
+import { TagDetailView, TagSetting } from '@api/models/tag-list.model';
+import { Filter, Schedule, Status } from '@common/enums/common-enum';
+import { TagDimension, TagSetCondition, TagSubDimension, TagType } from '@common/enums/tag-enum';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
@@ -23,7 +22,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   scheduleList: Array<{ key: string; val: string }> = Object.entries(Schedule).map(([k, v]) => ({ key: k, val: v }));
   //預設構面
   categoryList: Array<{ key: string; val: string }> = Object.entries(TagDimension).map(([k, v]) => ({ key: k, val: v }))
-  subCategoryList: Array<{ key: string; val: string }> = Object.entries(tagSubDimension).map(([k, v]) => ({ key: k, val: v }))
+  subCategoryList: Array<{ key: string; val: string }> = Object.entries(TagSubDimension).map(([k, v]) => ({ key: k, val: v }))
 
   detail: TagDetailView;
   fileName: string;

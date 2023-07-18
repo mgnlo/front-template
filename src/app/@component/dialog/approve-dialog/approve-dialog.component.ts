@@ -5,15 +5,15 @@ import { interval } from 'rxjs';
 import { map, takeWhile } from 'rxjs/operators';
 
 @Component({
-  selector: 'ngx-agree-dialog',
-  templateUrl: 'agree-dialog.component.html',
-  styleUrls: ['agree-dialog.component.scss'],
+  selector: 'ngx-approve-dialog',
+  templateUrl: 'approve-dialog.component.html',
+  styleUrls: ['approve-dialog.component.scss'],
 })
-export class AgreeDialogComponent implements OnInit {
+export class ApproveDialogComponent implements OnInit {
 
   @Input() backTo: string;
 
-  constructor(protected ref: NbDialogRef<AgreeDialogComponent>, private router: Router) {}
+  constructor(protected ref: NbDialogRef<ApproveDialogComponent>, private router: Router) {}
 
   ngOnInit() {
     interval(1000).pipe(

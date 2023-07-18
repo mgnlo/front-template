@@ -1,77 +1,32 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Gender } from '@common/enums/activity-list-enum';
-import { TagDimension, TagType, tagSubDimension } from '@common/enums/tag-enum';
+import { TagDimension, TagType, TagSubDimension, TagSetCondition } from '@common/enums/tag-enum';
 import { Filter, Schedule, Status } from '@common/enums/common-enum';
-import { ReviewStatus } from '@common/enums/review-enum';
+import { ReviewClass, ReviewCompareClass, ReviewStatus } from '@common/enums/review-enum';
 
+export const EUNMS = {
+  'gender': Gender,
+  'status': Status,
+  'schedule': Schedule,
+  'filter': Filter,
+  'reviewStatus': ReviewStatus,
+  'reviewClass': ReviewClass,
+  'reviewCompareClass': ReviewCompareClass,
+  'tagType': TagType,
+  'tagSetCondition': TagSetCondition,
+  'tagDimension': TagDimension,
+  'tagSubDimension': TagSubDimension
+};
 @Pipe({
-  name: 'status'
+  name: 'enum'
 })
-export class StatusPipe implements PipeTransform {
-  transform(value: string): number {
-    return Status[value];
+export class EnumPipe implements PipeTransform {
+  
+  transform<T>(val: string, enumStr: string): string | null {
+    if(!val || !enumStr || !EUNMS[enumStr]){ return null };
+    let enumType = EUNMS[enumStr] as T; 
+    let keyIndex = Object.keys(enumType).indexOf(val);
+    return Object.values(enumType)[keyIndex];
   }
-}
 
-@Pipe({
-  name: 'reviewStatus'
-})
-export class ReviewStatusPipe implements PipeTransform {
-  transform(value: string): number {
-    return ReviewStatus[value];
-  }
-}
-
-@Pipe({
-  name: 'schedule'
-})
-export class SchedulePipe implements PipeTransform {
-  transform(value: string): number {
-    return Schedule[value];
-  }
-}
-
-@Pipe({
-  name: 'filter'
-})
-export class FilterPipe implements PipeTransform {
-  transform(value: string): number {
-    return Filter[value];
-  }
-}
-
-@Pipe({
-  name: 'gender'
-})
-export class GenderPipe implements PipeTransform {
-  transform(value: string): number {
-    return Gender[value];
-  }
-}
-
-@Pipe({
-  name: 'tagDimension'
-})
-export class TagDimensionPipe implements PipeTransform {
-  transform(value: string): number {
-    return TagDimension[value];
-  }
-}
-
-@Pipe({
-  name: 'tagSubDimension'
-})
-export class TagSubDimensionPipe implements PipeTransform {
-  transform(value: string): number {
-    return tagSubDimension[value];
-  }
-}
-
-@Pipe({
-  name: 'tagType'
-})
-export class TagTypePipe implements PipeTransform {
-  transform(value: string): number {
-    return TagType[value];
-  }
 }

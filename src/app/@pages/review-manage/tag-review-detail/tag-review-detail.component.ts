@@ -57,8 +57,8 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
     this.isBefore = !this.isBefore;
   }
 
-  agree() {
-    this.dialogService.openAgree('tag-review-list');
+  approve() {
+    this.dialogService.openApprove('tag-review-list');
   }
 
   reject() {

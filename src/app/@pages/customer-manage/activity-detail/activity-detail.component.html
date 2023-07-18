@@ -14,7 +14,7 @@
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p class="textBold">狀態：</p>
-                    <span>{{detail.status | status}}</span>
+                    <span>{{detail.status | enum:'status'}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p class="textBold">名單上限：</p>
@@ -22,7 +22,7 @@
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p class="textBold">名單差異過濾：</p>
-                    <span>{{detail.filterOptions | filter}}</span>
+                    <span>{{detail.filterOptions | enum:'filter'}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p class="textBold">起迄時間：</p>
@@ -38,7 +38,7 @@
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p class="textBold">排成設定：</p>
-                    <span>{{detail.scheduleSettings | schedule}}</span>
+                    <span>{{detail.scheduleSettings | enum:'schedule'}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p class="textBold">排成更新時間：</p>

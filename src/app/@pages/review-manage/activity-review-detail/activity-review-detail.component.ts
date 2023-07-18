@@ -55,8 +55,8 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
     this.isBefore = !this.isBefore;
   }
   
-  agree() {
-    this.dialogService.openAgree('activity-review-list');
+  approve() {
+    this.dialogService.openApprove('activity-review-list');
   }
 
   reject() {

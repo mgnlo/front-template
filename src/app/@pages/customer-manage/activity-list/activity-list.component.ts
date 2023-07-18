@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ActivityReviewHistory, ActivitySetting } from '@api/models/activity-list.model';
+import { ActivitySetting } from '@api/models/activity-list.model';
 import { Status } from '@common/enums/common-enum';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
-import { ActivityReviewListMock } from '@common/mock-data/activity-review-mock';
 import { CheckboxIconComponent } from '@component/table/checkbox-icon/checkbox-icon.component';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { NbDateService } from '@nebular/theme';
@@ -87,7 +86,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
             type: 'string',
             class: 'col-1',
             valuePrepareFunction: (cell:string) => {
-              return this.statusList.filter(status => status.key === cell)[0].val;
+              return Status[cell];
             },
             sort: false,
           },

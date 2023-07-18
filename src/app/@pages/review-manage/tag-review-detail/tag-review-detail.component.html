@@ -9,7 +9,7 @@
     <!-- 提示訊息 -->
     <div class="noteText" [ngClass]="{'alert': reviewStatus === 'reject'}" *ngIf="reviewStatus !== 'review'">
         <nb-icon icon="info-outline"></nb-icon>
-        <p>審核結果：{{reviewStatus | reviewStatus}}</p><br/>
+        <p>審核結果：{{reviewStatus | enum:'reviewStatus'}}</p><br/>
         <p *ngIf="reviewStatus === 'reject'">原因：{{reviewComment}}</p>
     </div>
     <nb-card>
@@ -21,7 +21,7 @@
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p class="textBold" [ngClass]="isBefore ? 'colorBlue': 'colorRed'">狀態：</p>
-                    <span>{{detail.status | status}}</span>
+                    <span>{{detail.status | enum:'status'}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p class="textBold">類型：</p>
@@ -71,7 +71,7 @@
         <div class="btnGroup">
             <button nbButton status="basic" size="medium" (click)="cancel()">返回</button>
             <button nbButton status="danger" size="medium" (click)="reject()">不同意</button>
-            <button nbButton status="info" size="medium" (click)="agree()">同意</button>
+            <button nbButton status="info" size="medium" (click)="approve()">同意</button>
         </div>
     </div>
     <nb-card>

@@ -4,7 +4,6 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { TagReviewHistory, TagSetting } from '@api/models/tag-list.model';
 import { ReviewClass, ReviewStatus } from '@common/enums/review-enum';
 import { TagReviewListMock } from '@common/mock-data/tag-review-mock';
-import { ReviewStatusPipe } from '@common/pipes/enum.pipe';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { NbDateService } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
@@ -122,8 +121,7 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
         type: 'html',
         width: '5%',
         valuePrepareFunction: (cell: string) => {
-          const rStatus = new ReviewStatusPipe;
-          return `<span class="${ReviewClass[cell]}">${rStatus.transform(cell)}</span>`;
+          return `<span class="${ReviewClass[cell]}">${ReviewStatus[cell]}</span>`;
         },
         sort: false,
       },

@@ -1,11 +1,9 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ActivityReviewHistory, ActivitySetting } from '@api/models/activity-list.model';
+import { ActivityReviewHistory } from '@api/models/activity-list.model';
 import { ReviewClass, ReviewStatus } from '@common/enums/review-enum';
-import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { ActivityReviewListMock } from '@common/mock-data/activity-review-mock';
-import { ReviewStatusPipe } from '@common/pipes/enum.pipe';
 import { CheckboxIconComponent } from '@component/table/checkbox-icon/checkbox-icon.component';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { NbDateService } from '@nebular/theme';
@@ -129,8 +127,7 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
         type: 'html',
         width: '5%',
         valuePrepareFunction: (cell: string) => {
-          const rStatus = new ReviewStatusPipe;
-          return `<span class="${ReviewClass[cell]}">${rStatus.transform(cell)}</span>`;
+          return `<span class="${ReviewClass[cell]}">${ReviewStatus[cell]}</span>`;
         },
         sort: false,
       },
