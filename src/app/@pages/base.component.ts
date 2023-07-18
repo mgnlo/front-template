@@ -19,15 +19,11 @@ export class BaseComponent implements OnDestroy {
   // }
 
   dataSource: LocalDataSource; //table
-  paginator: Paginator = {totalCount: 0, nowPage: 1, perPage:10, totalPage: 1, rowStart: 0, rowEnd:0};  //table筆數顯示
+  paginator: Paginator = { totalCount: 0, nowPage: 1, perPage: 10, totalPage: 1, rowStart: 0, rowEnd: 0 };  //table筆數顯示
   validateForm: FormGroup;     // 共用表單名稱
   isSubmit: boolean = false;   // 確認是否送出表單 -> 初始化時須設定為false
   validationMessages: any;     // 欄位檢核提示訊息 -> 初始化時須各別設定
   tmpCtrl: AbstractControl;    // 多層次使用
-
-  getFieldValidMsg(field: string,RegExp:RegExpEnum){
-
-  }
 
   ngOnDestroy(): void {
     this.unsubscribe$.next(undefined);
@@ -39,15 +35,15 @@ export class BaseComponent implements OnDestroy {
   }
 
   updatePageInfo() {
-    if(!!this.dataSource){
-      this.dataSource.onChanged().subscribe(()=>{
+    if (!!this.dataSource) {
+      this.dataSource.onChanged().subscribe(() => {
         this.paginator.totalCount = this.dataSource.count();
         let page = this.dataSource.getPaging().page;
-        let perPage =  this.dataSource.getPaging().perPage;
+        let perPage = this.dataSource.getPaging().perPage;
         this.paginator.nowPage = page;
-        this.paginator.totalPage = Math.ceil(this.paginator.totalCount/perPage);
+        this.paginator.totalPage = Math.ceil(this.paginator.totalCount / perPage);
         this.paginator.rowStart = (page - 1) * perPage + 1;
-        this.paginator.rowEnd = this.paginator.totalPage !== page ? page * perPage : (page-1) * perPage + this.paginator.totalCount % perPage;
+        this.paginator.rowEnd = this.paginator.totalPage !== page ? page * perPage : (page - 1) * perPage + this.paginator.totalCount % perPage;
       });
     }
   }
@@ -55,21 +51,21 @@ export class BaseComponent implements OnDestroy {
   getErrorMsg(field: string): string {
 
     if (!this.isSubmit || this.validateForm == null || field == null || this.validationMessages == null) {
-        return undefined;
+      return undefined;
     }
 
     const ctlErrors: ValidationErrors = this.validateForm.get(field).errors;
     if (ctlErrors != null) {
       Object.keys(ctlErrors).forEach(keyError => {
-       console.info(keyError);
-       return keyError;
+        console.info(keyError);
+        return keyError;
       });
     }
     return undefined;
   }
 
   groupBy<T>(datas: T[], key: string) {
-    return datas.reduce(function(group, data) {
+    return datas.reduce(function (group, data) {
       (group[data[key]] = group[data[key]] || []).push(data);
       return group;
     }, {});
