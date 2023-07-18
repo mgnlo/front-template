@@ -3,11 +3,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CustomerList } from '@api/models/customer-list.model';
 import { DialogService } from '@api/services/dialog.service';
 import { CustomerListMock } from '@common/mock-data/user-list-mock';
-import { RegExp } from '@common/enums/reg-exp-enum';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
 import { DetailDialogComponent } from './detail-dialog/detail.dialog.component';
+import { RegExpEnum } from '@common/enums/reg-exp-enum';
 
 @Component({
     selector: 'customer-list',
@@ -20,14 +20,14 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
       super();
       // 篩選條件
       this.validateForm = new FormGroup({
-        custId: new FormControl('', Validators.pattern(RegExp.custIdSearch)),
-        mobile: new FormControl('', Validators.pattern(RegExp.integer)),
+        custId: new FormControl('', Validators.pattern(RegExpEnum.custIdSearch)),
+        mobile: new FormControl('', Validators.pattern(RegExpEnum.integer)),
       });
     }
 
     mockData: Array<CustomerList> = CustomerListMock;
     updateTime: string = moment(new Date()).format('YYYY/MM/DD');
-    
+
     ngOnInit(): void {
       this.dataSource = new LocalDataSource();
       this.dataSource.load(this.mockData);
@@ -82,7 +82,7 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
         delete: false,
       },
     };
-      
+
     reset(){
       this.dataSource.reset();
       this.validateForm.reset({custId: '', mobile: ''});

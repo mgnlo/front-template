@@ -4,6 +4,7 @@ import { Paginator } from '@component/table/paginator/paginator.component';
 import { LocalDataSource } from 'ng2-smart-table';
 // import { OAuth2BaseComponent, OAuth2Service } from '@module/oauth2';
 import { Subject } from 'rxjs';
+import { RegExpEnum } from '@common/enums/reg-exp-enum';
 
 @Injectable()
 export class BaseComponent implements OnDestroy {
@@ -21,6 +22,10 @@ export class BaseComponent implements OnDestroy {
   isSubmit: boolean = false;   // 確認是否送出表單 -> 初始化時須設定為false
   validationMessages: any;     // 欄位檢核提示訊息 -> 初始化時須各別設定
   tmpCtrl: AbstractControl;    // 多層次使用
+
+  getFieldValidMsg(field: string,RegExp:RegExpEnum){
+
+  }
 
   ngOnDestroy(): void {
     this.unsubscribe$.next(undefined);
@@ -60,7 +65,7 @@ export class BaseComponent implements OnDestroy {
     }
     return undefined;
   }
-  
+
   groupBy<T>(datas: T[], key: string) {
     return datas.reduce(function(group, data) {
       (group[data[key]] = group[data[key]] || []).push(data);

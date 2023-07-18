@@ -3,8 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TagSetting, TagDetailView } from '@api/models/tag-list.model';
 import { Filter, Status, Schedule } from '@common/enums/common-enum';
+import { RegExpEnum } from '@common/enums/reg-exp-enum';
 import { TagType, TagSetCondition, TagDimension, tagSubDimension } from '@common/enums/tag-enum';
-import { ValidateUtil } from '@common/utils/validate-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
@@ -43,8 +43,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       tagType: new FormControl('normal', Validators.required),
       setCondition: new FormControl('normal', Validators.required),
       uploadFile: new FormControl(null, Validators.required),
-      startDate: new FormControl(new Date(), [Validators.required]),
-      endDate: new FormControl(moment(new Date()).add(3, 'months').toDate(), [Validators.required]),
+      startDate: new FormControl(new Date(), [Validators.required, Validators.pattern(RegExpEnum.dateDashAD)]),
+      endDate: new FormControl(moment(new Date()).add(3, 'months').toDate(), [Validators.required, Validators.pattern(RegExpEnum.dateDashAD)]),
       tagDimension: new FormControl(null, Validators.required),
       tagSubDimension: new FormControl(null, Validators.required),
       scheduleSettings: new FormControl(null, Validators.required),
