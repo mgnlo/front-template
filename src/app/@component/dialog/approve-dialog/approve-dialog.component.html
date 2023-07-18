@@ -1,9 +1,6 @@
-<nb-card  size="tiny">
+<nb-card class="statusDialog">
   <nb-card-body>
-    <div class="success">
-      <nb-icon size="medium" status="success" icon="checkmark-circle-outline"></nb-icon>
-      <br/>
-      <p class="textBold textLarge">執行成功!</p>
-    </div>
+    <img [src]="isSuccess ? 'assets/images/dialog-success.svg' : 'assets/images/dialog-fail.svg'">
+    <p>{{isSuccess ? '執行成功！' : '執行失敗！'}}</p>
   </nb-card-body>
 </nb-card>

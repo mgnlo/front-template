@@ -21,6 +21,8 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   reviewStatus: string;
   reviewComment: string;
 
+  mongoDB = "{variables: {$elemMatch: {key:'產品持有數', value: {$gte: 3}}}}";
+
   constructor(private router: Router, private dialogService: DialogService) {
     super();
     if(!!this.router.getCurrentNavigation()?.extras){
@@ -58,7 +60,7 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   }
 
   approve() {
-    this.dialogService.openApprove('tag-review-list');
+    this.dialogService.openApprove('tag-review-list', true);
   }
 
   reject() {

@@ -68,9 +68,7 @@
       <nb-card-body>
           <div class="rightBox"><button nbButton status="primary" size="medium" (click)="add()">新增</button></div>
           <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
-          <div class="paginator" [ngClass]="{'only' : paginator.totalPage <=1 && paginator.nowPage >= paginator.totalPage}">
-              <span class="colorBlue">顯示 {{paginator.rowStart}} 到 {{paginator.rowEnd}} 筆資料，共 {{paginator.totalCount}} 筆資料</span>
-          </div>
+          <paginator [source]="dataSource" [paginator]="paginator"></paginator>
       </nb-card-body>
   </nb-card>
 </div>

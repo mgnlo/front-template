@@ -31,11 +31,12 @@ export class DialogService {
     });
   }
 
-  openApprove(backTo: string): void {
+  openApprove(backTo: string, isSuccess: boolean): void {
 
     this.dialogService.open(ApproveDialogComponent, {
       context: {
         backTo: backTo,
+        isSuccess: isSuccess
       },
       closeOnBackdropClick: false,
     });

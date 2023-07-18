@@ -12,6 +12,7 @@ import { map, takeWhile } from 'rxjs/operators';
 export class ApproveDialogComponent implements OnInit {
 
   @Input() backTo: string;
+  @Input() isSuccess: boolean;
 
   constructor(protected ref: NbDialogRef<ApproveDialogComponent>, private router: Router) {}
 
