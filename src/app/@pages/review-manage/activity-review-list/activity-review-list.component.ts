@@ -1,9 +1,10 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { TagReviewHistory, TagSetting } from '@api/models/tag-list.model';
+import { ActivityReviewHistory } from '@api/models/activity-list.model';
 import { ReviewClass, ReviewStatus } from '@common/enums/review-enum';
-import { TagReviewListMock } from '@common/mock-data/tag-review-mock';
+import { ActivityReviewListMock } from '@common/mock-data/activity-review-mock';
+import { CheckboxIconComponent } from '@component/table/checkbox-icon/checkbox-icon.component';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { NbDateService } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
@@ -11,11 +12,11 @@ import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({
-  selector: 'tag-review-list',
-  templateUrl: './tag-review-list.component.html',
-  styleUrls: ['./tag-review-list.component.scss'],
+  selector: 'activity-review-list',
+  templateUrl: './activity-review-list.component.html',
+  styleUrls: ['./activity-review-list.component.scss'],
 })
-export class TagReviewListComponent extends BaseComponent implements OnInit {
+export class ActivityReviewListComponent extends BaseComponent implements OnInit {
 
   constructor(
     private dateService: NbDateService<Date>) {
@@ -32,7 +33,7 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
 
   statusList: Array<{ key: string; val: string }> = Object.entries(ReviewStatus).map(([k, v]) => ({ key: k, val: v }))
   selected: string = '';
-  mockData: Array<TagReviewHistory> = TagReviewListMock;
+  mockData: Array<ActivityReviewHistory> = ActivityReviewListMock;
 
   ngOnInit(): void {
     this.dataSource = new LocalDataSource();
@@ -42,51 +43,46 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
   gridDefine = {
     pager: {
       display: true,
-      perPage: 10,
+      perPage: 10,          
     },
     columns: {
-      tagName: {
-        title: '標籤名稱',
+      activityName: {
+        title: '活動名稱',
         type: 'html',
-        width: '30%',
         class: 'left',
         sort: false,
-        valuePrepareFunction: (cell: string) => {
+        width: '20%',
+        valuePrepareFunction: (cell:string) => {
           return `<p class="left">${cell}</p>`;
         },
       },
-      tagType: {
-        title: '類型',
+      activityDescription: {
+        title: '活動說明',
         type: 'html',
-        width: '10%',
+        class: 'left',
         sort: false,
-      },
-      department: {
-        title: '所屬單位',
-        type: 'string',
-        width: '10%',
-        sort: false,
-      },
-      owner: {
-        title: '負責人',
-        type: 'string',
-        width: '5%',
-        sort: false,
-      },
-      tagDescription: {
-        title: '說明',
-        type: 'html',
         width: '25%',
-        class: 'left',
-        valuePrepareFunction: (cell: string) => {
+        valuePrepareFunction: (cell:string) => {
           return `<p class="left">${cell}</p>`;
         },
+      },
+      filterOptions: {
+        title: '差異過濾',
+        type: 'custom',
         sort: false,
+        width: '5%',
+        renderComponent: CheckboxIconComponent,
+      },
+      listLimit: {
+        title: '名單上限',
+        type: 'string',
+        sort: false,
+        width: '5%'
       },
       modificationTime: {
         title: '異動時間',
         type: 'html',
-        width: '10%',
+        width: '5%',
         sort: false,
         valuePrepareFunction: (cell: string) => {
           const datepipe: DatePipe = new DatePipe('en-US')
@@ -116,6 +112,16 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
           }
         }
       },
+      modifyContent: {
+        title: '異動內容',
+        type: 'html',
+        class: 'left',
+        sort: false,
+        width: '30%',
+        valuePrepareFunction: (cell:string) => {
+          return `<p class="left">TODO</p>`;
+        },
+      },
       reviewStatus: {
         title: '狀態',
         type: 'html',
@@ -129,7 +135,7 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
         title: '查看',
         type: 'custom',
         width: '5%',
-        valuePrepareFunction: (cell, row: TagSetting) => row,
+        valuePrepareFunction: (cell, row: ActivityReviewHistory) => row,
         renderComponent: DetailButtonComponent,
         sort: false,
       },

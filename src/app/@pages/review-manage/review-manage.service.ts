@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ResponseModel } from "@api/models/base.model";
-import { TagReviewListRes, TagReviewRowRes } from "@api/models/tag-review.model";
+import { TagReviewListRes, TagReviewRowReq, TagReviewRowRes } from "@api/models/tag-list.model";
 import { ApiService } from "@api/services/api.service";
 import { Observable } from "rxjs";
 
@@ -19,7 +19,7 @@ export class ReviewManageService {
         return this.service.doGet(this.activityFunc + 'TagReviewRow', {'historyId': historyId});
     }
 
-    TagReviewUpdate(data: any): Observable<ResponseModel<any>> {
+    TagReviewUpdate(data: TagReviewRowReq): Observable<ResponseModel<any>> {
         return this.service.doPut(this.activityFunc + 'TagReviewUpdate', data);
     }
 

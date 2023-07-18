@@ -17,11 +17,11 @@
               </div>
               <div class="textGroup col-12 col-lg-4">
                   <p class="textBold">狀態：</p>
-                  <span>{{detail.status | status}}</span>
+                  <span>{{detail.status | enum:'status'}}</span>
               </div>
               <div class="textGroup col-12 col-lg-4">
                   <p class="textBold">類型：</p>
-                  <span>{{detail.tagType | tagType}}</span>
+                  <span>{{detail.tagType | enum:'tagType'}}</span>
               </div>
               <div class="textGroup col-12 col-lg-4">
                 <p class="textBold">所屬單位：</p>
@@ -37,15 +37,15 @@
               </div>
               <div class="textGroup col-12 col-lg-4">
                 <p class="textBold">標籤構面：</p>
-                <span>{{detail.tagDimension | tagDimension}}</span>
+                <span>{{detail.tagDimension | enum:'tagDimension'}}</span>
               </div>
               <div class="textGroup col-12 col-lg-4">
                 <p class="textBold">標籤子構面：</p>
-                <span>{{detail.tagSubDimension | tagSubDimension}}</span>
+                <span>{{detail.tagSubDimension | enum:'tagSubDimension'}}</span>
               </div>
               <div class="textGroup col-12 col-lg-4">
                   <p class="textBold">排成設定：</p>
-                  <span>{{detail.scheduleSettings | schedule}}</span>
+                  <span>{{detail.scheduleSettings | enum:'schedule'}}</span>
               </div>
               <div class="textGroup col-12 col-lg-4">
                   <p class="textBold">描述說明：</p>

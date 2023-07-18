@@ -13,7 +13,7 @@ export enum TagDimension{
   B = '主構面B'
 }
 
-export enum tagSubDimension{
+export enum TagSubDimension{
   A = '子構面AAA',
   B = '子構面BBB'
 }

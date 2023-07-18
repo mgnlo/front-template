@@ -1,5 +1,18 @@
 export enum ReviewStatus {
-  REVIEW = '待審查',
-  AGREE = '同意',
-  REJECT = '不同意',
+  reviewing = '待審查',
+  approved = '同意',
+  rejected = '不同意',
+}
+
+export enum ReviewClass {
+  reviewing = '',
+  approved = 'colorGreen textBold',
+  rejected = 'colorRed textBold'
+}
+
+//搭配isSame判斷使用
+export enum ReviewCompareClass {
+  true = '',
+  false = 'colorRed',
+  null = 'colorBlue'
 }

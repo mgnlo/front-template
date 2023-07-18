@@ -119,8 +119,8 @@ export class TagSettingComponent extends BaseComponent implements OnInit {
         type: 'string',
         width: '5%',
         class: 'alignCenter',
-        valuePrepareFunction: (cell: string) => {
-          return this.statusList.filter(status => status.key === cell)[0].val;
+        valuePrepareFunction: (cell:string) => {
+          return Status[cell];
         },
         sort: false,
       },
