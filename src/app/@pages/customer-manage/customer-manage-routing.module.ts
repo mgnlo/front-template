@@ -3,10 +3,10 @@ import { RouterModule, Routes } from "@angular/router"
 import { ActivityAddComponent } from "./activity-add/activity-add.component"
 import { PreviewDialogComponent } from "./activity-add/preview-dialog/preview.dialog.component"
 import { ActivityDetailComponent } from "./activity-detail/activity-detail.component"
-import { ActivityButtonComponent, ActivityListCeckboxComponent, ActivityListComponent } from "./activity-list/activity-list.component"
-import { CustomerManageComponent } from "./customer-manage.component"
+import { ActivityListComponent } from "./activity-list/activity-list.component"
 import { CustomerListButtonComponent, CustomerListComponent, CustomerListTagComponent } from "./customer-list/customer-list.component"
 import { DetailDialogComponent } from "./customer-list/detail-dialog/detail.dialog.component"
+import { CustomerManageComponent } from "./customer-manage.component"
 
 const routes: Routes = [
     {
@@ -15,7 +15,7 @@ const routes: Routes = [
             { path: '', redirectTo: 'customer-list', pathMatch: 'full'},
             { path: "customer-list", component: CustomerListComponent },
             { path: 'activity-list', component: ActivityListComponent},
-            { path: 'activity-detail', component: ActivityDetailComponent},
+            { path: 'activity-detail/:activityId', component: ActivityDetailComponent},
             { path: 'activity-add', component: ActivityAddComponent}, //新增
             { path: 'activity-add/:activityId', component: ActivityAddComponent}, //編輯
         ]
@@ -36,8 +36,6 @@ export const routedComponents = [
   ActivityListComponent,
   ActivityAddComponent,
   ActivityDetailComponent,
-  ActivityButtonComponent,
-  ActivityListCeckboxComponent,
   DetailDialogComponent,
   PreviewDialogComponent
 ];

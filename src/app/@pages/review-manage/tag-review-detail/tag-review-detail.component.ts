@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Navigation, Router } from '@angular/router';
-import { TagReview, TagReviewDetail } from '@api/models/tag-review.model';
+import { TagDetailView, TagReviewHistory } from '@api/models/tag-list.model';
 import { DialogService } from '@api/services/dialog.service';
+import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { BaseComponent } from '@pages/base.component';
 
 @Component({
@@ -12,32 +13,36 @@ import { BaseComponent } from '@pages/base.component';
 export class TagReviewDetailComponent extends BaseComponent implements OnInit {
 
   navigation: Navigation;
-  detail: TagReviewDetail;
+  detail: TagDetailView;
   isConditionOpen: {[x: number]: boolean} = {}; //活動名單條件收合
   isHistoryOpen: {[x: number]: boolean} = []; //異動歷程收合
   isBefore: boolean = false;
+  isSame: {[x:string]: boolean} = {};
+  reviewStatus: string;
+  reviewComment: string;
 
   constructor(private router: Router, private dialogService: DialogService) {
     super();
     if(!!this.router.getCurrentNavigation()?.extras){
-      let tagReview = this.router.getCurrentNavigation().extras.state as TagReview;
-      if(!tagReview){ return null};
-      this.detail = JSON.parse(JSON.stringify(tagReview));
+      let tagReview = this.router.getCurrentNavigation().extras.state as TagReviewHistory;
+      let list = TagSettingMock.filter(row => row.tagId === tagReview.referenceId)[0];
+      this.detail = JSON.parse(JSON.stringify(list));
+      this.reviewStatus = tagReview.reviewStatus;
+      this.reviewComment = tagReview.reviewComment;
       console.info(this.detail)
-      this.detail.tagConditionSettingView = this.groupBy(tagReview.tagConditionSetting, 'groupId');
 
-      this.detail.tagReviewHistoryView = {};
-      tagReview.tagReviewHistory.forEach(history => {
-        if(!this.detail.tagReviewHistoryView || !this.detail.tagReviewHistoryView[history.groupId]){
+      this.detail.historyGroupView = {};
+      list.tagReviewHistory.forEach(history => {
+        if(!this.detail.historyGroupView || !this.detail.historyGroupView[history.groupId]){
           this.isHistoryOpen[history.groupId] = true;
-          this.detail.tagReviewHistoryView[history.groupId] = {
+          this.detail.historyGroupView[history.groupId] = {
             type: history.type,
             flows: [
               {historyId: history.historyId, time: history.time, title: history.title, detail: history.detail}
             ]
           };
         } else {
-          this.detail.tagReviewHistoryView[history.groupId].flows.push(
+          this.detail.historyGroupView[history.groupId].flows.push(
             {historyId: history.historyId, time: history.time, title: history.title, detail: history.detail}
           );
         }
@@ -53,14 +58,14 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   }
 
   agree() {
-    this.dialogService.openAgree('tag-review');
+    this.dialogService.openAgree('tag-review-list');
   }
 
   reject() {
-    this.dialogService.openReject({title: '標籤異動駁回說明', backTo: 'tag-review'});
+    this.dialogService.openReject({title: '標籤異動駁回說明', backTo: 'tag-review-list'});
   }
 
   cancel() {
-    this.router.navigate(['pages', 'review-manage', 'tag-review']);
+    this.router.navigate(['pages', 'review-manage', 'tag-review-list']);
   }
 }

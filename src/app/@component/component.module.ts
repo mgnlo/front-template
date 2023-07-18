@@ -7,12 +7,16 @@ import { AgreeDialogComponent } from './dialog/agree-dialog/agree-dialog.compone
 import { PaginatorComponent } from './table/paginator/paginator.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
+import { DetailButtonComponent } from './table/detail-button/detail-button.component';
+import { CheckboxIconComponent } from './table/checkbox-icon/checkbox-icon.component';
 
 export const COMPONENTS = [
   AgreeDialogComponent,
   RejectDialogComponent,
   ConfirmDialogComponent,
   PaginatorComponent,
+  CheckboxIconComponent,
+  DetailButtonComponent,
 ];
 
 export const NB_MODULES = [

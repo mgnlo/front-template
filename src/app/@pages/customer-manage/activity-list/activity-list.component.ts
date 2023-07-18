@@ -1,9 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { NavigationExtras, Router } from '@angular/router';
-import { ActivitySetting } from '@api/models/activity-list.model';
+import { Router } from '@angular/router';
+import { ActivityReviewHistory, ActivitySetting } from '@api/models/activity-list.model';
 import { Status } from '@common/enums/common-enum';
-import { ActivityListMock } from '@common/mock-data/activity-list-mock';
+import { ActivityReviewListMock } from '@common/mock-data/activity-review-mock';
+import { CheckboxIconComponent } from '@component/table/checkbox-icon/checkbox-icon.component';
+import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { NbDateService } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
@@ -32,7 +34,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
 
     statusList: Array<{key: string; val: string}> = Object.entries(Status).map(([k, v]) => ({ key: k, val: v }))
     selected: string = '';
-    mockData: Array<ActivitySetting> = ActivityListMock;
+    mockData: Array<ActivityReviewHistory> = ActivityReviewListMock;
 
     ngOnInit(): void {
       this.mockData = this.mockData.map(mock => {
@@ -71,7 +73,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
             type: 'custom',
             class: 'col-1',
             sort: false,
-            renderComponent: ActivityListCeckboxComponent,
+            renderComponent: CheckboxIconComponent,
           },
           listLimit: {
             title: '名單上限',
@@ -129,7 +131,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
             type: 'custom',
             class: 'col-1',
             valuePrepareFunction: (cell, row: ActivitySetting) => row,
-            renderComponent: ActivityButtonComponent,
+            renderComponent: DetailButtonComponent,
             sort: false,
           },
         },
@@ -174,38 +176,4 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
           });
         }
       }
-}
-
-@Component({
-    selector: 'ngx-activity-button',
-    template: '<button nbButton ghost status="info" size="medium" (click)="search()"><nb-icon icon="search"></nb-icon></button>'
-})
-export class ActivityButtonComponent implements OnInit {
-
-    constructor(private router: Router) { }
-
-    @Input() value: ActivitySetting;
-
-    ngOnInit() {}
-    
-    search(){
-      let passData: NavigationExtras = {state: this.value};
-      this.router.navigate(['pages', 'customer-manage', 'activity-detail'], passData);
-    }
-
-    edit(): void {}
-}
-
-@Component({
-    selector: 'ngx-ceckbox',
-    template: '<nb-icon *ngIf="bool" status="info" icon="checkmark-square-2"></nb-icon>',
-})
-export class ActivityListCeckboxComponent implements OnInit {
-
-    @Input() value: string;
-    bool: boolean;
-
-    ngOnInit() {
-      this.bool = this.value === 'true' ? true : false;
-    }
 }

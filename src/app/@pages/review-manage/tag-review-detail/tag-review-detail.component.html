@@ -1,9 +1,17 @@
 <div class="pageTitle">
     <h1>標籤審核</h1>
-    <button nbButton status="primary" size="small" (click)="viewToggle()" *ngIf="!isBefore">查看異動前內容</button>
-    <button nbButton status="primary" size="small" (click)="viewToggle()" *ngIf="isBefore">返回本次異動內容</button>
+    <ng-container *ngIf="reviewStatus === 'review'">
+        <button nbButton status="primary" size="small" (click)="viewToggle()" *ngIf="!isBefore">查看異動前內容</button>
+        <button nbButton status="primary" size="small" (click)="viewToggle()" *ngIf="isBefore">返回本次異動內容</button>
+    </ng-container>
 </div>
 <div class="pageContent">
+    <!-- 提示訊息 -->
+    <div class="noteText" [ngClass]="{'alert': reviewStatus === 'reject'}" *ngIf="reviewStatus !== 'review'">
+        <nb-icon icon="info-outline"></nb-icon>
+        <p>審核結果：{{reviewStatus | reviewStatus}}</p><br/>
+        <p *ngIf="reviewStatus === 'reject'">原因：{{reviewComment}}</p>
+    </div>
     <nb-card>
         <nb-card-body>
             <div class="row">
@@ -13,7 +21,7 @@
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p class="textBold" [ngClass]="isBefore ? 'colorBlue': 'colorRed'">狀態：</p>
-                    <span>{{detail.reviewStatus | reviewStatus}}</span>
+                    <span>{{detail.status | status}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p class="textBold">類型：</p>
@@ -54,7 +62,12 @@
             </div>
         </nb-card-body>
     </nb-card>
-    <div class="row">
+    <div class="row" *ngIf="reviewStatus!=='review'">
+        <div class="btnGroup">
+            <button nbButton status="basic" size="medium" (click)="cancel()">返回</button>
+        </div>
+    </div>
+    <div class="row" *ngIf="reviewStatus==='review'">
         <div class="btnGroup">
             <button nbButton status="basic" size="medium" (click)="cancel()">返回</button>
             <button nbButton status="danger" size="medium" (click)="reject()">不同意</button>
@@ -67,7 +80,7 @@
                 <nb-tab tabTitle="異動歷程" ngFor="let ">
                     <div class="historyList">
                         <!-- 已完成或正在進行的增加class="active"，有子項目加cl3ss="moreBtn"(視需求，可加可不加) -->
-                        <ng-container *ngFor="let hg of detail.tagReviewHistoryView | keyvalue; let i=index;">
+                        <ng-container *ngFor="let hg of detail.historyGroupView | keyvalue; let i=index;">
                             <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
                                 <div class="mainItem">
                                     <h4 (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">{{history.type}}</h4>
@@ -89,30 +102,7 @@
                         </ng-container>
                     </div>
                 </nb-tab>
-                <nb-tab tabTitle="標籤使用範圍" ngFor="let ">
-                    <div class="historyList">
-                        <!-- 已完成或正在進行的增加class="active"，有子項目加cl3ss="moreBtn"(視需求，可加可不加) -->
-                        <ng-container *ngFor="let hg of detail.tagConditionSettingView | keyvalue; let i=index;">
-                            <!-- <div class="historyItem active moreBtn" [ngClass]="isConditionOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
-                                <div class="mainItem">
-                                    <h4 (click)="isConditionOpen[hg.key] = !isConditionOpen[hg.key]">{{history.type}}</h4>
-                                    <button nbButton status="control" size="tiny" class="iconBtn" (click)="isConditionOpen[hg.key] = !isConditionOpen[hg.key]">
-                                        <nb-icon icon="chevron-down-outline"></nb-icon>
-                                    </button>
-                                </div>
-                                <div class="subItem" [ngClass]="isConditionOpen[hg.key] ? '' : 'displayNone'" *ngFor="let flow of history.flows">
-                                    <div>
-                                        <p>{{flow.time | date:dateFormat}}</p>
-                                        <p>{{flow.time | date:'hh:mm:ss'}}</p>
-                                    </div>
-                                    <div>
-                                        <p>{{flow.title}}</p>
-                                        <p>{{flow.detail}}</p>
-                                    </div>
-                                </div>
-                            </div> -->
-                        </ng-container>
-                    </div>
+                <nb-tab tabTitle="標籤使用範圍">
                 </nb-tab>
             </nb-tabset>
         </nb-card-body>

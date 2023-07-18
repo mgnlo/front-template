@@ -1,0 +1,118 @@
+<div class="pageTitle">
+    <h1>標籤審核</h1>
+    <ng-container *ngIf="reviewStatus === 'review'">
+        <button nbButton status="primary" size="small" (click)="viewToggle()" *ngIf="!isBefore">查看異動前內容</button>
+        <button nbButton status="primary" size="small" (click)="viewToggle()" *ngIf="isBefore">返回本次異動內容</button>
+    </ng-container>
+</div>
+<div class="pageContent">
+    <!-- 提示訊息 -->
+    <div class="noteText" [ngClass]="{'alert': reviewStatus === 'reject'}" *ngIf="reviewStatus !== 'review'">
+        <nb-icon icon="info-outline"></nb-icon>
+        <p>審核結果：{{reviewStatus | reviewStatus}}</p><br/>
+        <p *ngIf="reviewStatus === 'reject'">原因：{{reviewComment}}</p>
+    </div>
+    <nb-card>
+        <nb-card-body>
+            <div class="row">
+                <div class="textGroup col-12 col-lg-4" [ngClass]="isSame">
+                    <p class="textBold" [ngClass]="">活動名稱：</p>
+                    <span>{{detail.activityName}}</span>
+                </div>
+                <div class="textGroup col-12 col-lg-4">
+                    <p class="textBold">狀態：</p>
+                    <span>{{detail.status | status}}</span>
+                </div>
+                <div class="textGroup col-12 col-lg-4">
+                    <p class="textBold">名單上限：</p>
+                    <span>{{detail.listLimit}}</span>
+                </div>
+                <div class="textGroup col-12 col-lg-4">
+                    <p class="textBold">名單差異過濾：</p>
+                    <span>{{detail.filterOptions | filter}}</span>
+                </div>
+                <div class="textGroup col-12 col-lg-4">
+                    <p class="textBold">起迄時間：</p>
+                    <span>{{detail.startDate}}~{{detail.endDate}}</span>
+                </div>
+                <div class="textGroup col-12 col-lg-4">
+                    <p class="textBold">描述說明：</p>
+                    <span>{{detail.activityDescription}}</span>
+                </div>
+                <div class="textGroup col-12 col-lg-4">
+                    <p class="textBold">異動時間：</p>
+                    <span>{{detail.modificationTime | date:dateFormat}}</span>
+                </div>
+                <div class="textGroup col-12 col-lg-4">
+                    <p class="textBold">排成設定：</p>
+                    <span>{{detail.scheduleSettings | schedule}}</span>
+                </div>
+                <div class="textGroup col-12 col-lg-4">
+                    <p class="textBold">排成更新時間：</p>
+                    <span>{{detail.batchUpdateTime}}</span>
+                </div>
+            </div>
+            <ng-container *ngFor="let tag of detail.tagGroupView | keyvalue">
+                <div class="subTitle">
+                    <p>活動名單條件{{tag.key}}</p>
+                    <button nbButton status="basic" size="tiny" class="iconBtn btnSwitch"
+                        [ngClass]="isConditionOpen[tag.key] ? 'btnClick' : ''" (click)="isConditionOpen[tag.key] = !isConditionOpen[tag.key]">
+                        <nb-icon icon="arrow-ios-forward-outline"></nb-icon>
+                    </button>
+                </div>
+                <div [ngClass]="isConditionOpen[tag.key] ? '' : 'displayNone'">
+                    <div class="grayCard">
+                        <div class="row">
+                            <div class="textGroup col-12 col-lg-12" *ngFor="let condition of tag.value">
+                                <p class="textBold">偵測條件：</p>
+                                <span>{{condition.tagName}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </nb-card-body>
+    </nb-card>
+    <div class="row" *ngIf="reviewStatus!=='review'">
+        <div class="btnGroup">
+            <button nbButton status="basic" size="medium" (click)="cancel()">返回</button>
+        </div>
+    </div>
+    <div class="row" *ngIf="reviewStatus==='review'">
+        <div class="btnGroup">
+            <button nbButton status="basic" size="medium" (click)="cancel()">返回</button>
+            <button nbButton status="danger" size="medium" (click)="reject()">不同意</button>
+            <button nbButton status="info" size="medium" (click)="agree()">同意</button>
+        </div>
+    </div>
+    <nb-card>
+        <nb-card-header>
+            <h2>異動歷程</h2>
+        </nb-card-header>
+        <nb-card-body>
+            <div class="historyList">
+                <!-- 已完成或正在進行的增加class="active"，有子項目加cl3ss="moreBtn"(視需求，可加可不加) -->
+                <ng-container *ngFor="let hg of detail.historyGroupView | keyvalue; let i=index;">
+                    <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
+                        <div class="mainItem">
+                            <h4 (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">{{history.type}}</h4>
+                            <button nbButton status="control" size="tiny" class="iconBtn" (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">
+                                <nb-icon icon="chevron-down-outline"></nb-icon>
+                            </button>
+                        </div>
+                        <div class="subItem" [ngClass]="isHistoryOpen[hg.key] ? '' : 'displayNone'" *ngFor="let flow of history.flows">
+                            <div>
+                                <p>{{flow.time | date:dateFormat}}</p>
+                                <p>{{flow.time | date:'hh:mm:ss'}}</p>
+                            </div>
+                            <div>
+                                <p>{{flow.title}}</p>
+                                <p>{{flow.detail}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </nb-card-body>
+    </nb-card>
+</div>

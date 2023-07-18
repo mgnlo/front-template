@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CustomerListMock } from '@common/mock-data/user-list-mock';
+import { CustomerListMock } from '@common/mock-data/customer-list-mock';
 import { NbDialogRef } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';

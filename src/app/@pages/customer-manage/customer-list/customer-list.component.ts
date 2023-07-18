@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CustomerList } from '@api/models/customer-list.model';
 import { DialogService } from '@api/services/dialog.service';
-import { CustomerListMock } from '@common/mock-data/user-list-mock';
+import { CustomerListMock } from '@common/mock-data/customer-list-mock';
 import { RegExp } from '@common/enums/reg-exp-enum';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';

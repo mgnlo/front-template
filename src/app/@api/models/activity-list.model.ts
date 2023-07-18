@@ -28,19 +28,19 @@ export class ActivityReviewHistory {
   title: string;
   detail: string;
   type: string;
-  // reviewStatus?: string;
-  // reviewer?: string;
-  // reviewComment?: string;
-  // activityName?: string;
-  // activityDescription?: string;
-  // filterOptions?: string;
-  // listLimit?: number;
-  // status?: string;
-  // startDate?: string;
-  // endDate?: string;
-  // modificationTime?: string;
-  // scheduleSettings?: string;
-  // batchUpdateTime?: string;
+  reviewStatus?: string;
+  reviewer?: string;
+  reviewComment?: string;
+  activityName?: string;
+  activityDescription?: string;
+  filterOptions?: string;
+  listLimit?: number;
+  status?: string;
+  startDate?: string;
+  endDate?: string;
+  modificationTime?: string;
+  scheduleSettings?: string;
+  batchUpdateTime?: string;
 }
 export class TagSetting {
   tagId: string;

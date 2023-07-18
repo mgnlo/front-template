@@ -37,6 +37,25 @@ export class TagReviewHistory {
   title: string
   detail: string
   type: string
+  reviewStatus?: string
+  reviewer?: string
+  reviewComment?: string
+  tagName?: string
+  tagDescription?: string
+  tagType?: string
+  department?: string
+  owner?: string
+  modificationTime?: string
+  status?: string
+  startDate?: string
+  endDate?: string
+  conditionSettingMethod?: string
+  conditionSettingQuery?: string
+  tagDimension?: string
+  tagSubDimension?: string
+  scheduleSettings?: string
+  uploadType?: string
+  filePath?: string
 }
 
 
@@ -66,6 +85,7 @@ export interface TagDetailView {
 export interface HistoryGroupView {
   type: string;
   flows: {
+    historyId?: string;
     time: string;
     title: string;
     detail: string;

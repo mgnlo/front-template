@@ -1,23 +1,20 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
+import { ActivityReviewDetailComponent } from "./activity-review-detail/activity-review-detail.component";
+import { ActivityReviewListComponent } from "./activity-review-list/activity-review-list.component";
 import { ReviewManageComponent } from "./review-manage.component";
 import { TagReviewDetailComponent } from "./tag-review-detail/tag-review-detail.component";
-import { ReviewTagButtonComponent, TagReviewListComponent } from "./tag-review-list/tag-review-list.component";
+import { TagReviewListComponent } from "./tag-review-list/tag-review-list.component";
 
 const routes: Routes = [
     {
         path: "", component: ReviewManageComponent, 
         children: [
             { path: '', redirectTo: 'tag-review', pathMatch: 'full'},
-            { path: 'tag-review', component: TagReviewListComponent },
+            { path: 'tag-review-list', component: TagReviewListComponent },
             { path: 'tag-review-detail/:historyId', component: TagReviewDetailComponent },
-            // {
-            //   path: 'edit/:id',
-            //   component: SystemManageEditComponent, //編輯
-            // },
-            // { path: 'activity-list', component: ActivityListComponent},
-            // { path: 'activity-add', component: ActivityAddComponent},
-            // { path: 'activity-detail', component: ActivityDetailComponent},
+            { path: 'activity-review-list', component: ActivityReviewListComponent },
+            { path: 'activity-review-detail/:historyId', component: ActivityReviewDetailComponent },
         ]
     }
 ]
@@ -31,6 +28,7 @@ export class ReviewManageRoutingModule { }
 export const routedComponents = [
   ReviewManageComponent,
   TagReviewListComponent,
-  ReviewTagButtonComponent,
-  TagReviewDetailComponent
+  TagReviewDetailComponent,
+  ActivityReviewListComponent,
+  ActivityReviewDetailComponent
 ];
