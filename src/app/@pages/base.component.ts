@@ -1,12 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AbstractControl, FormGroup, ValidationErrors } from '@angular/forms';
-import { EnumPipe } from '@common/pipes/enum.pipe';
-import { CommonUtil } from '@common/utils/common-util';
+import { RegExpEnum } from '@common/enums/reg-exp-enum';
 import { Paginator } from '@component/table/paginator/paginator.component';
 import { LocalDataSource } from 'ng2-smart-table';
 // import { OAuth2BaseComponent, OAuth2Service } from '@module/oauth2';
 import { Subject } from 'rxjs';
-import { RegExpEnum } from '@common/enums/reg-exp-enum';
 
 @Injectable()
 export class BaseComponent implements OnDestroy {
