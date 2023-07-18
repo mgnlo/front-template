@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ActivityReviewHistory, ActivitySetting } from '@api/models/activity-list.model';
 import { Status } from '@common/enums/common-enum';
+import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { ActivityReviewListMock } from '@common/mock-data/activity-review-mock';
 import { CheckboxIconComponent } from '@component/table/checkbox-icon/checkbox-icon.component';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
@@ -34,7 +35,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
 
     statusList: Array<{key: string; val: string}> = Object.entries(Status).map(([k, v]) => ({ key: k, val: v }))
     selected: string = '';
-    mockData: Array<ActivityReviewHistory> = ActivityReviewListMock;
+    mockData: Array<ActivitySetting> = ActivityListMock;
 
     ngOnInit(): void {
       this.mockData = this.mockData.map(mock => {
