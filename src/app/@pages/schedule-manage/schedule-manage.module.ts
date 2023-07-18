@@ -12,6 +12,7 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { ThemeModule } from '../../@theme/theme.module';
 import { routedComponents, ScheduleManageRoutingModule } from './schedule-manage-routing.module';
 import { ScheduleManageService } from './schedule-manage.service';
+import { ComponentModule } from "../../@component/component.module";
 
 export const NB_MODULES = [
   NbSpinnerModule,
@@ -35,8 +36,9 @@ export const NB_MODULES = [
     FormsModule,
     ReactiveFormsModule,
     ThemeModule,
-    Ng2SmartTableModule,
     ScheduleManageRoutingModule,
+    Ng2SmartTableModule,
+    ComponentModule,
     ...NB_MODULES
   ],
   providers: [
