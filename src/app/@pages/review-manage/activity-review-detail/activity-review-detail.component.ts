@@ -56,7 +56,7 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
   }
   
   approve() {
-    this.dialogService.openApprove('activity-review-list');
+    this.dialogService.openApprove('activity-review-list', true);
   }
 
   reject() {

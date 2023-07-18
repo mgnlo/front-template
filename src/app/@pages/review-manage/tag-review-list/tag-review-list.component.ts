@@ -17,8 +17,7 @@ import { LocalDataSource } from 'ng2-smart-table';
 })
 export class TagReviewListComponent extends BaseComponent implements OnInit {
 
-  constructor(
-    private dateService: NbDateService<Date>) {
+  constructor(private dateService: NbDateService<Date>) {
     super();
     // 篩選條件
     this.validateForm = new FormGroup({
