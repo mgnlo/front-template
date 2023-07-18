@@ -91,3 +91,15 @@ export interface HistoryGroupView {
     detail: string;
   }[]
 }
+
+export interface TagReviewListRes {
+  data: Array<TagReviewHistory>;
+}
+
+export interface TagReviewRowRes {
+  data: TagReviewHistory;
+}
+
+export interface TagReviewRowReq {
+  data: TagReviewHistory;
+}
