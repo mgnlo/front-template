@@ -92,6 +92,23 @@ export interface HistoryGroupView {
   }[]
 }
 
+export class TagSettingListResp {
+  data: Array<TagSetting>;
+}
+export class TagSettingRowResp {
+  data: TagSetting;
+}
+export class TagSettingEditReq {
+  TagName: string;
+  status: string;
+  listLimit: number;
+  filterOptions: string;
+  startDate: string;
+  endDate: string;
+  scheduleSettings: string;
+  TagDescription: string;
+}
+
 export interface TagReviewListRes {
   data: Array<TagReviewHistory>;
 }
