@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Navigation, Router } from '@angular/router';
-import { TagDetailView, TagReviewHistory } from '@api/models/tag-list.model';
+import { TagDetailView, TagReviewHistory } from '@api/models/tag-manage.model';
 import { DialogService } from '@api/services/dialog.service';
 import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { BaseComponent } from '@pages/base.component';

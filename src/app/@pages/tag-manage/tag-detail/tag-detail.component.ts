@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { TagDetailView, TagSetting } from '@api/models/tag-list.model';
+import { TagDetailView, TagSetting } from '@api/models/tag-manage.model';
 import { BaseComponent } from '@pages/base.component';
 
 @Component({

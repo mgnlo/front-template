@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TagDimension, TagSetCondition, TagSubDimension, TagType } from '@common/enums/tag-enum';
-import { TagSetting, TagDetailView } from '@api/models/tag-list.model';
+import { TagSetting, TagDetailView } from '@api/models/tag-manage.model';
 import { Filter, Status, Schedule } from '@common/enums/common-enum';
 import { RegExpEnum } from '@common/enums/reg-exp-enum';
 import { ValidatorsUtil } from '@common/utils/validators-util';

@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core"
 import { Observable } from "rxjs"
 import { ApiService } from "@api/services/api.service";
 import { ResponseModel } from "@api/models/base.model";
-import { TagSettingEditReq, TagSettingListResp, TagSettingRowResp } from "@api/models/tag-list.model";
+import { TagSettingEditReq, TagSettingListResp, TagSettingRowResp } from "@api/models/tag-manage.model";
 
 @Injectable()
 export class TagManageService {
