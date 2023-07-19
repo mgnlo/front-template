@@ -61,13 +61,6 @@ export class BaseComponent implements OnDestroy {
     return undefined;
   }
 
-  groupBy<T>(datas: T[], key: string) {
-    return datas.reduce(function (group, data) {
-      (group[data[key]] = group[data[key]] || []).push(data);
-      return group;
-    }, {});
-  }
-
   getActionName(changeRouteName: string): string {
     switch (changeRouteName) {
       case 'edit':

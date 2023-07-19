@@ -16,48 +16,48 @@
         <nb-card-body>
             <div class="row">
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold">標籤名稱：</p>
+                    <p class="textBold" [ngClass]="changeClass('tagName') | enum: 'reviewCompareClass'">標籤名稱：</p>
                     <span>{{detail.tagName}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold" [ngClass]="isBefore ? 'colorSkyBlue': 'colorRed'">狀態：</p>
+                    <p class="textBold" [ngClass]="changeClass('status') | enum: 'reviewCompareClass'">狀態：</p>
                     <span>{{detail.status | enum:'status'}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold">類型：</p>
+                    <p class="textBold" [ngClass]="changeClass('tagType') | enum: 'reviewCompareClass'">類型：</p>
                     <span>{{detail.tagType | enum:'tagType'}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold">所屬單位：</p>
+                    <p class="textBold" [ngClass]="changeClass('department') | enum: 'reviewCompareClass'">所屬單位：</p>
                     <span>{{detail.department}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold">負責人：</p>
+                    <p class="textBold" [ngClass]="changeClass('owner') | enum: 'reviewCompareClass'">負責人：</p>
                     <span>{{detail.owner}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold">起迄時間：</p>
+                    <p class="textBold" [ngClass]="changeClass('startDate','endDate') | enum: 'reviewCompareClass'">起迄時間：</p>
                     <span>{{detail.startDate}}~{{detail.endDate}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold">標籤屬性：</p>
+                    <p class="textBold" [ngClass]="changeClass('tagDimension') | enum: 'reviewCompareClass'">標籤屬性：</p>
                     <span>{{detail.tagDimension}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold">標籤子構面：</p>
+                    <p class="textBold" [ngClass]="changeClass('tagSubDimension') | enum: 'reviewCompareClass'">標籤子構面：</p>
                     <span>{{detail.tagSubDimension}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold">異動時間：</p>
+                    <p class="textBold" [ngClass]="changeClass('modificationTime') | enum: 'reviewCompareClass'">異動時間：</p>
                     <span>{{detail.modificationTime | date:dateFormat}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold">說明：</p>
+                    <p class="textBold" [ngClass]="changeClass('tagDescription') | enum: 'reviewCompareClass'">說明：</p>
                     <span>{{detail.tagDescription}}</span>
                 </div>
                 <div class="textGroup code col-12">
-                    <p class="textBold" [ngClass]="isBefore ? 'colorSkyBlue': 'colorRed'">條件設定：</p>
-                    <pre>{{mongoDB}}</pre>
+                    <p class="textBold" [ngClass]="changeClass('conditionSettingQuery') | enum: 'reviewCompareClass'">條件設定：</p>
+                    <pre>{{detail.conditionSettingQuery}}</pre>
                 </div>
             </div>
         </nb-card-body>
