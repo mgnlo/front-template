@@ -5,7 +5,7 @@ import { Status } from '@common/enums/common-enum';
 import { TagManageService } from '../tag-manage.service';
 import { LocalDataSource } from 'ng2-smart-table';
 import * as moment from 'moment';
-import { TagSetting } from '@api/models/tag-list.model';
+import { TagSetting } from '@api/models/tag-manage.model';
 import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { DatePipe } from '@angular/common';
 import { TagType } from '@common/enums/tag-enum';
@@ -16,7 +16,7 @@ import { DetailButtonComponent } from '@component/table/detail-button/detail-but
   templateUrl: './tag-list.component.html',
   styleUrls: ['./tag-list.component.scss']
 })
-export class TagSettingComponent extends BaseComponent implements OnInit {
+export class TagListComponent extends BaseComponent implements OnInit {
   constructor(
     private tagManageService: TagManageService,
     private router: Router) {
@@ -205,15 +205,3 @@ export class TagSettingComponent extends BaseComponent implements OnInit {
 
 }
 
-@Component({
-  selector: 'tmp-tag',
-  template: '<button class="left" *ngFor="let tag of value" nbButton status="info" size="small">{{tag}}</button>'
-})
-export class TagComponent implements OnInit {
-
-  constructor() { }
-  renderValue: string;
-  @Input() value: Array<string>;
-
-  ngOnInit() { }
-}

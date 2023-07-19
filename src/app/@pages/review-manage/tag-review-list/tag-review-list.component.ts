@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { TagReviewHistory, TagSetting } from '@api/models/tag-list.model';
+import { TagReviewHistory, TagSetting } from '@api/models/tag-manage.model';
 import { ReviewClass, ReviewStatus } from '@common/enums/review-enum';
 import { TagType } from '@common/enums/tag-enum';
 import { TagReviewListMock } from '@common/mock-data/tag-review-mock';

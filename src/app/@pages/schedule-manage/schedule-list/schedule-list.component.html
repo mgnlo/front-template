@@ -1,0 +1,15 @@
+<div class="pageTitle">
+  <h1>排程管理</h1>
+</div>
+<div class="pageContent">
+  <nb-card>
+      <nb-card-header>
+          <h2>排程列表</h2>
+      </nb-card-header>
+      <nb-card-body>
+          <div class="rightBox"><button nbButton status="primary" size="medium" (click)="add()">新增</button></div>
+          <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
+          <paginator [source]="dataSource" [paginator]="paginator"></paginator>
+      </nb-card-body>
+  </nb-card>
+</div>

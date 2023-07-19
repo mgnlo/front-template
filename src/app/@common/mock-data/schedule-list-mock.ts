@@ -1,11 +1,11 @@
-import { TagSetting } from "@api/models/tag-manage.model";
+import { ScheduleSetting } from "@api/models/schedule-manage.model";
 
-export const TagSettingMock: Array<TagSetting> = [
+export const ScheduleSettingMock: Array<ScheduleSetting> = [
   {
-    "tagId": "cccccc123456",
-    "tagName": "標籤名稱A",
-    "tagDescription": "標籤說明",
-    "tagType": "normal",
+    "scheduleId": "cccccc123456",
+    "scheduleName": "標籤名稱A",
+    "scheduleDescription": "標籤說明",
+    "scheduleType": "normal",
     "department": "所屬單位",
     "owner": "負責人",
     "modificationTime": "2023-07-03 15:30:00",
@@ -14,14 +14,14 @@ export const TagSettingMock: Array<TagSetting> = [
     "endDate": "2023-07-10",
     "conditionSettingMethod": "條件設定方式",
     "conditionSettingQuery": "條件設定語法",
-    "tagDimension": "A",
-    "tagSubDimension": "A",
+    "scheduleDimension": "A",
+    "scheduleSubDimension": "A",
     "scheduleSettings": "daily",
     "uploadType": "名單上傳類型",
     "filePath": "上傳檔案路徑",
-    "tagConditionSetting": [
+    "scheduleConditionSetting": [
       {
-        "tagId": "cccccc123456",
+        "scheduleId": "cccccc123456",
         "conditionKey": "condition-key-1",
         "groupId": 1,
         "detectionCondition": "偵測條件1",
@@ -29,7 +29,7 @@ export const TagSettingMock: Array<TagSetting> = [
         "thresholdValue": "門檻值1"
       },
       {
-        "tagId": "cccccc123456",
+        "scheduleId": "cccccc123456",
         "conditionKey": "condition-key-2",
         "groupId": 1,
         "detectionCondition": "偵測條件2",
@@ -37,7 +37,7 @@ export const TagSettingMock: Array<TagSetting> = [
         "thresholdValue": "門檻值2"
       },
       {
-        "tagId": "cccccc123456",
+        "scheduleId": "cccccc123456",
         "conditionKey": "condition-key-3",
         "groupId": 2,
         "detectionCondition": "偵測條件3",
@@ -45,7 +45,7 @@ export const TagSettingMock: Array<TagSetting> = [
         "thresholdValue": "門檻值3"
       }
     ],
-    "tagReviewHistory": [
+    "scheduleReviewHistory": [
       {
         "historyId": "hh123456",
         "referenceId": "cccccc123456",
@@ -112,10 +112,10 @@ export const TagSettingMock: Array<TagSetting> = [
     ]
   },
   {
-    "tagId": "cccccc123456",
-    "tagName": "標籤名稱B",
-    "tagDescription": "標籤說明",
-    "tagType": "document",
+    "scheduleId": "cccccc123456",
+    "scheduleName": "標籤名稱B",
+    "scheduleDescription": "標籤說明",
+    "scheduleType": "document",
     "department": "所屬單位",
     "owner": "負責人",
     "modificationTime": "2023-07-03 15:30:00",
@@ -124,14 +124,14 @@ export const TagSettingMock: Array<TagSetting> = [
     "endDate": "2023-08-30",
     "conditionSettingMethod": "條件設定方式",
     "conditionSettingQuery": "條件設定語法",
-    "tagDimension": "B",
-    "tagSubDimension": "B",
+    "scheduleDimension": "B",
+    "scheduleSubDimension": "B",
     "scheduleSettings": "daily",
     "uploadType": "名單上傳類型",
     "filePath": "上傳檔案路徑",
-    "tagConditionSetting": [
+    "scheduleConditionSetting": [
       {
-        "tagId": "cccccc123456",
+        "scheduleId": "cccccc123456",
         "conditionKey": "condition-key-1",
         "groupId": 1,
         "detectionCondition": "偵測條件1",
@@ -139,7 +139,7 @@ export const TagSettingMock: Array<TagSetting> = [
         "thresholdValue": "門檻值1"
       },
       {
-        "tagId": "cccccc123456",
+        "scheduleId": "cccccc123456",
         "conditionKey": "condition-key-2",
         "groupId": 1,
         "detectionCondition": "偵測條件2",
@@ -147,7 +147,7 @@ export const TagSettingMock: Array<TagSetting> = [
         "thresholdValue": "門檻值2"
       },
       {
-        "tagId": "cccccc123456",
+        "scheduleId": "cccccc123456",
         "conditionKey": "condition-key-3",
         "groupId": 2,
         "detectionCondition": "偵測條件3",
@@ -155,7 +155,7 @@ export const TagSettingMock: Array<TagSetting> = [
         "thresholdValue": "門檻值3"
       }
     ],
-    "tagReviewHistory": [
+    "scheduleReviewHistory": [
       {
         "historyId": "hh123456",
         "referenceId": "cccccc123456",

@@ -1,10 +1,10 @@
 <div class="pageTitle">
-  <h1>新增標籤</h1>
+  <h1>標籤管理</h1>
 </div>
 <div class="pageContent">
   <nb-card>
       <nb-card-header>
-          <h2>新增活動</h2>
+          <h2>{{actionName}}標籤</h2>
       </nb-card-header>
       <nb-card-body [formGroup]="validateForm">
           <div class="row">
@@ -75,28 +75,28 @@
                     <p>請上傳csv格式檔案</p>
                 </div>
             </div>
-            <div class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': this.validateForm.errors?.range}">
+            <div class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': validateForm.errors?.range}">
                 <label>起始時間</label>
                 <div>
-                    <input nbInput fullWidth [status]="this.validateForm.errors?.range ? 'danger' : 'basic'"
+                    <input nbInput fullWidth [status]="validateForm.errors?.range ? 'danger' : 'basic'"
                         placeholder="請選擇日期" [nbDatepicker]="startDatePicker" formControlName="startDate">
-                    <nb-datepicker #startDatePicker [format]="dateFormat" [max]="this.validateForm.get('endDate').value"></nb-datepicker>
+                    <nb-datepicker #startDatePicker [format]="dateFormat" [max]="validateForm.get('endDate').value"></nb-datepicker>
                 </div>
-                <div class="note errorText" *ngIf="this.validateForm.errors?.range">
+                <div class="note errorText" *ngIf="validateForm.errors?.range">
                     <nb-icon icon="alert-triangle"></nb-icon>
-                    <p>{{this.validateForm.errors?.dateErrMsg}}</p>
+                    <p>{{validateForm.errors?.dateErrMsg}}</p>
                 </div>
             </div>
-            <div class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': this.validateForm.errors?.range}">
+            <div class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': validateForm.errors?.range}">
                 <label>結束時間</label>
                 <div>
-                    <input nbInput fullWidth [status]="this.validateForm.errors?.range ? 'danger' : 'basic'"
+                    <input nbInput fullWidth [status]="validateForm.errors?.range ? 'danger' : 'basic'"
                         placeholder="請選擇日期" [nbDatepicker]="endDatePicker" formControlName="endDate">
-                    <nb-datepicker #endDatePicker [format]="dateFormat" [min]="this.validateForm.get('startDate').value"></nb-datepicker>
+                    <nb-datepicker #endDatePicker [format]="dateFormat" [min]="validateForm.get('startDate').value"></nb-datepicker>
                 </div>
-                <div class="note errorText" *ngIf="this.validateForm.errors?.range">
+                <div class="note errorText" *ngIf="validateForm.errors?.range">
                     <nb-icon icon="alert-triangle"></nb-icon>
-                    <p>{{this.validateForm.errors?.dateErrMsg}}</p>
+                    <p>{{validateForm.errors?.dateErrMsg}}</p>
                 </div>
             </div>
             <div class="fieldGroup essential col-12 col-lg-6">
@@ -192,7 +192,7 @@
   <div class="row">
       <div class="btnGroup">
           <button nbButton status="basic" size="medium" (click)="cancel()">取消</button>
-          <button nbButton status="primary" size="medium" (click)="submit()" [disabled]="this.validateForm.invalid">送出</button>
+          <button nbButton status="primary" size="medium" (click)="submit()" [disabled]="validateForm.invalid">送出</button>
       </div>
   </div>
 </div>

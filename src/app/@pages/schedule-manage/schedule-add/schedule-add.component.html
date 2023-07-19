@@ -1,0 +1,91 @@
+<div class="pageTitle">
+  <h1>排程管理</h1>
+</div>
+<div class="pageContent">
+  <nb-card>
+      <nb-card-header>
+          <h2>{{actionName}}排程</h2>
+      </nb-card-header>
+      <nb-card-body [formGroup]="validateForm">
+          <div class="row">
+            <div class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': err}">
+                <label>排程名稱</label>
+                <div>
+                    <input nbInput fullWidth [status]="err?'danger':'basic'" type="text" placeholder="請輸入" formControlName="scheduleName"/>
+                </div>
+                <div class="note errorText">
+                    <nb-icon icon="alert-triangle"></nb-icon>
+                    <p>欄位錯誤訊息</p>
+                </div>
+            </div>
+            <div class="fieldGroup essential col-12 col-lg-6">
+                <label>狀態</label>
+                <div>
+                    <nb-radio-group name="status" formControlName="status">
+                        <nb-radio value="active">{{Status.active}}</nb-radio>
+                        <nb-radio value="stop">{{Status.stop}}</nb-radio>
+                    </nb-radio-group>
+                </div>
+                <div class="note errorText">
+                    <nb-icon icon="alert-triangle"></nb-icon>
+                    <p>欄位錯誤訊息</p>
+                </div>
+            </div>
+            <div class="fieldGroup essential col-12 col-lg-6">
+              <label>排程頻率</label>
+              <div>
+                  <nb-radio-group  name="c" formControlName="frequency">
+                      <nb-radio value="daily">{{Frequency.daily}}</nb-radio>
+                      <nb-radio value="monthly">{{Frequency.monthly}}</nb-radio>
+                  </nb-radio-group>
+              </div>
+              <div *ngIf="validateForm.get('frequency').value === 'daily'" class="multi">
+                <nb-select fullWidth placeholder="時" formControlName="hour">
+                    <nb-option *ngFor="let val of hour" [value]="val">{{ val }}</nb-option>
+                </nb-select>
+                <span>：</span>
+                <nb-select fullWidth placeholder="分" formControlName="minute">
+                  <nb-option *ngFor="let val of minute" [value]="val">{{ val }}</nb-option>
+                </nb-select>
+              </div>
+              <div *ngIf="validateForm.get('frequency').value === 'monthly'" class="multi">
+                <nb-select fullWidth placeholder="日" formControlName="daily">
+                  <nb-option *ngFor="let val of daily" [value]="val">{{ val }}</nb-option>
+              </nb-select>
+              <span>：</span>
+                <nb-select fullWidth placeholder="時" formControlName="hour">
+                    <nb-option *ngFor="let val of hour" [value]="val">{{ val }}</nb-option>
+                </nb-select>
+                <span>：</span>
+                <nb-select fullWidth placeholder="分" formControlName="minute">
+                  <nb-option *ngFor="let val of minute" [value]="val">{{ val }}</nb-option>
+                </nb-select>
+              </div>
+              <div class="note errorText">
+                  <nb-icon icon="alert-triangle"></nb-icon>
+                  <p>欄位錯誤訊息</p>
+              </div>
+          </div>
+            <div class="fieldGroup essential col-12 col-lg-6">
+              <label>檔案存放地方</label>
+              <div>
+                  <nb-select fullWidth placeholder="請選擇" formControlName="scheduleFilePath">
+                      <nb-option value="">全部</nb-option>
+                    </nb-select>
+              </div>
+              <div class="note errorText">
+                  <nb-icon icon="alert-triangle"></nb-icon>
+                  <p>欄位錯誤訊息</p>
+              </div>
+            </div>
+          </div>
+      </nb-card-body>
+  </nb-card>
+
+  <div class="row">
+      <div class="btnGroup">
+          <button nbButton status="basic" size="medium" (click)="cancel()">取消</button>
+          <button nbButton status="primary" size="medium" (click)="submit()" [disabled]="validateForm.invalid">儲存</button>
+      </div>
+  </div>
+</div>

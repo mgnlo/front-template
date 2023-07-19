@@ -47,6 +47,13 @@ const routes: Routes = [
             (m) => m.ReviewManageModule
           ),
       },
+      {
+        path: 'schedule-manage',
+        loadChildren: () =>
+          import('@pages/schedule-manage/schedule-manage.module').then(
+            (m) => m.ScheduleManageModule
+          ),
+      },
     ],
   },
 ];

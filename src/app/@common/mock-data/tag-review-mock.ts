@@ -1,4 +1,4 @@
-import { TagReviewHistory } from "@api/models/tag-list.model";
+import { TagReviewHistory } from "@api/models/tag-manage.model";
 
 export const TagReviewListMock: Array<TagReviewHistory> = [
   {
