@@ -36,11 +36,11 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
   }
 
   edit() {
-    this.router.navigate(['pages', 'tag-manage', 'tag-add', 'edit', this.detail.tagId], { state: this.detail });
+    this.router.navigate(['pages', 'tag-manage', 'tag-set', 'edit', this.detail.tagId], { state: this.detail });
   }
 
   copy() {
-    this.router.navigate(['pages', 'tag-manage', 'tag-add', 'copy', this.detail.tagId], { state: this.detail });
+    this.router.navigate(['pages', 'tag-manage', 'tag-set', 'copy', this.detail.tagId], { state: this.detail });
   }
 
   cancel() {

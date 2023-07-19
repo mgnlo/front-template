@@ -9,7 +9,7 @@
       <nb-card-body>
           <div class="row">
               <div class="textGroup col-12 col-lg-4">
-                  <p class="textBold">標籤名稱：</p>
+                  <p class="textBold">作業名稱：</p>
                   <span>{{detail.scheduleName}}</span>
               </div>
               <div class="textGroup col-12 col-lg-4">
@@ -17,36 +17,8 @@
                   <span>{{detail.status | enum:'status'}}</span>
               </div>
               <div class="textGroup col-12 col-lg-4">
-                  <p class="textBold">類型：</p>
-                  <span>{{detail.scheduleType | enum:'scheduleType'}}</span>
-              </div>
-              <div class="textGroup col-12 col-lg-4">
-                <p class="textBold">所屬單位：</p>
-                <span>{{detail.department}}</span>
-              </div>
-              <div class="textGroup col-12 col-lg-4">
-                <p class="textBold">負責人：</p>
-                <span>{{detail.owner}}</span>
-              </div>
-              <div class="textGroup col-12 col-lg-4">
-                  <p class="textBold">起迄時間：</p>
-                  <span>{{detail.startDate}}~{{detail.endDate}}</span>
-              </div>
-              <div class="textGroup col-12 col-lg-4">
-                <p class="textBold">標籤構面：</p>
-                <span>{{detail.scheduleDimension | enum:'scheduleDimension'}}</span>
-              </div>
-              <div class="textGroup col-12 col-lg-4">
-                <p class="textBold">標籤子構面：</p>
-                <span>{{detail.scheduleSubDimension | enum:'scheduleSubDimension'}}</span>
-              </div>
-              <div class="textGroup col-12 col-lg-4">
-                  <p class="textBold">排成設定：</p>
-                  <span>{{detail.scheduleSettings | enum:'schedule'}}</span>
-              </div>
-              <div class="textGroup col-12 col-lg-4">
-                  <p class="textBold">描述說明：</p>
-                  <span>{{detail.scheduleDescription}}</span>
+                  <p class="textBold">執行頻率：</p>
+                  <span>{{detail.startDate}}</span>
               </div>
               <div class="textGroup col-12 col-lg-4">
                   <p class="textBold">異動時間：</p>
@@ -54,6 +26,27 @@
               </div>
           </div>
       </nb-card-body>
+  </nb-card>
+  <nb-card>
+    <nb-card-body>
+      <nb-tabset>
+        <nb-tab tabTitle="標籤紀錄">
+          <nb-card-body>
+              <div class="rightBox"><button nbButton status="primary" size="medium" (click)="refresh()">手動更新</button></div>
+              <ng2-smart-table [settings]="tagGridDefine" [source]="dataSource"></ng2-smart-table>
+              <paginator [source]="dataSource" [paginator]="paginator"></paginator>
+          </nb-card-body>
+        </nb-tab>
+        <nb-tab tabTitle="活動紀錄">
+          <nb-card-body>
+              <div class="rightBox"><button nbButton status="primary" size="medium" (click)="refresh()">手動更新</button></div>
+              <ng2-smart-table [settings]="activityGridDefine" [source]="dataSource"></ng2-smart-table>
+              <paginator [source]="dataSource" [paginator]="paginator"></paginator>
+          </nb-card-body>
+        </nb-tab>
+      </nb-tabset>
+    </nb-card-body>
+
   </nb-card>
   <nb-card>
       <nb-card-header>

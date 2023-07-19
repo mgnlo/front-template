@@ -5,9 +5,9 @@ import { Frequency, Status } from '@common/enums/common-enum';
 import { BaseComponent } from '@pages/base.component';
 
 @Component({
-  selector: 'app-schedule-add',
-  templateUrl: './schedule-add.component.html',
-  styleUrls: ['./schedule-add.component.scss']
+  selector: 'schedule-set',
+  templateUrl: './schedule-set.component.html',
+  styleUrls: ['./schedule-set.component.scss']
 })
 export class ScheduleAddComponent extends BaseComponent implements OnInit {
   Status = Status;

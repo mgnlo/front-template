@@ -199,7 +199,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
   }
 
   add() {
-    this.router.navigate(['pages', 'tag-manage', 'tag-add']);
+    this.router.navigate(['pages', 'tag-manage', 'tag-set']);
   }
 
 }

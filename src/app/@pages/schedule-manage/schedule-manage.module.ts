@@ -6,15 +6,13 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
 import {
   NbAccordionModule,
   NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbIconModule,
-  NbInputModule, NbRadioModule, NbSelectModule, NbSpinnerModule, NbTreeGridModule
+  NbInputModule, NbRadioModule, NbSelectModule, NbSpinnerModule, NbTabsetModule, NbTagModule, NbTreeGridModule
 } from '@nebular/theme';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { ThemeModule } from '../../@theme/theme.module';
 import { routedComponents, ScheduleManageRoutingModule } from './schedule-manage-routing.module';
 import { ScheduleManageService } from './schedule-manage.service';
 import { ComponentModule } from "../../@component/component.module";
-import { ScheduleAddComponent } from './schedule-add/schedule-add.component';
-import { ScheduleDetailComponent } from './schedule-detail/schedule-detail.component';
 
 export const NB_MODULES = [
   NbSpinnerModule,
@@ -29,6 +27,8 @@ export const NB_MODULES = [
   NbSelectModule,
   NbDatepickerModule,
   NbAccordionModule,
+  NbTagModule,
+  NbTabsetModule,
   NbDateFnsDateModule.forChild({ format: 'yyyy/MM/dd' }),
 ];
 
@@ -48,8 +48,6 @@ export const NB_MODULES = [
   ],
   declarations: [
     ...routedComponents,
-    ScheduleAddComponent,
-    ScheduleDetailComponent,
   ],
 })
 export class ScheduleManageModule { }
