@@ -19,8 +19,11 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     const currentNavigation = this.router.getCurrentNavigation();
     if (!!currentNavigation?.extras) {
       const state = currentNavigation.extras.state;
-      //const processedData = CommonUtil.getHistoryProcessData<ScheduleSetting>(state); // 将Person类型作为类型参数传递
-      ///console.log('Processed Data:', processedData);
+      const processedData = CommonUtil.getHistoryProcessData<ScheduleSetting>('scheduleReviewHistory',state as ScheduleSetting); // 異動歷程處理
+      if (!!processedData) {
+        this.isHistoryOpen = processedData.isHistoryOpen;
+        this.detail = processedData.detail;
+      }
     }
   }
 

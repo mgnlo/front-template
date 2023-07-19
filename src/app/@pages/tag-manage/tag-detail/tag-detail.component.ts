@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TagDetailView, TagSetting } from '@api/models/tag-manage.model';
+import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
 
 @Component({
@@ -15,24 +16,14 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
 
   constructor(private router: Router) {
     super();
-    if (!!this.router.getCurrentNavigation()?.extras) {
-      this.checkData = this.router.getCurrentNavigation().extras.state as TagSetting;
-      if (!this.checkData) { return null };
-      let tagSetting = this.checkData
-      this.detail = JSON.parse(JSON.stringify(tagSetting));
-
-      this.detail.historyGroupView = {};
-      tagSetting.tagReviewHistory.forEach(history => {
-        if (!this.detail.historyGroupView || !this.detail.historyGroupView[history.groupId]) {
-          this.isHistoryOpen[history.groupId] = true;
-          this.detail.historyGroupView[history.groupId] = {
-            type: history.type,
-            flows: [{ time: history.time, title: history.title, detail: history.detail }]
-          };
-        } else {
-          this.detail.historyGroupView[history.groupId].flows.push({ time: history.time, title: history.title, detail: history.detail });
-        }
-      });
+    const currentNavigation = this.router.getCurrentNavigation();
+    if (!!currentNavigation?.extras) {
+      const state = currentNavigation.extras.state;
+      const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistory', state as TagSetting); // 異動歷程處理
+      if (!!processedData) {
+        this.isHistoryOpen = processedData.isHistoryOpen;
+        this.detail = processedData.detail;
+      }
     }
 
   }
