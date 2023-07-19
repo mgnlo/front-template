@@ -57,5 +57,29 @@ export const CommonUtil = {
         if (event.key && isNumber && (/^\d{4}$/.test(v) || /^\d{4}\/\d{2}$/.test(v))) {
             element.value += '/';
         }
+    },
+
+    getHistoryProcessData<T>(data: T): any {
+      if (!!data) {
+        if (!data) { return null };
+        let detail = JSON.parse(JSON.stringify(data));
+
+        detail.historyGroupView = {};
+        data['tagReviewHistory'].forEach(history => {
+          if (!detail.historyGroupView || !detail.historyGroupView[history.groupId]) {
+            this.isHistoryOpen[history.groupId] = true;
+            detail.historyGroupView[history.groupId] = {
+              type: history.type,
+              flows: [{ time: history.time, title: history.title, detail: history.detail }]
+            };
+          } else {
+            detail.historyGroupView[history.groupId].flows.push({ time: history.time, title: history.title, detail: history.detail });
+          }
+        });
+
+        return detail;
+      }
+      return null;
     }
+
 }; // End

@@ -152,8 +152,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
 
     //search date
     const addDateFilter = (field: string, value: Date | null, filterFn: (value: string, searchValue: string[]) => boolean) => {
-      const formatDate = value !== null ? moment(value).format(this.dateFormat) : null;
-
+      const formatDate = value !== null ? moment(value) : null;
       if (formatDate) {
         this.dataSource.addFilter({
           field,
