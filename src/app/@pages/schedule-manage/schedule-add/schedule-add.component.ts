@@ -44,17 +44,6 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  getActionName(changeRouteName: string): string {
-    switch (changeRouteName) {
-      case 'edit':
-        return '編輯';
-      case 'copy':
-        return '複製';
-      default:
-        return '新增';
-    }
-  }
-
   cancel() {
     this.router.navigate(['pages', 'schedule-manage', 'schedule-list']);
   }
