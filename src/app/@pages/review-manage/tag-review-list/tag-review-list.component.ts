@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { TagReviewHistory, TagSetting } from '@api/models/tag-list.model';
 import { ReviewClass, ReviewStatus } from '@common/enums/review-enum';
+import { TagType } from '@common/enums/tag-enum';
 import { TagReviewListMock } from '@common/mock-data/tag-review-mock';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { NbDateService } from '@nebular/theme';
@@ -56,9 +57,12 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
       },
       tagType: {
         title: '類型',
-        type: 'html',
+        type: 'string',
         width: '10%',
         sort: false,
+        valuePrepareFunction: (cell: string) => {
+          return `${TagType[cell]}`;
+        },
       },
       department: {
         title: '所屬單位',

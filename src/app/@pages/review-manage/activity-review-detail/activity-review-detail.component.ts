@@ -3,6 +3,7 @@ import { Navigation, Router } from '@angular/router';
 import { ActivityDetail, ActivityReviewHistory } from '@api/models/activity-list.model';
 import { DialogService } from '@api/services/dialog.service';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
+import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
 
 @Component({
@@ -15,7 +16,7 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
   navigation: Navigation;
   detail: ActivityDetail;
   isConditionOpen: {[x: number]: boolean} = {}; //活動名單條件收合
-  isHistoryOpen: {[x: number]: boolean} = []; //異動歷程收合
+  isHistoryOpen: {[x: number]: boolean} = {}; //異動歷程收合
   isBefore: boolean = false;
   isSame: {[x:string]: boolean} = {};
   reviewStatus: string;
@@ -30,7 +31,7 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
       let list = ActivityListMock.filter(row => row.activityId === activityReviewHistory.referenceId)[0];
       this.detail = JSON.parse(JSON.stringify(list));
 
-      this.detail.tagGroupView = this.groupBy(list.activityListCondition, 'tagGroup');
+      this.detail.tagGroupView = CommonUtil.groupBy(list.activityListCondition, 'tagGroup');
       Object.keys(this.detail.tagGroupView).forEach(key => this.isConditionOpen[key] = true);
 
       this.detail.historyGroupView = {};
@@ -49,6 +50,7 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
   }
 
   ngOnInit(): void {
+    
   }
 
   viewToggle() {

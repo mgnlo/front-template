@@ -14,5 +14,5 @@ export enum ReviewClass {
 export enum ReviewCompareClass {
   true = '',
   false = 'colorRed',
-  null = 'colorBlue'
+  null = 'colorSkyBlue'
 }

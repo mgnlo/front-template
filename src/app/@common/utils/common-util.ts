@@ -57,5 +57,24 @@ export const CommonUtil = {
         if (event.key && isNumber && (/^\d{4}$/.test(v) || /^\d{4}\/\d{2}$/.test(v))) {
             element.value += '/';
         }
+    },
+    /** 比較兩個object, 以objA的key為比較基準*/
+    compareObj<T extends Object>(objA: T, objB: T): {[x: string]: boolean} {
+        const result: {[key in string]: boolean} = {};
+        Object.keys(objA).map(key => {
+            if(!!objA[key] && !!objB[key]){
+                result[key] = objA[key] === objB[key] ? true : false;
+            } else {
+                result[key] = false;
+            }
+        })
+        return result;
+    },
+    /** 將flat資料group*/
+    groupBy<T>(datas: T[], key: string) {
+        return datas.reduce(function (group, data) {
+        (group[data[key]] = group[data[key]] || []).push(data);
+        return group;
+        }, {});
     }
 }; // End

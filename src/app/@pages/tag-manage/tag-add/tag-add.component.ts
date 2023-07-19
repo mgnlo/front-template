@@ -33,7 +33,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   // maxSizeInMB = 5;//檔案大小
   // isFileSize = false;//檔案大小是否錯誤
 
-  isHistoryOpen: { [x: number]: boolean } = []; //異動歷程收合
+  isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {
     super();

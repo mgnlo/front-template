@@ -11,7 +11,7 @@ import { BaseComponent } from '@pages/base.component';
 export class TagDetailComponent extends BaseComponent implements OnInit {
   detail: TagDetailView;
   checkData: TagSetting;
-  isHistoryOpen: { [x: number]: boolean } = []; //異動歷程收合
+  isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
 
   constructor(private router: Router) {
     super();

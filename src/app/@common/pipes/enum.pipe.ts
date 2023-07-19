@@ -4,7 +4,7 @@ import { TagDimension, TagType, TagSubDimension, TagSetCondition } from '@common
 import { Filter, Schedule, Status } from '@common/enums/common-enum';
 import { ReviewClass, ReviewCompareClass, ReviewStatus } from '@common/enums/review-enum';
 
-export const EUNMS = {
+export const ENUMS = {
   'gender': Gender,
   'status': Status,
   'schedule': Schedule,
@@ -23,8 +23,8 @@ export const EUNMS = {
 export class EnumPipe implements PipeTransform {
   
   transform<T>(val: string, enumStr: string): string | null {
-    if(!val || !enumStr || !EUNMS[enumStr]){ return null };
-    let enumType = EUNMS[enumStr] as T; 
+    if(!val || !enumStr || !ENUMS[enumStr]){ return null };
+    let enumType = ENUMS[enumStr] as T; 
     let keyIndex = Object.keys(enumType).indexOf(val);
     return Object.values(enumType)[keyIndex];
   }

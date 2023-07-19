@@ -9,6 +9,7 @@ import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { PreviewDialogComponent } from './preview-dialog/preview.dialog.component';
 import { RegExpEnum } from '@common/enums/reg-exp-enum';
+import { CommonUtil } from '@common/utils/common-util';
 
 @Component({
   selector: 'activity-add',
@@ -51,7 +52,7 @@ export class ActivityAddComponent extends BaseComponent implements OnInit {
                 break;
               case 'activityListCondition':
                 this.conditions.removeAt(0);
-                let groupData = this.groupBy(editData[key], 'tagGroup');
+                let groupData = CommonUtil.groupBy(editData[key], 'tagGroup');
                 Object.keys(groupData).forEach(key => {
                   let fg = new FormGroup({});
                   let condition = groupData[key] as Array<ActivityListCondition>;

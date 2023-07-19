@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Navigation, Router } from '@angular/router';
 import { ActivityDetail, ActivitySetting } from '@api/models/activity-list.model';
+import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
 
 @Component({
@@ -14,7 +15,7 @@ export class ActivityDetailComponent extends BaseComponent implements OnInit {
   detail: ActivityDetail;
   editData: ActivitySetting;
   isConditionOpen: {[x: number]: boolean} = {}; //活動名單條件收合
-  isHistoryOpen: {[x: number]: boolean} = []; //異動歷程收合
+  isHistoryOpen: {[x: number]: boolean} = {}; //異動歷程收合
 
   constructor(private router: Router) {
     super();
@@ -24,7 +25,7 @@ export class ActivityDetailComponent extends BaseComponent implements OnInit {
       let activitySetting = this.editData
       this.detail = JSON.parse(JSON.stringify(activitySetting));
 
-      this.detail.tagGroupView = this.groupBy(activitySetting.activityListCondition, 'tagGroup');
+      this.detail.tagGroupView = CommonUtil.groupBy(activitySetting.activityListCondition, 'tagGroup');
       Object.keys(this.detail.tagGroupView).forEach(key => this.isConditionOpen[key] = true);
 
       this.detail.historyGroupView = {};

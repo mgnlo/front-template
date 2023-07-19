@@ -2,7 +2,6 @@ import { NgModule } from "@angular/core"
 import { RouterModule, Routes } from "@angular/router"
 import { TagManageComponent } from "./tag-manage.component"
 import { TagSettingComponent } from "./tag-list/tag-list.component"
-import { TagButtonComponent } from "./tag-list/tag-list.component"
 import { TagAddComponent } from "./tag-add/tag-add.component"
 import { TagDetailComponent } from "./tag-detail/tag-detail.component"
 
@@ -28,7 +27,6 @@ export class TagManageRoutingModule { }
 export const routedComponents = [
   TagManageComponent,
   TagSettingComponent,
-  TagButtonComponent,
   TagAddComponent,
   TagDetailComponent,
 ];

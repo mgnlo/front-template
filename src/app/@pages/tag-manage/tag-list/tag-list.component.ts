@@ -9,6 +9,7 @@ import { TagSetting } from '@api/models/tag-list.model';
 import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { DatePipe } from '@angular/common';
 import { TagType } from '@common/enums/tag-enum';
+import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 
 @Component({
   selector: 'tag-list',
@@ -108,11 +109,34 @@ export class TagSettingComponent extends BaseComponent implements OnInit {
         title: '異動時間',
         type: 'html',
         width: '10%',
+        sort: false,
         valuePrepareFunction: (cell: string) => {
           const datepipe: DatePipe = new DatePipe('en-US');
           return `<p class="date">${datepipe.transform(cell, this.dateFormat)}</p>`;
         },
-        sort: false,
+        filterFunction: (cell?: string, search?: string[]) => {
+          let date = cell;
+          let sDate = search[0];
+          let eDate = search[1];
+          let isSDate = sDate !== null;
+          let isEDate = eDate !== null;
+          if(
+            (!isSDate && !isEDate) ||
+            ((isSDate && isEDate) && (
+              moment(date).isBetween(sDate, eDate, undefined, '[]')
+            )) ||
+            ((isSDate && !isEDate) && (
+              moment(sDate).isSameOrBefore(date)
+            )) ||
+            ((!isSDate && isEDate) && (
+              moment(eDate).isSameOrAfter(date)
+            ))
+          ){
+            return true
+          }  else {
+            return false
+          }
+        }
       },
       status: {
         title: '狀態',
@@ -129,7 +153,7 @@ export class TagSettingComponent extends BaseComponent implements OnInit {
         type: 'custom',
         width: '1%',
         valuePrepareFunction: (cell, row: TagSetting) => row,
-        renderComponent: TagButtonComponent,
+        renderComponent: DetailButtonComponent,
         sort: false,
       },
     },
@@ -179,26 +203,6 @@ export class TagSettingComponent extends BaseComponent implements OnInit {
     this.router.navigate(['pages', 'tag-manage', 'tag-add']);
   }
 
-}
-
-@Component({
-  selector: 'ngx-tag-button',
-  template: '<button nbButton ghost status="info" size="medium" (click)="search()"><nb-icon icon="search"></nb-icon></button>'
-})
-export class TagButtonComponent implements OnInit {
-
-  constructor(private router: Router) { }
-
-  @Input() value: TagSetting;
-
-  ngOnInit() { }
-
-  search() {
-    let passData: NavigationExtras = { state: this.value };
-    this.router.navigate(['pages', 'tag-manage', 'tag-detail'], passData);
-  }
-
-  edit(): void { }
 }
 
 @Component({
