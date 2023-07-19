@@ -67,4 +67,15 @@ export class BaseComponent implements OnDestroy {
       return group;
     }, {});
   }
+
+  getActionName(changeRouteName: string): string {
+    switch (changeRouteName) {
+      case 'edit':
+        return '編輯';
+      case 'copy':
+        return '複製';
+      default:
+        return '新增';
+    }
+  }
 }

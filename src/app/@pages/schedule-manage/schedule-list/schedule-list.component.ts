@@ -36,8 +36,7 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
       scheduleName: {
         title: '作業名稱',
         type: 'html',
-        class: 'left',
-        width: '20%',
+        class: 'col-5 left',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
@@ -46,13 +45,13 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
       executionFrequency: {
         title: '執行頻率',
         type: 'html',
-        width: '10%',
+        class: 'col-2',
         sort: false,
       },
       modificationTime: {
         title: '異動時間',
         type: 'html',
-        width: '10%',
+        class: 'col-2',
         valuePrepareFunction: (cell: string) => {
           const datepipe: DatePipe = new DatePipe('en-US');
           return `<p class="date">${datepipe.transform(cell, this.dateFormat)}</p>`;
@@ -62,8 +61,7 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
       status: {
         title: '狀態',
         type: 'string',
-        width: '5%',
-        class: 'alignCenter',
+        class: 'col-2 alignCenter',
         valuePrepareFunction: (cell: string) => {
           return Status[cell];
         },
@@ -72,7 +70,7 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
       action: {
         title: '查看',
         type: 'custom',
-        width: '1%',
+        class: 'col-1',
         valuePrepareFunction: (cell, row: ScheduleSetting) => row,
         renderComponent: ScheduleButtonComponent,
         sort: false,

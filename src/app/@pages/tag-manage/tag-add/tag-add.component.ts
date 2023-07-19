@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TagDimension, TagSetCondition, TagSubDimension, TagType } from '@common/enums/tag-enum';
 import { TagSetting, TagDetailView } from '@api/models/tag-manage.model';
 import { Filter, Status, Schedule } from '@common/enums/common-enum';
-import { RegExpEnum } from '@common/enums/reg-exp-enum';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
@@ -30,6 +29,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   isFile: boolean = true;//是否上傳檔案
   err: boolean = false;
   params: any;//路由參數
+  actionName: string;// 新增/編輯/複製
+
   // maxSizeInMB = 5;//檔案大小
   // isFileSize = false;//檔案大小是否錯誤
 
@@ -53,11 +54,16 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     }, [ValidatorsUtil.dateRange]);
 
     this.params = this.activatedRoute.snapshot.params;
-    this.changeTagType(this.validateForm.get('tagType').value)
+    const changeRouteName = this.params['changeRoute'] ?? "";
+    this.actionName = this.getActionName(changeRouteName);
+    const getRawValue = this.validateForm.getRawValue();
+
+    this.changeTagType(getRawValue.tagType)
+
     if (!!this.router.getCurrentNavigation().extras) {
       let checkData = this.router.getCurrentNavigation().extras.state as TagSetting;
       if (!checkData) return
-      if (this.params['changeRoute'] === 'edit') {
+      if (changeRouteName === 'edit') {
         this.detail = JSON.parse(JSON.stringify(checkData));
         this.detail.historyGroupView = {};
         checkData.tagReviewHistory.forEach(history => {
@@ -89,7 +95,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
         })
       }
     }
-    this.changeTagType(this.validateForm.get('tagType').value)
+
+    this.changeTagType(getRawValue.tagType)
 
   }
 
