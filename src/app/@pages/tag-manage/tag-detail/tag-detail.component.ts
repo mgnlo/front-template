@@ -24,6 +24,10 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
         this.isHistoryOpen = processedData.isHistoryOpen;
         this.detail = processedData.detail;
       }
+      else{
+        //之後可能加導頁pop-up提醒
+        this.router.navigate(['pages', 'tag-manage', 'tag-list']);
+      }
     }
 
   }
@@ -32,11 +36,11 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
   }
 
   edit() {
-    this.router.navigate(['pages', 'tag-manage', 'tag-add', 'edit', this.checkData.tagId], { state: this.detail });
+    this.router.navigate(['pages', 'tag-manage', 'tag-add', 'edit', this.detail.tagId], { state: this.detail });
   }
 
   copy() {
-    this.router.navigate(['pages', 'tag-manage', 'tag-add', 'copy', this.checkData.tagId], { state: this.checkData });
+    this.router.navigate(['pages', 'tag-manage', 'tag-add', 'copy', this.detail.tagId], { state: this.detail });
   }
 
   cancel() {

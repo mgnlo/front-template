@@ -24,6 +24,10 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         this.isHistoryOpen = processedData.isHistoryOpen;
         this.detail = processedData.detail;
       }
+      else{
+        //之後可能加導頁pop-up提醒
+        this.router.navigate(['pages', 'schedule-manage', 'schedule-list']);
+      }
     }
   }
 

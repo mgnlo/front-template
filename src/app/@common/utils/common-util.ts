@@ -80,7 +80,6 @@ export const CommonUtil = {
   /** 取得歷程資料 */
   getHistoryProcessData<T>(reviewHistory: string, data: T): any {
     if (!!data) {
-      if (!data) { return null };
       let detail = JSON.parse(JSON.stringify(data));
       let isHistoryOpen = {};
 
