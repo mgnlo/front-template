@@ -196,8 +196,8 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   }
 
   ngDoCheck(): void {
-    this.updateSchedulePageInfo(this.tagDtaSource, this.tagPaginator)
-    this.updateSchedulePageInfo(this.activityDtaSource, this.activityPaginator)
+    // this.updateSchedulePageInfo(this.tagDtaSource, this.tagPaginator)
+    // this.updateSchedulePageInfo(this.activityDtaSource, this.activityPaginator)
   }
 
   updateSchedulePageInfo(dataSource: any, paginator: Paginator) {

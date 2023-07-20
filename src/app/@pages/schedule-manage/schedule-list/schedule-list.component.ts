@@ -34,7 +34,7 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
       perPage: 10,
     },
     columns: {
-      scheduleName: {
+      jobName: {
         title: '作業名稱',
         type: 'html',
         class: 'col-5 left',
@@ -64,7 +64,7 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
         type: 'string',
         class: 'col-2 alignCenter',
         valuePrepareFunction: (cell: string) => {
-          return Status[cell];
+          return Status[cell.toLowerCase()];
         },
         sort: false,
       },
