@@ -7,6 +7,7 @@ import { Filter, Status, Schedule } from '@common/enums/common-enum';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
+import { CommonUtil } from '@common/utils/common-util';
 
 @Component({
   selector: 'tag-set',
@@ -60,39 +61,31 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
     this.changeTagType(getRawValue.tagType)
 
-    if (!!this.router.getCurrentNavigation().extras) {
-      let checkData = this.router.getCurrentNavigation().extras.state as TagSetting;
-      if (!checkData) return
-      if (changeRouteName === 'edit') {
-        this.detail = JSON.parse(JSON.stringify(checkData));
-        this.detail.historyGroupView = {};
-        checkData.tagReviewHistory.forEach(history => {
-          if (!this.detail.historyGroupView || !this.detail.historyGroupView[history.groupId]) {
-            this.isHistoryOpen[history.groupId] = true;
-            this.detail.historyGroupView[history.groupId] = {
-              type: history.type,
-              flows: [{ time: history.time, title: history.title, detail: history.detail }]
-            };
-          } else {
-            this.detail.historyGroupView[history.groupId].flows.push({ time: history.time, title: history.title, detail: history.detail });
+    const state = this.router.getCurrentNavigation()?.extras?.state;
+    if (!!state) {
+      const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistory', state as TagSetting); // 異動歷程處理
+      Object.keys(state).forEach(key => {
+        if (!!this.validateForm.controls[key]) {
+          switch (key) {
+            case 'startDate':
+            case 'endDate':
+              this.validateForm.controls[key].setValue(new Date(state[key]))
+              break;
+            default:
+              this.validateForm.controls[key].setValue(state[key]);
+              break;
           }
-        });
+        }
+      })
+      if (!!processedData) {
+        if (changeRouteName === 'edit') {
+          this.isHistoryOpen = processedData.isHistoryOpen;
+          this.detail = processedData.detail;
+        }
       }
-
-      if (!!checkData) {
-        Object.keys(checkData).forEach(key => {
-          if (!!this.validateForm.controls[key]) {
-            switch (key) {
-              case 'startDate':
-              case 'endDate':
-                this.validateForm.controls[key].setValue(new Date(checkData[key]))
-                break;
-              default:
-                this.validateForm.controls[key].setValue(checkData[key]);
-                break;
-            }
-          }
-        })
+      else {
+        //之後可能加導頁pop-up提醒
+        this.router.navigate(['pages', 'tag-manage', 'tag-list']);
       }
     }
 
