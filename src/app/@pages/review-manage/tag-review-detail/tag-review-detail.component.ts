@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Navigation, Router } from '@angular/router';
-import { TagDetailView, TagReviewHistory } from '@api/models/tag-manage.model';
+import { HistoryGroupView, TagDetailView, TagReviewHistory } from '@api/models/tag-manage.model';
 import { DialogService } from '@api/services/dialog.service';
 import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
@@ -17,9 +17,10 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   oldDetail: TagDetailView;
   newDetail: TagDetailView;
   detail: TagDetailView;
+  historyGroupView: {[x: number]: HistoryGroupView} = {};
   isConditionOpen: {[x: number]: boolean} = {}; //活動名單條件收合
   isHistoryOpen: {[x: number]: boolean} = {}; //異動歷程收合
-  isSameList: {[x:string]: boolean} = {};
+  isSameList: {[x:string]: boolean} = {}; //差異比較
   isBefore: boolean = false;
   reviewStatus: string;
   reviewComment: string;
@@ -35,19 +36,18 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
       this.reviewStatus = tagReview.reviewStatus;
       this.reviewComment = tagReview.reviewComment;
       this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
-      console.info(this.isSameList)
-      this.oldDetail.historyGroupView = {};
+
       list.tagReviewHistory.forEach(history => {
-        if(!this.oldDetail.historyGroupView || !this.oldDetail.historyGroupView[history.groupId]){
+        if(!this.historyGroupView || !this.historyGroupView[history.groupId]){
           this.isHistoryOpen[history.groupId] = true;
-          this.oldDetail.historyGroupView[history.groupId] = {
+          this.historyGroupView[history.groupId] = {
             type: history.type,
             flows: [
               {historyId: history.historyId, time: history.time, title: history.title, detail: history.detail}
             ]
           };
         } else {
-          this.oldDetail.historyGroupView[history.groupId].flows.push(
+          this.historyGroupView[history.groupId].flows.push(
             {historyId: history.historyId, time: history.time, title: history.title, detail: history.detail}
           );
         }

@@ -12,11 +12,11 @@ import { RegExpEnum } from '@common/enums/reg-exp-enum';
 import { CommonUtil } from '@common/utils/common-util';
 
 @Component({
-  selector: 'activity-add',
-  templateUrl: './activity-add.component.html',
-  styleUrls: ['./activity-add.component.scss'],
+  selector: 'activity-set',
+  templateUrl: './activity-set.component.html',
+  styleUrls: ['./activity-set.component.scss'],
 })
-export class ActivityAddComponent extends BaseComponent implements OnInit {
+export class ActivitySetComponent extends BaseComponent implements OnInit {
 
   filterList: Array<{key: string; val: string}> = Object.entries(Filter).map(([k, v]) => ({ key: k, val: v }));
   scheduleList: Array<{key: string; val: string}> = Object.entries(Schedule).map(([k, v]) => ({ key: k, val: v }));

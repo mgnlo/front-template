@@ -25,7 +25,7 @@ export const TagReviewListMock: Array<TagReviewHistory> = [
     conditionSettingQuery: "條件設定語法",
     tagDimension: "標籤構面",
     tagSubDimension: "標籤子構面",
-    scheduleSettings: "排成設定",
+    scheduleSettings: "monthly",
     uploadType: "monthly",
     filePath: "上傳檔案路徑"
   },
