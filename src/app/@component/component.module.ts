@@ -6,7 +6,7 @@ import { NbButtonModule, NbCardModule, NbIconModule, NbInputModule, NbSelectModu
 import { ApproveDialogComponent } from './dialog/approve-dialog/approve-dialog.component';
 import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
 import { RejectDialogComponent } from './dialog/reject-dialog/reject-dialog.component';
-import { CheckboxIconComponent, CheckboxIconPageComponent } from './table/checkbox-icon/checkbox-icon.component';
+import { CheckboxIconComponent } from './table/checkbox-icon/checkbox-icon.component';
 import { DetailButtonComponent } from './table/detail-button/detail-button.component';
 import { PaginatorComponent } from './table/paginator/paginator.component';
 
@@ -16,7 +16,6 @@ export const COMPONENTS = [
   ConfirmDialogComponent,
   PaginatorComponent,
   CheckboxIconComponent,
-  CheckboxIconPageComponent,
   DetailButtonComponent,
 ];
 
