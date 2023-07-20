@@ -85,7 +85,7 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
   };
 
   add() {
-    this.router.navigate(['pages', 'schedule-manage', 'schedule-add']);
+    this.router.navigate(['pages', 'schedule-manage', 'schedule-set']);
   }
 }
 

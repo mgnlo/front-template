@@ -1,1 +1,85 @@
-<p>schedule-detail works!</p>
+<div class="pageTitle">
+  <h1>排程管理</h1>
+  <button nbButton status="info" size="tiny" class="iconBtn" (click)="edit()">
+      <nb-icon icon="edit-outline"></nb-icon>
+  </button>
+</div>
+<div class="pageContent">
+  <nb-card>
+      <nb-card-body>
+          <div class="row">
+              <div class="textGroup col-12 col-lg-4">
+                  <p class="textBold">作業名稱：</p>
+                  <span>{{detail.scheduleName}}</span>
+              </div>
+              <div class="textGroup col-12 col-lg-4">
+                  <p class="textBold">狀態：</p>
+                  <span>{{detail.status | enum:'status'}}</span>
+              </div>
+              <div class="textGroup col-12 col-lg-4">
+                  <p class="textBold">執行頻率：</p>
+                  <span>{{detail.startDate}}</span>
+              </div>
+              <div class="textGroup col-12 col-lg-4">
+                  <p class="textBold">異動時間：</p>
+                  <span>{{detail.modificationTime | date:dateFormat}}</span>
+              </div>
+          </div>
+      </nb-card-body>
+  </nb-card>
+  <nb-card>
+    <nb-card-body>
+      <nb-tabset>
+        <nb-tab tabTitle="標籤紀錄">
+          <nb-card-body>
+              <div class="rightBox"><button nbButton status="primary" size="medium" (click)="refresh()">手動更新</button></div>
+              <ng2-smart-table [settings]="tagGridDefine" [source]="dataSource"></ng2-smart-table>
+              <paginator [source]="dataSource" [paginator]="paginator"></paginator>
+          </nb-card-body>
+        </nb-tab>
+        <nb-tab tabTitle="活動紀錄">
+          <nb-card-body>
+              <div class="rightBox"><button nbButton status="primary" size="medium" (click)="refresh()">手動更新</button></div>
+              <ng2-smart-table [settings]="activityGridDefine" [source]="dataSource"></ng2-smart-table>
+              <paginator [source]="dataSource" [paginator]="paginator"></paginator>
+          </nb-card-body>
+        </nb-tab>
+      </nb-tabset>
+    </nb-card-body>
+
+  </nb-card>
+  <nb-card>
+      <nb-card-header>
+          <h2>異動歷程</h2>
+      </nb-card-header>
+      <nb-card-body>
+          <div class="historyList">
+              <ng-container *ngFor="let hg of detail.historyGroupView | keyvalue; let i=index;">
+                  <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
+                      <div class="mainItem">
+                          <h4 (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">{{history.type}}</h4>
+                          <button nbButton status="control" size="tiny" class="iconBtn" (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">
+                              <nb-icon icon="chevron-down-outline"></nb-icon>
+                          </button>
+                      </div>
+                      <div class="subItem" [ngClass]="isHistoryOpen[hg.key] ? '' : 'displayNone'" *ngFor="let flow of history.flows">
+                          <div>
+                              <p>{{flow.time | date:dateFormat}}</p>
+                              <p>{{flow.time | date:'hh:mm:ss'}}</p>
+                          </div>
+                          <div>
+                              <p>{{flow.title}}</p>
+                              <p>{{flow.detail}}</p>
+                          </div>
+                      </div>
+                  </div>
+              </ng-container>
+          </div>
+      </nb-card-body>
+  </nb-card>
+  <div class="row">
+      <div class="btnGroup">
+          <button nbButton status="basic" size="medium" (click)="cancel()">返回</button>
+      </div>
+  </div>
+</div>

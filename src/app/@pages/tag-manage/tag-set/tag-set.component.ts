@@ -9,9 +9,9 @@ import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 
 @Component({
-  selector: 'tag-add',
-  templateUrl: './tag-add.component.html',
-  styleUrls: ['./tag-add.component.scss']
+  selector: 'tag-set',
+  templateUrl: './tag-set.component.html',
+  styleUrls: ['./tag-set.component.scss']
 })
 export class TagAddComponent extends BaseComponent implements OnInit {
   TagType = TagType;
