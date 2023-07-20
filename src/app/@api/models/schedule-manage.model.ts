@@ -1,11 +1,13 @@
 export interface ScheduleSetting {
   scheduleId: string;
+  version: string;
   jobName: string;
   executionFrequency: string;
   creationTime: string;
   modificationTime: string;
   status: string;
   activitySetting: Array<Activitysetting>;
+  scheduleReviewHistory: Array<Schedulereviewhistory>;
 }
 
 export class Activitysetting {
@@ -28,33 +30,34 @@ export class Activitysetting {
 export class Schedule_Batch_History {
   historyId: string;
   activityId: string;
+  version: string;
   batchTime: string;
   batchResult: string;
 }
 
+export class Schedulereviewhistory {
+  historyId: string;
+  version: string;
+  referenceId: string;
+  groupId: number;
+  time: string;
+  title: string;
+  detail: string;
+  type: string;
+}
 
 
 
 
 //for HTML diaplay ViewModel
 export interface ScheduleDetailView {
-  scheduleId: string
-  scheduleName: string
-  scheduleDescription: string
-  scheduleType: string
-  department: string
-  owner: string
-  modificationTime: string
-  status: string
-  startDate: string
-  endDate: string
-  conditionSettingMethod: string
-  conditionSettingQuery: string
-  scheduleDimension: string
-  scheduleSubDimension: string
-  scheduleSettings: string
-  uploadType: string
-  filePath: string
+  scheduleId: string;
+  version: string;
+  jobName: string;
+  executionFrequency: string;
+  creationTime: string;
+  modificationTime: string;
+  status: string;
   historyGroupView: { [x: number]: HistoryGroupView };
 }
 

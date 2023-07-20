@@ -54,7 +54,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         title: '標籤名稱',
         type: 'html',
         class: 'left',
-        width: '20%',
+        width: '30%',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
@@ -64,7 +64,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         title: '說明',
         type: 'html',
         class: 'left',
-        width: '39%',
+        width: '30%',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
@@ -83,7 +83,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
       modificationTime: {
         title: '異動時間',
         type: 'html',
-        width: '10%',
+        width: '15%',
         sort: false,
         valuePrepareFunction: (cell: string) => {
           const datepipe: DatePipe = new DatePipe('en-US');
@@ -129,7 +129,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         title: '活動名稱',
         type: 'html',
         class: 'left',
-        width: '20%',
+        width: '30%',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
@@ -139,7 +139,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         title: '活動說明',
         type: 'html',
         class: 'left',
-        width: '39%',
+        width: '30%',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
@@ -158,7 +158,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
       modificationTime: {
         title: '異動時間',
         type: 'html',
-        width: '10%',
+        width: '15%',
         sort: false,
         valuePrepareFunction: (cell: string) => {
           const datepipe: DatePipe = new DatePipe('en-US');
@@ -196,8 +196,8 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   }
 
   ngDoCheck(): void {
-    // this.updateSchedulePageInfo(this.tagDtaSource, this.tagPaginator)
-    // this.updateSchedulePageInfo(this.activityDtaSource, this.activityPaginator)
+    this.updateSchedulePageInfo(this.tagDtaSource, this.tagPaginator)
+    this.updateSchedulePageInfo(this.activityDtaSource, this.activityPaginator)
   }
 
   updateSchedulePageInfo(dataSource: any, paginator: Paginator) {

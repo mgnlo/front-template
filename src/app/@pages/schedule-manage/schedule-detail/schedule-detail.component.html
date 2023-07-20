@@ -10,15 +10,15 @@
           <div class="row">
               <div class="textGroup col-12 col-lg-4">
                   <p class="textBold">作業名稱：</p>
-                  <span>{{detail.scheduleName}}</span>
+                  <span>{{detail.jobName}}</span>
               </div>
               <div class="textGroup col-12 col-lg-4">
                   <p class="textBold">狀態：</p>
-                  <span>{{detail.status | enum:'status'}}</span>
+                  <span>{{detail.status?.toLowerCase() | enum:'status'}}</span>
               </div>
               <div class="textGroup col-12 col-lg-4">
                   <p class="textBold">執行頻率：</p>
-                  <span>{{detail.startDate}}</span>
+                  <span>{{detail.executionFrequency?.toLowerCase() | enum:'frequency'}}</span>
               </div>
               <div class="textGroup col-12 col-lg-4">
                   <p class="textBold">異動時間：</p>
