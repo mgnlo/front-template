@@ -14,6 +14,8 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
   checkData: TagSetting;
   isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
 
+  fileName:string = "";
+
   constructor(private router: Router) {
     super();
     const currentNavigation = this.router.getCurrentNavigation();
@@ -28,6 +30,10 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
         //之後可能加導頁pop-up提醒
         this.router.navigate(['pages', 'tag-manage', 'tag-list']);
       }
+    }
+    //取得檔案名稱
+    if(!!this.detail.filePath){
+      this.fileName = this.detail.filePath.split('/').pop();
     }
 
   }

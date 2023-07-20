@@ -114,29 +114,29 @@ export class TagListComponent extends BaseComponent implements OnInit {
           const datepipe: DatePipe = new DatePipe('en-US');
           return `<p class="date">${datepipe.transform(cell, this.dateFormat)}</p>`;
         },
-        filterFunction: (cell?: string, search?: string[]) => {
-          let date = cell;
-          let sDate = search[0];
-          let eDate = search[1];
-          let isSDate = sDate !== null;
-          let isEDate = eDate !== null;
-          if(
-            (!isSDate && !isEDate) ||
-            ((isSDate && isEDate) && (
-              moment(date).isBetween(sDate, eDate, undefined, '[]')
-            )) ||
-            ((isSDate && !isEDate) && (
-              moment(sDate).isSameOrBefore(date)
-            )) ||
-            ((!isSDate && isEDate) && (
-              moment(eDate).isSameOrAfter(date)
-            ))
-          ){
-            return true
-          }  else {
-            return false
-          }
-        }
+        // filterFunction: (cell?: string, search?: string[]) => {
+        //   let date = cell;
+        //   let sDate = search[0];
+        //   let eDate = search[1];
+        //   let isSDate = sDate !== null;
+        //   let isEDate = eDate !== null;
+        //   if(
+        //     (!isSDate && !isEDate) ||
+        //     ((isSDate && isEDate) && (
+        //       moment(date).isBetween(sDate, eDate, undefined, '[]')
+        //     )) ||
+        //     ((isSDate && !isEDate) && (
+        //       moment(sDate).isSameOrBefore(date)
+        //     )) ||
+        //     ((!isSDate && isEDate) && (
+        //       moment(eDate).isSameOrAfter(date)
+        //     ))
+        //   ){
+        //     return true
+        //   }  else {
+        //     return false
+        //   }
+        // }
       },
       status: {
         title: '狀態',

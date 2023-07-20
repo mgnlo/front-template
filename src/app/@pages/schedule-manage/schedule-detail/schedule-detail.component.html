@@ -32,14 +32,14 @@
       <nb-tabset>
         <nb-tab tabTitle="標籤紀錄">
           <nb-card-body>
-              <div class="rightBox"><button nbButton status="primary" size="medium" (click)="refresh()">手動更新</button></div>
+              <div class="rightBox"><button nbButton status="primary" size="medium" (click)="tagRefresh()">手動更新</button></div>
               <ng2-smart-table [settings]="tagGridDefine" [source]="dataSource"></ng2-smart-table>
               <paginator [source]="dataSource" [paginator]="paginator"></paginator>
           </nb-card-body>
         </nb-tab>
         <nb-tab tabTitle="活動紀錄">
           <nb-card-body>
-              <div class="rightBox"><button nbButton status="primary" size="medium" (click)="refresh()">手動更新</button></div>
+              <div class="rightBox"><button nbButton status="primary" size="medium" (click)="activityRefresh()">手動更新</button></div>
               <ng2-smart-table [settings]="activityGridDefine" [source]="dataSource"></ng2-smart-table>
               <paginator [source]="dataSource" [paginator]="paginator"></paginator>
           </nb-card-body>

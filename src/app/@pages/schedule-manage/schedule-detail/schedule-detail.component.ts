@@ -5,9 +5,10 @@ import { TagSetting } from '@api/models/activity-list.model';
 import { ScheduleDetailView, ScheduleSetting } from '@api/models/schedule-manage.model';
 import { Status } from '@common/enums/common-enum';
 import { CommonUtil } from '@common/utils/common-util';
-import { CheckboxIconComponent } from '@component/table/checkbox-icon/checkbox-icon.component';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
+import { Paginator } from '@component/table/paginator/paginator.component';
 import { BaseComponent } from '@pages/base.component';
+import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({
   selector: 'schedule-detail',
@@ -18,6 +19,10 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   detail: ScheduleDetailView;
   checkData: ScheduleSetting;
   isHistoryOpen: { [x: number]: boolean } = []; //異動歷程收合
+
+  tagdDtaSource: LocalDataSource = new LocalDataSource(); //table
+  tagPaginator: Paginator = { totalCount: 0, nowPage: 1, perPage: 10, totalPage: 1, rowStart: 0, rowEnd: 0 };  //table筆數顯示
+
 
   constructor(private router: Router) {
     super();
@@ -41,7 +46,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
       display: true,
       perPage: 10,
     },
-    selectMode:'multi',
+    selectMode: 'multi',
     columns: {
       tagName: {
         title: '標籤名稱',
@@ -63,6 +68,16 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         },
         sort: false,
       },
+      status: {
+        title: '狀態',
+        type: 'string',
+        width: '5%',
+        class: 'alignCenter',
+        valuePrepareFunction: (cell:string) => {
+          return Status[cell];
+        },
+        sort: false,
+      },
       modificationTime: {
         title: '異動時間',
         type: 'html',
@@ -73,8 +88,8 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
           return `<p class="date">${datepipe.transform(cell, this.dateFormat)}</p>`;
         },
       },
-      status: {
-        title: '狀態',
+      refreshStatus: {
+        title: '更新結果',
         type: 'string',
         width: '5%',
         class: 'alignCenter',
@@ -94,7 +109,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     },
     hideSubHeader: true,
     actions: {
-      columnTitle: 'Select',
+      select: true,
       add: false,
       edit: false,
       delete: false,
@@ -106,9 +121,10 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
       display: true,
       perPage: 10,
     },
+    selectMode: 'multi',
     columns: {
       tagName: {
-        title: '標籤名稱',
+        title: '活動名稱',
         type: 'html',
         class: 'left',
         width: '20%',
@@ -118,12 +134,22 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         sort: false
       },
       tagDescription: {
-        title: '說明',
+        title: '活動說明',
         type: 'html',
         class: 'left',
         width: '39%',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
+        },
+        sort: false,
+      },
+      status: {
+        title: '狀態',
+        type: 'string',
+        width: '5%',
+        class: 'alignCenter',
+        valuePrepareFunction: (cell:string) => {
+          return Status[cell];
         },
         sort: false,
       },
@@ -137,8 +163,8 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
           return `<p class="date">${datepipe.transform(cell, this.dateFormat)}</p>`;
         },
       },
-      status: {
-        title: '狀態',
+      refreshStatus: {
+        title: '更新結果',
         type: 'string',
         width: '5%',
         class: 'alignCenter',
@@ -167,7 +193,11 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  refresh(){
+  tagRefresh(){
+
+  }
+
+  activityRefresh(){
 
   }
 
