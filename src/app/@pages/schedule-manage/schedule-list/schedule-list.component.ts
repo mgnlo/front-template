@@ -7,6 +7,7 @@ import { ScheduleSetting } from '@api/models/schedule-manage.model';
 import { Status } from '@common/enums/common-enum';
 import { DatePipe } from '@angular/common';
 import { ScheduleSettingMock } from '@common/mock-data/schedule-list-mock';
+import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 
 @Component({
   selector: 'schedule-list',
@@ -72,7 +73,7 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
         type: 'custom',
         class: 'col-1',
         valuePrepareFunction: (cell, row: ScheduleSetting) => row,
-        renderComponent: ScheduleButtonComponent,
+        renderComponent: DetailButtonComponent,
         sort: false,
       },
     },
@@ -86,23 +87,5 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
 
   add() {
     this.router.navigate(['pages', 'schedule-manage', 'schedule-set']);
-  }
-}
-
-@Component({
-  selector: 'schedule-list-button',
-  template: '<button nbButton ghost status="info" size="medium" (click)="search()"><nb-icon icon="search"></nb-icon></button>'
-})
-export class ScheduleButtonComponent implements OnInit {
-
-  constructor(private router: Router) { }
-
-  @Input() value: ScheduleSetting;
-
-  ngOnInit() { }
-
-  search() {
-    let passData: NavigationExtras = { state: this.value };
-    this.router.navigate(['pages', 'schedule-manage', 'schedule-detail'], passData);
   }
 }

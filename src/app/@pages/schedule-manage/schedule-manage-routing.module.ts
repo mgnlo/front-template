@@ -2,7 +2,6 @@ import { NgModule } from "@angular/core"
 import { RouterModule, Routes } from "@angular/router"
 import { ScheduleManageComponent } from "./schedule-manage.component"
 import { ScheduleListComponent } from "./schedule-list/schedule-list.component"
-import { ScheduleButtonComponent } from "./schedule-list/schedule-list.component"
 import { ScheduleAddComponent } from "./schedule-set/schedule-set.component"
 import { ScheduleDetailComponent } from "./schedule-detail/schedule-detail.component"
 
@@ -28,7 +27,6 @@ export class ScheduleManageRoutingModule { }
 export const routedComponents = [
   ScheduleManageComponent,
   ScheduleListComponent,
-  ScheduleButtonComponent,
   ScheduleAddComponent,
   ScheduleDetailComponent,
 ];
