@@ -49,7 +49,7 @@ export class ActivityDetailComponent extends BaseComponent implements OnInit {
   }
 
   edit() {
-    this.router.navigate(['pages', 'customer-manage', 'activity-add', this.editData.activityId],{state: this.editData});
+    this.router.navigate(['pages', 'customer-manage', 'activity-set', this.editData.activityId],{state: this.editData});
   }
 
   cancel() {

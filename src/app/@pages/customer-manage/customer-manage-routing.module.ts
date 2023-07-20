@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core"
 import { RouterModule, Routes } from "@angular/router"
-import { ActivityAddComponent } from "./activity-add/activity-add.component"
-import { PreviewDialogComponent } from "./activity-add/preview-dialog/preview.dialog.component"
+import { ActivitySetComponent } from "./activity-set/activity-set.component"
+import { PreviewDialogComponent } from "./activity-set/preview-dialog/preview.dialog.component"
 import { ActivityDetailComponent } from "./activity-detail/activity-detail.component"
 import { ActivityListComponent } from "./activity-list/activity-list.component"
 import { CustomerListButtonComponent, CustomerListComponent, CustomerListTagComponent } from "./customer-list/customer-list.component"
@@ -16,8 +16,8 @@ const routes: Routes = [
             { path: "customer-list", component: CustomerListComponent },
             { path: 'activity-list', component: ActivityListComponent},
             { path: 'activity-detail/:activityId', component: ActivityDetailComponent},
-            { path: 'activity-add', component: ActivityAddComponent}, //新增
-            { path: 'activity-add/:activityId', component: ActivityAddComponent}, //編輯
+            { path: 'activity-set', component: ActivitySetComponent}, //新增
+            { path: 'activity-set/:activityId', component: ActivitySetComponent}, //編輯
         ]
     }
 ]
@@ -34,7 +34,7 @@ export const routedComponents = [
   CustomerListButtonComponent,
   CustomerListTagComponent,
   ActivityListComponent,
-  ActivityAddComponent,
+  ActivitySetComponent,
   ActivityDetailComponent,
   DetailDialogComponent,
   PreviewDialogComponent

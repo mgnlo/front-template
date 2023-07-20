@@ -79,7 +79,7 @@
             <nb-tabset>
                 <nb-tab tabTitle="異動歷程" ngFor="let ">
                     <div class="historyList">
-                        <ng-container *ngFor="let hg of detail.historyGroupView | keyvalue; let i=index;">
+                        <ng-container *ngFor="let hg of historyGroupView | keyvalue; let i=index;">
                             <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
                                 <div class="mainItem">
                                     <h4 (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">{{history.type}}</h4>

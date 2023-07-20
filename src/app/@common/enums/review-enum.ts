@@ -16,3 +16,9 @@ export enum ReviewCompareClass {
   false = 'colorRed',
   null = 'colorSkyBlue'
 }
+
+export enum BgClass {
+  true = '',
+  false = 'redBG',
+  null = 'blueBG'
+}

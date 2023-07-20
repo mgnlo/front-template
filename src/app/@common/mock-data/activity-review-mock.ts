@@ -22,10 +22,36 @@ export const ActivityReviewListMock: Array<ActivityReviewHistory> = [
     modificationTime: "2023-07-03 15:30:00",
     scheduleSettings: "daily",
     batchUpdateTime: "2023-08-02 12:00:00",
+    activityListCondition:[
+      {
+         activityId: "abcdefg123457",
+         conditionId:"1",
+         version: "uuid-zzzz",
+         tagGroup:1,
+         tagName:"近一個月_基金_定期定額手續費-高",
+         tagKey:"tag-123"
+      },
+      {
+         activityId: "abcdefg123457",
+         conditionId:"2",
+         version: "uuid-zzzz",
+         tagGroup:1,
+         tagName:"近三個月_基金_手續費-低",
+         tagKey:"tag-456"
+      },
+      {
+         activityId: "abcdefg123457",
+         conditionId:"3",
+         version: "uuid-zzzz",
+         tagGroup:2,
+         tagName:"近三個月_換匯_交易金額-低",
+         tagKey:"tag-790"
+      }
+    ]
   },
   {
     historyId: "h123457",
-    referenceId: "abcdefg123456",
+    referenceId: "abcdefg123457",
     groupId: 1,
     time: "2023-07-01 09:00:00",
     title: "審核",
@@ -44,10 +70,36 @@ export const ActivityReviewListMock: Array<ActivityReviewHistory> = [
     modificationTime: "2023-09-06 15:30:00",
     scheduleSettings: "daily",
     batchUpdateTime: "2023-07-03 12:00:00",
+    activityListCondition:[
+      {
+         activityId:"uuid-b",
+         conditionId:"1",
+         version: "uuid-zzzz",
+         tagGroup:1,
+         tagName:"近一個月_基金_定期定額手續費-高",
+         tagKey:"tag-123"
+      },
+      {
+         activityId:"uuid-b",
+         conditionId:"2",
+         version: "uuid-zzzz",
+         tagGroup:1,
+         tagName:"近三個月_基金_手續費-低",
+         tagKey:"tag-457"
+      },
+      {
+         activityId:"uuid-b",
+         conditionId:"3",
+         version: "uuid-zzzz",
+         tagGroup:2,
+         tagName:"近一個月_換匯_交易金額-高",
+         tagKey:"tag-789"
+      }
+    ]
   },
   {
     historyId: "h123459",
-    referenceId: "abcdefg123456",
+    referenceId: "abcdefg123458",
     groupId: 2,
     time: "2023-07-01 09:00:00",
     title: "修改",
@@ -62,8 +114,42 @@ export const ActivityReviewListMock: Array<ActivityReviewHistory> = [
     endDate: "2023-07-19",
     status: "ing",
     modificationTime: "2023-07-03 15:30:00",
-    scheduleSettings: "monthy",
+    scheduleSettings: "monthly",
     batchUpdateTime: "2023-07-03 12:00:00",
+    activityListCondition:[
+      {
+         activityId:"uuid-b",
+         conditionId:"1",
+         version: "uuid-zzzz",
+         tagGroup:1,
+         tagName:"近一個月_基金_定期定額手續費-高",
+         tagKey:"tag-123"
+      },
+      {
+         activityId:"uuid-b",
+         conditionId:"2",
+         version: "uuid-zzzz",
+         tagGroup:1,
+         tagName:"近三個月_基金_手續費-低",
+         tagKey:"tag-456"
+      },
+      {
+         activityId:"uuid-b",
+         conditionId:"3",
+         version: "uuid-zzzz",
+         tagGroup:2,
+         tagName:"近一個月_換匯_交易金額-高",
+         tagKey:"tag-789"
+      },
+      {
+         activityId:"uuid-b",
+         conditionId:"4",
+         version: "uuid-zzzz",
+         tagGroup:3,
+         tagName:"近一個月_換匯_交易金額-高",
+         tagKey:"tag-792"
+      }
+    ]
   },
   {
     historyId: "h123459",
@@ -82,8 +168,26 @@ export const ActivityReviewListMock: Array<ActivityReviewHistory> = [
     endDate: "2023-07-19",
     status: "ing",
     modificationTime: "2023-02-05 15:30:00",
-    scheduleSettings: "monthy",
+    scheduleSettings: "monthly",
     batchUpdateTime: "2023-07-03 12:00:00",
+    activityListCondition:[
+      {
+         activityId:"uuid-b",
+         conditionId:"1",
+         version: "uuid-zzzz",
+         tagGroup:1,
+         tagName:"近一個月_基金_定期定額手續費-高",
+         tagKey:"tag-123"
+      },
+      {
+         activityId:"uuid-b",
+         conditionId:"2",
+         version: "uuid-zzzz",
+         tagGroup:1,
+         tagName:"近三個月_基金_手續費-低",
+         tagKey:"tag-456"
+      }
+    ]
   },
   {
     historyId: "h123460",
@@ -104,6 +208,32 @@ export const ActivityReviewListMock: Array<ActivityReviewHistory> = [
     modificationTime: "2023-03-21 15:30:00",
     scheduleSettings: "daily",
     batchUpdateTime: "2023-07-03 12:00:00",
+    activityListCondition:[
+      {
+         activityId:"uuid-b",
+         conditionId:"1",
+         version: "uuid-zzzz",
+         tagGroup:1,
+         tagName:"近一個月_基金_定期定額手續費-高",
+         tagKey:"tag-123"
+      },
+      {
+         activityId:"uuid-b",
+         conditionId:"2",
+         version: "uuid-zzzz",
+         tagGroup:1,
+         tagName:"性別-男",
+         tagKey:"tag-456"
+      },
+      {
+         activityId:"uuid-b",
+         conditionId:"3",
+         version: "uuid-zzzz",
+         tagGroup:2,
+         tagName:"近一個月_換匯_交易金額-高",
+         tagKey:"tag-789"
+      }
+    ]
   },
   {
     historyId: "h123460",
@@ -124,5 +254,31 @@ export const ActivityReviewListMock: Array<ActivityReviewHistory> = [
     modificationTime: "2023-07-07 15:30:00",
     scheduleSettings: "daily",
     batchUpdateTime: "2023-07-03 12:00:00",
+    activityListCondition:[
+      {
+         activityId:"uuid-b",
+         conditionId:"7",
+         version: "uuid-zzzz",
+         tagGroup:1,
+         tagName:"近一個月_基金_定期定額手續費-高",
+         tagKey:"tag-123"
+      },
+      {
+         activityId:"uuid-b",
+         conditionId:"8",
+         version: "uuid-zzzz",
+         tagGroup:1,
+         tagName:"近三個月_基金_手續費-低",
+         tagKey:"tag-456"
+      },
+      {
+         activityId:"uuid-b",
+         conditionId:"9",
+         version: "uuid-zzzz",
+         tagGroup:2,
+         tagName:"近一個月_換匯_交易金額-高",
+         tagKey:"tag-789"
+      }
+    ]
   }
 ]

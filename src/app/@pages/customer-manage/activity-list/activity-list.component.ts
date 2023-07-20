@@ -148,7 +148,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
       };
 
       add(){
-        this.router.navigate(['pages', 'customer-manage', 'activity-add']);
+        this.router.navigate(['pages', 'customer-manage', 'activity-set']);
       }
 
       reset(){
