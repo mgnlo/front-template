@@ -6,11 +6,11 @@ export interface ScheduleSetting {
   creationTime: string;
   modificationTime: string;
   status: string;
-  activitySetting: Array<Activitysetting>;
-  scheduleReviewHistory: Array<Schedulereviewhistory>;
+  activitySetting: Array<ActivitySetting>;
+  scheduleReviewHistory: Array<ScheduleReviewhistory>;
 }
 
-export class Activitysetting {
+export class ActivitySetting {
   activityId: string;
   version: string;
   activityName: string;
@@ -35,7 +35,7 @@ export class Schedule_Batch_History {
   batchResult: string;
 }
 
-export class Schedulereviewhistory {
+export class ScheduleReviewhistory {
   historyId: string;
   version: string;
   referenceId: string;

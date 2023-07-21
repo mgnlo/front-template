@@ -6,47 +6,36 @@
 </div>
 <div class="pageContent">
   <nb-card>
-      <nb-card-body>
-          <div class="row">
-              <div class="textGroup col-12 col-lg-4">
-                  <p class="textBold">作業名稱：</p>
-                  <span>{{detail.jobName}}</span>
-              </div>
-              <div class="textGroup col-12 col-lg-4">
-                  <p class="textBold">狀態：</p>
-                  <span>{{detail.status?.toLowerCase() | enum:'status'}}</span>
-              </div>
-              <div class="textGroup col-12 col-lg-4">
-                  <p class="textBold">執行頻率：</p>
-                  <span>{{detail.executionFrequency?.toLowerCase() | enum:'frequency'}}</span>
-              </div>
-              <div class="textGroup col-12 col-lg-4">
-                  <p class="textBold">異動時間：</p>
-                  <span>{{detail.modificationTime | date:dateFormat}}</span>
-              </div>
-          </div>
-      </nb-card-body>
+    <nb-card-body>
+        <div class="row">
+            <div class="textGroup col-12 col-lg-4">
+                <p class="textBold">作業名稱：</p>
+                <span>{{detail.jobName}}</span>
+            </div>
+            <div class="textGroup col-12 col-lg-4">
+                <p class="textBold">狀態：</p>
+                <span>{{detail.status?.toLowerCase() | enum:'status'}}</span>
+            </div>
+            <div class="textGroup col-12 col-lg-4">
+                <p class="textBold">執行頻率：</p>
+                <span>{{detail.executionFrequency?.toLowerCase() | enum:'frequency'}}</span>
+            </div>
+            <div class="textGroup col-12 col-lg-4">
+                <p class="textBold">異動時間：</p>
+                <span>{{detail.modificationTime | date:dateFormat}}</span>
+            </div>
+        </div>
+    </nb-card-body>
   </nb-card>
   <nb-card>
+    <nb-card-header>
+        <h2>名單紀錄</h2>
+    </nb-card-header>
     <nb-card-body>
-      <nb-tabset>
-        <nb-tab tabTitle="標籤紀錄">
-          <nb-card-body>
-              <div class="rightBox"><button nbButton status="primary" size="medium" (click)="tagRefresh()">手動更新</button></div>
-              <ng2-smart-table [settings]="tagGridDefine" [source]="tagDtaSource"></ng2-smart-table>
-              <paginator [source]="tagDtaSource" [paginator]="tagPaginator"></paginator>
-          </nb-card-body>
-        </nb-tab>
-        <nb-tab tabTitle="活動紀錄">
-          <nb-card-body>
-              <div class="rightBox"><button nbButton status="primary" size="medium" (click)="activityRefresh()">手動更新</button></div>
-              <ng2-smart-table [settings]="activityGridDefine" [source]="activityDtaSource"></ng2-smart-table>
-              <paginator [source]="activityDtaSource" [paginator]="activityPaginator"></paginator>
-          </nb-card-body>
-        </nb-tab>
-      </nb-tabset>
+        <div class="rightBox"><button nbButton status="primary" size="medium" (click)="refresh()">手動更新</button></div>
+        <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
+        <paginator [source]="dataSource" [paginator]="paginator"></paginator>
     </nb-card-body>
-
   </nb-card>
   <nb-card>
       <nb-card-header>
