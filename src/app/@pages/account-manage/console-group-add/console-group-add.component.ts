@@ -6,6 +6,8 @@ import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
 import { AccountManageService } from '../account.manage.service';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { is } from 'date-fns/locale';
 
 @Component({
   selector: 'console-group-add',
@@ -36,40 +38,8 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
 
   enableOption: string;
   groupName: string;
-
-  constructor(
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private accountManageService: AccountManageService,
-    private dateService: NbDateService<Date>) {
-    super();
-
-    let mode = this.activatedRoute.snapshot.queryParamMap.get("mode");
-
-    if (mode) {
-      if(mode == "copy"){
-        let groupScope = this.activatedRoute.snapshot.queryParamMap.get("consoleGroupScope");
-
-        if (groupScope) {
-          this.consoleGroupScope = JSON.parse(groupScope);
-        }
-      }      
-    } else {
-      //防止瀏覽器 F5，重新導回 list
-      this.router.navigate(this.accountManageService.CONSOLE_GROUP_LIST_PATH).then((res) => {
-        if (res) {
-          window.history.replaceState({}, '', this.router.url.split("?")[0]);
-        };
-      });
-    }
-  }
-
-  ngOnInit(): void {
-    this.dataSource = new LocalDataSource();
-    this.dataSource.load(this.consoleGroupScope);
-
-    document.querySelector("nb-layout-column").scrollTo(0, 0);
-  }
+  consoleGroupAddForm: FormGroup;
+  isSubmit = false;
 
   gridDefine = {
     pager: {
@@ -127,6 +97,76 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
     }
   };
 
+  constructor(
+    formBuilder: FormBuilder,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private accountManageService: AccountManageService,
+    private dateService: NbDateService<Date>) {
+    super();
+
+    let mode = this.activatedRoute.snapshot.queryParamMap.get("mode");
+
+    if (mode) {
+      if (mode == "copy") {
+        let groupScope = this.activatedRoute.snapshot.queryParamMap.get("consoleGroupScope");
+
+        if (groupScope) {
+          this.consoleGroupScope = JSON.parse(groupScope);
+        }
+      }
+    } else {
+      //防止瀏覽器 F5，重新導回 list
+      this.router.navigate(this.accountManageService.CONSOLE_GROUP_LIST_PATH).then((res) => {
+        if (res) {
+          window.history.replaceState({}, '', this.router.url.split("?")[0]);
+        };
+      });
+    }
+
+    this.consoleGroupAddForm = formBuilder.group({
+      groupName: [null, null],
+      enableRadio: [null, null]
+    }, {
+      validator: (fg: FormGroup) => {
+        (async () => {
+          this.validateField(fg); // your validation method
+        })();
+      }
+    });
+  }
+
+  private validateField(fg: FormGroup): any {
+    let groupName: AbstractControl = fg.get('groupName');
+    let enableRadio: AbstractControl = fg.get('enableRadio');
+
+    requestAnimationFrame(() => {
+      if (!this.groupName) {
+        this.updateErrMsg(groupName, "此欄位為必填欄位");
+      } else {
+        if (this.groupName.length > 20) {
+          this.updateErrMsg(groupName, "權限名稱過長，最長為20個字");
+        }
+      }
+  
+      if(!this.enableOption){
+        this.updateErrMsg(enableRadio, "此欄位為必填欄位");
+      }
+    });    
+  }
+
+  private updateErrMsg(viewCtrl: AbstractControl, errMsg) {
+    if (!viewCtrl.errors || viewCtrl.errors.errMsg !== errMsg)
+      viewCtrl.setErrors({ errMsg: errMsg });
+  }
+
+  ngOnInit(): void {
+    this.dataSource = new LocalDataSource();
+    this.dataSource.load(this.consoleGroupScope);
+
+    document.querySelector("nb-layout-column").scrollTo(0, 0);
+  }
+
   cancel() {
     let passData: NavigationExtras = {};
 
@@ -142,13 +182,17 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
   }
 
   ok() {
-    // 這邊要發送電文去進行新增
-    // 新增成功後要再發送電文重新 query 
-    this.router.navigate(this.accountManageService.CONSOLE_GROUP_LIST_PATH).then((res) => {
-      if (res) {
-        window.history.replaceState({}, '', this.router.url.split("?")[0]);
-      };
-    });
+    this.isSubmit = true;
+    
+    if (!this.consoleGroupAddForm.invalid) {
+      // 這邊要發送電文去進行新增
+      // 新增成功後要再發送電文重新 query 
+      this.router.navigate(this.accountManageService.CONSOLE_GROUP_LIST_PATH).then((res) => {
+        if (res) {
+          window.history.replaceState({}, '', this.router.url.split("?")[0]);
+        };
+      });
+    }
   }
 }
 
