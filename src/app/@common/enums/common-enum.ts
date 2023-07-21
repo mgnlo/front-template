@@ -24,3 +24,10 @@ export enum Filter{
   true = '啟用',
   false = '停用'
 }
+
+export enum StatusResult{
+  true = '成功',
+  false = '失敗',
+  success = '成功',
+  fail = '失敗'
+}

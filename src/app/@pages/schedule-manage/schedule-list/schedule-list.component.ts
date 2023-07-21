@@ -20,12 +20,12 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
     private router: Router) {
     super();
   }
-  mockData: Array<ScheduleSetting> = ScheduleSettingMock;
+  scheduleSetting: Array<ScheduleSetting> = ScheduleSettingMock;
 
 
   ngOnInit(): void {
     this.dataSource = new LocalDataSource();
-    this.dataSource.load(this.mockData);
+    this.dataSource.load(this.scheduleSetting);
   }
 
   gridDefine = {
