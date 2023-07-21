@@ -10,6 +10,8 @@ import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { DatePipe } from '@angular/common';
 import { TagType } from '@common/enums/tag-enum';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
+import { FormControl, FormGroup } from '@angular/forms';
+import { ValidatorsUtil } from '@common/utils/validators-util';
 
 @Component({
   selector: 'tag-list',
@@ -21,23 +23,17 @@ export class TagListComponent extends BaseComponent implements OnInit {
     private tagManageService: TagManageService,
     private router: Router) {
     super();
+    this.validateForm = new FormGroup({
+      tagName: new FormControl(''),
+      status: new FormControl(''),
+      startDate: new FormControl(null, ValidatorsUtil.dateFmt),
+      endDate: new FormControl(null, ValidatorsUtil.dateFmt),
+    }, [ValidatorsUtil.dateRange]);
   }
 
   statusList: Array<{ key: string; val: string }> = Object.entries(Status).map(([k, v]) => ({ key: k, val: v }))
   updateTime: string = moment(new Date()).format('YYYY/MM/DD');
   mockData: Array<TagSetting> = TagSettingMock;
-
-  params = {
-    filter: {
-      tagName: '',
-      status: '',
-      startDate: null,
-      endDate: null,
-    },
-    page: 1,
-    sort: [],
-  };
-
 
   ngOnInit(): void {
     this.dataSource = new LocalDataSource();
@@ -143,7 +139,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
         type: 'string',
         width: '5%',
         class: 'alignCenter',
-        valuePrepareFunction: (cell:string) => {
+        valuePrepareFunction: (cell: string) => {
           return Status[cell];
         },
         sort: false,
@@ -166,13 +162,15 @@ export class TagListComponent extends BaseComponent implements OnInit {
   };
 
   reset() {
-    this.params.filter = { tagName: '', status: '', startDate: null, endDate: null, };
+    this.validateForm.reset({ tagName: '', status: '', startDate: null, endDate: null, });
     this.dataSource.reset();
   }
 
   search() {
     this.dataSource.reset();
-    const { startDate, endDate } = this.params.filter;
+    const getForm = this.validateForm.getRawValue();
+    const startDate = getForm.startDate;
+    const endDate = getForm.endDate;
 
     //search date
     const addDateFilter = (field: string, value: Date | null, filterFn: (value: string, searchValue: string[]) => boolean) => {
@@ -189,7 +187,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
     addDateFilter('endDate', endDate, (value, searchValue) => new Date(value) <= new Date(searchValue[0]));
 
     //search other
-    for (const [k, v] of Object.entries(this.params.filter).filter(([key, val]) => !key.includes('Date'))) {
+    for (const [k, v] of Object.entries(getForm).filter(([key, val]) => !key.includes('Date'))) {
       this.dataSource.addFilter({
         field: k,
         filter: undefined,
