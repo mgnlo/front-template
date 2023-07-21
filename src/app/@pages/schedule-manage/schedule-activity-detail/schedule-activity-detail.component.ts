@@ -8,9 +8,9 @@ import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({
-  selector: 'schedule-detail',
-  templateUrl: './schedule-detail.component.html',
-  styleUrls: ['./schedule-detail.component.scss']
+  selector: 'schedule-activity-detail',
+  templateUrl: './schedule-activity-detail.component.html',
+  styleUrls: ['./schedule-activity-detail.component.scss']
 })
 export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   detail: ScheduleDetailView;
@@ -29,7 +29,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
       }
       else {
         //之後可能加導頁pop-up提醒
-        this.router.navigate(['pages', 'schedule-manage', 'schedule-list']);
+        this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-list']);
       }
     }
   }
@@ -114,18 +114,18 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   }
 
   edit() {
-    this.router.navigate(['pages', 'schedule-manage', 'schedule-set', 'edit', this.detail.scheduleId], { state: this.detail });
+    this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-set', 'edit', this.detail.scheduleId], { state: this.detail });
   }
 
   cancel() {
-    this.router.navigate(['pages', 'schedule-manage', 'schedule-list']);
+    this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-list']);
   }
 }
 
 
 
 @Component({
-  selector: 'schedule-detail-button',
+  selector: 'schedule-activity-detail-button',
   template: '<button nbButton ghost status="info" size="medium" (click)="search()"><nb-icon icon="search"></nb-icon></button>'
 })
 export class ScheduleButtonComponent implements OnInit {

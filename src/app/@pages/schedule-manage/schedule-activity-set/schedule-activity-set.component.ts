@@ -5,9 +5,9 @@ import { Frequency, Status } from '@common/enums/common-enum';
 import { BaseComponent } from '@pages/base.component';
 
 @Component({
-  selector: 'schedule-set',
-  templateUrl: './schedule-set.component.html',
-  styleUrls: ['./schedule-set.component.scss']
+  selector: 'schedule-activity-set',
+  templateUrl: './schedule-activity-set.component.html',
+  styleUrls: ['./schedule-activity-set.component.scss']
 })
 export class ScheduleAddComponent extends BaseComponent implements OnInit {
   Status = Status;
@@ -45,7 +45,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate(['pages', 'schedule-manage', 'schedule-list']);
+    this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-list']);
   }
 
   submit() {

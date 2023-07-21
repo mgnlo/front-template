@@ -91,7 +91,7 @@ export class ActivityDetailComponent extends BaseComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate(['pages', 'schedule-manage', 'schedule-detail', this.params.scheduleId]);
+    this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-detail', this.params.scheduleId]);
   }
 
 }
