@@ -50,6 +50,9 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
               case 'endDate':
                 this.validateForm.controls[key].setValue(new Date(editData[key]))
                 break;
+              case 'filterOptions':
+                this.validateForm.controls[key].setValue(editData[key] === 'true' ? true : false)
+                break;
               case 'activityListCondition':
                 this.conditions.removeAt(0);
                 let groupData = CommonUtil.groupBy(editData[key], 'tagGroup');
