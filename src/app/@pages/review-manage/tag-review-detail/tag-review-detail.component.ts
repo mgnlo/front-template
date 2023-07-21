@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Navigation, Router } from '@angular/router';
+import { ActivitySetting } from '@api/models/activity-list.model';
 import { HistoryGroupView, TagDetailView, TagReviewHistory } from '@api/models/tag-manage.model';
 import { DialogService } from '@api/services/dialog.service';
+import { Status } from '@common/enums/common-enum';
+import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
+import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({
   selector: 'tag-review-detail',
@@ -24,6 +28,7 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   isBefore: boolean = false;
   reviewStatus: string;
   reviewComment: string;
+  mockData: Array<ActivitySetting> = ActivityListMock;
 
   constructor(private router: Router, private dialogService: DialogService) {
     super();
@@ -55,8 +60,80 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
     }
   }
 
-  public ngOnInit(): void {
+  ngOnInit(): void {
+    this.dataSource = new LocalDataSource();
+    this.mockData = this.mockData.map(mock => {
+      return {...mock, during:`${mock.startDate}~${mock.endDate}`} //起訖日查詢篩選要用到
+    })
+    this.dataSource.load(this.mockData);
   }
+
+  gridDefine = {
+    pager: {
+      display: true,
+      perPage: 10,          
+    },
+    columns: {
+      activityName: {
+        title: '活動名稱',
+        type: 'html',
+        class: 'col-2 left',
+        sort: false,
+        valuePrepareFunction: (cell:string) => {
+          return `<p class="left">${cell}</p>`;
+        },
+      },
+      activityDescription: {
+        title: '活動說明',
+        type: 'html',
+        class: 'col-3 left',
+        sort: false,
+        valuePrepareFunction: (cell:string) => {
+          return `<p class="left">${cell}</p>`;
+        },
+      },
+      department: {
+        title: '所屬單位',
+        type: 'string',
+        class: 'col-2',
+        sort: false,
+      },
+      owner: {
+        title: '負責人',
+        type: 'string',
+        class: 'col-1',
+        sort: false,
+      },
+      status: {
+        title: '狀態',
+        type: 'string',
+        class: 'col-1',
+        valuePrepareFunction: (cell:string) => {
+          return Status[cell];
+        },
+        sort: false,
+      },
+      during: {
+        title: '起訖時間',
+        type: 'html',
+        class: 'col-3',
+        valuePrepareFunction: (cell:any) => {
+          return `<span class="date">${cell}</span>`;
+        },
+        sort: false, 
+      },
+    },
+    hideSubHeader: false, //起訖日查詢要用到
+    actions: {
+      add: false,
+      edit: false,
+      delete: false,
+    },
+    // rowClassFunction: (row: Row) => {
+    //   console.info(row.getData().status)
+    //   return row.getData().status === 'ing' ? 'aa' : '';
+    // },
+  };
 
   viewToggle() {
     this.isBefore = !this.isBefore;
