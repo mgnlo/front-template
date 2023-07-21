@@ -21,6 +21,13 @@ const routes: Routes = [
             (m) => m.Element2PageModule
           ),
       },
+      {
+        path: 'charts',
+        loadChildren: () =>
+          import('@pages/charts/charts.module').then(
+            (m) => m.ChartsModule
+          ),
+      },
     ],
   },
 ];

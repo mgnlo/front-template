@@ -35,6 +35,10 @@ export class PagesComponent implements OnInit {
             title: "表單元件",
             link: "/pages/element2",
           },
+          {
+            title: "Echarts圖表內容",
+            link: "/pages/charts/echarts",
+          },
         ]
       },
     ];

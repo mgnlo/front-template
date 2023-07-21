@@ -13,7 +13,6 @@ body { overflow: hidden; }
     line-height: 1.5 !important;
 }
 .textSmall { font-size: 0.75rem !important; }
-.textSmall { font-size: 0.75rem !important; }
 .displayNone { display: none !important; }
 .flexBetween { justify-content: space-between !important; }
 .alignStretch { align-items: stretch !important; }
@@ -1372,7 +1371,108 @@ p { margin: 0; }
         }
     }
 }
+$listColors: (#FF3D71, #008CD0, #00D68F, #FFAA00, #BBC1C5, #29A7E6);
+.categoryList {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    li {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        > div {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        @for $i from 1 through length($listColors) {
+            &:nth-of-type(#{$i}) {
+                nb-icon {
+                    position: relative;
+                    z-index: 2;
+                    color: nth($listColors, $i);
+                    &:before {
+                        content: '';
+                        position: absolute;
+                        top: -4px;
+                        left: -4px;
+                        z-index: 1;
+                        width: 1.75rem;
+                        height: 1.75rem;
+                        border-radius: 100%;
+                        background: nth($listColors, $i);
+                        opacity: 0.1;
+                    }
 
+                }
+                h3 {
+                    line-height: normal;
+                    font-size: 1rem;
+                    color: nth($listColors, $i);
+                    margin: 0 0 0 0.5rem;
+                }
+                p {
+                    font-size: 1rem;
+                    color: #5D5D5D;
+                    span {
+                        font-size: 1.875rem;
+                        font-weight: bold;
+                        color: $label-color;
+                        margin-right: 5px;
+                    }
+                }
+            }
+        }
+    }
+    &.userList li p {
+        color: nth($listColors, 1);
+        padding-right: 2em;
+        span { color: nth($listColors, 1); }
+    }
+}
+.pushLabel {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    .icon-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 4rem;
+        height: 4rem;
+        font-size: 3.75rem;
+        background-image: linear-gradient(to right top, #FF708D, #FF3D71);
+        border-radius: nb-theme(card-border-radius);
+        margin-right: 10px;
+        &:hover { background-image: linear-gradient(to left bottom, #FF708D, #FF3D71);}
+        nb-icon {
+            font-size: 3rem;
+            color: #FFFFFF;
+        }
+    }
+    .details {
+        h3 {
+            line-height: normal;
+            font-size: 1rem;
+            font-weight: bold;
+            color: $label-color;
+            margin-bottom: 5px;
+        }
+        p {
+            line-height: normal;
+            font-size: 1.875rem;
+            font-weight: bold;
+            color: $label-color;
+        }
+        span {
+            display: flex;
+            font-size: 0.875rem;
+            color: #5D5D5D;
+            margin-top: 0.5rem;
+            nb-icon { margin-right: 5px; }
+        }
+    }
+}
 .statusDialog {
     min-width: 240px;
     text-align: center;
