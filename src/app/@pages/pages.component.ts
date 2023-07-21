@@ -94,7 +94,7 @@ export class PagesComponent implements OnInit {
           },
           {
             title: "權限管理",
-            link: "/pages/element",
+            link: "/pages/account-manage/console-group-list",
           },
         ]
       },
