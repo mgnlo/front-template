@@ -5,6 +5,7 @@ import { TagReviewHistory, TagSetting } from '@api/models/tag-manage.model';
 import { ReviewClass, ReviewStatus } from '@common/enums/review-enum';
 import { TagType } from '@common/enums/tag-enum';
 import { TagReviewListMock } from '@common/mock-data/tag-review-mock';
+import { ValidatorsUtil } from '@common/utils/validators-util';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { NbDateService } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
@@ -24,9 +25,9 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
     this.validateForm = new FormGroup({
       tagName: new FormControl(''),
       reviewStatus: new FormControl(''),
-      startDate: new FormControl(null),
-      endDate: new FormControl(null),
-    });
+      startDate: new FormControl(null, ValidatorsUtil.dateFmt),
+      endDate: new FormControl(null, ValidatorsUtil.dateFmt),
+    }, [ValidatorsUtil.dateRange]);
 
   }
 

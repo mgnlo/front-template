@@ -1,4 +1,5 @@
 import { AbstractControl, ValidatorFn, Validators } from '@angular/forms';
+import { RegExpUtil } from './reg-exp-util';
 import { ValidateUtil } from './validate-util';
 
 export const ValidatorsUtil = {
@@ -13,9 +14,20 @@ export const ValidatorsUtil = {
       endDate && (endCtl.dirty || endCtl.touched)) &&
       endDate != null && startDate > endDate
     ) {
-      return { 'range': true, 'dateErrMsg': '結束時間不得大於起始時間' };
+      return { 'dateErrMsg': '結束時間不得大於起始時間' };
     }
     return null;
+  },
+  /** 手輸日期檢查 */
+  dateFmt: (ctl: AbstractControl) => {
+    const v = ctl.value;
+    if(v instanceof Date){
+      return null
+    } else if ((ctl.dirty || ctl.touched) && !RegExpUtil.dateFmt1.test(v)) {
+      return { 'format': '日期格式錯誤' };
+    } else {
+      return null;
+    }
   },
   /** 檢查:身份證字號 */
   id: (ctl: AbstractControl) => {

@@ -2,13 +2,15 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
-import { NbButtonModule, NbCardModule, NbIconModule, NbInputModule, NbSelectModule, NbSpinnerModule } from '@nebular/theme';
+import { NbButtonModule, NbCardModule, NbDatepickerModule, NbIconModule, NbInputModule, NbSelectModule, NbSpinnerModule } from '@nebular/theme';
 import { ApproveDialogComponent } from './dialog/approve-dialog/approve-dialog.component';
 import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
 import { RejectDialogComponent } from './dialog/reject-dialog/reject-dialog.component';
 import { CheckboxIconComponent } from './table/checkbox-icon/checkbox-icon.component';
 import { DetailButtonComponent } from './table/detail-button/detail-button.component';
 import { PaginatorComponent } from './table/paginator/paginator.component';
+import { DateRangeComponent } from './date-range/date-range.component';
+import { NbDateFnsDateModule } from '@nebular/date-fns';
 
 export const COMPONENTS = [
   ApproveDialogComponent,
@@ -17,6 +19,7 @@ export const COMPONENTS = [
   PaginatorComponent,
   CheckboxIconComponent,
   DetailButtonComponent,
+  DateRangeComponent
 ];
 
 export const NB_MODULES = [
@@ -27,6 +30,8 @@ export const NB_MODULES = [
   NbEvaIconsModule,
   NbCardModule,
   NbInputModule,
+  NbDatepickerModule,
+  NbDateFnsDateModule.forChild({ format: 'yyyy-MM-dd' }),
 ];
 @NgModule({
   declarations: [...COMPONENTS],

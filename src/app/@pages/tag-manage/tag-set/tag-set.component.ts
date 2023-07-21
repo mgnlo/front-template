@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TagDimension, TagSetCondition, TagSubDimension, TagType } from '@common/enums/tag-enum';
@@ -36,7 +36,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private readonly changeDetectorRef: ChangeDetectorRef) {
     super();
     this.validateForm = new FormGroup({
       tagName: new FormControl(null, Validators.required),
@@ -109,6 +109,10 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   // }
 
   ngOnInit(): void {
+  }
+
+  ngAfterViewChecked(): void {
+    this.changeDetectorRef.detectChanges();
   }
 
   //標籤類型 更動時切換驗證
