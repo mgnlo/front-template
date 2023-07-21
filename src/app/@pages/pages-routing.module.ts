@@ -47,6 +47,13 @@ const routes: Routes = [
             (m) => m.ReviewManageModule
           ),
       },
+      {
+        path: 'account-manage',
+        loadChildren: () =>
+          import('@pages/account-manage/account-manage.module').then(
+            (m) => m.AccountManageModule
+          ),
+      }
     ],
   },
 ];
