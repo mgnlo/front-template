@@ -4,6 +4,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActivityReviewHistory } from '@api/models/activity-list.model';
 import { ReviewClass, ReviewStatus } from '@common/enums/review-enum';
 import { ActivityReviewListMock } from '@common/mock-data/activity-review-mock';
+import { ValidatorsUtil } from '@common/utils/validators-util';
 import { CheckboxIconComponent } from '@component/table/checkbox-icon/checkbox-icon.component';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { NbDateService } from '@nebular/theme';
@@ -25,9 +26,9 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
     this.validateForm = new FormGroup({
       tagName: new FormControl(''),
       reviewStatus: new FormControl(''),
-      startDate: new FormControl(null),
-      endDate: new FormControl(null),
-    });
+      startDate: new FormControl(null, ValidatorsUtil.dateFmt),
+      endDate: new FormControl(null, ValidatorsUtil.dateFmt),
+    }, [ValidatorsUtil.dateRange]);
 
   }
 

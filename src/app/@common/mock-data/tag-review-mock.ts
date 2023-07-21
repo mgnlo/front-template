@@ -1,4 +1,4 @@
-import { TagReviewHistory } from "@api/models/tag-list.model";
+import { TagReviewHistory } from "@api/models/tag-manage.model";
 
 export const TagReviewListMock: Array<TagReviewHistory> = [
   {
@@ -14,7 +14,7 @@ export const TagReviewListMock: Array<TagReviewHistory> = [
     reviewComment: "退回",
     tagName: "近一個月金申金額",
     tagDescription: "標籤說明標說明標籤說明",
-    tagType: "規則標籤",
+    tagType: "normal",
     department: "數位金融處",
     owner: "林XX",
     modificationTime: "2023-07-02 15:30:00",
@@ -25,7 +25,7 @@ export const TagReviewListMock: Array<TagReviewHistory> = [
     conditionSettingQuery: "條件設定語法",
     tagDimension: "標籤構面",
     tagSubDimension: "標籤子構面",
-    scheduleSettings: "排成設定",
+    scheduleSettings: "monthly",
     uploadType: "monthly",
     filePath: "上傳檔案路徑"
   },
@@ -42,7 +42,7 @@ export const TagReviewListMock: Array<TagReviewHistory> = [
     reviewComment: "",
     tagName: "已婚",
     tagDescription: "標籤說明",
-    tagType: "名單標籤",
+    tagType: "document",
     department: "數位金融處",
     owner: "武XX",
     modificationTime: "2023-07-03 15:30:00",
@@ -70,7 +70,7 @@ export const TagReviewListMock: Array<TagReviewHistory> = [
     reviewComment: "",
     tagName: "非信用卡客戶",
     tagDescription: "標籤說明標說明標籤說明",
-    tagType: "規則標籤",
+    tagType: "normal",
     department: "信用卡暨支付處",
     owner: "馬XX",
     modificationTime: "2023-07-03 15:30:00",

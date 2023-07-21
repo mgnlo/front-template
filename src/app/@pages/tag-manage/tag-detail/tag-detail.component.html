@@ -12,7 +12,7 @@
       <nb-card-body>
           <div class="row">
               <div class="textGroup col-12 col-lg-4">
-                  <p class="textBold">活動名稱：</p>
+                  <p class="textBold">標籤名稱：</p>
                   <span>{{detail.tagName}}</span>
               </div>
               <div class="textGroup col-12 col-lg-4">
@@ -44,16 +44,16 @@
                 <span>{{detail.tagSubDimension | enum:'tagSubDimension'}}</span>
               </div>
               <div class="textGroup col-12 col-lg-4">
-                  <p class="textBold">排成設定：</p>
-                  <span>{{detail.scheduleSettings | enum:'schedule'}}</span>
+                  <p class="textBold">異動時間：</p>
+                  <span>{{detail.modificationTime | date:dateFormat}}</span>
               </div>
               <div class="textGroup col-12 col-lg-4">
                   <p class="textBold">描述說明：</p>
                   <span>{{detail.tagDescription}}</span>
               </div>
               <div class="textGroup col-12 col-lg-4">
-                  <p class="textBold">異動時間：</p>
-                  <span>{{detail.modificationTime | date:dateFormat}}</span>
+                  <p class="textBold">名單上傳：</p>
+                  <a [href]="detail.filePath" download>{{this.fileName}}</a>
               </div>
           </div>
       </nb-card-body>

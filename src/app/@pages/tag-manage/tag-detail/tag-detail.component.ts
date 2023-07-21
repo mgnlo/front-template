@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { TagDetailView, TagSetting } from '@api/models/tag-list.model';
+import { TagDetailView, TagSetting } from '@api/models/tag-manage.model';
+import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
 
 @Component({
@@ -11,28 +12,28 @@ import { BaseComponent } from '@pages/base.component';
 export class TagDetailComponent extends BaseComponent implements OnInit {
   detail: TagDetailView;
   checkData: TagSetting;
-  isHistoryOpen: { [x: number]: boolean } = []; //異動歷程收合
+  isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
+
+  fileName:string = "";
 
   constructor(private router: Router) {
     super();
-    if (!!this.router.getCurrentNavigation()?.extras) {
-      this.checkData = this.router.getCurrentNavigation().extras.state as TagSetting;
-      if (!this.checkData) { return null };
-      let tagSetting = this.checkData
-      this.detail = JSON.parse(JSON.stringify(tagSetting));
-
-      this.detail.historyGroupView = {};
-      tagSetting.tagReviewHistory.forEach(history => {
-        if (!this.detail.historyGroupView || !this.detail.historyGroupView[history.groupId]) {
-          this.isHistoryOpen[history.groupId] = true;
-          this.detail.historyGroupView[history.groupId] = {
-            type: history.type,
-            flows: [{ time: history.time, title: history.title, detail: history.detail }]
-          };
-        } else {
-          this.detail.historyGroupView[history.groupId].flows.push({ time: history.time, title: history.title, detail: history.detail });
-        }
-      });
+    const currentNavigation = this.router.getCurrentNavigation();
+    if (!!currentNavigation?.extras) {
+      const state = currentNavigation.extras.state;
+      const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistory', state as TagSetting); // 異動歷程處理
+      if (!!processedData) {
+        this.isHistoryOpen = processedData.isHistoryOpen;
+        this.detail = processedData.detail;
+      }
+      else{
+        //之後可能加導頁pop-up提醒
+        this.router.navigate(['pages', 'tag-manage', 'tag-list']);
+      }
+    }
+    //取得檔案名稱
+    if(!!this.detail.filePath){
+      this.fileName = this.detail.filePath.split('/').pop();
     }
 
   }
@@ -41,11 +42,11 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
   }
 
   edit() {
-    this.router.navigate(['pages', 'tag-manage', 'tag-add', 'edit', this.checkData.tagId], { state: this.detail });
+    this.router.navigate(['pages', 'tag-manage', 'tag-set', 'edit', this.detail.tagId], { state: this.detail });
   }
 
   copy() {
-    this.router.navigate(['pages', 'tag-manage', 'tag-add', 'copy', this.checkData.tagId], { state: this.checkData });
+    this.router.navigate(['pages', 'tag-manage', 'tag-set', 'copy', this.detail.tagId], { state: this.detail });
   }
 
   cancel() {

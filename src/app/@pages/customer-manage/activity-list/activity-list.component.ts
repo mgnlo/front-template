@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ActivitySetting } from '@api/models/activity-list.model';
 import { Status } from '@common/enums/common-enum';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
+import { ValidatorsUtil } from '@common/utils/validators-util';
 import { CheckboxIconComponent } from '@component/table/checkbox-icon/checkbox-icon.component';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { NbDateService } from '@nebular/theme';
@@ -26,9 +27,9 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
         this.validateForm = new FormGroup({
           activityName: new FormControl(''),
           status: new FormControl(''),
-          startDate: new FormControl(null),
-          endDate: new FormControl(null),
-        });
+          startDate: new FormControl(null, ValidatorsUtil.dateFmt),
+          endDate: new FormControl(null, ValidatorsUtil.dateFmt),
+        }, [ ValidatorsUtil.dateRange ]);
 
     }
 
@@ -148,7 +149,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
       };
 
       add(){
-        this.router.navigate(['pages', 'customer-manage', 'activity-add']);
+        this.router.navigate(['pages', 'customer-manage', 'activity-set']);
       }
 
       reset(){

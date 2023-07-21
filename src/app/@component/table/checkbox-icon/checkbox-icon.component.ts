@@ -8,8 +8,9 @@ export class CheckboxIconComponent implements OnInit {
 
   @Input() value: string;
   bool: boolean;
-  constructor() {}
+  constructor() { }
   ngOnInit(): void {
     this.bool = this.value === 'true' ? true : false;
   }
 }
+

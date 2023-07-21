@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ResponseModel } from "@api/models/base.model";
-import { TagReviewListRes, TagReviewRowReq, TagReviewRowRes } from "@api/models/tag-list.model";
+import { TagReviewListRes, TagReviewRowReq, TagReviewRowRes } from "@api/models/tag-manage.model";
 import { ApiService } from "@api/services/api.service";
 import { Observable } from "rxjs";
 

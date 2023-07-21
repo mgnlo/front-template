@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ActivityListCondition, ActivitySetting } from '@api/models/activity-list.model';
@@ -8,28 +8,29 @@ import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { PreviewDialogComponent } from './preview-dialog/preview.dialog.component';
-import { RegExpEnum } from '@common/enums/reg-exp-enum';
+import { CommonUtil } from '@common/utils/common-util';
+import { RegExpUtil } from '@common/utils/reg-exp-util';
 
 @Component({
-  selector: 'activity-add',
-  templateUrl: './activity-add.component.html',
-  styleUrls: ['./activity-add.component.scss'],
+  selector: 'activity-set',
+  templateUrl: './activity-set.component.html',
+  styleUrls: ['./activity-set.component.scss'],
 })
-export class ActivityAddComponent extends BaseComponent implements OnInit {
+export class ActivitySetComponent extends BaseComponent implements OnInit {
 
   filterList: Array<{key: string; val: string}> = Object.entries(Filter).map(([k, v]) => ({ key: k, val: v }));
   scheduleList: Array<{key: string; val: string}> = Object.entries(Schedule).map(([k, v]) => ({ key: k, val: v }));
 
-  constructor(private router: Router, private dialogService: DialogService) {
+  constructor(private router: Router, private dialogService: DialogService, private readonly changeDetectorRef: ChangeDetectorRef) {
     super();
 
     this.validateForm = new FormGroup({
       activityName: new FormControl(null, Validators.required),
       status: new FormControl('stop', Validators.required),
-      listLimit: new FormControl(null, Validators.pattern(RegExpEnum.integer)),
+      listLimit: new FormControl(null, Validators.pattern(RegExpUtil.int)),
       filterOptions: new FormControl(false),
-      startDate: new FormControl(new Date(), Validators.required),
-      endDate: new FormControl(moment(new Date()).add(3, 'months').toDate(), Validators.required),
+      startDate: new FormControl(new Date(), ValidatorsUtil.dateFmt),
+      endDate: new FormControl(moment(new Date()).add(3, 'months').toDate(), ValidatorsUtil.dateFmt),
       scheduleSettings: new FormControl(null, Validators.required),
       activityDescription: new FormControl(null),
       activityListCondition: new FormArray([
@@ -37,7 +38,7 @@ export class ActivityAddComponent extends BaseComponent implements OnInit {
             1: new FormControl(null, Validators.required)
         })
       ], Validators.required),
-    }, ValidatorsUtil.dateRange);
+    }, [ValidatorsUtil.dateRange]);
 
     if(!!this.router.getCurrentNavigation().extras){
       let editData = this.router.getCurrentNavigation().extras.state as ActivitySetting;
@@ -49,9 +50,12 @@ export class ActivityAddComponent extends BaseComponent implements OnInit {
               case 'endDate':
                 this.validateForm.controls[key].setValue(new Date(editData[key]))
                 break;
+              case 'filterOptions':
+                this.validateForm.controls[key].setValue(editData[key] === 'true' ? true : false)
+                break;
               case 'activityListCondition':
                 this.conditions.removeAt(0);
-                let groupData = this.groupBy(editData[key], 'tagGroup');
+                let groupData = CommonUtil.groupBy(editData[key], 'tagGroup');
                 Object.keys(groupData).forEach(key => {
                   let fg = new FormGroup({});
                   let condition = groupData[key] as Array<ActivityListCondition>;
@@ -71,7 +75,8 @@ export class ActivityAddComponent extends BaseComponent implements OnInit {
     }
   }
 
-  ngDoCheck() {
+  ngAfterViewChecked(): void {
+    this.changeDetectorRef.detectChanges();
   }
 
   or(action: 'add' | 'remove', key: number) {

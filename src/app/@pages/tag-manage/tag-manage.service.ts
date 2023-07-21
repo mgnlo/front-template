@@ -1,23 +1,30 @@
 import { Injectable } from "@angular/core"
-import { HttpClient } from "@angular/common/http"
 import { Observable } from "rxjs"
-import { environment } from "../../../environments/environment"
+import { ApiService } from "@api/services/api.service";
+import { ResponseModel } from "@api/models/base.model";
+import { TagSettingEditReq, TagSettingListResp, TagSettingRowResp } from "@api/models/tag-manage.model";
 
 @Injectable()
 export class TagManageService {
 
-    // protected prefix: string = environment.OAUTH_SERVER_URL + environment.OAUTH_API_URL
+  readonly tagFunc = 'tag-settings/';
 
-    constructor(private http: HttpClient) {
+  constructor(private service: ApiService) {}
 
-    }
+  gettagSettingList(): Observable<ResponseModel<TagSettingListResp>> {
+      return this.service.doGet(this.tagFunc + 'tagSettingList');
+  }
 
-    // public getUsers(): Observable<PermissionResponse<UserList>> {
-    //     return this.http.get<PermissionResponse<UserList>>(this.prefix + "/users")
-    // }
+  gettagSettingRow(tagId: number): Observable<ResponseModel<TagSettingRowResp>> {
+      return this.service.doGet(this.tagFunc + 'tagSettingRow', {'tagId': tagId});
+  }
 
-    // public updateUser(user: UserManageDetail): Observable<PermissionResponse<UserManageDetail>> {
-    //     return this.http.put<PermissionResponse<UserManageDetail>>(this.prefix + "/user/" + user.userId, user);
-    // }
+  tagSettingSave(data: TagSettingEditReq): Observable<ResponseModel<any>> {
+      return this.service.doPost(this.tagFunc + 'tagSettingSave', data);
+  }
+
+  tagSettingUpdate(data: TagSettingEditReq): Observable<ResponseModel<any>> {
+      return this.service.doPut(this.tagFunc + 'tagSettingUpdate', data);
+  }
 
 }

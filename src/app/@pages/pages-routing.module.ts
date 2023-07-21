@@ -53,7 +53,14 @@ const routes: Routes = [
           import('@pages/account-manage/account-manage.module').then(
             (m) => m.AccountManageModule
           ),
-      }
+      },
+      {
+        path: 'schedule-manage',
+        loadChildren: () =>
+          import('@pages/schedule-manage/schedule-manage.module').then(
+            (m) => m.ScheduleManageModule
+          ),
+      },
     ],
   },
 ];

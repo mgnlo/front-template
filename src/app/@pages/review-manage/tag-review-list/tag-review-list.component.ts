@@ -1,9 +1,11 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { TagReviewHistory, TagSetting } from '@api/models/tag-list.model';
+import { TagReviewHistory, TagSetting } from '@api/models/tag-manage.model';
 import { ReviewClass, ReviewStatus } from '@common/enums/review-enum';
+import { TagType } from '@common/enums/tag-enum';
 import { TagReviewListMock } from '@common/mock-data/tag-review-mock';
+import { ValidatorsUtil } from '@common/utils/validators-util';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { NbDateService } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
@@ -17,16 +19,15 @@ import { LocalDataSource } from 'ng2-smart-table';
 })
 export class TagReviewListComponent extends BaseComponent implements OnInit {
 
-  constructor(
-    private dateService: NbDateService<Date>) {
+  constructor(private dateService: NbDateService<Date>) {
     super();
     // 篩選條件
     this.validateForm = new FormGroup({
       tagName: new FormControl(''),
       reviewStatus: new FormControl(''),
-      startDate: new FormControl(null),
-      endDate: new FormControl(null),
-    });
+      startDate: new FormControl(null, ValidatorsUtil.dateFmt),
+      endDate: new FormControl(null, ValidatorsUtil.dateFmt),
+    }, [ValidatorsUtil.dateRange]);
 
   }
 
@@ -57,9 +58,12 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
       },
       tagType: {
         title: '類型',
-        type: 'html',
+        type: 'string',
         width: '10%',
         sort: false,
+        valuePrepareFunction: (cell: string) => {
+          return `${TagType[cell]}`;
+        },
       },
       department: {
         title: '所屬單位',

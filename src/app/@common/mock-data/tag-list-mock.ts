@@ -1,4 +1,4 @@
-import { TagSetting } from "@api/models/tag-list.model";
+import { TagSetting } from "@api/models/tag-manage.model";
 
 export const TagSettingMock: Array<TagSetting> = [
   {
@@ -18,7 +18,7 @@ export const TagSettingMock: Array<TagSetting> = [
     "tagSubDimension": "A",
     "scheduleSettings": "daily",
     "uploadType": "名單上傳類型",
-    "filePath": "上傳檔案路徑",
+    "filePath": "上傳檔案路徑/A/AAA/B\BB.config",
     "tagConditionSetting": [
       {
         "tagId": "cccccc123456",

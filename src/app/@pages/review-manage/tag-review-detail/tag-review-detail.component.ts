@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Navigation, Router } from '@angular/router';
-import { TagDetailView, TagReviewHistory } from '@api/models/tag-list.model';
+import { HistoryGroupView, TagDetailView, TagReviewHistory } from '@api/models/tag-manage.model';
 import { DialogService } from '@api/services/dialog.service';
 import { TagSettingMock } from '@common/mock-data/tag-list-mock';
+import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
 
 @Component({
@@ -13,11 +14,14 @@ import { BaseComponent } from '@pages/base.component';
 export class TagReviewDetailComponent extends BaseComponent implements OnInit {
 
   navigation: Navigation;
+  oldDetail: TagDetailView;
+  newDetail: TagDetailView;
   detail: TagDetailView;
+  historyGroupView: {[x: number]: HistoryGroupView} = {};
   isConditionOpen: {[x: number]: boolean} = {}; //活動名單條件收合
-  isHistoryOpen: {[x: number]: boolean} = []; //異動歷程收合
+  isHistoryOpen: {[x: number]: boolean} = {}; //異動歷程收合
+  isSameList: {[x:string]: boolean} = {}; //差異比較
   isBefore: boolean = false;
-  isSame: {[x:string]: boolean} = {};
   reviewStatus: string;
   reviewComment: string;
 
@@ -26,23 +30,24 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
     if(!!this.router.getCurrentNavigation()?.extras){
       let tagReview = this.router.getCurrentNavigation().extras.state as TagReviewHistory;
       let list = TagSettingMock.filter(row => row.tagId === tagReview.referenceId)[0];
-      this.detail = JSON.parse(JSON.stringify(list));
+      this.newDetail = JSON.parse(JSON.stringify(tagReview));
+      this.oldDetail = JSON.parse(JSON.stringify(list));
+      this.detail = this.newDetail;
       this.reviewStatus = tagReview.reviewStatus;
       this.reviewComment = tagReview.reviewComment;
-      console.info(this.detail)
+      this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
 
-      this.detail.historyGroupView = {};
       list.tagReviewHistory.forEach(history => {
-        if(!this.detail.historyGroupView || !this.detail.historyGroupView[history.groupId]){
+        if(!this.historyGroupView || !this.historyGroupView[history.groupId]){
           this.isHistoryOpen[history.groupId] = true;
-          this.detail.historyGroupView[history.groupId] = {
+          this.historyGroupView[history.groupId] = {
             type: history.type,
             flows: [
               {historyId: history.historyId, time: history.time, title: history.title, detail: history.detail}
             ]
           };
         } else {
-          this.detail.historyGroupView[history.groupId].flows.push(
+          this.historyGroupView[history.groupId].flows.push(
             {historyId: history.historyId, time: history.time, title: history.title, detail: history.detail}
           );
         }
@@ -55,10 +60,21 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
 
   viewToggle() {
     this.isBefore = !this.isBefore;
+    this.detail = this.isBefore === true ? this.oldDetail: this.newDetail;
+  }
+
+  changeClass(key1: string, key2?: string){
+    let isSame1 = this.isSameList[key1];
+    if(!key2){
+      return !!isSame1 ? 'true' : !isSame1 && !!this.isBefore ? 'null' : 'false';
+    } else {
+      let isSame2 = this.isSameList[key2];
+      return !!isSame1 && !!isSame2 ? 'true' : (!isSame1 || !isSame2) && !!this.isBefore ? 'null' : 'false';
+    }
   }
 
   approve() {
-    this.dialogService.openApprove('tag-review-list');
+    this.dialogService.openApprove({bool: true, backTo: 'tag-review-list'});
   }
 
   reject() {

@@ -1,18 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TagDimension, TagSetCondition, TagSubDimension, TagType } from '@common/enums/tag-enum';
-import { TagSetting, TagDetailView } from '@api/models/tag-list.model';
+import { TagSetting, TagDetailView } from '@api/models/tag-manage.model';
 import { Filter, Status, Schedule } from '@common/enums/common-enum';
-import { RegExpEnum } from '@common/enums/reg-exp-enum';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
+import { CommonUtil } from '@common/utils/common-util';
 
 @Component({
-  selector: 'tag-add',
-  templateUrl: './tag-add.component.html',
-  styleUrls: ['./tag-add.component.scss']
+  selector: 'tag-set',
+  templateUrl: './tag-set.component.html',
+  styleUrls: ['./tag-set.component.scss']
 })
 export class TagAddComponent extends BaseComponent implements OnInit {
   TagType = TagType;
@@ -30,12 +30,14 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   isFile: boolean = true;//是否上傳檔案
   err: boolean = false;
   params: any;//路由參數
+  actionName: string;// 新增/編輯/複製
+
   // maxSizeInMB = 5;//檔案大小
   // isFileSize = false;//檔案大小是否錯誤
 
-  isHistoryOpen: { [x: number]: boolean } = []; //異動歷程收合
+  isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private readonly changeDetectorRef: ChangeDetectorRef) {
     super();
     this.validateForm = new FormGroup({
       tagName: new FormControl(null, Validators.required),
@@ -43,8 +45,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       tagType: new FormControl('normal', Validators.required),
       setCondition: new FormControl('normal', Validators.required),
       uploadFile: new FormControl(null, Validators.required),
-      startDate: new FormControl(new Date(), [Validators.required, Validators.pattern(RegExpEnum.dateDashAD)]),
-      endDate: new FormControl(moment(new Date()).add(3, 'months').toDate(), [Validators.required, Validators.pattern(RegExpEnum.dateDashAD)]),
+      startDate: new FormControl(new Date(), ValidatorsUtil.dateFmt),
+      endDate: new FormControl(moment(new Date()).add(3, 'months').toDate(), ValidatorsUtil.dateFmt),
       tagDimension: new FormControl(null, Validators.required),
       tagSubDimension: new FormControl(null, Validators.required),
       scheduleSettings: new FormControl(null, Validators.required),
@@ -53,43 +55,41 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     }, [ValidatorsUtil.dateRange]);
 
     this.params = this.activatedRoute.snapshot.params;
-    this.changeTagType(this.validateForm.get('tagType').value)
-    if (!!this.router.getCurrentNavigation().extras) {
-      let checkData = this.router.getCurrentNavigation().extras.state as TagSetting;
-      if (!checkData) return
-      if (this.params['changeRoute'] === 'edit') {
-        this.detail = JSON.parse(JSON.stringify(checkData));
-        this.detail.historyGroupView = {};
-        checkData.tagReviewHistory.forEach(history => {
-          if (!this.detail.historyGroupView || !this.detail.historyGroupView[history.groupId]) {
-            this.isHistoryOpen[history.groupId] = true;
-            this.detail.historyGroupView[history.groupId] = {
-              type: history.type,
-              flows: [{ time: history.time, title: history.title, detail: history.detail }]
-            };
-          } else {
-            this.detail.historyGroupView[history.groupId].flows.push({ time: history.time, title: history.title, detail: history.detail });
-          }
-        });
-      }
+    const changeRouteName = this.params['changeRoute'] ?? "";
+    this.actionName = this.getActionName(changeRouteName);
+    const getRawValue = this.validateForm.getRawValue();
 
-      if (!!checkData) {
-        Object.keys(checkData).forEach(key => {
-          if (!!this.validateForm.controls[key]) {
-            switch (key) {
-              case 'startDate':
-              case 'endDate':
-                this.validateForm.controls[key].setValue(new Date(checkData[key]))
-                break;
-              default:
-                this.validateForm.controls[key].setValue(checkData[key]);
-                break;
-            }
+    this.changeTagType(getRawValue.tagType)
+
+    const state = this.router.getCurrentNavigation()?.extras?.state;
+    if (!!state) {
+      const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistory', state as TagSetting); // 異動歷程處理
+      Object.keys(state).forEach(key => {
+        if (!!this.validateForm.controls[key]) {
+          switch (key) {
+            case 'startDate':
+            case 'endDate':
+              this.validateForm.controls[key].setValue(new Date(state[key]))
+              break;
+            default:
+              this.validateForm.controls[key].setValue(state[key]);
+              break;
           }
-        })
+        }
+      })
+      if (!!processedData) {
+        if (changeRouteName === 'edit') {
+          this.isHistoryOpen = processedData.isHistoryOpen;
+          this.detail = processedData.detail;
+        }
+      }
+      else {
+        //之後可能加導頁pop-up提醒
+        this.router.navigate(['pages', 'tag-manage', 'tag-list']);
       }
     }
-    this.changeTagType(this.validateForm.get('tagType').value)
+
+    this.changeTagType(getRawValue.tagType)
 
   }
 
@@ -102,6 +102,10 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   // }
 
   ngOnInit(): void {
+  }
+
+  ngAfterViewChecked(): void {
+    this.changeDetectorRef.detectChanges();
   }
 
   //標籤類型 更動時切換驗證

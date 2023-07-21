@@ -27,7 +27,7 @@ export const NB_MODULES = [
   NbButtonModule,
   NbSelectModule,
   NbDatepickerModule,
-  NbDateFnsDateModule.forChild({ format: 'yyyy/MM/dd' }),
+  NbDateFnsDateModule.forChild({ format: 'yyyy-MM-dd' }),
   NbDialogModule.forChild(),
   NbTagModule,
   NbAccordionModule,

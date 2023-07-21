@@ -1,5 +1,5 @@
 <div class="pageTitle">
-    <h1>標籤審核</h1>
+    <h1>客群名單審核</h1>
     <ng-container *ngIf="reviewStatus === 'reviewing'">
         <button nbButton status="primary" size="small" (click)="viewToggle()" *ngIf="!isBefore">查看異動前內容</button>
         <button nbButton status="primary" size="small" (click)="viewToggle()" *ngIf="isBefore">返回本次異動內容</button>
@@ -15,53 +15,53 @@
     <nb-card>
         <nb-card-body>
             <div class="row">
-                <div class="textGroup col-12 col-lg-4" [ngClass]="isSame">
-                    <p class="textBold" [ngClass]="">活動名稱：</p>
+                <div class="textGroup col-12 col-lg-4">
+                    <p class="textBold" [ngClass]="changeClass('activityName') | enum: 'reviewCompareClass'">活動名稱：</p>
                     <span>{{detail.activityName}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold">狀態：</p>
+                    <p class="textBold" [ngClass]="changeClass('status') | enum: 'reviewCompareClass'">狀態：</p>
                     <span>{{detail.status | enum:'status'}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold">名單上限：</p>
+                    <p class="textBold" [ngClass]="changeClass('listLimit') | enum: 'reviewCompareClass'">名單上限：</p>
                     <span>{{detail.listLimit}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold">名單差異過濾：</p>
+                    <p class="textBold" [ngClass]="changeClass('filterOptions') | enum: 'reviewCompareClass'">名單差異過濾：</p>
                     <span>{{detail.filterOptions | enum:'filter'}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold">起迄時間：</p>
+                    <p class="textBold" [ngClass]="changeClass('startDate', 'endDate') | enum: 'reviewCompareClass'">起迄時間：</p>
                     <span>{{detail.startDate}}~{{detail.endDate}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold">描述說明：</p>
+                    <p class="textBold" [ngClass]="changeClass('activityDescription') | enum: 'reviewCompareClass'">描述說明：</p>
                     <span>{{detail.activityDescription}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold">異動時間：</p>
+                    <p class="textBold" [ngClass]="changeClass('modificationTime') | enum: 'reviewCompareClass'">異動時間：</p>
                     <span>{{detail.modificationTime | date:dateFormat}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold">排成設定：</p>
+                    <p class="textBold" [ngClass]="changeClass('scheduleSettings') | enum: 'reviewCompareClass'">排成設定：</p>
                     <span>{{detail.scheduleSettings | enum:'schedule'}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold">排成更新時間：</p>
+                    <p class="textBold" [ngClass]="changeClass('batchUpdateTime') | enum: 'reviewCompareClass'">排成更新時間：</p>
                     <span>{{detail.batchUpdateTime}}</span>
                 </div>
             </div>
-            <ng-container *ngFor="let tag of detail.tagGroupView | keyvalue">
+            <ng-container *ngFor="let tag of detail.tagGroupView | keyvalue; let i = index;">
                 <div class="subTitle">
-                    <p>活動名單條件{{tag.key}}</p>
+                    <p [ngClass]="getConditionClass(i) | enum: 'reviewCompareClass'">活動名單條件{{tag.key}}</p>
                     <button nbButton status="basic" size="tiny" class="iconBtn btnSwitch"
                         [ngClass]="isConditionOpen[tag.key] ? 'btnClick' : ''" (click)="isConditionOpen[tag.key] = !isConditionOpen[tag.key]">
                         <nb-icon icon="arrow-ios-forward-outline"></nb-icon>
                     </button>
                 </div>
                 <div [ngClass]="isConditionOpen[tag.key] ? '' : 'displayNone'">
-                    <div class="grayCard">
+                    <div class="grayCard" [ngClass]="getConditionClass(i) | enum: 'bgClass'">
                         <div class="row">
                             <div class="textGroup col-12 col-lg-12" *ngFor="let condition of tag.value">
                                 <p class="textBold">偵測條件：</p>
@@ -92,7 +92,7 @@
         <nb-card-body>
             <div class="historyList">
                 <!-- 已完成或正在進行的增加class="active"，有子項目加cl3ss="moreBtn"(視需求，可加可不加) -->
-                <ng-container *ngFor="let hg of detail.historyGroupView | keyvalue; let i=index;">
+                <ng-container *ngFor="let hg of historyGroupView | keyvalue; let i=index;">
                     <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
                         <div class="mainItem">
                             <h4 (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">{{history.type}}</h4>

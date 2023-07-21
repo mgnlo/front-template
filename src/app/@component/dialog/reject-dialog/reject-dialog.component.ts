@@ -17,6 +17,7 @@ export class RejectDialogOption {
 export class RejectDialogComponent implements OnInit {
 
   @Input() option: RejectDialogOption;
+  
   form = new FormGroup({
     reason: new FormControl('', [Validators.required, ValidatorsUtil.blank])
   });
@@ -31,7 +32,7 @@ export class RejectDialogComponent implements OnInit {
 
   submit() {
     if(this.form.valid){
-      //TODO:駁回API
+      //TODO: 駁回API
       this.router.navigate(['pages', 'review-manage', this.option.backTo]);
       this.ref.close();
     }

@@ -1,20 +1,19 @@
 import { NgModule } from "@angular/core"
 import { RouterModule, Routes } from "@angular/router"
 import { TagManageComponent } from "./tag-manage.component"
-import { TagSettingComponent } from "./tag-list/tag-list.component"
-import { TagButtonComponent } from "./tag-list/tag-list.component"
-import { TagAddComponent } from "./tag-add/tag-add.component"
+import { TagListComponent } from "./tag-list/tag-list.component"
+import { TagAddComponent } from "./tag-set/tag-set.component"
 import { TagDetailComponent } from "./tag-detail/tag-detail.component"
 
 const routes: Routes = [
   {
     path: "", component: TagManageComponent,
     children: [
-      { path: "tag-list", component: TagSettingComponent },
+      { path: "tag-list", component: TagListComponent },
       { path: '', redirectTo: 'tag-list', pathMatch: 'full' },
       { path: 'tag-detail', component: TagDetailComponent },
-      { path: 'tag-add', component: TagAddComponent },
-      { path: 'tag-add/:changeRoute/:tagId', component: TagAddComponent}, //編輯 or 複製
+      { path: 'tag-set', component: TagAddComponent },
+      { path: 'tag-set/:changeRoute/:tagId', component: TagAddComponent}, //編輯 or 複製
     ]
   }
 ]
@@ -27,8 +26,7 @@ export class TagManageRoutingModule { }
 
 export const routedComponents = [
   TagManageComponent,
-  TagSettingComponent,
-  TagButtonComponent,
+  TagListComponent,
   TagAddComponent,
   TagDetailComponent,
 ];

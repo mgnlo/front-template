@@ -15,7 +15,8 @@ export interface ActivitySetting {
 }
 export class ActivityListCondition {
   activityId: string;
-  conditionId: number;
+  conditionId: string;
+  version: string;
   tagGroup: number;
   tagName: string;
   tagKey: string;
@@ -41,6 +42,7 @@ export class ActivityReviewHistory {
   modificationTime?: string;
   scheduleSettings?: string;
   batchUpdateTime?: string;
+  activityListCondition?: Array<ActivityListCondition>;
 }
 export class TagSetting {
   tagId: string;
