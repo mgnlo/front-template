@@ -3,11 +3,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CustomerList } from '@api/models/customer-list.model';
 import { DialogService } from '@api/services/dialog.service';
 import { CustomerListMock } from '@common/mock-data/customer-list-mock';
+import { RegExpUtil } from '@common/utils/reg-exp-util';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
 import { DetailDialogComponent } from './detail-dialog/detail.dialog.component';
-import { RegExpEnum } from '@common/enums/reg-exp-enum';
 
 @Component({
     selector: 'customer-list',
@@ -20,8 +20,8 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
       super();
       // 篩選條件
       this.validateForm = new FormGroup({
-        custId: new FormControl('', Validators.pattern(RegExpEnum.custIdSearch)),
-        mobile: new FormControl('', Validators.pattern(RegExpEnum.integer)),
+        custId: new FormControl('', Validators.pattern(RegExpUtil.custIdSearch)),
+        mobile: new FormControl('', Validators.pattern(RegExpUtil.int)),
       });
     }
 

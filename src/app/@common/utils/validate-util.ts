@@ -1,4 +1,3 @@
-import { AbstractControl } from '@angular/forms';
 export const ValidateUtil = {
     /**
      * 如格式符合: YYYY/(M)M/(D)D YYYY(M)M(D)D\

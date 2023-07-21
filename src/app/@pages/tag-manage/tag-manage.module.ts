@@ -27,7 +27,7 @@ export const NB_MODULES = [
   NbSelectModule,
   NbDatepickerModule,
   NbAccordionModule,
-  NbDateFnsDateModule.forChild({ format: 'yyyy/MM/dd' }),
+  NbDateFnsDateModule.forChild({ format: 'yyyy-MM-dd' }),
 ];
 
 @NgModule({

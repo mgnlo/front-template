@@ -1,0 +1,28 @@
+<div class="row" [formGroup]="form">
+  <div class="fieldGroup col-12 col-lg-6" [ngClass]="{'error': this.form.get('startDate').errors?.format || this.form.errors?.dateErrMsg}">
+    <label>起始時間</label>
+    <div>
+        <input nbInput fullWidth [status]="this.form.errors?.format || this.form.errors?.dateErrMsg ? 'danger' : 'basic'"
+            placeholder="請選擇日期" [nbDatepicker]="startDatePicker" formControlName="startDate" (keyup)="fmtDate($event, 'startDate')" maxlength="10">
+        <nb-datepicker #startDatePicker [format]="dateFormat" [max]="this.form.get('endDate').value"></nb-datepicker>
+    </div>
+    <!-- 欄位錯誤訊息 -->
+    <div class="note errorText">
+        <nb-icon icon="alert-triangle"></nb-icon>
+        <p>{{this.form.get('startDate').errors?.format || this.form.errors?.dateErrMsg}}</p>
+    </div>
+  </div>
+  <div class="fieldGroup col-12 col-lg-6" [ngClass]="{'error': this.form.get('endDate').errors?.format || this.form.errors?.dateErrMsg}">
+    <label>結束時間</label>
+    <div>
+        <input nbInput fullWidth [status]="this.form.get('endDate').errors?.format || this.form.errors?.dateErrMsg ? 'danger' : 'basic'"
+            placeholder="請選擇日期" [nbDatepicker]="endDatePicker" formControlName="endDate" (keyup)="fmtDate($event, 'endDate')" maxlength="10">
+        <nb-datepicker #endDatePicker [format]="dateFormat" [min]="this.form.get('startDate').value"></nb-datepicker>
+    </div>
+    <!-- 欄位錯誤訊息 -->
+    <div class="note errorText">
+        <nb-icon icon="alert-triangle"></nb-icon>
+        <p>{{this.form.get('endDate').errors?.format || this.form.errors?.dateErrMsg}}</p>
+    </div>
+  </div>
+</div>

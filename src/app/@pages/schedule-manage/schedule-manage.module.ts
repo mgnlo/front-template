@@ -29,7 +29,7 @@ export const NB_MODULES = [
   NbAccordionModule,
   NbTagModule,
   NbTabsetModule,
-  NbDateFnsDateModule.forChild({ format: 'yyyy/MM/dd' }),
+  NbDateFnsDateModule.forChild({ format: 'yyyy-MM-dd' }),
 ];
 
 @NgModule({

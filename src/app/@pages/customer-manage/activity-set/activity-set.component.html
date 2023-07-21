@@ -32,6 +32,8 @@
                         <p>欄位錯誤訊息</p>
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="fieldGroup col-12 col-lg-6">
                     <label>名單上限</label>
                     <div>
@@ -53,32 +55,9 @@
                         <p>欄位錯誤訊息</p>
                     </div>
                 </div>
-                <div class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': this.validateForm.errors?.range}">
-                    <label>起始時間</label>
-                    <div>
-                        <input nbInput fullWidth [status]="this.validateForm.errors?.range ? 'danger' : 'basic'"
-                            placeholder="請選擇日期" [nbDatepicker]="startDatePicker" formControlName="startDate">
-                        <nb-datepicker #startDatePicker [format]="dateFormat" [max]="this.validateForm.get('endDate').value"></nb-datepicker>
-                    </div>
-                    <!-- 欄位錯誤訊息 -->
-                    <div class="note errorText" *ngIf="this.validateForm.errors?.range">
-                        <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>結束時間不得大於起始時間</p>
-                    </div>
-                </div>
-                <div class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': this.validateForm.errors?.range}">
-                    <label>結束時間</label>
-                    <div>
-                        <input nbInput fullWidth [status]="this.validateForm.errors?.range ? 'danger' : 'basic'"
-                            placeholder="請選擇日期" [nbDatepicker]="endDatePicker" formControlName="endDate">
-                        <nb-datepicker #endDatePicker [format]="dateFormat" [min]="this.validateForm.get('startDate').value"></nb-datepicker>
-                    </div>
-                    <!-- 欄位錯誤訊息 -->
-                    <div class="note errorText" *ngIf="this.validateForm.errors?.range">
-                        <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>結束時間不得大於起始時間</p>
-                    </div>
-                </div>
+            </div>
+            <date-range [form]="validateForm"></date-range>
+            <div class="row">
                 <div class="fieldGroup essential col-12 col-lg-6">
                     <label>排程設定</label>
                     <div>
