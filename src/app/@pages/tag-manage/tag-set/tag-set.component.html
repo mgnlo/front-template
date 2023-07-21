@@ -146,32 +146,37 @@
       </nb-card-body>
   </nb-card>
   <nb-card *ngIf="this.params['changeRoute'] === 'edit'">
-    <nb-card-header>
-        <h2>異動歷程</h2>
-    </nb-card-header>
     <nb-card-body>
-      <div class="historyList">
-        <ng-container *ngFor="let hg of detail.historyGroupView | keyvalue; let i=index;">
-            <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
-                <div class="mainItem">
-                    <h4 (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">{{history.type}}</h4>
-                    <button nbButton status="control" size="tiny" class="iconBtn" (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">
-                        <nb-icon icon="chevron-down-outline"></nb-icon>
-                    </button>
-                </div>
-                <div class="subItem" [ngClass]="isHistoryOpen[hg.key] ? '' : 'displayNone'" *ngFor="let flow of history.flows">
-                    <div>
-                        <p>{{flow.time | date:dateFormat}}</p>
-                        <p>{{flow.time | date:'hh:mm:ss'}}</p>
+        <nb-tabset>
+            <nb-tab tabTitle="異動歷程">
+              <div class="historyList">
+                <ng-container *ngFor="let hg of detail.historyGroupView | keyvalue; let i=index;">
+                    <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
+                        <div class="mainItem">
+                            <h4 (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">{{history.type}}</h4>
+                            <button nbButton status="control" size="tiny" class="iconBtn" (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">
+                                <nb-icon icon="chevron-down-outline"></nb-icon>
+                            </button>
+                        </div>
+                        <div class="subItem" [ngClass]="isHistoryOpen[hg.key] ? '' : 'displayNone'" *ngFor="let flow of history.flows">
+                            <div>
+                                <p>{{flow.time | date:dateFormat}}</p>
+                                <p>{{flow.time | date:'hh:mm:ss'}}</p>
+                            </div>
+                            <div>
+                                <p>{{flow.title}}</p>
+                                <p>{{flow.detail}}</p>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <p>{{flow.title}}</p>
-                        <p>{{flow.detail}}</p>
-                    </div>
-                </div>
-            </div>
-        </ng-container>
-      </div>
+                </ng-container>
+              </div>
+            </nb-tab>
+            <nb-tab tabTitle="標籤使用範圍">
+                <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
+                <paginator [source]="dataSource" [paginator]="paginator"></paginator>
+            </nb-tab>
+        </nb-tabset>
     </nb-card-body>
   </nb-card>
   <div class="row">

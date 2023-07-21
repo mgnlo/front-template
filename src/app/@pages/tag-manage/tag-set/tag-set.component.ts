@@ -8,6 +8,9 @@ import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { CommonUtil } from '@common/utils/common-util';
+import { LocalDataSource } from 'ng2-smart-table';
+import { ActivitySetting } from '@api/models/activity-list.model';
+import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 
 @Component({
   selector: 'tag-set',
@@ -31,6 +34,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   err: boolean = false;
   params: any;//路由參數
   actionName: string;// 新增/編輯/複製
+
+  mockData: Array<ActivitySetting> = ActivityListMock;
 
   // maxSizeInMB = 5;//檔案大小
   // isFileSize = false;//檔案大小是否錯誤
@@ -101,7 +106,75 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   //   return allowedTypes.includes(file.type);
   // }
 
+  gridDefine = {
+    pager: {
+      display: true,
+      perPage: 10,
+    },
+    columns: {
+      activityName: {
+        title: '活動名稱',
+        type: 'html',
+        class: 'col-2 left',
+        sort: false,
+        valuePrepareFunction: (cell:string) => {
+          return `<p class="left">${cell}</p>`;
+        },
+      },
+      activityDescription: {
+        title: '活動說明',
+        type: 'html',
+        class: 'col-3 left',
+        sort: false,
+        valuePrepareFunction: (cell:string) => {
+          return `<p class="left">${cell}</p>`;
+        },
+      },
+      department: {
+        title: '所屬單位',
+        type: 'string',
+        class: 'col-2',
+        sort: false,
+      },
+      owner: {
+        title: '負責人',
+        type: 'string',
+        class: 'col-1',
+        sort: false,
+      },
+      status: {
+        title: '狀態',
+        type: 'string',
+        class: 'col-1',
+        valuePrepareFunction: (cell:string) => {
+          return Status[cell];
+        },
+        sort: false,
+      },
+      during: {
+        title: '起訖時間',
+        type: 'html',
+        class: 'col-3',
+        valuePrepareFunction: (cell:any) => {
+          return `<span class="date">${cell}</span>`;
+        },
+        sort: false,
+      },
+    },
+    hideSubHeader: false, //起訖日查詢要用到
+    actions: {
+      add: false,
+      edit: false,
+      delete: false,
+    },
+  };
+
   ngOnInit(): void {
+    this.dataSource = new LocalDataSource();
+    this.mockData = this.mockData.map(mock => {
+      return {...mock, during:`${mock.startDate}~${mock.endDate}`} //起訖日查詢篩選要用到
+    })
+    this.dataSource.load(this.mockData);
   }
 
   ngAfterViewChecked(): void {
