@@ -2,15 +2,19 @@ export interface ActivitySetting {
   activityId: string;
   activityName: string;
   activityDescription: string;
+  department: string;
+  owner: string;
   filterOptions: string;
   listLimit: number;
   status: string;
   startDate: string;
   endDate: string;
+  createTime: string;
   modificationTime: string;
   scheduleSettings: string;
   batchUpdateTime: string;
   activityListCondition: Array<ActivityListCondition>;
+  version: string;
   activityReviewHistory: Array<ActivityReviewHistory>;
 }
 export class ActivityListCondition {
@@ -23,6 +27,7 @@ export class ActivityListCondition {
 }
 export class ActivityReviewHistory {
   historyId: string;
+  version: string;
   referenceId: string;
   groupId: number;
   time: string;

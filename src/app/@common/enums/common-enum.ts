@@ -1,7 +1,7 @@
 export enum Status {
-  active = '啟用',
-  ing = '審查中',
-  stop = '停用'
+  enabled = '啟用',
+  reviewing = '審查中',
+  disabled = '停用'
 }
 
 export enum Frequency{

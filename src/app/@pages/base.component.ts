@@ -1,6 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AbstractControl, FormGroup, ValidationErrors } from '@angular/forms';
-import { RegExpUtil } from '@common/utils/reg-exp-util';
 import { Paginator } from '@component/table/paginator/paginator.component';
 import { LocalDataSource } from 'ng2-smart-table';
 // import { OAuth2BaseComponent, OAuth2Service } from '@module/oauth2';

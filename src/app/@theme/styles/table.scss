@@ -16,9 +16,11 @@ ng2-smart-table {
       }
     }
     td {
-      padding: 0rem 1.25rem !important;
       &:not(.left){
         text-align: center;
+      }
+      &:has(button), &:has(input[type="checkbox"]){
+        padding: 0rem 1.25rem !important;
       }
       &:has(.left){
         text-align: left;
