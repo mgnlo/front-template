@@ -1,84 +1,64 @@
 export interface ScheduleSetting {
-  scheduleId: string
-  scheduleName: string
-  scheduleDescription: string
-  scheduleType: string
-  department: string
-  owner: string
-  modificationTime: string
-  status: string
-  startDate: string
-  endDate: string
-  conditionSettingMethod: string
-  conditionSettingQuery: string
-  scheduleDimension: string
-  scheduleSubDimension: string
-  scheduleSettings: string
-  uploadType: string
-  filePath: string
-  scheduleConditionSetting: Array<ScheduleConditionSetting>
-  scheduleReviewHistory: Array<ScheduleReviewHistory>
+  scheduleId: string;
+  version: string;
+  jobName: string;
+  executionFrequency: string;
+  creationTime: string;
+  modificationTime: string;
+  status: string;
+  activitySetting: Array<Activitysetting>;
+  scheduleReviewHistory: Array<Schedulereviewhistory>;
 }
 
-export class ScheduleConditionSetting {
-  scheduleId: string
-  conditionKey: string
-  groupId: number
-  detectionCondition: string
-  conditionValue: string
-  thresholdValue: string
+export class Activitysetting {
+  activityId: string;
+  version: string;
+  activityName: string;
+  activityDescription: string;
+  filterOptions: string;
+  listLimit: number;
+  status: string;
+  startDate: string;
+  endDate: string;
+  createTime: string;
+  modificationTime: string;
+  scheduleSettings: string;
+  batchUpdateTime: string;
+  schedule_batch_history: Array<Schedule_Batch_History>;
 }
 
-export class ScheduleReviewHistory {
-  historyId: string
-  referenceId: string
-  groupId: number
-  time: string
-  title: string
-  detail: string
-  type: string
-  reviewStatus?: string
-  reviewer?: string
-  reviewComment?: string
-  scheduleName?: string
-  scheduleDescription?: string
-  scheduleType?: string
-  department?: string
-  owner?: string
-  modificationTime?: string
-  status?: string
-  startDate?: string
-  endDate?: string
-  conditionSettingMethod?: string
-  conditionSettingQuery?: string
-  scheduleDimension?: string
-  scheduleSubDimension?: string
-  scheduleSettings?: string
-  uploadType?: string
-  filePath?: string
+export class Schedule_Batch_History {
+  historyId: string;
+  activityId: string;
+  version: string;
+  batchTime: string;
+  batchResult: string;
 }
+
+export class Schedulereviewhistory {
+  historyId: string;
+  version: string;
+  referenceId: string;
+  groupId: number;
+  time: string;
+  title: string;
+  detail: string;
+  type: string;
+}
+
+
 
 
 //for HTML diaplay ViewModel
 export interface ScheduleDetailView {
-  scheduleId: string
-  scheduleName: string
-  scheduleDescription: string
-  scheduleType: string
-  department: string
-  owner: string
-  modificationTime: string
-  status: string
-  startDate: string
-  endDate: string
-  conditionSettingMethod: string
-  conditionSettingQuery: string
-  scheduleDimension: string
-  scheduleSubDimension: string
-  scheduleSettings: string
-  uploadType: string
-  filePath: string
-  historyGroupView: {[x: number]: HistoryGroupView};
+  scheduleId: string;
+  version: string;
+  jobName: string;
+  executionFrequency: string;
+  creationTime: string;
+  modificationTime: string;
+  status: string;
+  historyGroupView: { [x: number]: HistoryGroupView };
 }
 
 //for HTML diaplay ViewModel
@@ -93,10 +73,10 @@ export interface HistoryGroupView {
 }
 
 export class ScheduleSettingListResp {
-  data: Array<ScheduleSetting>;
+  data: [];
 }
 export class ScheduleSettingRowResp {
-  data: ScheduleSetting;
+  data: [];
 }
 export class ScheduleSettingEditReq {
   ScheduleName: string;
@@ -110,13 +90,13 @@ export class ScheduleSettingEditReq {
 }
 
 export interface ScheduleReviewListRes {
-  data: Array<ScheduleReviewHistory>;
+  data: [];
 }
 
 export interface ScheduleReviewRowRes {
-  data: ScheduleReviewHistory;
+  data: [];
 }
 
 export interface ScheduleReviewRowReq {
-  data: ScheduleReviewHistory;
+  data: [];
 }
