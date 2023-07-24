@@ -1,8 +1,10 @@
 <div class="fieldGroup" [ngClass]="{'error': hasError(), 'essential': required}" [formGroup]="form">
   <label>{{title}}</label>
   <div>
-      <nb-radio-group [formControlName]="ctlName" [name]="ctlName">
+      <nb-radio-group [formControlName]="ctlName" [name]="ctlName" *ngIf="!!selectList?.options">
         <nb-radio *ngFor="let option of selectList?.options" [value]="option[selectList.key]" (valueChange)="valueChangeFn(option[selectList.key])">{{ option[selectList.val] }}</nb-radio>
+      </nb-radio-group>
+      <nb-radio-group [formControlName]="ctlName" [name]="ctlName" *ngIf="!selectList?.options">
         <nb-radio *ngFor="let enum of enumList |keyvalue" [value]="enum.key" (valueChange)="valueChangeFn(enum.key)">{{ enum.value }}</nb-radio>
       </nb-radio-group>
   </div>
