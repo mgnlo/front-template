@@ -163,7 +163,7 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
       },
       businessUnit: {
         title: '所屬單位',
-        type: 'string',
+        type: 'html',
         class: 'col-2',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${BusinessUnit[cell]}</p>`;
