@@ -46,7 +46,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     super();
     this.validateForm = new FormGroup({
       tagName: new FormControl(null, Validators.required),
-      status: new FormControl('active', Validators.required),
+      status: new FormControl('enabled', Validators.required),
       tagType: new FormControl('normal', Validators.required),
       setCondition: new FormControl('normal', Validators.required),
       uploadFile: new FormControl(null, Validators.required),

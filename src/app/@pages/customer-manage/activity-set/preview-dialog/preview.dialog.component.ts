@@ -22,6 +22,14 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
     [111, '交易次數'],
     [112, '換匯次數'],
     [113, '定存筆數'],
+    [114, '消費金額'],
+    [115, '交易次數'],
+    [116, '換匯次數'],
+    [117, '定存筆數'],
+    [118, '消費金額'],
+    [119, '交易次數'],
+    [120, '換匯次數'],
+    [121, '定存筆數'],
   ]);
   orderTypeList = new Map([
     ['asc', '升冪'],

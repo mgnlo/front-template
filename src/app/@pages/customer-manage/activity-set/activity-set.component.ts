@@ -25,7 +25,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
 
     this.validateForm = new FormGroup({
       activityName: new FormControl(null, Validators.required),
-      status: new FormControl('stop', Validators.required),
+      status: new FormControl('disabled', Validators.required),
       listLimit: new FormControl(null, ValidatorsUtil.number),
       filterOptions: new FormControl(false),
       startDate: new FormControl(new Date(), ValidatorsUtil.dateFmt),
