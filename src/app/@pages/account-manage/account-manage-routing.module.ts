@@ -5,6 +5,8 @@ import { ConsoleGroupButtonComponent, ConsoleGroupListComponent } from "./consol
 import { ConsoleGroupDetailCheckboxComponent, ConsoleGroupDetailComponent } from "./console-group-detail/console-group-detail.component";
 import { ConsoleGroupEditCheckboxComponent, ConsoleGroupEditComponent } from "./console-group-edit/console-group-edit.component";
 import { ConsoleGroupAddCheckboxComponent, ConsoleGroupAddComponent } from "./console-group-add/console-group-add.component";
+import { ConsoleUserButtonComponent, ConsoleUserComponent } from "./console-user/console-user.component";
+import { ChangeDialogComponent } from "./console-user/change-dialog/change.dialog.component";
 
 const routes: Routes = [
     {
@@ -14,7 +16,8 @@ const routes: Routes = [
             { path: "console-group-list", component: ConsoleGroupListComponent },
             { path: "console-group-detail", component: ConsoleGroupDetailComponent },
             { path: "console-group-edit", component: ConsoleGroupEditComponent },
-            { path: "console-group-add", component: ConsoleGroupAddComponent }
+            { path: "console-group-add", component: ConsoleGroupAddComponent },
+            { path: "console-user", component: ConsoleUserComponent }
         ]
     }
 ]
@@ -34,5 +37,8 @@ export const routedComponents = [
     ConsoleGroupEditComponent,
     ConsoleGroupEditCheckboxComponent,
     ConsoleGroupAddComponent,
-    ConsoleGroupAddCheckboxComponent
+    ConsoleGroupAddCheckboxComponent,
+    ConsoleUserComponent,
+    ConsoleUserButtonComponent,
+    ChangeDialogComponent
 ];

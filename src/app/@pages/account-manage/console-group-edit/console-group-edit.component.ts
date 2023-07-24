@@ -7,6 +7,7 @@ import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
 import { AccountManageService } from '../account.manage.service';
+import { BusinessUnit } from '@common/enums/console-user-enum';
 
 @Component({
   selector: 'console-group-edit',
@@ -164,7 +165,9 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
         title: '所屬單位',
         type: 'string',
         class: 'col-2',
-        valuePrepareFunction: (cell, row: any) => cell,
+        valuePrepareFunction: (cell: string) => {
+          return `<p class="left">${BusinessUnit[cell]}</p>`;
+        },
         sort: false,
       }
     },

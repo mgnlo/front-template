@@ -2,7 +2,7 @@ import { Injectable, TemplateRef, Type } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApproveDialogComponent, ApproveDialogOption } from '@component/dialog/approve-dialog/approve-dialog.component';
 import { RejectDialogComponent, RejectDialogOption } from '@component/dialog/reject-dialog/reject-dialog.component';
-import { NbDialogService } from '@nebular/theme';
+import { NbDialogRef, NbDialogService } from '@nebular/theme';
 
 @Injectable({
   providedIn: 'root',
@@ -14,8 +14,8 @@ export class DialogService {
     private dialogService: NbDialogService,
   ) { }
 
-  open<T>(content: Type<T> | TemplateRef<T>, context?: Partial<T> | string): void {
-    this.dialogService.open(content, {
+  open<T>(content: Type<T> | TemplateRef<T>, context?: Partial<T> | string): NbDialogRef<T> {
+    return this.dialogService.open(content, {
       context: context,
       closeOnBackdropClick: false,
     });

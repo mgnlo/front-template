@@ -1,0 +1,30 @@
+<nb-card class="list-card" nbSpinnerStatus="info" nbSpinnerSize="giant" size="small">
+  <nb-card-header class="text-h-center">
+    <p>變更 {{consoleUserJson.name}} 權限</p>
+  </nb-card-header>
+  <nb-card-body>
+    <div class="row">
+      <div class="fieldGroup col-12 col-lg-6">
+        <label>授予權限</label>
+        <div>
+          <nb-select fullWidth placeholder="請選擇" [(selected)]="groupId">
+            <nb-option *ngFor="let consoleGroup of consoleGroupListJson" [value]="consoleGroup.groupId">{{
+              consoleGroup.groupName }}</nb-option>
+          </nb-select>
+        </div>
+        <!-- 欄位錯誤訊息 -->
+        <div class="note errorText">
+          <nb-icon icon="alert-triangle"></nb-icon>
+          <p>欄位錯誤訊息</p>
+        </div>
+      </div>
+    </div>    
+  </nb-card-body>
+  <nb-card-footer>
+    <div class="btnGroup">
+      <button nbButton status="basic" size="medium" (click)="close()">關閉</button>
+      <button nbButton status="primary" size="medium" [disabled]="groupId == consoleUserJson.consoleGroup.groupId" (click)="save()">儲存</button>
+    </div>
+    
+  </nb-card-footer>
+</nb-card>

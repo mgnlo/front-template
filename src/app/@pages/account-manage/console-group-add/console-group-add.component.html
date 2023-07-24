@@ -8,22 +8,22 @@
         </nb-card-header>
         <nb-card-body [formGroup]="consoleGroupAddForm">
             <div class="row">
-                <div class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': isSubmit && consoleGroupAddForm.controls.groupName.errors}">
+                <div class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': isError('groupName')}">
                     <label>權限名稱</label>
                     <div>
-                        <input formControlName="groupName" nbInput fullWidth [status]="(isSubmit && consoleGroupAddForm.controls.groupName.errors) ? 'danger' : 'basic'"
+                        <input formControlName="groupName" nbInput fullWidth [status]="isError('groupName') ? 'danger' : 'basic'"
                                type="text" maxlength="20" placeholder="請輸入，最多20個字元" [(ngModel)]="groupName"/>
                     </div>
                     <div class="note errorText">
                         <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>{{ isSubmit && consoleGroupAddForm.controls.groupName.errors?.errMsg }}</p>
+                        <p>{{ isError('groupName') }}</p>
                     </div>
                 </div>
-                <div class="fieldGroup essential col-12 col-lg-4" [ngClass]="{'error': isSubmit && consoleGroupAddForm.controls.enableRadio.errors}">
+                <div class="fieldGroup essential col-12 col-lg-4" [ngClass]="{'error': isError('enableRadio')}">
                     <label>狀態</label>
                     <div>
-                        <nb-radio-group formControlName="enableRadio" [status]="(isSubmit && consoleGroupAddForm.controls.enableRadio.errors) ? 'danger' : 'basic'"
-                                        [(ngModel)]="enableOption">
+                        <nb-radio-group formControlName="enableRadio" [status]="isError('enableRadio') ? 'danger' : 'basic'"
+                                        [(ngModel)]="enableRadio">
                             <nb-radio value="true">啟用</nb-radio>
                             <nb-radio value="false">停用</nb-radio>
                         </nb-radio-group>
@@ -31,7 +31,7 @@
                     <!-- 欄位錯誤訊息 -->
                     <div class="note errorText">
                         <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>{{ isSubmit && consoleGroupAddForm.controls.enableRadio.errors?.errMsg }}</p>
+                        <p>{{ isError('enableRadio') }}</p>
                     </div>
                 </div>               
             </div>
@@ -47,7 +47,7 @@
     <div class="row">
         <div class="btnGroup">
             <button nbButton status="basic" size="medium" (click)="cancel()" >取消</button>
-            <button nbButton status="primary" size="medium" (click)="ok()">確定</button>
+            <button nbButton status="primary" size="medium" (click)="ok()" [disabled]="consoleGroupAddForm.invalid">確定</button>
         </div>
     </div>
 </div>

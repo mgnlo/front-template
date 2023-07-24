@@ -36,10 +36,9 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
     "console-group": "帳號管理 - 權限管理"
   }
 
-  enableOption: string;
+  enableRadio: string = "true";
   groupName: string;
   consoleGroupAddForm: FormGroup;
-  isSubmit = false;
 
   gridDefine = {
     pager: {
@@ -136,6 +135,12 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
     });
   }
 
+  isError(formCtrlName: string) {
+    let viewCtrl: AbstractControl = this.consoleGroupAddForm.get(formCtrlName);
+
+    return (viewCtrl.touched || viewCtrl.dirty) && viewCtrl.errors?.errMsg;
+  }
+
   private validateField(fg: FormGroup): any {
     let groupName: AbstractControl = fg.get('groupName');
     let enableRadio: AbstractControl = fg.get('enableRadio');
@@ -149,7 +154,7 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
         }
       }
   
-      if(!this.enableOption){
+      if(!this.enableRadio){
         this.updateErrMsg(enableRadio, "此欄位為必填欄位");
       }
     });    
@@ -182,8 +187,6 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
   }
 
   ok() {
-    this.isSubmit = true;
-    
     if (!this.consoleGroupAddForm.invalid) {
       // 這邊要發送電文去進行新增
       // 新增成功後要再發送電文重新 query 

@@ -1,0 +1,101 @@
+<div class="pageTitle">
+    <h1>使用者管理</h1>
+</div>
+<div class="pageContent">
+    <nb-card>
+        <nb-card-header>
+            <h2>查詢設定值</h2>
+        </nb-card-header>
+        <nb-card-body [formGroup]="consoleUserForm">
+            <div class="row">
+                <div class="fieldGroup col-12 col-lg-6">
+                    <label>帳號</label>
+                    <div>
+                        <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" formControlName="account"
+                            [(ngModel)]="account" />
+                    </div>
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+                <div class="fieldGroup col-12 col-lg-6">
+                    <label>姓名</label>
+                    <div>
+                        <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" formControlName="name"
+                            [(ngModel)]="name" />
+                    </div>
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+                <div class="fieldGroup col-12 col-lg-6">
+                    <label>電子郵件</label>
+                    <div>
+                        <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" formControlName="email"
+                            [(ngModel)]="email" />
+                    </div>
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+                <div class="fieldGroup col-12 col-md-6">
+                    <label>所屬單位</label>
+                    <div>
+                        <div>
+                            <div class="checkboxGroup">
+                                <nb-checkbox status="basic" [(checked)]="digitalSelect">{{ businessUnit.Digital_Financial
+                                    }}</nb-checkbox>
+                                <nb-checkbox status="basic" [(checked)]="personalSelect">{{ businessUnit.Consumer_Finance
+                                    }}</nb-checkbox>
+                                <nb-checkbox status="basic" [(checked)]="moneySelect">{{ businessUnit.Wealth_Management
+                                    }}</nb-checkbox>
+                                <nb-checkbox status="basic" [(checked)]="creditlSelect">{{ businessUnit.Consumer_Finance
+                                    }}</nb-checkbox>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 欄位錯誤訊息 -->
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+                <div class="fieldGroup col-12 col-lg-6">
+                    <label>授予權限</label>
+                    <div>
+                        <nb-select fullWidth placeholder="請選擇" [(selected)]="groupId">
+                            <nb-option value="">全部</nb-option>
+                            <nb-option *ngFor="let consoleGroup of consoleGroupList" [value]="consoleGroup.groupId">{{
+                                consoleGroup.groupName }}</nb-option>
+                        </nb-select>
+                    </div>
+                    <!-- 欄位錯誤訊息 -->
+                    <div class="note errorText">
+                        <nb-icon icon="alert-triangle"></nb-icon>
+                        <p>欄位錯誤訊息</p>
+                    </div>
+                </div>
+            </div>
+        </nb-card-body>
+    </nb-card>
+
+    <div class="row">
+        <div class="btnGroup">
+            <button nbButton status="basic" size="medium" (click)="reset()">清除</button>
+            <button nbButton status="primary" size="medium" (click)="search()">查詢</button>
+        </div>
+    </div>
+    
+    <nb-card>
+        <nb-card-header>
+            <h2>使用者列表</h2>
+        </nb-card-header>
+        <nb-card-body>
+            <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
+            <paginator [source]="dataSource" [paginator]="paginator"></paginator>
+        </nb-card-body>
+    </nb-card>
+</div>

@@ -90,7 +90,7 @@ export class PagesComponent implements OnInit {
         children: [
           {
             title: "使用者管理",
-            link: "/pages/element",
+            link: "/pages/account-manage/console-user",
           },
           {
             title: "權限管理",
