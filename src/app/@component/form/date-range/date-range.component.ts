@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { RegExpUtil } from '@common/utils/reg-exp-util';
 
 @Component({
@@ -37,6 +37,11 @@ export class DateRangeComponent implements OnInit {
         v += '-';
       }
     }
+  }
+
+  hasError(ctlName: string){
+    let ctl = this.form.get(ctlName) as FormControl;
+    return (ctl.dirty || ctl.touched) && ctl?.errors;
   }
 
 }

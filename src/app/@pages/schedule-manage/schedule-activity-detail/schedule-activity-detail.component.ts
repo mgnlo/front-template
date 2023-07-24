@@ -1,21 +1,20 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ScheduleDetailView, ScheduleSetting, ActivitySetting, Schedule_Batch_History } from '@api/models/schedule-manage.model';
-import { Filter, Status } from '@common/enums/common-enum';
+import { StatusResult, Status } from '@common/enums/common-enum';
 import { ScheduleSettingMock } from '@common/mock-data/schedule-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({
-  selector: 'schedule-detail',
-  templateUrl: './schedule-detail.component.html',
-  styleUrls: ['./schedule-detail.component.scss']
+  selector: 'schedule-activity-detail',
+  templateUrl: './schedule-activity-detail.component.html',
+  styleUrls: ['./schedule-activity-detail.component.scss']
 })
 export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   detail: ScheduleDetailView;
   isHistoryOpen: { [x: number]: boolean } = []; //異動歷程收合
-  mockData: Array<ScheduleSetting> = ScheduleSettingMock;
   activitySetting: Array<ActivitySetting> = ScheduleSettingMock[0].activitySetting;
 
   constructor(private router: Router) {
@@ -30,7 +29,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
       }
       else {
         //之後可能加導頁pop-up提醒
-        this.router.navigate(['pages', 'schedule-manage', 'schedule-list']);
+        this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-list']);
       }
     }
   }
@@ -80,11 +79,11 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
       },
       filterOptions: {
         title: '更新結果',
-        type: 'string',
+        type: 'html',
         width: '5%',
-        class: 'alignCenter',
         valuePrepareFunction: (cell: string) => {
-          return Filter[cell];
+          const cellLow = cell?.toLowerCase();
+          return cellLow === 'true' ? StatusResult[cellLow] : `<p class="colorRed textBold">${StatusResult[cellLow]}</p>`;
         },
         sort: false,
       },
@@ -93,7 +92,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         type: 'custom',
         width: '1%',
         valuePrepareFunction: (cell, row: Schedule_Batch_History) => row,
-        renderComponent: ActivityButtonComponent,
+        renderComponent: ScheduleButtonComponent,
         sort: false,
       },
     },
@@ -115,23 +114,26 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   }
 
   edit() {
-    this.router.navigate(['pages', 'schedule-manage', 'schedule-set', 'edit', this.detail.scheduleId], { state: this.detail });
+    this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-set', 'edit', this.detail.scheduleId], { state: this.detail });
   }
 
   cancel() {
-    this.router.navigate(['pages', 'schedule-manage', 'schedule-list']);
+    this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-list']);
   }
 }
 
 
 
 @Component({
-  selector: 'activity-detail-button',
+  selector: 'schedule-activity-detail-button',
   template: '<button nbButton ghost status="info" size="medium" (click)="search()"><nb-icon icon="search"></nb-icon></button>'
 })
-export class ActivityButtonComponent implements OnInit {
+export class ScheduleButtonComponent implements OnInit {
+  params: any;//路由參數
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+    this.params = this.activatedRoute.snapshot.params;
+   }
 
   @Input() value: Schedule_Batch_History;
 
@@ -139,6 +141,6 @@ export class ActivityButtonComponent implements OnInit {
 
   search() {
     let passData: NavigationExtras = { state: this.value };
-    this.router.navigate(['pages', 'schedule-manage', 'activity-detail'], passData);
+    this.router.navigate(['pages', 'schedule-manage', 'activity-detail',this.params.scheduleId, this.value.activityId], passData);
   }
 }

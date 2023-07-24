@@ -24,7 +24,7 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
     super();
     // 篩選條件
     this.validateForm = new FormGroup({
-      tagName: new FormControl(''),
+      activityName: new FormControl(''),
       reviewStatus: new FormControl(''),
       startDate: new FormControl(null, ValidatorsUtil.dateFmt),
       endDate: new FormControl(null, ValidatorsUtil.dateFmt),

@@ -1,0 +1,15 @@
+<div class="fieldGroup" [ngClass]="{'error': hasError(), 'essential': required}" [formGroup]="form">
+  <label>{{title}}</label>
+  <div>
+      <nb-radio-group [formControlName]="ctlName" [name]="ctlName">
+        <nb-radio *ngFor="let option of selectList?.options" [value]="option[selectList.key]" (valueChange)="valueChangeFn(option[selectList.key])">{{ option[selectList.val] }}</nb-radio>
+        <nb-radio *ngFor="let enum of enumList |keyvalue" [value]="enum.key" (valueChange)="valueChangeFn(enum.key)">{{ enum.value }}</nb-radio>
+      </nb-radio-group>
+  </div>
+  <!-- 欄位錯誤訊息 -->
+  <div class="note errorText">
+    <nb-icon icon="alert-triangle"></nb-icon>
+    <p *ngIf=" (ctl.dirty || ctl.touched) && ctl?.errors?.required; else otherErr">此為必填欄位</p>
+    <ng-template #otherErr>{{firstErr}}</ng-template>
+  </div>
+</div>

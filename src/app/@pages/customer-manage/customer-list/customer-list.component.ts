@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { CustomerList } from '@api/models/customer-list.model';
 import { DialogService } from '@api/services/dialog.service';
 import { CustomerListMock } from '@common/mock-data/customer-list-mock';
-import { RegExpUtil } from '@common/utils/reg-exp-util';
+import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
@@ -20,8 +20,8 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
       super();
       // 篩選條件
       this.validateForm = new FormGroup({
-        custId: new FormControl('', Validators.pattern(RegExpUtil.custIdSearch)),
-        mobile: new FormControl('', Validators.pattern(RegExpUtil.int)),
+        custId: new FormControl('', [ValidatorsUtil.searchCustId]),
+        mobile: new FormControl('', ValidatorsUtil.number),
       });
     }
 
@@ -34,6 +34,10 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
     }
 
     ngDoCheck(): void {
+    }
+
+    getFormControl(ctlName: string): FormControl {
+      return this.validateForm.get(ctlName) as FormControl;
     }
 
     gridDefine = {

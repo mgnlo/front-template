@@ -6,13 +6,13 @@ import { LocalDataSource } from 'ng2-smart-table';
 import { ScheduleSetting } from '@api/models/schedule-manage.model';
 import { Status } from '@common/enums/common-enum';
 import { DatePipe } from '@angular/common';
-import { ScheduleSettingMock } from '@common/mock-data/schedule-list-mock';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
+import { ScheduleSettingMock } from '@common/mock-data/schedule-list-mock';
 
 @Component({
-  selector: 'schedule-list',
-  templateUrl: './schedule-list.component.html',
-  styleUrls: ['./schedule-list.component.scss']
+  selector: 'schedule-activity-list',
+  templateUrl: './schedule-activity-list.component.html',
+  styleUrls: ['./schedule-activity-list.component.scss']
 })
 export class ScheduleListComponent extends BaseComponent implements OnInit {
   constructor(
@@ -20,12 +20,12 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
     private router: Router) {
     super();
   }
-  mockData: Array<ScheduleSetting> = ScheduleSettingMock;
+  scheduleSetting: Array<ScheduleSetting> = ScheduleSettingMock;
 
 
   ngOnInit(): void {
     this.dataSource = new LocalDataSource();
-    this.dataSource.load(this.mockData);
+    this.dataSource.load(this.scheduleSetting);
   }
 
   gridDefine = {
@@ -86,6 +86,6 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
   };
 
   add() {
-    this.router.navigate(['pages', 'schedule-manage', 'schedule-set']);
+    this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-set']);
   }
 }

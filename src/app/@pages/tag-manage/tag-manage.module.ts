@@ -5,8 +5,8 @@ import { NbDateFnsDateModule } from '@nebular/date-fns';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import {
   NbAccordionModule,
-  NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbIconModule,
-  NbInputModule, NbRadioModule, NbSelectModule, NbSpinnerModule, NbTreeGridModule
+  NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbDialogModule, NbIconModule,
+  NbInputModule, NbRadioModule, NbSelectModule, NbSpinnerModule, NbTabsetModule, NbTagModule, NbTreeGridModule
 } from '@nebular/theme';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { ThemeModule } from '../../@theme/theme.module';
@@ -28,6 +28,9 @@ export const NB_MODULES = [
   NbDatepickerModule,
   NbAccordionModule,
   NbDateFnsDateModule.forChild({ format: 'yyyy-MM-dd' }),
+  NbDialogModule.forChild(),
+  NbTagModule,
+  NbTabsetModule
 ];
 
 @NgModule({

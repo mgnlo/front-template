@@ -82,7 +82,7 @@ export class PagesComponent implements OnInit {
       {
         title: "排程管理",
         icon: "file-text-outline",
-        link: "/pages/schedule-manage/schedule-list"
+        link: "/pages/schedule-manage/schedule-activity-list"
       },
       {
         title: "帳號管理",
