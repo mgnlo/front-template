@@ -8,30 +8,9 @@
         </nb-card-header>
         <nb-card-body [formGroup]="validateForm">
             <div class="row">
-                <div class="fieldGroup col-12 col-lg-6">
-                    <label>標籤名稱</label>
-                    <div>
-                        <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" formControlName="tagName"/>
-                    </div>
-                    <div class="note errorText">
-                        <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>欄位錯誤訊息</p>
-                    </div>
-                </div>
-                <div class="fieldGroup col-12 col-lg-6">
-                    <label>狀態</label>
-                    <div>
-                        <nb-select fullWidth placeholder="請選擇" formControlName="reviewStatus">
-                            <nb-option value="">全部</nb-option>
-                            <nb-option *ngFor="let status of statusList" [value]="status.key">{{ status.val }}</nb-option>
-                        </nb-select>
-                    </div>
-                    <!-- 欄位錯誤訊息 -->
-                    <div class="note errorText">
-                        <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>欄位錯誤訊息</p>
-                    </div>
-                </div>
+                <basic-input class="col-12 col-lg-6" title="標籤名稱" [form]="validateForm" ctlName="tagName"></basic-input>
+                <dropdown class="col-12 col-lg-6" title="狀態" [form]="validateForm" ctlName="reviewStatus"
+                    [selectList]="{options: statusList, key: 'key', val: 'val'}"></dropdown>
             </div>
             <date-range [form]="validateForm"></date-range>
         </nb-card-body>

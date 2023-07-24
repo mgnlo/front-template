@@ -12,57 +12,14 @@
           <h2>{{actionName}}標籤</h2>
     </nb-card-header>
     <nb-card-body [formGroup]="validateForm">
-          <div class="row">
-            <div class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': err}">
-                <label>標籤名稱</label>
-                <div>
-                    <input nbInput fullWidth [status]="err?'danger':'basic'" type="text" placeholder="請輸入" formControlName="tagName"/>
-                </div>
-                <div class="note errorText">
-                    <nb-icon icon="alert-triangle"></nb-icon>
-                    <p>欄位錯誤訊息</p>
-                </div>
-            </div>
-            <div class="fieldGroup essential col-12 col-lg-6">
-                <label>狀態</label>
-                <div>
-                    <nb-radio-group name="status" formControlName="status">
-                        <nb-radio value="active">{{Status.enabled}}</nb-radio>
-                        <nb-radio value="stop">{{Status.disabled}}</nb-radio>
-                    </nb-radio-group>
-                </div>
-                <div class="note errorText">
-                    <nb-icon icon="alert-triangle"></nb-icon>
-                    <p>欄位錯誤訊息</p>
-                </div>
-            </div>
+        <div class="row">
+            <basic-input class="col-12 col-lg-6" title="標籤名稱" [form]="validateForm" ctlName="tagName"></basic-input>
+            <radio class="col-12 col-lg-6" title="狀態" [form]="validateForm" ctlName="status"></radio>
         </div>
         <div class="row">
-            <div class="fieldGroup essential col-12 col-lg-6">
-              <label>標籤類型</label>
-              <div>
-                  <nb-radio-group name="tagType" formControlName="tagType">
-                      <nb-radio value="normal" (valueChange)="changeTagType('normal')">{{TagType.normal}}</nb-radio>
-                      <nb-radio value="document" (valueChange)="changeTagType('document')">{{TagType.document}}</nb-radio>
-                  </nb-radio-group>
-              </div>
-              <div class="note errorText">
-                  <nb-icon icon="alert-triangle"></nb-icon>
-                  <p>欄位錯誤訊息</p>
-              </div>
-            </div>
-            <div *ngIf="validateForm.get('tagType').value === 'normal'"  class="fieldGroup essential col-12 col-lg-6">
-              <label>條件設定方式</label>
-              <div>
-                  <nb-radio-group name="setCondition" formControlName="setCondition">
-                      <nb-radio value="normal">{{SetCondition.normal}}</nb-radio>
-                      <nb-radio value="field">{{SetCondition.field}}</nb-radio>
-                  </nb-radio-group>
-              </div>
-              <div class="note errorText">
-                  <nb-icon icon="alert-triangle"></nb-icon>
-                  <p>欄位錯誤訊息</p>
-              </div>
+            <radio class="col-12 col-lg-6" title="標籤類型" [form]="validateForm" ctlName="tagType" (valueChange)="changeTagType($event)"></radio>
+            <div *ngIf="validateForm.get('tagType').value === 'normal'"  class="essential col-12 col-lg-6">
+              <radio title="條件設定方式" [form]="validateForm" ctlName="setCondition" enumName="tagSetCondition"></radio>
             </div>
             <div *ngIf="validateForm.get('tagType').value === 'document'" class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': !isFile}">
                 <label>名單上傳</label>
@@ -85,56 +42,12 @@
         </div>
         <date-range [form]="validateForm"></date-range>
         <div class="row">
-            <div class="fieldGroup essential col-12 col-lg-6">
-              <label>標籤構面</label>
-              <div>
-                  <nb-select fullWidth placeholder="請選擇" formControlName="tagDimension">
-                      <nb-option value="">全部</nb-option>
-                      <nb-option *ngFor="let status of categoryList" [value]="status.key">{{ status.val }}</nb-option>
-                  </nb-select>
-              </div>
-              <div class="note errorText">
-                  <nb-icon icon="alert-triangle"></nb-icon>
-                  <p>欄位錯誤訊息</p>
-              </div>
-            </div>
-            <div class="fieldGroup essential col-12 col-lg-6">
-              <label>標籤子構面</label>
-              <div>
-                  <nb-select fullWidth placeholder="請選擇" formControlName="tagSubDimension">
-                      <nb-option value="">全部</nb-option>
-                      <nb-option *ngFor="let status of subCategoryList" [value]="status.key">{{ status.val }}</nb-option>
-                  </nb-select>
-              </div>
-              <div class="note errorText">
-                  <nb-icon icon="alert-triangle"></nb-icon>
-                  <p>欄位錯誤訊息</p>
-              </div>
-            </div>
+            <dropdown class="col-12 col-lg-6" title="標籤構面" [form]="validateForm" ctlName="tagDimension"></dropdown>
+            <dropdown class="col-12 col-lg-6" title="標籤子構面" [form]="validateForm" ctlName="tagSubDimension"></dropdown>
         </div>
         <div class="row">
-            <div class="fieldGroup essential col-12 col-lg-6">
-                <label>排程設定</label>
-                <div>
-                    <nb-select fullWidth placeholder="請選擇" formControlName="scheduleSettings">
-                        <nb-option *ngFor="let schedule of scheduleList" [value]="schedule.key">{{ schedule.val }}</nb-option>
-                    </nb-select>
-                </div>
-                <div class="note errorText">
-                    <nb-icon icon="alert-triangle"></nb-icon>
-                    <p>欄位錯誤訊息</p>
-                </div>
-            </div>
-            <div class="fieldGroup col-12 col-lg-6">
-                <label>描述說明</label>
-                <div>
-                    <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" formControlName="tagDescription"/>
-                </div>
-                <div class="note errorText">
-                    <nb-icon icon="alert-triangle"></nb-icon>
-                    <p>欄位錯誤訊息</p>
-                </div>
-            </div>
+            <dropdown class="col-12 col-lg-6" title="排程設定" [form]="validateForm" ctlName="scheduleSettings" enumName="schedule"></dropdown>
+            <basic-input class="col-12 col-lg-6" title="描述說明" [form]="validateForm" ctlName="tagDescription"></basic-input>
         </div>
         <div class="subTitle">
             <p>條件設定</p>

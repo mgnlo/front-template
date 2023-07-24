@@ -4,12 +4,11 @@ import { Router } from '@angular/router';
 import { ActivityListCondition, ActivitySetting } from '@api/models/activity-list.model';
 import { DialogService } from '@api/services/dialog.service';
 import { Filter, Schedule } from '@common/enums/common-enum';
+import { CommonUtil } from '@common/utils/common-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { PreviewDialogComponent } from './preview-dialog/preview.dialog.component';
-import { CommonUtil } from '@common/utils/common-util';
-import { RegExpUtil } from '@common/utils/reg-exp-util';
 
 @Component({
   selector: 'activity-set',
@@ -27,7 +26,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     this.validateForm = new FormGroup({
       activityName: new FormControl(null, Validators.required),
       status: new FormControl('stop', Validators.required),
-      listLimit: new FormControl(null, Validators.pattern(RegExpUtil.int)),
+      listLimit: new FormControl(null, ValidatorsUtil.number),
       filterOptions: new FormControl(false),
       startDate: new FormControl(new Date(), ValidatorsUtil.dateFmt),
       endDate: new FormControl(moment(new Date()).add(3, 'months').toDate(), ValidatorsUtil.dateFmt),

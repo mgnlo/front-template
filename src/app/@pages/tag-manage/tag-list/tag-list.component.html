@@ -8,14 +8,7 @@
       </nb-card-header>
       <nb-card-body [formGroup]="validateForm">
           <div class="row">
-            <div class="fieldGroup col-12 col-lg-6">
-                <label>標籤名稱</label>
-                <div><input nbInput fullWidth status="basic" type="text" placeholder="請輸入"  formControlName="tagName"/></div>
-                <div class="note errorText">
-                    <nb-icon icon="alert-triangle"></nb-icon>
-                    <p>欄位錯誤訊息</p>
-                </div>
-            </div>
+            <basic-input class="col-12 col-lg-6" title="標籤名稱" [form]="validateForm" ctlName="tagName"></basic-input>
             <div class="fieldGroup col-12 col-lg-6">
               <label>狀態</label>
               <div>
