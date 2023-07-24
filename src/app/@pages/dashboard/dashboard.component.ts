@@ -1,9 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'ngx-dashboard',
-  styleUrls: ['./dashboard.component.scss'],
-  templateUrl: './dashboard.component.html',
+  selector: 'dashboard',
+  template: '<router-outlet></router-outlet>',
 })
 export class DashboardComponent implements OnDestroy, OnInit {
 
