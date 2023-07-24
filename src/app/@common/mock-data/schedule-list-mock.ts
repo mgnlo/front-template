@@ -8,7 +8,7 @@ export const ScheduleSettingMock: Array<ScheduleSetting> = [
     "executionFrequency": "Daily",
     "creationTime": "2023-07-20 10:00:00",
     "modificationTime": "2023-07-20 12:30:00",
-    "status": "Active",
+    "status": "enabled",
     "activitySetting": [
       {
         "activityId": "abcdefg123456",
@@ -17,7 +17,7 @@ export const ScheduleSettingMock: Array<ScheduleSetting> = [
         "activityDescription": "女王節活動 EDM 名單",
         "filterOptions": "true",
         "listLimit": 100,
-        "status": "active",
+        "status": "enabled",
         "startDate": "2023-07-01",
         "endDate": "2023-07-10",
         "createTime": "2023-07-03 15:30:00",
@@ -50,7 +50,7 @@ export const ScheduleSettingMock: Array<ScheduleSetting> = [
         "activityDescription": "女王節活動 EDM 名單",
         "filterOptions": "false",
         "listLimit": 100,
-        "status": "active",
+        "status": "enabled",
         "startDate": "2023-07-01",
         "endDate": "2023-07-10",
         "createTime": "2023-07-03 15:30:00",

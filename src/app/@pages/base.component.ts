@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AbstractControl, FormGroup, ValidationErrors } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors } from '@angular/forms';
 import { Paginator } from '@component/table/paginator/paginator.component';
 import { LocalDataSource } from 'ng2-smart-table';
 // import { OAuth2BaseComponent, OAuth2Service } from '@module/oauth2';
@@ -45,20 +45,9 @@ export class BaseComponent implements OnDestroy {
     }
   }
 
-  getErrorMsg(field: string): string {
-
-    if (!this.isSubmit || this.validateForm == null || field == null || this.validationMessages == null) {
-      return undefined;
-    }
-
-    const ctlErrors: ValidationErrors = this.validateForm.get(field).errors;
-    if (ctlErrors != null) {
-      Object.keys(ctlErrors).forEach(keyError => {
-        console.info(keyError);
-        return keyError;
-      });
-    }
-    return undefined;
+  hasError(ctlName: string){
+    let ctl = this.validateForm.get(ctlName) as FormControl;
+    return (ctl.dirty || ctl.touched) && ctl?.errors;
   }
 
   getActionName(changeRouteName: string): string {

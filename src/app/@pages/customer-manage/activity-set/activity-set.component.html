@@ -8,42 +8,11 @@
         </nb-card-header>
         <nb-card-body [formGroup]="validateForm">
             <div class="row">
-                <div class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': err}">
-                    <label>活動名稱</label>
-                    <div>
-                        <input nbInput fullWidth [status]="err?'danger':'basic'" type="text" placeholder="請輸入" formControlName="activityName"/>
-                    </div>
-                    <div class="note errorText">
-                        <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>欄位錯誤訊息</p>
-                    </div>
-                </div>
-                <div class="fieldGroup essential col-12 col-lg-6">
-                    <label>狀態</label>
-                    <div>
-                        <nb-radio-group formControlName="status">
-                            <nb-radio value="active">啟用</nb-radio>
-                            <nb-radio value="stop">停用</nb-radio>
-                        </nb-radio-group>
-                    </div>
-                    <!-- 欄位錯誤訊息 -->
-                    <div class="note errorText">
-                        <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>欄位錯誤訊息</p>
-                    </div>
-                </div>
+                <basic-input class="col-12 col-lg-6" title="活動名稱" [form]="validateForm" ctlName="activityName"></basic-input>
+                <radio class="col-12 col-lg-6" title="狀態" [form]="validateForm" ctlName="status"></radio>
             </div>
             <div class="row">
-                <div class="fieldGroup col-12 col-lg-6">
-                    <label>名單上限</label>
-                    <div>
-                        <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" formControlName="listLimit"/>
-                    </div>
-                    <div class="note errorText">
-                        <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>欄位錯誤訊息</p>
-                    </div>
-                </div>
+                <basic-input class="col-12 col-lg-6" title="名單上限" [form]="validateForm" ctlName="listLimit"></basic-input>
                 <div class="fieldGroup col-12 col-lg-6">
                     <label>名單差異過濾</label>
                     <div>
@@ -58,29 +27,9 @@
             </div>
             <date-range [form]="validateForm"></date-range>
             <div class="row">
-                <div class="fieldGroup essential col-12 col-lg-6">
-                    <label>排程設定</label>
-                    <div>
-                        <nb-select fullWidth placeholder="請選擇" formControlName="scheduleSettings">
-                            <nb-option *ngFor="let schedule of scheduleList" [value]="schedule.key">{{ schedule.val }}</nb-option>
-                        </nb-select>
-                    </div>
-                    <!-- 欄位錯誤訊息 -->
-                    <div class="note errorText">
-                        <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>欄位錯誤訊息</p>
-                    </div>
-                </div>
-                <div class="fieldGroup col-12 col-lg-6">
-                    <label>描述說明</label>
-                    <div>
-                        <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" formControlName="activityDescription"/>
-                    </div>
-                    <div class="note errorText">
-                        <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>欄位錯誤訊息</p>
-                    </div>
-                </div>
+                <dropdown class="col-12 col-lg-6" title="排程設定" [form]="validateForm" ctlName="scheduleSettings"
+                    [selectList]="{options: scheduleList, key: 'key', val: 'val'}"></dropdown>
+                <basic-input class="col-12 col-lg-6" title="描述說明" [form]="validateForm" ctlName="activityDescription"></basic-input>
             </div>
             <ng-container *ngFor="let condition of conditions.controls; let i=index; let first1 = first; let last1 = last" formArrayName="activityListCondition">
                 <div class="subTitle">

@@ -37,6 +37,10 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       return this.tagMathSymbolList.includes(v);
     }).map(([k, v]) => ({ key: k, val: v }));
 
+  tagTypeList: Array<{key: string; val: string}> = Object.entries(TagType).map(([k, v]) => ({ key: k, val: v }))
+
+
+
   detail: TagDetailView;
   fileName: string;
   isFile: boolean = true;//是否上傳檔案
@@ -58,7 +62,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     super();
     this.validateForm = new FormGroup({
       tagName: new FormControl(null, Validators.required),
-      status: new FormControl('active', Validators.required),
+      status: new FormControl('enabled', Validators.required),
       tagType: new FormControl('normal', Validators.required),
       setCondition: new FormControl('normal', Validators.required),
       uploadFile: new FormControl(null, Validators.required),

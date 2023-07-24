@@ -1,0 +1,12 @@
+<div class="fieldGroup" [ngClass]="{'error': hasError(), 'essential': required}" [formGroup]="form">
+  <label>{{title}}</label>
+  <div>
+      <input nbInput fullWidth [status]="hasError() ? 'danger':'basic'" [type]="type"
+        [placeholder]="placeholder" [formControlName]="ctlName" [maxlength]="maxlength"/>
+  </div>
+  <div class="note errorText">
+      <nb-icon icon="alert-triangle"></nb-icon>
+      <p *ngIf=" (ctl.dirty || ctl.touched) && ctl?.errors?.required; else otherErr">此為必填欄位</p>
+      <ng-template #otherErr>{{firstErr}}</ng-template>
+  </div>
+</div>
