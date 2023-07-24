@@ -1,1 +1,41 @@
-<p>activity-detail works!</p>
+<div class="pageTitle">
+  <h1>排程管理</h1>
+</div>
+<div class="pageContent">
+  <nb-card>
+    <nb-card-body>
+        <div class="row">
+            <div class="textGroup col-12 col-lg-4">
+                <p class="textBold">作業名稱：</p>
+                <span>{{activitySetting.activityName}}</span>
+            </div>
+            <div class="textGroup col-12 col-lg-4">
+                <p class="textBold">狀態：</p>
+                <span>{{activitySetting.status?.toLowerCase() | enum:'status'}}</span>
+            </div>
+            <div class="textGroup col-12 col-lg-4">
+                <p class="textBold">執行頻率：</p>
+                <span>{{activitySetting.scheduleSettings?.toLowerCase() | enum:'frequency'}}</span>
+            </div>
+            <div class="textGroup col-12 col-lg-4">
+                <p class="textBold">異動時間：</p>
+                <span>{{activitySetting.modificationTime | date:dateFormat}}</span>
+            </div>
+        </div>
+    </nb-card-body>
+  </nb-card>
+  <nb-card>
+    <nb-card-header>
+        <h2>名單紀錄</h2>
+    </nb-card-header>
+    <nb-card-body>
+        <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
+        <paginator [source]="dataSource" [paginator]="paginator"></paginator>
+    </nb-card-body>
+  </nb-card>
+  <div class="row">
+      <div class="btnGroup">
+          <button nbButton status="basic" size="medium" (click)="cancel()">返回</button>
+      </div>
+  </div>
+</div>

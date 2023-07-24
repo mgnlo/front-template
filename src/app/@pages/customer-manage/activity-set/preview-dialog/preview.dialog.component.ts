@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CustomerListMock } from '@common/mock-data/customer-list-mock';
 import { NbDialogRef } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
@@ -14,21 +15,41 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
 
   @Input() dataList: Array<string>;
 
-  orderType: string = 'asc';
-  orderBy: number = 110;
-  orderList = new Map([
+  // orderType: string = 'asc';
+  // orderBy: number = 110;
+  orderByList = new Map([
     [110, '消費金額'],
     [111, '交易次數'],
     [112, '換匯次數'],
     [113, '定存筆數'],
+    [114, '消費金額'],
+    [115, '交易次數'],
+    [116, '換匯次數'],
+    [117, '定存筆數'],
+    [118, '消費金額'],
+    [119, '交易次數'],
+    [120, '換匯次數'],
+    [121, '定存筆數'],
+  ]);
+  orderTypeList = new Map([
+    ['asc', '升冪'],
+    ['desc', '降冪'],
   ]);
   constructor(private ref: NbDialogRef<PreviewDialogComponent>) {
     super();
+    this.validateForm = new FormGroup({
+      listLimit: new FormControl('150', Validators.required),
+      orderBy: new FormControl(110),
+      orderType: new FormControl('asc', Validators.required),
+    });
   }
 
   ngOnInit() {
     this.dataSource = new LocalDataSource();
     this.dataSource.load(CustomerListMock);
+    if(!!this.dataList['listLimit']){
+      this.validateForm.get('listLimit').setValue(this.dataList['listLimit']);
+    }
     console.info(this.dataList);
   }
 

@@ -32,7 +32,7 @@ import { ElementComponent } from "./element.component";
         NbDialogModule.forRoot(),
     ],
     declarations: [
-        ElementComponent,
+        ElementComponent
     ]
 })
 export class ElementPageModule { }

@@ -29,11 +29,27 @@ export const ValidatorsUtil = {
       return null;
     }
   },
+  /** 搜尋區的身份證字號檢核 */
+  searchCustId: (ctl: AbstractControl) => {
+    const v = ctl.value;
+    if (v && (ctl.dirty || ctl.touched) && !RegExpUtil.custIdSearch.test(v)) {
+      return { 'searchCustId': '請輸入有效會員號碼，大寫英文字母或數字' };
+    }
+    return null;
+  },
+  /** 檢查:正整數格式 */
+  number: (ctl: AbstractControl) => {
+    const v = ctl.value;
+    if (v && (ctl.dirty || ctl.touched) && !/^\d+$/i.test(v)) {
+      return { 'number': '請輸入數字' };
+    }
+    return null;
+  },
   /** 檢查:身份證字號 */
   id: (ctl: AbstractControl) => {
     const v = ctl.value;
     if (v && (ctl.dirty || ctl.touched) && !ValidateUtil.checkIdentity(v)) {
-      return { 'creditLoan.invalid.msg.ID': true };
+      return { 'id': '身分證號有誤' };
     }
     return null;
   },
@@ -41,7 +57,7 @@ export const ValidatorsUtil = {
   migrantId: (ctl: AbstractControl) => {
     const v = ctl.value;
     if (v && (ctl.dirty || ctl.touched) && !ValidateUtil.isMigrantsId(v) && !ValidateUtil.checkIdentity(v)) {
-      return { 'creditLoan.invalid.msg.ID': true };
+      return { 'migrantId': '身分證號或外來人口統一證號有誤' };
     }
     return null;
   },
@@ -49,7 +65,7 @@ export const ValidatorsUtil = {
   UBN: (ctl: AbstractControl) => {
     const v = ctl.value;
     if (v && (ctl.dirty || ctl.touched) && !ValidateUtil.checkUBN(v)) {
-      return { 'creditLoan.invalid.msg.ID': true };
+      return { 'ubn': '統編有誤' };
     }
     return null;
   },
@@ -60,7 +76,7 @@ export const ValidatorsUtil = {
       (ctl.dirty || ctl.touched) &&
       (!ValidateUtil.checkIdentity(v) && !ValidateUtil.checkUBN(v))
     ) {
-      return { 'creditLoan.invalid.msg.ID': true };
+      return { 'ubnId': '身分證號或統編有誤' };
     }
     return null;
   },
@@ -68,7 +84,7 @@ export const ValidatorsUtil = {
   mobile: (ctl: AbstractControl) => {
     const v = ctl.value;
     if (v && (ctl.dirty || ctl.touched) && !/^09\d{8}$/i.test(v)) {
-      return { 'creditLoan.invalid.msg.mobile': true };
+      return { 'mobile': '手機號碼有誤' };
     }
     return null;
   },
@@ -90,20 +106,12 @@ export const ValidatorsUtil = {
       return null;
     };
   },
-  /** 檢查:正整數格式 */
-  fullNumber: (ctl: AbstractControl) => {
-    const v = ctl.value;
-    if (v && (ctl.dirty || ctl.touched) && !/^\d+$/i.test(v)) {
-      return { 'creditLoan.invalid.msg.fullNumber': true };
-    }
-    return null;
-  },
   /** 檢查:email格式 */
   email: (ctl: AbstractControl) => {
     const v = ctl.value;
     const exp = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
     if (v && (ctl.dirty || ctl.touched) && !ValidateUtil.checkEmail(ctl.value) && !exp.test(v)) {
-      return { 'creditLoan.invalid.msg.email': true };
+      return { 'email': 'email格式有誤' };
     }
     return null;
   },
@@ -111,29 +119,21 @@ export const ValidatorsUtil = {
   address: (ctl: AbstractControl) => {
     const v = ctl.value;
     if (v && (ctl.dirty || ctl.touched) && !/^[\u4e00-\u9fa50-9\-]+$/.test(v)) {
-      return { 'creditLoan.invalid.msg.address': true };
-    }
-    return null;
-  },
-  /** 檢查戶籍地址及通訊地址的號，只能數字及“-“ */
-  addressNumber: (ctl: AbstractControl) => {
-    const v = ctl.value;
-    if (v && (ctl.dirty || ctl.touched) && !/^[0-9\-]+$/.test(v)) {
-      return { 'creditLoan.invalid.msg.address.number': true };
+      return { 'address': '地址格式有誤' };
     }
     return null;
   },
   /** 檢查數字不為0 */
   notZero: (ctl: AbstractControl) => {
     if ((ctl.dirty || ctl.touched) && +ctl.value === 0) {
-      return { 'creditLoan.calculate.query.remind4': true };
+      return { 'zero': '不可為0' };
     }
     return null;
   },
   blank: (ctl: AbstractControl) => {
     const v: string = ctl.value;
     if (v && (ctl.dirty || ctl.touched) && ((v || '').trim().length === 0)) {
-      return { 'blank': true };
+      return { 'blank': '不可為空' };
     }
     return null;
   }

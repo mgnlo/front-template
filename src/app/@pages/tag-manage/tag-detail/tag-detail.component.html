@@ -11,81 +11,101 @@
   <nb-card>
       <nb-card-body>
           <div class="row">
-              <div class="textGroup col-12 col-lg-4">
+            <div class="textGroup col-12 col-lg-4">
                   <p class="textBold">標籤名稱：</p>
                   <span>{{detail.tagName}}</span>
-              </div>
-              <div class="textGroup col-12 col-lg-4">
+            </div>
+            <div class="textGroup col-12 col-lg-4">
                   <p class="textBold">狀態：</p>
                   <span>{{detail.status | enum:'status'}}</span>
-              </div>
-              <div class="textGroup col-12 col-lg-4">
+            </div>
+            <div class="textGroup col-12 col-lg-4">
                   <p class="textBold">類型：</p>
                   <span>{{detail.tagType | enum:'tagType'}}</span>
-              </div>
-              <div class="textGroup col-12 col-lg-4">
-                <p class="textBold">所屬單位：</p>
-                <span>{{detail.department}}</span>
-              </div>
-              <div class="textGroup col-12 col-lg-4">
-                <p class="textBold">負責人：</p>
-                <span>{{detail.owner}}</span>
-              </div>
-              <div class="textGroup col-12 col-lg-4">
-                  <p class="textBold">起迄時間：</p>
-                  <span>{{detail.startDate}}~{{detail.endDate}}</span>
-              </div>
-              <div class="textGroup col-12 col-lg-4">
-                <p class="textBold">標籤構面：</p>
-                <span>{{detail.tagDimension | enum:'tagDimension'}}</span>
-              </div>
-              <div class="textGroup col-12 col-lg-4">
-                <p class="textBold">標籤子構面：</p>
-                <span>{{detail.tagSubDimension | enum:'tagSubDimension'}}</span>
-              </div>
-              <div class="textGroup col-12 col-lg-4">
-                  <p class="textBold">異動時間：</p>
-                  <span>{{detail.modificationTime | date:dateFormat}}</span>
-              </div>
-              <div class="textGroup col-12 col-lg-4">
-                  <p class="textBold">描述說明：</p>
-                  <span>{{detail.tagDescription}}</span>
-              </div>
-              <div class="textGroup col-12 col-lg-4">
-                  <p class="textBold">名單上傳：</p>
-                  <a [href]="detail.filePath" download>{{this.fileName}}</a>
+            </div>
+          </div>
+          <div class="row">
+            <div class="textGroup col-12 col-lg-4">
+              <p class="textBold">所屬單位：</p>
+              <span>{{detail.department}}</span>
+            </div>
+            <div class="textGroup col-12 col-lg-4">
+              <p class="textBold">負責人：</p>
+              <span>{{detail.owner}}</span>
+            </div>
+            <div class="textGroup col-12 col-lg-4">
+                <p class="textBold">起迄時間：</p>
+                <span>{{detail.startDate}}~{{detail.endDate}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="textGroup col-12 col-lg-4">
+              <p class="textBold">標籤構面：</p>
+              <span>{{detail.tagDimension | enum:'tagDimension'}}</span>
+            </div>
+            <div class="textGroup col-12 col-lg-4">
+              <p class="textBold">標籤子構面：</p>
+              <span>{{detail.tagSubDimension | enum:'tagSubDimension'}}</span>
+            </div>
+            <div class="textGroup col-12 col-lg-4">
+                <p class="textBold">異動時間：</p>
+                <span>{{detail.modificationTime | date:dateFormat}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="textGroup col-12 col-lg-4">
+                <p class="textBold">描述說明：</p>
+                <span>{{detail.tagDescription}}</span>
+            </div>
+            <div class="textGroup col-12 col-lg-4">
+                <p class="textBold">名單上傳：</p>
+                <a [href]="detail.filePath" download>{{this.fileName}}</a>
+            </div>
+          </div>
+          <div class="subTitle">
+              <p>條件設定</p>
+          </div>
+          <div class="row">
+              <div class="textGroup code col-12">
+                  <p class="textBold">偵測條件：</p>
+                  <pre>{{detail.conditionSettingQuery}}</pre>
               </div>
           </div>
       </nb-card-body>
   </nb-card>
   <nb-card>
-      <nb-card-header>
-          <h2>異動歷程</h2>
-      </nb-card-header>
-      <nb-card-body>
-          <div class="historyList">
-              <ng-container *ngFor="let hg of detail.historyGroupView | keyvalue; let i=index;">
-                  <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
-                      <div class="mainItem">
-                          <h4 (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">{{history.type}}</h4>
-                          <button nbButton status="control" size="tiny" class="iconBtn" (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">
-                              <nb-icon icon="chevron-down-outline"></nb-icon>
-                          </button>
-                      </div>
-                      <div class="subItem" [ngClass]="isHistoryOpen[hg.key] ? '' : 'displayNone'" *ngFor="let flow of history.flows">
-                          <div>
-                              <p>{{flow.time | date:dateFormat}}</p>
-                              <p>{{flow.time | date:'hh:mm:ss'}}</p>
-                          </div>
-                          <div>
-                              <p>{{flow.title}}</p>
-                              <p>{{flow.detail}}</p>
-                          </div>
-                      </div>
-                  </div>
-              </ng-container>
-          </div>
-      </nb-card-body>
+    <nb-card-body>
+        <nb-tabset>
+            <nb-tab tabTitle="異動歷程">
+              <div class="historyList">
+                <ng-container *ngFor="let hg of detail.historyGroupView | keyvalue; let i=index;">
+                    <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
+                        <div class="mainItem">
+                            <h4 (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">{{history.type}}</h4>
+                            <button nbButton status="control" size="tiny" class="iconBtn" (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">
+                                <nb-icon icon="chevron-down-outline"></nb-icon>
+                            </button>
+                        </div>
+                        <div class="subItem" [ngClass]="isHistoryOpen[hg.key] ? '' : 'displayNone'" *ngFor="let flow of history.flows">
+                            <div>
+                                <p>{{flow.time | date:dateFormat}}</p>
+                                <p>{{flow.time | date:'hh:mm:ss'}}</p>
+                            </div>
+                            <div>
+                                <p>{{flow.title}}</p>
+                                <p>{{flow.detail}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+              </div>
+            </nb-tab>
+            <nb-tab tabTitle="標籤使用範圍">
+                <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
+                <paginator [source]="dataSource" [paginator]="paginator"></paginator>
+            </nb-tab>
+        </nb-tabset>
+    </nb-card-body>
   </nb-card>
   <div class="row">
       <div class="btnGroup">

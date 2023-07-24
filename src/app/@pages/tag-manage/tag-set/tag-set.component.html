@@ -2,62 +2,24 @@
   <h1>標籤管理</h1>
 </div>
 <div class="pageContent">
+  <!-- 提示訊息 -->
+  <div *ngIf="this.params['changeRoute'] === 'edit' && this.validateForm.get('tagType').value ==='document'" class="noteText">
+        <nb-icon icon="info-outline"></nb-icon>
+        <p>重新選取檔案後，將以新版上傳資料為貼標標準</p>
+  </div>
   <nb-card>
-      <nb-card-header>
+    <nb-card-header>
           <h2>{{actionName}}標籤</h2>
-      </nb-card-header>
-      <nb-card-body [formGroup]="validateForm">
-          <div class="row">
-            <div class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': err}">
-                <label>標籤名稱</label>
-                <div>
-                    <input nbInput fullWidth [status]="err?'danger':'basic'" type="text" placeholder="請輸入" formControlName="tagName"/>
-                </div>
-                <div class="note errorText">
-                    <nb-icon icon="alert-triangle"></nb-icon>
-                    <p>欄位錯誤訊息</p>
-                </div>
-            </div>
-            <div class="fieldGroup essential col-12 col-lg-6">
-                <label>狀態</label>
-                <div>
-                    <nb-radio-group name="status" formControlName="status">
-                        <nb-radio value="active">{{Status.enabled}}</nb-radio>
-                        <nb-radio value="stop">{{Status.disabled}}</nb-radio>
-                    </nb-radio-group>
-                </div>
-                <div class="note errorText">
-                    <nb-icon icon="alert-triangle"></nb-icon>
-                    <p>欄位錯誤訊息</p>
-                </div>
-            </div>
+    </nb-card-header>
+    <nb-card-body [formGroup]="validateForm">
+        <div class="row">
+            <basic-input class="col-12 col-lg-6" title="標籤名稱" [form]="validateForm" ctlName="tagName"></basic-input>
+            <radio class="col-12 col-lg-6" title="狀態" [form]="validateForm" ctlName="status"></radio>
         </div>
         <div class="row">
-            <div class="fieldGroup essential col-12 col-lg-6">
-              <label>標籤類型</label>
-              <div>
-                  <nb-radio-group name="tagType" formControlName="tagType">
-                      <nb-radio value="normal" (valueChange)="changeTagType('normal')">{{TagType.normal}}</nb-radio>
-                      <nb-radio value="document" (valueChange)="changeTagType('document')">{{TagType.document}}</nb-radio>
-                  </nb-radio-group>
-              </div>
-              <div class="note errorText">
-                  <nb-icon icon="alert-triangle"></nb-icon>
-                  <p>欄位錯誤訊息</p>
-              </div>
-            </div>
-            <div *ngIf="validateForm.get('tagType').value === 'normal'"  class="fieldGroup essential col-12 col-lg-6">
-              <label>條件設定方式</label>
-              <div>
-                  <nb-radio-group name="setCondition" formControlName="setCondition">
-                      <nb-radio value="normal">{{SetCondition.normal}}</nb-radio>
-                      <nb-radio value="field">{{SetCondition.field}}</nb-radio>
-                  </nb-radio-group>
-              </div>
-              <div class="note errorText">
-                  <nb-icon icon="alert-triangle"></nb-icon>
-                  <p>欄位錯誤訊息</p>
-              </div>
+            <radio class="col-12 col-lg-6" title="標籤類型" [form]="validateForm" ctlName="tagType" (valueChange)="changeTagType($event)"></radio>
+            <div *ngIf="validateForm.get('tagType').value === 'normal'"  class="essential col-12 col-lg-6">
+              <radio title="條件設定方式" [form]="validateForm" ctlName="setCondition" enumName="tagSetCondition"></radio>
             </div>
             <div *ngIf="validateForm.get('tagType').value === 'document'" class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': !isFile}">
                 <label>名單上傳</label>
@@ -68,7 +30,7 @@
                         <nb-icon icon="folder-add-outline"></nb-icon>
                     </button>
                 </div>
-                <div class="note errorText" *ngIf="true">
+                <div class="note errorText">
                     <nb-icon icon="alert-triangle"></nb-icon>
                     <p>上傳格式錯誤或檔案過大</p>
                 </div>
@@ -80,39 +42,26 @@
         </div>
         <date-range [form]="validateForm"></date-range>
         <div class="row">
-            <div class="fieldGroup essential col-12 col-lg-6">
-              <label>標籤構面</label>
-              <div>
-                  <nb-select fullWidth placeholder="請選擇" formControlName="tagDimension">
-                      <nb-option value="">全部</nb-option>
-                      <nb-option *ngFor="let status of categoryList" [value]="status.key">{{ status.val }}</nb-option>
-                  </nb-select>
-              </div>
-              <div class="note errorText">
-                  <nb-icon icon="alert-triangle"></nb-icon>
-                  <p>欄位錯誤訊息</p>
-              </div>
-            </div>
-            <div class="fieldGroup essential col-12 col-lg-6">
-              <label>標籤子構面</label>
-              <div>
-                  <nb-select fullWidth placeholder="請選擇" formControlName="tagSubDimension">
-                      <nb-option value="">全部</nb-option>
-                      <nb-option *ngFor="let status of subCategoryList" [value]="status.key">{{ status.val }}</nb-option>
-                  </nb-select>
-              </div>
-              <div class="note errorText">
-                  <nb-icon icon="alert-triangle"></nb-icon>
-                  <p>欄位錯誤訊息</p>
-              </div>
-            </div>
+            <dropdown class="col-12 col-lg-6" title="標籤構面" [form]="validateForm" ctlName="tagDimension"></dropdown>
+            <dropdown class="col-12 col-lg-6" title="標籤子構面" [form]="validateForm" ctlName="tagSubDimension"></dropdown>
         </div>
         <div class="row">
-            <div class="fieldGroup essential col-12 col-lg-6">
-                <label>排程設定</label>
+            <dropdown class="col-12 col-lg-6" title="排程設定" [form]="validateForm" ctlName="scheduleSettings" enumName="schedule"></dropdown>
+            <basic-input class="col-12 col-lg-6" title="描述說明" [form]="validateForm" ctlName="tagDescription"></basic-input>
+        </div>
+        <div class="subTitle">
+            <p>條件設定</p>
+        </div>
+        <div class="row">
+            <div class="fieldGroup essential col-12">
+                <label>偵測條件</label>
+                <!-- <div>
+                    <textarea nbInput fullWidth status="basic" type="text" formControlName="conditionSettingQuery" placeholder="請輸入"></textarea>
+                </div> -->
                 <div>
-                    <nb-select fullWidth placeholder="請選擇" formControlName="scheduleSettings">
-                        <nb-option *ngFor="let schedule of scheduleList" [value]="schedule.key">{{ schedule.val }}</nb-option>
+                    <nb-select fullWidth placeholder="請選擇">
+                        <nb-option value="item1">item1</nb-option>
+                        <nb-option value="item2">item2</nb-option>
                     </nb-select>
                 </div>
                 <div class="note errorText">
@@ -120,58 +69,105 @@
                     <p>欄位錯誤訊息</p>
                 </div>
             </div>
-            <div class="fieldGroup col-12 col-lg-6">
-                <label>描述說明</label>
-                <div>
-                    <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" formControlName="tagDescription"/>
-                </div>
-                <div class="note errorText">
-                    <nb-icon icon="alert-triangle"></nb-icon>
-                    <p>欄位錯誤訊息</p>
-                </div>
-            </div>
         </div>
-        <div class="row">
-            <div class="fieldGroup essential col-12">
-                <label>條件設定</label>
-                <div>
-                    <textarea nbInput fullWidth status="basic" type="text" formControlName="conditionSettingQuery" placeholder="請輸入"></textarea>
-                </div>
-                <div class="note errorText">
-                    <nb-icon icon="alert-triangle"></nb-icon>
-                    <p>欄位錯誤訊息</p>
-                </div>
-            </div>
+        <div class="row rightBox">
+          <div class="fieldBtn col-12 col-lg-2">
+              <button nbButton status="control">
+                  <nb-icon icon="bar-chart-outline"></nb-icon>條件分佈級距
+              </button>
+          </div>
         </div>
-      </nb-card-body>
+        <!-- 灰底區塊 -->
+        <div class="grayCard">
+          <div class="row">
+              <!-- 下拉式選單欄位結構 -->
+              <div class="fieldGroup essential col-6 col-lg-4">
+                  <label>下拉式選單</label>
+                  <div>
+                      <nb-select fullWidth placeholder="請選擇">
+                          <nb-option value="item1">item1</nb-option>
+                          <nb-option value="item2">item2</nb-option>
+                      </nb-select>
+                  </div>
+                  <div class="note errorText">
+                      <nb-icon icon="alert-triangle"></nb-icon>
+                      <p>欄位錯誤訊息</p>
+                  </div>
+              </div>
+              <!-- 一般輸入欄位結構 -->
+              <div class="fieldGroup essential col-6 col-lg-4">
+                  <label>輸入欄位</label>
+                  <div>
+                      <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" />
+                  </div>
+                  <div class="note errorText">
+                      <nb-icon icon="alert-triangle"></nb-icon>
+                      <p>欄位錯誤訊息</p>
+                  </div>
+              </div>
+              <!-- radio欄位結構 -->
+              <div class="fieldGroup col-10 col-lg-2">
+                  <label>radio</label>
+                  <div>
+                      <nb-radio-group>
+                          <nb-radio value="1">and</nb-radio>
+                          <nb-radio value="2">or</nb-radio>
+                      </nb-radio-group>
+                  </div>
+                  <!-- 欄位錯誤訊息 -->
+                  <div class="note errorText">
+                      <nb-icon icon="alert-triangle"></nb-icon>
+                      <p>欄位錯誤訊息</p>
+                  </div>
+              </div>
+
+              <!-- 增減按鈕 -->
+              <div class="fieldBtn col-1 col-lg-1">
+                  <button nbButton status="success" size="tiny" class="iconBtn">
+                      <nb-icon icon="plus-outline"></nb-icon>
+                  </button>
+              </div>
+              <div class="fieldBtn col-1 col-lg-1">
+                  <button nbButton status="danger" size="tiny" class="iconBtn">
+                      <nb-icon icon="minus-outline"></nb-icon>
+                  </button>
+              </div>
+          </div>
+        </div>
+    </nb-card-body>
   </nb-card>
   <nb-card *ngIf="this.params['changeRoute'] === 'edit'">
-    <nb-card-header>
-        <h2>異動歷程</h2>
-    </nb-card-header>
     <nb-card-body>
-      <div class="historyList">
-        <ng-container *ngFor="let hg of detail.historyGroupView | keyvalue; let i=index;">
-            <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
-                <div class="mainItem">
-                    <h4 (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">{{history.type}}</h4>
-                    <button nbButton status="control" size="tiny" class="iconBtn" (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">
-                        <nb-icon icon="chevron-down-outline"></nb-icon>
-                    </button>
-                </div>
-                <div class="subItem" [ngClass]="isHistoryOpen[hg.key] ? '' : 'displayNone'" *ngFor="let flow of history.flows">
-                    <div>
-                        <p>{{flow.time | date:dateFormat}}</p>
-                        <p>{{flow.time | date:'hh:mm:ss'}}</p>
+        <nb-tabset>
+            <nb-tab tabTitle="異動歷程">
+              <div class="historyList">
+                <ng-container *ngFor="let hg of detail.historyGroupView | keyvalue; let i=index;">
+                    <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
+                        <div class="mainItem">
+                            <h4 (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">{{history.type}}</h4>
+                            <button nbButton status="control" size="tiny" class="iconBtn" (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">
+                                <nb-icon icon="chevron-down-outline"></nb-icon>
+                            </button>
+                        </div>
+                        <div class="subItem" [ngClass]="isHistoryOpen[hg.key] ? '' : 'displayNone'" *ngFor="let flow of history.flows">
+                            <div>
+                                <p>{{flow.time | date:dateFormat}}</p>
+                                <p>{{flow.time | date:'hh:mm:ss'}}</p>
+                            </div>
+                            <div>
+                                <p>{{flow.title}}</p>
+                                <p>{{flow.detail}}</p>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <p>{{flow.title}}</p>
-                        <p>{{flow.detail}}</p>
-                    </div>
-                </div>
-            </div>
-        </ng-container>
-      </div>
+                </ng-container>
+              </div>
+            </nb-tab>
+            <nb-tab tabTitle="標籤使用範圍">
+                <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
+                <paginator [source]="dataSource" [paginator]="paginator"></paginator>
+            </nb-tab>
+        </nb-tabset>
     </nb-card-body>
   </nb-card>
   <div class="row">

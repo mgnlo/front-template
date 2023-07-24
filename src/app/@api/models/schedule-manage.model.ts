@@ -31,6 +31,7 @@ export class Schedule_Batch_History {
   historyId: string;
   activityId: string;
   version: string;
+  batchResultCount:number;
   batchTime: string;
   batchResult: string;
 }
