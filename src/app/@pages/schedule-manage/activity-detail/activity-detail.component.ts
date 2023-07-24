@@ -99,7 +99,7 @@ export class ActivityDetailComponent extends BaseComponent implements OnInit {
 
 @Component({
   selector: 'activity-detail-button',
-  template: '<button nbButton ghost status="info" size="medium" (click)="download()"><nb-icon icon="search"></nb-icon></button>'
+  template: '<button nbButton ghost status="info" size="medium" (click)="download()"><nb-icon icon="cloud-download-outline"></nb-icon></button>'
 })
 export class ActivityButtonComponent implements OnInit {
 

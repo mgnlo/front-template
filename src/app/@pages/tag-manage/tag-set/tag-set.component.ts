@@ -32,7 +32,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   fileName: string;
   isFile: boolean = true;//是否上傳檔案
   err: boolean = false;
-  params: any;//路由參數
+  params: any = [];//路由參數
   actionName: string;// 新增/編輯/複製
 
   mockData: Array<ActivitySetting> = ActivityListMock;
@@ -208,6 +208,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   addField(fieldName: string, formState: any, fileFormatValidator: any) {
     this.validateForm.addControl(fieldName, new FormControl(formState, fileFormatValidator));
+    this.validateForm.controls[fieldName].updateValueAndValidity();
   }
 
   removeField(fieldName: string) {
