@@ -12,8 +12,8 @@
           <h2>{{actionName}}標籤</h2>
     </nb-card-header>
     <nb-card-body [formGroup]="validateForm">
-          <div class="row">
-            <div class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': err}">
+        <div class="row">
+          <div class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': err}">
                 <label>標籤名稱</label>
                 <div>
                     <input nbInput fullWidth [status]="err?'danger':'basic'" type="text" placeholder="請輸入" formControlName="tagName"/>
@@ -22,8 +22,8 @@
                     <nb-icon icon="alert-triangle"></nb-icon>
                     <p>欄位錯誤訊息</p>
                 </div>
-            </div>
-            <div class="fieldGroup essential col-12 col-lg-6">
+          </div>
+          <div class="fieldGroup essential col-12 col-lg-6">
                 <label>狀態</label>
                 <div>
                     <nb-radio-group name="status" formControlName="status">
@@ -35,7 +35,7 @@
                     <nb-icon icon="alert-triangle"></nb-icon>
                     <p>欄位錯誤訊息</p>
                 </div>
-            </div>
+          </div>
         </div>
         <div class="row">
             <div class="fieldGroup essential col-12 col-lg-6">
@@ -159,7 +159,7 @@
         </div>
         <div class="row rightBox">
           <div class="fieldBtn col-12 col-lg-2">
-              <button nbButton status="control">
+              <button nbButton status="control" (click)="conditionDialog()">
                   <nb-icon icon="bar-chart-outline"></nb-icon>條件分佈級距
               </button>
           </div>
@@ -171,19 +171,17 @@
               <div class="fieldGroup essential col-6 col-lg-4">
                   <label>下拉式選單</label>
                   <div>
-                      <nb-select fullWidth placeholder="請選擇">
-                          <nb-option value="item1">item1</nb-option>
-                          <nb-option value="item2">item2</nb-option>
-                      </nb-select>
+                    <nb-select fullWidth placeholder="請選擇" formControlName="mathSymbol">
+                      <nb-option *ngFor="let mathSymbol of mathSymbolList" [value]="mathSymbol.key">{{ mathSymbol.val }}</nb-option>
+                    </nb-select>
                   </div>
                   <div class="note errorText">
                       <nb-icon icon="alert-triangle"></nb-icon>
                       <p>欄位錯誤訊息</p>
                   </div>
               </div>
-              <!-- 一般輸入欄位結構 -->
               <div class="fieldGroup essential col-6 col-lg-4">
-                  <label>輸入欄位</label>
+                  <label>門檻值</label>
                   <div>
                       <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" />
                   </div>
@@ -194,14 +192,13 @@
               </div>
               <!-- radio欄位結構 -->
               <div class="fieldGroup col-10 col-lg-2">
-                  <label>radio</label>
+                  <label>集合</label>
                   <div>
                       <nb-radio-group>
                           <nb-radio value="1">and</nb-radio>
                           <nb-radio value="2">or</nb-radio>
                       </nb-radio-group>
                   </div>
-                  <!-- 欄位錯誤訊息 -->
                   <div class="note errorText">
                       <nb-icon icon="alert-triangle"></nb-icon>
                       <p>欄位錯誤訊息</p>

@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TagDimension, TagSetCondition, TagSubDimension, TagType } from '@common/enums/tag-enum';
 import { TagSetting, TagDetailView } from '@api/models/tag-manage.model';
-import { Filter, Status, Schedule } from '@common/enums/common-enum';
+import { Filter, Status, Schedule, MathSymbol } from '@common/enums/common-enum';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
@@ -11,6 +11,8 @@ import { CommonUtil } from '@common/utils/common-util';
 import { LocalDataSource } from 'ng2-smart-table';
 import { ActivitySetting } from '@api/models/activity-list.model';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
+import { DialogService } from '@api/services/dialog.service';
+import { TagConditionDialogComponent } from './condition-dialog/condition-dialog.component';
 
 @Component({
   selector: 'tag-set',
@@ -28,6 +30,13 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   categoryList: Array<{ key: string; val: string }> = Object.entries(TagDimension).map(([k, v]) => ({ key: k, val: v }))
   subCategoryList: Array<{ key: string; val: string }> = Object.entries(TagSubDimension).map(([k, v]) => ({ key: k, val: v }))
 
+  //預設數學符號
+  tagMathSymbolList = [MathSymbol.is_greater_than, MathSymbol.is_less_than, MathSymbol.equals];
+  mathSymbolList: Array<{ key: string; val: string }> = Object.entries(MathSymbol)
+    .filter(([k, v]) => {
+      return this.tagMathSymbolList.includes(v);
+    }).map(([k, v]) => ({ key: k, val: v }));
+
   detail: TagDetailView;
   fileName: string;
   isFile: boolean = true;//是否上傳檔案
@@ -42,7 +51,10 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private readonly changeDetectorRef: ChangeDetectorRef) {
+  constructor(private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private readonly changeDetectorRef: ChangeDetectorRef,
+    private dialogService: DialogService) {
     super();
     this.validateForm = new FormGroup({
       tagName: new FormControl(null, Validators.required),
@@ -117,7 +129,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'col-2 left',
         sort: false,
-        valuePrepareFunction: (cell:string) => {
+        valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
       },
@@ -126,7 +138,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'col-3 left',
         sort: false,
-        valuePrepareFunction: (cell:string) => {
+        valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
       },
@@ -146,7 +158,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
         title: '狀態',
         type: 'string',
         class: 'col-1',
-        valuePrepareFunction: (cell:string) => {
+        valuePrepareFunction: (cell: string) => {
           return Status[cell];
         },
         sort: false,
@@ -155,7 +167,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
         title: '起訖時間',
         type: 'html',
         class: 'col-3',
-        valuePrepareFunction: (cell:any) => {
+        valuePrepareFunction: (cell: any) => {
           return `<span class="date">${cell}</span>`;
         },
         sort: false,
@@ -172,7 +184,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.dataSource = new LocalDataSource();
     this.mockData = this.mockData.map(mock => {
-      return {...mock, during:`${mock.startDate}~${mock.endDate}`} //起訖日查詢篩選要用到
+      return { ...mock, during: `${mock.startDate}~${mock.endDate}` } //起訖日查詢篩選要用到
     })
     this.dataSource.load(this.mockData);
   }
@@ -259,6 +271,13 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   //   }
   //   return null;
   // }
+
+  conditionDialog() {
+    this.dialogService.open(TagConditionDialogComponent, {
+      title: '條件分佈級距',
+      dataList: this.validateForm,
+    });
+  }
 
   cancel() {
     this.router.navigate(['pages', 'tag-manage', 'tag-list']);
