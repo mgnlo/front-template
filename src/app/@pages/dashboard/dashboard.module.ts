@@ -1,22 +1,29 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule } from '@common/common.module';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { DialogService } from '@api/services/dialog.service';
+import { ComponentModule } from '@component/component.module';
+import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
 import { ThemeModule } from 'app/@theme/theme.module';
-import { SlideOutComponent } from './visitors-analytics/slide-out/slide-out.component';
+import { Ng2SmartTableModule } from 'ng2-smart-table';
+import { DashboardRoutingModule, routedComponents } from './dashboard-routing.module';
 
 @NgModule({
   imports: [
-    ThemeModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    TranslateModule,
-  ],
-  declarations: [
-    SlideOutComponent,
+    ThemeModule,
+    DashboardRoutingModule,
+    Ng2SmartTableModule,
+    ComponentModule,
   ],
   providers: [
+    DialogService,
+    CustomerManageService
+  ],
+  declarations: [
+    ...routedComponents,
   ],
 })
 export class DashboardModule { }

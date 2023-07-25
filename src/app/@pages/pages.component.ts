@@ -35,6 +35,10 @@ export class PagesComponent implements OnInit {
             title: "表單元件",
             link: "/pages/element2",
           },
+          {
+            title: "Echarts圖表內容",
+            link: "/pages/charts/echarts",
+          },
         ]
       },
       {
@@ -90,7 +94,7 @@ export class PagesComponent implements OnInit {
         children: [
           {
             title: "使用者管理",
-            link: "/pages/element",
+            link: "/pages/account-manage/console-user",
           },
           {
             title: "權限管理",
