@@ -6,8 +6,9 @@ import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
 import { AccountManageService } from '../account.manage.service';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { is } from 'date-fns/locale';
+import { ValidationError } from 'ngx-awesome-uploader';
 
 @Component({
   selector: 'console-group-add',
@@ -36,7 +37,7 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
     "console-group": "帳號管理 - 權限管理"
   }
 
-  enableRadio: string = "true";
+  enableOption: string = "true";
   groupName: string;
   consoleGroupAddForm: FormGroup;
 
@@ -97,7 +98,6 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
   };
 
   constructor(
-    formBuilder: FormBuilder,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private accountManageService: AccountManageService,
@@ -123,16 +123,24 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
       });
     }
 
-    this.consoleGroupAddForm = formBuilder.group({
-      groupName: [null, null],
-      enableRadio: [null, null]
-    }, {
-      validator: (fg: FormGroup) => {
-        (async () => {
-          this.validateField(fg); // your validation method
-        })();
-      }
+    this.consoleGroupAddForm = new FormGroup({
+      groupName: new FormControl('', [this.groupNameValidate(20)]),
     });
+  }
+
+  groupNameValidate(length: number): ValidatorFn{
+    return (ctl: AbstractControl): ValidationErrors | null => {
+      const value = ctl.value;
+
+      if(!value){
+        return { errMsg: "此欄位為必填欄位"};
+      } else if (value.leangth > length) {
+        return { errMsg: "權限名稱過長，最長為20個字"};
+      } else {
+        return null;
+      }
+    }
+    
   }
 
   isError(formCtrlName: string) {
@@ -141,28 +149,12 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
     return (viewCtrl.touched || viewCtrl.dirty) && viewCtrl.errors?.errMsg;
   }
 
-  private validateField(fg: FormGroup): any {
-    let groupName: AbstractControl = fg.get('groupName');
-    let enableRadio: AbstractControl = fg.get('enableRadio');
-
-    requestAnimationFrame(() => {
-      if (!this.groupName) {
-        this.updateErrMsg(groupName, "此欄位為必填欄位");
-      } else {
-        if (this.groupName.length > 20) {
-          this.updateErrMsg(groupName, "權限名稱過長，最長為20個字");
-        }
-      }
-  
-      if(!this.enableRadio){
-        this.updateErrMsg(enableRadio, "此欄位為必填欄位");
-      }
-    });    
-  }
-
-  private updateErrMsg(viewCtrl: AbstractControl, errMsg) {
-    if (!viewCtrl.errors || viewCtrl.errors.errMsg !== errMsg)
-      viewCtrl.setErrors({ errMsg: errMsg });
+  reset(){
+    this.enableOption = "true";
+    
+    this.consoleGroupAddForm.reset({
+      groupName: ""
+    });
   }
 
   ngOnInit(): void {
@@ -195,6 +187,10 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
           window.history.replaceState({}, '', this.router.url.split("?")[0]);
         };
       });
+    } else {
+      for (const control of Object.keys(this.consoleGroupAddForm.controls)) {
+        this.consoleGroupAddForm.controls[control].markAsTouched();
+      }
     }
   }
 }

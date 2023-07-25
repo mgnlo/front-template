@@ -6,9 +6,10 @@
         <nb-card-header>
             <h2>編輯權限</h2>
         </nb-card-header>
-        <nb-card-body [formGroup]="consoleGroupAddForm">
+        <nb-card-body>
             <div class="row">
-                <div class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': isError('groupName')}">
+                <div [formGroup]="consoleGroupAddForm" class="fieldGroup essential col-12 col-lg-6" 
+                     [ngClass]="{'error': isError('groupName')}">
                     <label>權限名稱</label>
                     <div>
                         <input formControlName="groupName" nbInput fullWidth [status]="isError('groupName') ? 'danger' : 'basic'"
@@ -19,11 +20,10 @@
                         <p>{{ isError('groupName') }}</p>
                     </div>
                 </div>
-                <div class="fieldGroup essential col-12 col-lg-4" [ngClass]="{'error': isError('enableRadio')}">
+                <div class="fieldGroup essential col-12 col-lg-4">
                     <label>狀態</label>
                     <div>
-                        <nb-radio-group formControlName="enableRadio" [status]="isError('enableRadio') ? 'danger' : 'basic'"
-                                        [(ngModel)]="enableRadio">
+                        <nb-radio-group [(ngModel)]="enableOption">
                             <nb-radio value="true">啟用</nb-radio>
                             <nb-radio value="false">停用</nb-radio>
                         </nb-radio-group>
@@ -31,10 +31,11 @@
                     <!-- 欄位錯誤訊息 -->
                     <div class="note errorText">
                         <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>{{ isError('enableRadio') }}</p>
+                        <p>欄位錯誤訊息</p>
                     </div>
-                </div>               
+                </div>        
             </div>
+            <button nbButton status="basic" size="medium" (click)="reset()" >清除</button>
             <div class="subTitle">
                 <p>權限內容</p>
             </div>
