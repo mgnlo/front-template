@@ -1,6 +1,6 @@
 import { ConsoleGroupScope } from "@api/models/console-group.model";
 
-export const ConsoleGroupScopeListMock: Array<ConsoleGroupScope> = [
+export const DEPRECATED_ConsoleGroupScopeListMock: Array<ConsoleGroupScope> = [
     {
         groupId: "uuid-1",
         scope: "dashboard.read"

@@ -15,8 +15,8 @@ import { BusinessUnit } from '@common/enums/console-user-enum';
   styleUrls: ['./console-group-edit.component.scss'],
 })
 export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
-  consoleGroup: ConsoleGroup;
-  consoleUser: any;
+  consoleGroupDetail: ConsoleGroup;
+  // consoleUser: any;
   consoleGroupScope: Array<GridInnerCheckBox> = [
     {featureName: "dashboard", read: false},
     {featureName: "customer", read: false},
@@ -37,44 +37,6 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
   }
   dataSource2: LocalDataSource;
   enableOption: any;
-
-  constructor(
-    private router: Router,
-    private accountManageService: AccountManageService,
-    private activatedRoute: ActivatedRoute,
-    private dateService: NbDateService<Date>) {
-    super();
-
-    try{
-      this.consoleGroup = JSON.parse(this.activatedRoute.snapshot.queryParamMap.get("consoleGroup"));
-      this.consoleUser = JSON.parse(this.activatedRoute.snapshot.queryParamMap.get("consoleUser"));
-      this.enableOption = "" + this.consoleGroup.enable;
-  
-      for (let scopeObj of this.consoleGroupScope) {
-        let keyList = Object.keys(scopeObj);
-  
-        for(let idx = 1; idx < keyList.length; idx++){
-          scopeObj[keyList[idx]] = 
-          (this.consoleGroup.consoleGroupScope.filter( item => item.scope == `${scopeObj[keyList[0]]}.${keyList[idx]}`).length > 0 ? true : false);
-        }      
-      }
-    } catch(e) {
-      //防止瀏覽器 F5，重新導回 list
-      this.router.navigate(this.accountManageService.CONSOLE_GROUP_LIST_PATH).then((res) => {
-        if (res) {
-          window.history.replaceState({}, '', this.router.url.split("?")[0]);
-        };
-      });
-    }    
-  }
-  
-  ngOnInit(): void {
-    this.dataSource = new LocalDataSource();
-    this.dataSource2 = new LocalDataSource();
-    this.dataSource.load(this.consoleUser);
-    this.dataSource2.load(this.consoleGroupScope);
-    document.querySelector("nb-layout-column").scrollTo(0, 0);
-  }
 
   gridDefine2 = {
     pager: {
@@ -185,6 +147,43 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
     }
   };
 
+  constructor(
+    private router: Router,
+    private accountManageService: AccountManageService,
+    private activatedRoute: ActivatedRoute,
+    private dateService: NbDateService<Date>) {
+    super();
+
+    try{
+      this.consoleGroupDetail = JSON.parse(this.activatedRoute.snapshot.queryParamMap.get("consoleGroupDetail"));
+      this.enableOption = "" + this.consoleGroupDetail.enable;
+  
+      for (let scopeObj of this.consoleGroupScope) {
+        let keyList = Object.keys(scopeObj);
+  
+        for(let idx = 1; idx < keyList.length; idx++){
+          scopeObj[keyList[idx]] = 
+          (this.consoleGroupDetail.consoleGroupScope.filter( item => item.scope == `${scopeObj[keyList[0]]}.${keyList[idx]}`).length > 0 ? true : false);
+        }      
+      }
+    } catch(e) {
+      //防止瀏覽器 F5，重新導回 list
+      this.router.navigate(this.accountManageService.CONSOLE_GROUP_LIST_PATH).then((res) => {
+        if (res) {
+          window.history.replaceState({}, '', this.router.url.split("?")[0]);
+        };
+      });
+    }    
+  }
+  
+  ngOnInit(): void {
+    this.dataSource = new LocalDataSource();
+    this.dataSource2 = new LocalDataSource();
+    this.dataSource.load(this.consoleGroupDetail.consoleUser);
+    this.dataSource2.load(this.consoleGroupScope);
+    document.querySelector("nb-layout-column").scrollTo(0, 0);
+  }
+
   onDeleteConfirm(event) {
     event.confirm.resolve();
     // setTimeout(() => {
@@ -208,21 +207,20 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
   }
 
   ok(){
-    // 這邊要發送電文去進行修改
+    // 這邊要發送電文 6.4 更新群組設定去進行修改，request 內容同 6.2 的 response
     // 修改成功後是否要再發送電文重新 query 資料或者是就直接 update?
     let passData: NavigationExtras = {};
 
-    this.consoleGroup.consoleGroupScope = [];
-    this.consoleGroup.enable = new RegExp("true").test(this.enableOption);
+    this.consoleGroupDetail.consoleGroupScope = [];
+    this.consoleGroupDetail.enable = new RegExp("true").test(this.enableOption);
 
     for (let scopeObj of this.dataSource2['data']) {
       let keyList = Object.keys(scopeObj);
-      this.consoleGroup
 
       for(let idx = 1; idx < keyList.length; idx++){
         if(scopeObj[keyList[idx]]){
-          this.consoleGroup.consoleGroupScope.push({
-            groupId: this.consoleGroup.groupId,
+          this.consoleGroupDetail.consoleGroupScope.push({
+            groupId: this.consoleGroupDetail.groupId,
             scope: `${scopeObj[keyList[0]]}.${keyList[idx]}`
           });
         }
@@ -230,8 +228,7 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
     }
 
     passData.queryParams = {
-      consoleGroup: JSON.stringify(this.consoleGroup),
-      consoleUser: JSON.stringify(this.dataSource['data'])
+      consoleGroupDetail: JSON.stringify(this.consoleGroupDetail)
     };
     this.router.navigate(this.accountManageService.CONSOLE_GROUP_DETAIL_PATH, passData).then((res) => {
       if (res) {
@@ -254,6 +251,7 @@ export class ConsoleGroupEditCheckboxComponent implements OnInit {
   }
 
   change(event: any){
-    console.log(this.value[0][this.value[1]]);
+    // 測試用
+    // console.log(this.value[0][this.value[1]]);
   }
 }

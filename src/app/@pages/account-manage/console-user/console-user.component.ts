@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ConsoleGroup } from '@api/models/console-group.model';
 import { ConsoleGroupListMock } from '@common/mock-data/console-group-list-mock';
-import { ConsoleGroupScopeListMock } from '@common/mock-data/console-group-scope-list-mock';
 import { ConsoleUserListMock } from '@common/mock-data/console-user-list-mock';
 import { NbDateService, NbDialogRef } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';

@@ -180,7 +180,7 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
 
   ok() {
     if (!this.consoleGroupAddForm.invalid) {
-      // 這邊要發送電文去進行新增
+      // 這邊要發送 6.3 電文去進行新增
       // 新增成功後要再發送電文重新 query 
       this.router.navigate(this.accountManageService.CONSOLE_GROUP_LIST_PATH).then((res) => {
         if (res) {
