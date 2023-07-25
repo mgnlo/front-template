@@ -1,0 +1,16 @@
+:host {
+  display: block;
+  height: 100%; /* 设置组件根元素的高度为100% */
+}
+
+/* 使用Flex布局使组件内容自动充满父层高度 */
+.mat-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* 图表容器填充剩余高度 */
+.echarts-container {
+  flex: 1;
+}

@@ -13,6 +13,7 @@ import { ThemeModule } from '../../@theme/theme.module';
 import { routedComponents, TagManageRoutingModule } from './tag-manage-routing.module';
 import { TagManageService } from './tag-manage.service';
 import { ComponentModule } from '@component/component.module';
+import { NgxEchartsModule } from 'ngx-echarts';
 
 export const NB_MODULES = [
   NbSpinnerModule,
@@ -41,6 +42,7 @@ export const NB_MODULES = [
     ThemeModule,
     TagManageRoutingModule,
     Ng2SmartTableModule,
+    NgxEchartsModule,
     ComponentModule,
     ...NB_MODULES
   ],
@@ -52,3 +54,4 @@ export const NB_MODULES = [
   ],
 })
 export class TagManageModule { }
+

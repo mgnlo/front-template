@@ -99,6 +99,24 @@ export class TagAddComponent extends BaseComponent implements OnInit {
             case 'endDate':
               this.validateForm.controls[key].setValue(new Date(state[key]))
               break;
+            case 'conditionSettingQuery':
+              this.conditions.removeAt(0);
+//這裡要改呀呀呀
+              this.conditions.push(new FormGroup({
+                id: new FormControl(0),
+                ['mathSymbol' + 0]: new FormControl(null, Validators.required),
+                ['inputMath' + 0]: new FormControl(null, Validators.required)
+              }));
+              // let groupData = CommonUtil.groupBy(editData[key], 'tagGroup');
+              // Object.keys(groupData).forEach(key => {
+              //   let fg = new FormGroup({});
+              //   let condition = groupData[key] as Array<ActivityListCondition>;
+              //   condition.forEach(con => {
+              //     fg.setControl(con.tagKey.replace('tag-', ''), new FormControl(con.tagName, Validators.required));
+              //   });
+              //   this.conditions.push(fg);
+              // })
+              break;
             default:
               this.validateForm.controls[key].setValue(state[key]);
               break;
