@@ -17,9 +17,9 @@
             <radio class="col-12 col-lg-6" title="狀態" [form]="validateForm" ctlName="status"></radio>
         </div>
         <div class="row">
-            <radio class="col-12 col-lg-6" title="標籤類型" [form]="validateForm" ctlName="tagType" (valueChange)="changeTagType($event)"></radio>
-            <div *ngIf="validateForm.get('tagType').value === 'normal'"  class="essential col-12 col-lg-6">
-              <radio title="條件設定方式" [form]="validateForm" ctlName="setCondition" enumName="tagSetCondition"></radio>
+            <radio class="col-12 col-lg-6" title="標籤類型" [form]="validateForm" ctlName="tagType" [selectList]="{options: tagTypeList, key: 'key', val: 'val'}" (valueChange)="changeTagType($event)"></radio>
+            <div *ngIf="validateForm.get('tagType').value === 'normal'">
+              <radio class="essential col-12 col-lg-6" title="條件設定方式" [form]="validateForm" ctlName="setCondition" enumName="tagSetCondition"></radio>
             </div>
             <div *ngIf="validateForm.get('tagType').value === 'document'" class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': !isFile}">
                 <label>名單上傳</label>
@@ -72,33 +72,31 @@
         </div>
         <div class="row rightBox">
           <div class="fieldBtn col-12 col-lg-2">
-              <button nbButton status="control">
+              <button nbButton status="control" (click)="conditionDialog()">
                   <nb-icon icon="bar-chart-outline"></nb-icon>條件分佈級距
               </button>
           </div>
         </div>
         <!-- 灰底區塊 -->
-        <div class="grayCard">
-          <div class="row">
+        <div class="grayCard" *ngFor="let condition of conditions.controls | keyvalue; let i=index; let first = first; let last = last" formArrayName="conditionSettingQuery">
+          <div class="row" formGroupName="{{i}}">
               <!-- 下拉式選單欄位結構 -->
               <div class="fieldGroup essential col-6 col-lg-4">
                   <label>下拉式選單</label>
                   <div>
-                      <nb-select fullWidth placeholder="請選擇">
-                          <nb-option value="item1">item1</nb-option>
-                          <nb-option value="item2">item2</nb-option>
-                      </nb-select>
+                    <nb-select fullWidth placeholder="請選擇" formControlName="mathSymbol{{this.conditions.controls[i].get('id').value}}">
+                      <nb-option *ngFor="let mathSymbol of mathSymbolList" [value]="mathSymbol.key">{{ mathSymbol.val }}</nb-option>
+                    </nb-select>
                   </div>
                   <div class="note errorText">
                       <nb-icon icon="alert-triangle"></nb-icon>
                       <p>欄位錯誤訊息</p>
                   </div>
               </div>
-              <!-- 一般輸入欄位結構 -->
               <div class="fieldGroup essential col-6 col-lg-4">
-                  <label>輸入欄位</label>
+                  <label>門檻值</label>
                   <div>
-                      <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" />
+                      <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" formControlName="inputMath{{this.conditions.controls[i].get('id').value}}"/>
                   </div>
                   <div class="note errorText">
                       <nb-icon icon="alert-triangle"></nb-icon>
@@ -106,29 +104,28 @@
                   </div>
               </div>
               <!-- radio欄位結構 -->
-              <div class="fieldGroup col-10 col-lg-2">
-                  <label>radio</label>
-                  <div>
-                      <nb-radio-group>
-                          <nb-radio value="1">and</nb-radio>
-                          <nb-radio value="2">or</nb-radio>
-                      </nb-radio-group>
-                  </div>
-                  <!-- 欄位錯誤訊息 -->
-                  <div class="note errorText">
-                      <nb-icon icon="alert-triangle"></nb-icon>
-                      <p>欄位錯誤訊息</p>
-                  </div>
+              <div class="fieldGroup essential col-11 col-lg-3">
+                <label *ngIf="!last">集合</label>
+                <div *ngIf="!last">
+                    <nb-radio-group formControlName="selectedRadio{{this.conditions.controls[i].get('id').value}}">
+                        <nb-radio value="1">and</nb-radio>
+                        <nb-radio value="2">or</nb-radio>
+                    </nb-radio-group>
+                </div>
+                <div *ngIf="!last" class="note errorText">
+                    <nb-icon icon="alert-triangle"></nb-icon>
+                    <p>欄位錯誤訊息</p>
+                </div>
               </div>
 
               <!-- 增減按鈕 -->
-              <div class="fieldBtn col-1 col-lg-1">
-                  <button nbButton status="success" size="tiny" class="iconBtn">
+              <div *ngIf="last" class="fieldBtn col-1 col-lg-1">
+                  <button nbButton status="success" size="tiny" class="iconBtn" (click)="or('add', i)">
                       <nb-icon icon="plus-outline"></nb-icon>
                   </button>
               </div>
-              <div class="fieldBtn col-1 col-lg-1">
-                  <button nbButton status="danger" size="tiny" class="iconBtn">
+              <div *ngIf="!first || !last" class="fieldBtn col-1 col-lg-1">
+                  <button nbButton status="danger" size="tiny" class="iconBtn" (click)="or('remove', i)">
                       <nb-icon icon="minus-outline"></nb-icon>
                   </button>
               </div>

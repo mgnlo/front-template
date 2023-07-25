@@ -4,6 +4,7 @@ import { TagManageComponent } from "./tag-manage.component"
 import { TagListComponent } from "./tag-list/tag-list.component"
 import { TagAddComponent } from "./tag-set/tag-set.component"
 import { TagDetailComponent } from "./tag-detail/tag-detail.component"
+import { TagConditionDialogComponent } from "./tag-set/condition-dialog/condition-dialog.component"
 
 const routes: Routes = [
   {
@@ -29,4 +30,5 @@ export const routedComponents = [
   TagListComponent,
   TagAddComponent,
   TagDetailComponent,
+  TagConditionDialogComponent,
 ];

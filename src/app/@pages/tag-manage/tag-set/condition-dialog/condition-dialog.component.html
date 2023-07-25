@@ -1,0 +1,23 @@
+<nb-card class="list-card" nbSpinnerStatus="info" nbSpinnerSize="giant" size="large">
+  <nb-card-header class="text-h-center">
+    <p>{{title}}</p>
+  </nb-card-header>
+  <nb-card-body>
+    <div>
+      <div class="noteText">
+        <nb-icon icon="info-outline"></nb-icon>
+        <p>此條件人數級距如下，若有多重件組合，則需多重對照以利貼合活動預算與人數需求。</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="textGroup col-12 col-lg-12">
+          <p class="textBold">刷卡消費金額人數級距</p>
+          <span></span>
+      </div>
+
+    </div>
+  </nb-card-body>
+  <nb-card-footer>
+    <button nbButton status="basic" size="medium" (click)="close()">關閉</button>
+  </nb-card-footer>
+</nb-card>
