@@ -97,7 +97,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     } else {
       fg.removeControl(`${key}`);
     }
-    // console.info('and', this.conditions.getRawValue())
+     console.info('and', this.conditions.getRawValue())
   }
 
   get conditions() : FormArray {

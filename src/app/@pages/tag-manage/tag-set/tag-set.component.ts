@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TagDimension, TagSetCondition, TagSubDimension, TagType } from '@common/enums/tag-enum';
 import { TagSetting, TagDetailView } from '@api/models/tag-manage.model';
@@ -37,7 +37,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       return this.tagMathSymbolList.includes(v);
     }).map(([k, v]) => ({ key: k, val: v }));
 
-  tagTypeList: Array<{key: string; val: string}> = Object.entries(TagType).map(([k, v]) => ({ key: k, val: v }))
+  tagTypeList: Array<{ key: string; val: string }> = Object.entries(TagType).map(([k, v]) => ({ key: k, val: v }))
 
 
 
@@ -72,7 +72,14 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       tagSubDimension: new FormControl(null, Validators.required),
       scheduleSettings: new FormControl(null, Validators.required),
       tagDescription: new FormControl(null),
-      conditionSettingQuery: new FormControl(null, Validators.required),
+      conditionSettingQuery: new FormArray([
+        new FormGroup({
+          id: new FormControl(0),
+          mathSymbol0: new FormControl(null, Validators.required),
+          inputMath0: new FormControl(null, Validators.required),
+          //C1: new FormControl(null, Validators.required),
+        }),
+      ]),
     }, [ValidatorsUtil.dateRange]);
 
     this.params = this.activatedRoute.snapshot.params;
@@ -224,11 +231,49 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   addField(fieldName: string, formState: any, fileFormatValidator: any) {
     this.validateForm.addControl(fieldName, new FormControl(formState, fileFormatValidator));
-    this.validateForm.controls[fieldName].updateValueAndValidity();
+    //this.validateForm.controls[fieldName].updateValueAndValidity();
   }
 
   removeField(fieldName: string) {
     this.validateForm.removeControl(fieldName);
+  }
+
+  or(action: 'add' | 'remove', index: number) {
+    if (action === 'add') {
+      while (this.conditions.controls.filter(f => f.value.id === index).length > 0) {
+        index = index + 1
+      }
+      this.conditions.push(new FormGroup({
+        id: new FormControl(index),
+        ['mathSymbol' + index]: new FormControl(null, Validators.required),
+        ['inputMath' + index]: new FormControl(null, Validators.required)
+      }));
+      //最後一個選單前加入其餘欄位驗證
+      for (let i = 0; i < this.conditions.length - 1; i++) {
+        if (Object.keys(this.conditions.controls[i]?.value).length === 3) {
+          this.and('add', 'selectedRadio', this.conditions.controls[i].get('id').value, i)
+        }
+      }
+    } else {
+      this.conditions.removeAt(index);
+    }
+
+    //console.info('or', this.conditions.getRawValue())
+  }
+
+  and(action: 'add' | 'remove', key: string, id: number, index: number) {
+    let fg = this.conditions.at(index) as FormGroup;
+    if (action === 'add') {
+      fg.setControl(`${key + id}`, new FormControl(null, Validators.required));
+    } else {
+      fg.removeControl(`${key}`);
+    }
+    //console.info('and', this.conditions.getRawValue())
+  }
+
+
+  get conditions(): FormArray {
+    return this.validateForm.get('conditionSettingQuery') as FormArray
   }
 
   uploadFile(event: any) {
