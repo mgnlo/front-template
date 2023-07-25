@@ -8,11 +8,12 @@ import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
 import { AccountManageService } from '../account.manage.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { BusinessUnit } from '@common/enums/console-user-enum';
 import { ConsoleUser } from '@api/models/console-user.model';
 import { ChangeDialogComponent } from './change-dialog/change.dialog.component';
 import { DialogService } from '@api/services/dialog.service';
+import { ValidateUtil } from '@common/utils/validate-util';
 
 @Component({
   selector: 'console-user',
@@ -20,10 +21,10 @@ import { DialogService } from '@api/services/dialog.service';
   styleUrls: ['./console-user.component.scss'],
 })
 export class ConsoleUserComponent extends BaseComponent implements OnInit {
-  account: string;
-  name: string;
-  email: string;
-  groupId: string;
+  account: string = "";
+  name: string = "";
+  email: string = "";
+  groupId: string = "";
 
   consoleGroupList: Array<ConsoleGroup>;
   consoleUserList: Array<ConsoleUser>;
@@ -45,12 +46,46 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
     private accountManageService: AccountManageService,
     private dateService: NbDateService<Date>) {
     super();
-    this.consoleUserForm = formBuilder.group({
-      account: [null, null],
-      name: [null, null],
-      email: [null, null]
-    });
 
+    this.consoleUserForm = new FormGroup({
+      account: new FormControl('', [this.maxLengthValidate(20)]),
+      name: new FormControl('', [this.maxLengthValidate(20)]),
+      email: new FormControl('', {
+        validators: [this.maxLengthValidate(50), this.emailFormatValidate],
+        updateOn: 'blur'
+      }),
+    });
+  }
+
+  maxLengthValidate(length: number): ValidatorFn {
+    return (ctl: AbstractControl): ValidationErrors | null => {
+      const value = ctl.value;
+
+      if (value && value.leangth > length) {
+        return { errMsg: `欄位最長為${length}個字元` };
+      } else {
+        return null;
+      }
+    }
+  }
+
+  emailFormatValidate(ctl: AbstractControl) {
+    const val = ctl.value;
+
+    if (val && !ValidateUtil.checkEmail(val)) {
+      ctl['_updateOn'] = "change";
+      return { errMsg: "電子郵件輸入錯誤" };
+    } else {
+      ctl['_updateOn'] = "blur";
+    }
+
+    return null;
+  }
+
+  isError(formCtrlName: string) {
+    let viewCtrl: AbstractControl = this.consoleUserForm.get(formCtrlName);
+
+    return (viewCtrl.touched || viewCtrl.dirty) && viewCtrl.errors?.errMsg;
   }
 
   ngOnInit(): void {
@@ -128,18 +163,28 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
   };
 
   search() {
+    if (!this.consoleUserForm.invalid) {
+      // 這邊要發送 5.1 or 5.2 電文去查詢
 
+    } else {
+      for (const control of Object.keys(this.consoleUserForm.controls)) {
+        this.consoleUserForm.controls[control].markAsTouched();
+      }
+    }
   }
 
   reset() {
-    this.account = "";
-    this.name = "";
-    this.email = "";
     this.digitalSelect = false;
     this.personalSelect = false;
     this.moneySelect = false;
     this.creditlSelect = false;
     this.groupId = "";
+
+    this.consoleUserForm.reset({
+      account: "",
+      name: "",
+      email: ""
+    });
   }
 }
 
@@ -164,7 +209,7 @@ export class ConsoleUserButtonComponent implements OnInit {
     });
 
     dialogRef.onClose.subscribe(res => {
-      if(res){
+      if (res) {
         // 這邊收到異動成功的時候，是否重新電文？
       }
     });

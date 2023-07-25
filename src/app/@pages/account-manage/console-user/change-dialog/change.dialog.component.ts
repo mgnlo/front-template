@@ -34,7 +34,7 @@ export class ChangeDialogComponent implements OnInit {
   }
 
   save(){
-    // 需要先發電文進行更新
+    // 需要發送 5.6 電文進行更新
     // 成功後需要通知主畫面異動成功
     this.ref.close(true);
   }

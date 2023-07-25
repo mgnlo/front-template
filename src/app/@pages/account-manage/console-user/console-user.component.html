@@ -8,37 +8,37 @@
         </nb-card-header>
         <nb-card-body [formGroup]="consoleUserForm">
             <div class="row">
-                <div class="fieldGroup col-12 col-lg-6">
+                <div class="fieldGroup col-12 col-lg-6" [ngClass]="{'error': isError('account')}">
                     <label>帳號</label>
                     <div>
-                        <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" formControlName="account"
-                            [(ngModel)]="account" />
+                        <input nbInput fullWidth type="text" maxlength="20" placeholder="請輸入" formControlName="account"
+                            [(ngModel)]="account" [status]="isError('account') ? 'danger' : 'basic'"/>
                     </div>
                     <div class="note errorText">
                         <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>欄位錯誤訊息</p>
+                        <p>{{ isError('account') }}</p>
                     </div>
                 </div>
-                <div class="fieldGroup col-12 col-lg-6">
+                <div class="fieldGroup col-12 col-lg-6" [ngClass]="{'error': isError('name')}">
                     <label>姓名</label>
                     <div>
-                        <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" formControlName="name"
-                            [(ngModel)]="name" />
+                        <input nbInput fullWidth type="text" maxlength="20" placeholder="請輸入" formControlName="name"
+                            [(ngModel)]="name" [status]="isError('name') ? 'danger' : 'basic'"/>
                     </div>
                     <div class="note errorText">
                         <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>欄位錯誤訊息</p>
+                        <p>{{ isError('name') }}</p>
                     </div>
                 </div>
-                <div class="fieldGroup col-12 col-lg-6">
+                <div class="fieldGroup col-12 col-lg-6" [ngClass]="{'error': isError('email')}">
                     <label>電子郵件</label>
                     <div>
-                        <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" formControlName="email"
-                            [(ngModel)]="email" />
+                        <input nbInput fullWidth type="text" maxlength="50" placeholder="請輸入" formControlName="email"
+                            [(ngModel)]="email"  [status]="isError('email') ? 'danger' : 'basic'"/>
                     </div>
                     <div class="note errorText">
                         <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>欄位錯誤訊息</p>
+                        <p>{{ isError('email') }}</p>
                     </div>
                 </div>
                 <div class="fieldGroup col-12 col-md-6">

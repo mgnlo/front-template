@@ -135,7 +135,7 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
       if(!value){
         return { errMsg: "此欄位為必填欄位"};
       } else if (value.leangth > length) {
-        return { errMsg: "權限名稱過長，最長為20個字"};
+        return { errMsg: `欄位最長為${length}個字元`};
       } else {
         return null;
       }
