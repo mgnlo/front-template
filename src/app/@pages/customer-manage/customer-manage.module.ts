@@ -46,7 +46,7 @@ export const NB_MODULES = [
   ],
   providers: [
     DialogService,
-    CustomerManageService
+    CustomerManageService,
   ],
   declarations: [
     ...routedComponents,

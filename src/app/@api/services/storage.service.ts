@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StorageService {
-
-  constructor(
-  ) { }
 
   putSessionVal(key: string, value: any): void {
     if (key) {
@@ -48,4 +47,19 @@ export class StorageService {
     }
   }
 
+  getSessionFilter(sessionKey: string, form: FormGroup): BehaviorSubject<boolean> {
+    let result$ = new BehaviorSubject(false);
+    let storage = this.getSessionVal(sessionKey);
+    if (!!storage?.filter) {
+      Object.keys(storage.filter).filter(key => !!form.get(key) && !!storage.filter[key]).forEach(key => {
+        if (key.includes('Date')) {
+          form.get(key).setValue(new Date(storage.filter[key]));
+        } else {
+          form.get(key).setValue(storage.filter[key]);
+        }
+      })
+      result$.next(true);
+    }
+    return result$;
+  }
 }
