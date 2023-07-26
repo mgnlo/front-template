@@ -37,8 +37,11 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       return this.tagMathSymbolList.includes(v);
     }).map(([k, v]) => ({ key: k, val: v }));
 
+  //預設標籤類型
   tagTypeList: Array<{ key: string; val: string }> = Object.entries(TagType).map(([k, v]) => ({ key: k, val: v }))
 
+  //預設檔案存放地方
+  condition_valueList: Array<{ key: string; val: string }> = [{ key: 'condition_A', val: '近三個月_基金_申購金額' }, { key: 'condition_B', val: '假資料B' }, { key: 'condition_C', val: '假資料C' }];
 
 
   detail: TagDetailView;
@@ -72,11 +75,12 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       tagSubDimension: new FormControl(null, Validators.required),
       scheduleSettings: new FormControl(null, Validators.required),
       tagDescription: new FormControl(null),
+      condition_value: new FormControl(null, Validators.required),
       conditionSettingQuery: new FormArray([
         new FormGroup({
           id: new FormControl(0),
-          mathSymbol0: new FormControl(null, Validators.required),
-          inputMath0: new FormControl(null, Validators.required),
+          detection_condition0: new FormControl(null, Validators.required),
+          threshold_value0: new FormControl(null, [Validators.required,ValidatorsUtil.number]),
           //C1: new FormControl(null, Validators.required),
         }),
       ]),
@@ -101,11 +105,11 @@ export class TagAddComponent extends BaseComponent implements OnInit {
               break;
             case 'conditionSettingQuery':
               this.conditions.removeAt(0);
-//這裡要改呀呀呀
+              //這裡要改呀呀呀
               this.conditions.push(new FormGroup({
                 id: new FormControl(0),
-                ['mathSymbol' + 0]: new FormControl(null, Validators.required),
-                ['inputMath' + 0]: new FormControl(null, Validators.required)
+                ['detection_condition' + 0]: new FormControl(null, Validators.required),
+                ['threshold_value' + 0]: new FormControl(null, Validators.required)
               }));
               // let groupData = CommonUtil.groupBy(editData[key], 'tagGroup');
               // Object.keys(groupData).forEach(key => {
@@ -263,8 +267,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       }
       this.conditions.push(new FormGroup({
         id: new FormControl(index),
-        ['mathSymbol' + index]: new FormControl(null, Validators.required),
-        ['inputMath' + index]: new FormControl(null, Validators.required)
+        ['detection_condition' + index]: new FormControl(null, Validators.required),
+        ['threshold_value' + index]: new FormControl(null, Validators.required)
       }));
       //最後一個選單前加入其餘欄位驗證
       for (let i = 0; i < this.conditions.length - 1; i++) {
