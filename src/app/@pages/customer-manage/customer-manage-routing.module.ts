@@ -10,14 +10,14 @@ import { CustomerManageComponent } from "./customer-manage.component"
 
 const routes: Routes = [
     {
-        path: "", component: CustomerManageComponent, 
+        path: "", component: CustomerManageComponent,
         children: [
-            { path: '', redirectTo: 'customer-list', pathMatch: 'full'},
-            { path: "customer-list", component: CustomerListComponent},
-            { path: 'activity-list', component: ActivityListComponent},
-            { path: 'activity-detail/:activityId', component: ActivityDetailComponent},
-            { path: 'activity-set', component: ActivitySetComponent}, //新增
-            { path: 'activity-set/:activityId', component: ActivitySetComponent}, //編輯
+            { path: '', redirectTo: 'customer-list', pathMatch: 'full' },
+            { path: "customer-list", component: CustomerListComponent },
+            { path: 'activity-list', component: ActivityListComponent, data: { keepSession: true } },
+            { path: 'activity-detail/:activityId', component: ActivityDetailComponent, data: { keepSession: true } },
+            { path: 'activity-set', component: ActivitySetComponent }, //新增
+            { path: 'activity-set/:activityId', component: ActivitySetComponent }, //編輯
         ]
     }
 ]
@@ -29,13 +29,13 @@ const routes: Routes = [
 export class UserManageRoutingModule { }
 
 export const routedComponents = [
-  CustomerManageComponent,
-  CustomerListComponent,
-  CustomerListButtonComponent,
-  CustomerListTagComponent,
-  ActivityListComponent,
-  ActivitySetComponent,
-  ActivityDetailComponent,
-  DetailDialogComponent,
-  PreviewDialogComponent
+    CustomerManageComponent,
+    CustomerListComponent,
+    CustomerListButtonComponent,
+    CustomerListTagComponent,
+    ActivityListComponent,
+    ActivitySetComponent,
+    ActivityDetailComponent,
+    DetailDialogComponent,
+    PreviewDialogComponent
 ];
