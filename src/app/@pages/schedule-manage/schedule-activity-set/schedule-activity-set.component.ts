@@ -22,23 +22,58 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   hour: number[] = Array.from({ length: 12 }, (_, index) => index + 1);
   minute: number[] = Array.from({ length: 60 }, (_, index) => index + 1);
 
+  //預設排程頻率
+  scheduleFrequencyList = [Frequency.daily, Frequency.monthly];
+  frequencyList: Array<{ key: string; val: string }> = Object.entries(Frequency)
+    .filter(([k, v]) => {
+      return this.scheduleFrequencyList.includes(v);
+    }).map(([k, v]) => ({ key: k, val: v }));
+
+  //預設檔案存放地方
+  filePathList:Array<{key:string;val:string}> = [{key: 'path_A', val: 'A://'},{key: 'path_B', val: 'B:/'},{key: 'path_C', val: 'C:\\'}];
+
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {
     super();
 
     this.validateForm = new FormGroup({
       scheduleName: new FormControl(null, Validators.required),
-      status:new FormControl('active', Validators.required),
-      frequency:new FormControl('daily', Validators.required),
-      daily:new FormControl(null, Validators.required),
-      hour:new FormControl(null, Validators.required),
-      minute:new FormControl(null, Validators.required),
-      scheduleFilePath:new FormControl(null, Validators.required),
+      status: new FormControl('active', Validators.required),
+      frequency: new FormControl('daily', Validators.required),
+      //daily: new FormControl(null, Validators.required),
+      hour: new FormControl(null, Validators.required),
+      minute: new FormControl(null, Validators.required),
+      scheduleFilePath: new FormControl(null, Validators.required),
     });
 
     this.params = this.activatedRoute.snapshot.params;
     const changeRouteName = this.params['changeRoute'] ?? "";
     this.actionName = this.getActionName(changeRouteName);
 
+  }
+
+  changeFrequencyType(key: string) {
+    this.validateForm.patchValue({ 'hour': '', 'minute': '' });
+    switch (key) {
+      case 'daily':
+        if (this.validateForm.contains('daily')) {
+          this.removeField('daily');
+        }
+        break;
+      case 'monthly':
+        if (!this.validateForm.contains('daily')) {
+          this.addField('daily', null, Validators.required);
+        }
+        break;
+    }
+  }
+
+  addField(fieldName: string, formState: any, fileFormatValidator: any) {
+    this.validateForm.addControl(fieldName, new FormControl(formState, fileFormatValidator));
+    //this.validateForm.controls[fieldName].updateValueAndValidity();
+  }
+
+  removeField(fieldName: string) {
+    this.validateForm.removeControl(fieldName);
   }
 
   ngOnInit(): void {
