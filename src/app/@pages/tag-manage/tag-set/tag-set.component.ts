@@ -47,7 +47,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   detail: TagDetailView;
   fileName: string;
   isFile: boolean = true;//是否上傳檔案
-  err: boolean = false;
   params: any = [];//路由參數
   actionName: string;// 新增/編輯/複製
 

@@ -13,7 +13,6 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   Status = Status;
   Frequency = Frequency;
 
-  err: boolean = false;
   params: any;//路由參數
   actionName: string;// 新增/編輯/複製
 
@@ -30,13 +29,13 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     }).map(([k, v]) => ({ key: k, val: v }));
 
   //預設檔案存放地方
-  filePathList:Array<{key:string;val:string}> = [{key: 'path_A', val: 'A://'},{key: 'path_B', val: 'B:/'},{key: 'path_C', val: 'C:\\'}];
+  filePathList: Array<{ key: string; val: string }> = [{ key: 'path_A', val: 'A://' }, { key: 'path_B', val: 'B:/' }, { key: 'path_C', val: 'C:\\' }];
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {
     super();
 
     this.validateForm = new FormGroup({
-      scheduleName: new FormControl(null, Validators.required),
+      jobName: new FormControl(null, Validators.required),
       status: new FormControl('active', Validators.required),
       frequency: new FormControl('daily', Validators.required),
       //daily: new FormControl(null, Validators.required),
@@ -48,6 +47,20 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     this.params = this.activatedRoute.snapshot.params;
     const changeRouteName = this.params['changeRoute'] ?? "";
     this.actionName = this.getActionName(changeRouteName);
+
+    const state = this.router.getCurrentNavigation()?.extras?.state;
+    console.info('state',state)
+    if (!!state) {
+      Object.keys(state).forEach(key => {
+        if (!!this.validateForm.controls[key]) {
+          switch (key) {
+            default:
+              this.validateForm.controls[key].setValue(state[key]);
+              break;
+          }
+        }
+      })
+    }
 
   }
 
