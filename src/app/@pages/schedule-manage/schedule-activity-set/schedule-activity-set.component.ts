@@ -49,7 +49,6 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     this.actionName = this.getActionName(changeRouteName);
 
     const state = this.router.getCurrentNavigation()?.extras?.state;
-    console.info('state',state)
     if (!!state) {
       Object.keys(state).forEach(key => {
         if (!!this.validateForm.controls[key]) {

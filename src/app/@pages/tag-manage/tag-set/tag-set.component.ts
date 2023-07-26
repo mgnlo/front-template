@@ -272,7 +272,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       //最後一個選單前加入其餘欄位驗證
       for (let i = 0; i < this.conditions.length - 1; i++) {
         if (Object.keys(this.conditions.controls[i]?.value).length === 3) {
-          this.and('add', 'selectedRadio', this.conditions.controls[i].get('id').value, i)
+          this.and('add', 'join_value', this.conditions.controls[i].get('id').value, i)
         }
       }
     } else {

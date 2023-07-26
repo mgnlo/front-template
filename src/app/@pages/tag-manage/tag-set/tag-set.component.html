@@ -78,9 +78,8 @@
         <!-- 灰底區塊 -->
         <div class="grayCard" *ngFor="let condition of conditions.controls | keyvalue; let i=index; let first = first; let last = last" formArrayName="conditionSettingQuery">
           <div class="row" formGroupName="{{i}}">
-              <!-- 下拉式選單欄位結構 -->
               <div class="fieldGroup essential col-6 col-lg-4">
-                  <label>下拉式選單</label>
+                  <label>條件值</label>
                   <div>
                     <nb-select fullWidth placeholder="請選擇" formControlName="detection_condition{{this.conditions.controls[i].get('id').value}}">
                       <nb-option *ngFor="let mathSymbol of mathSymbolList" [value]="mathSymbol.key">{{ mathSymbol.val }}</nb-option>
@@ -106,7 +105,7 @@
               <div class="fieldGroup essential col-10 col-lg-2">
                 <label *ngIf="!last">集合</label>
                 <div *ngIf="!last">
-                    <nb-radio-group formControlName="selectedRadio{{this.conditions.controls[i].get('id').value}}">
+                    <nb-radio-group formControlName="join_value{{this.conditions.controls[i].get('id').value}}">
                         <nb-radio value="and">and</nb-radio>
                         <nb-radio value="or">or</nb-radio>
                     </nb-radio-group>
