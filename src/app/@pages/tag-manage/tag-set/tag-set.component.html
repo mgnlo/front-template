@@ -118,12 +118,12 @@
 
               <!-- 增減按鈕 -->
               <div *ngIf="last" class="fieldBtn col-1 col-lg-1">
-                  <button nbButton status="success" size="tiny" class="iconBtn" (click)="or('add', i)">
+                  <button nbButton status="success" size="tiny" class="iconBtn" (click)="changeConditionsBtn('add', i)">
                       <nb-icon icon="plus-outline"></nb-icon>
                   </button>
               </div>
               <div *ngIf="!first || !last" class="fieldBtn col-1 col-lg-1">
-                  <button nbButton status="danger" size="tiny" class="iconBtn" (click)="or('remove', i)">
+                  <button nbButton status="danger" size="tiny" class="iconBtn" (click)="changeConditionsBtn('remove', i)">
                       <nb-icon icon="minus-outline"></nb-icon>
                   </button>
               </div>
