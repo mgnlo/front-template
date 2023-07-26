@@ -31,7 +31,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   subCategoryList: Array<{ key: string; val: string }> = Object.entries(TagSubDimension).map(([k, v]) => ({ key: k, val: v }))
 
   //預設數學符號
-  tagMathSymbolList = [MathSymbol.is_greater_than, MathSymbol.is_less_than, MathSymbol.equals];
+  tagMathSymbolList = [MathSymbol.$gt, MathSymbol.$lt, MathSymbol.$eq];
   mathSymbolList: Array<{ key: string; val: string }> = Object.entries(MathSymbol)
     .filter(([k, v]) => {
       return this.tagMathSymbolList.includes(v);
