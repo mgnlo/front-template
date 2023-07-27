@@ -66,7 +66,7 @@
         </div>
         <!-- 灰底區塊 -->
         <div class="grayCard" *ngFor="let condition of conditions.controls | keyvalue; let i=index; let first = first; let last = last" formArrayName="activityListCondition">
-          <div class="row" formGroupName="{{i}}">
+          <div class="row" formGroupName="{{i}}" *ngIf="this.conditions.controls[i] as item">
               <!-- <div class="fieldGroup essential col-10 col-lg-10">
                   <label>活動清單</label>
                   <div>
@@ -79,19 +79,19 @@
                       <p>欄位錯誤訊息</p>
                   </div>
               </div> -->
-              <div class="fieldGroup essential col-10 col-lg-10" [ngClass]="{'error': this.conditions.controls[i].get('activity'+i).errors?.activityErrMsg}">
+              <div class="fieldGroup essential col-10 col-lg-10" [ngClass]="{'error': item.get('activity'+i)?.errors?.activityErrMsg}">
                 <label>活動清單</label>
                 <div>
-                    <input #activityInput nbInput fullWidth type="text"  placeholder="請輸入"[nbAutocomplete]="auto"
-                        [status]="this.conditions.controls[i].get('activity'+i).errors?.activityErrMsg ? 'danger' : 'basic'"
-                        (input)="onChange()" formControlName="activity{{this.conditions.controls[i].get('id').value}}"/>
-                    <nb-autocomplete #auto (selectedChange)="onSelectionChange($event)">
-                      <nb-option *ngFor="let mathSymbol of activityList" [value]="mathSymbol.key">{{ mathSymbol.val }}</nb-option>
+                    <input nbInput fullWidth type="text"  placeholder="請輸入"[nbAutocomplete]="auto"
+                        [status]="item.get('activity'+i)?.errors?.activityErrMsg ? 'danger' : 'basic'"
+                        (input)="onActivityChange(item.get('id').value)" formControlName="activity{{item.get('id').value}}"/>
+                    <nb-autocomplete #auto (selectedChange)="onActivityChange(item.get('id').value)">
+                      <nb-option *ngFor="let mathSymbol of activityListDict.get('activityList'+item.get('id').value)" [value]="mathSymbol.val" [id]="mathSymbol.key">{{ mathSymbol.val }}</nb-option>
                     </nb-autocomplete>
                 </div>
                 <div class="note errorText">
                     <nb-icon icon="alert-triangle"></nb-icon>
-                    <p>{{this.conditions.controls[i].get('activity'+i).errors?.activityErrMsg}}</p>
+                    <p>{{item.get('activity'+i)?.errors?.activityErrMsg}}</p>
                 </div>
               </div>
               <!-- 增減按鈕 -->

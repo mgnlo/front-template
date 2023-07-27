@@ -2,9 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Frequency, Status } from '@common/enums/common-enum';
+import { CommonUtil } from '@common/utils/common-util';
+import { Dictionary } from '@common/utils/dictionary';
 import { BaseComponent } from '@pages/base.component';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'schedule-activity-set',
@@ -35,13 +35,13 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   //預設活動名單
   activityList: Array<{ key: string; val: string }> = [{ key: 'condition_A', val: '近三個月_基金_申購金額' }, { key: 'condition_B', val: '假資料B' }, { key: 'condition_C', val: '假資料C' }];
+  activityInputTempList: [];
+  activityListDict = new Dictionary();
 
   //取得新增條件區塊
   get conditions(): FormArray {
     return this.validateForm.get('activityListCondition') as FormArray
   }
-
-  @ViewChild('activityInput') activityInput: { nativeElement: { value: string; }; };
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {
     super();
@@ -57,10 +57,12 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       activityListCondition: new FormArray([
         new FormGroup({
           id: new FormControl(0),
-          activity0: new FormControl(null, [Validators.required,this.existsInActivityList.bind(this)]),
+          activity0: new FormControl(null, [Validators.required, this.existsInActivityList.bind(this)]),
         }),
       ]),
     });
+
+    this.setDicActivityList('add', 0);
 
     this.params = this.activatedRoute.snapshot.params;
     const changeRouteName = this.params['changeRoute'] ?? "";
@@ -81,6 +83,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   }
 
+  //#region 頻率切換
   changeFrequencyType(key: string) {
     this.validateForm.patchValue({ 'hour': '', 'minute': '' });
     switch (key) {
@@ -96,6 +99,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         break;
     }
   }
+  //#endregion
 
   //#region 基本欄位檢核(新增/刪除)
   addField(fieldName: string, formState: any, fileFormatValidator: any) {
@@ -114,44 +118,68 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       while (this.conditions.controls.filter(f => f.value.id === index).length > 0) {
         index = index + 1
       }
+      this.setDicActivityList('add', index);
       this.conditions.push(new FormGroup({
         id: new FormControl(index),
-        ['activity' + index]: new FormControl(null, [Validators.required,this.existsInActivityList.bind(this)]),
+        ['activity' + index]: new FormControl(null, [Validators.required, this.existsInActivityList.bind(this)]),
       }));
     } else {
+      this.setDicActivityList('remove', this.conditions.at(index)?.get('id').value)
       this.conditions.removeAt(index);
     }
     //console.info('changeConditionsBtn', this.conditions.getRawValue())
   }
   //#endregion
 
-  //#region 條件區塞選活動清單
-  private filter(value: string): Array<{ key: string; val: string }> {
+  //#region 塞選條件區活動清單
+  setDicActivityList(action: 'add' | 'remove', index: number) {
+    switch (action) {
+      case 'add':
+        if (!this.activityListDict.has('activityList' + index)) {
+          this.activityListDict.set('activityList' + index, this.activityList);
+        }
+        break;
+      case 'remove':
+        if (this.activityListDict.has('activityList' + index)) {
+          this.activityListDict.delete('activityList' + index);
+        }
+        break;
+    }
+  }
+  activityFilter(value: string): Array<{ key: string; val: string }> {
     const filterValue = value.toLowerCase();
+    if (CommonUtil.isBlank(filterValue)) return this.activityList;
     return this.activityList.filter((f) => {
       return f.val?.toLowerCase()?.includes(filterValue);
     })
-    //return [{'key':'CCC','val':''}];
-
-    //.filter(optionValue => optionValue.toLowerCase().includes(filterValue));
   }
 
-  onChange() {
-    this.activityList = this.filter(this.activityInput.nativeElement.value);
+  onActivityChange(index: number) {
+    this.activityListDict.set('activityList' + index, this.activityFilter(this.getActivityInput(index)));
   }
-  onSelectionChange($event: any) {
-    this.activityList = this.filter($event);
+
+  getActivityInput(index: number) {
+    const actList = this.validateForm.get('activityListCondition').value;
+    const actId = this.conditions.at(index)?.get('id').value;
+    if (CommonUtil.isBlank(actId)) return "";
+    const findVal = actList.find(f => f.id === actId)
+    const key = 'activity' + actId
+    return findVal[key] ?? "";
   }
   //#endregion
 
   //#region 檢查條件區是否存在清單中
   existsInActivityList(ctl: FormControl): { [key: string]: any } | null {
-    if ((ctl.dirty || ctl.touched) && !this.activityList.some(item => item.val.includes(ctl.value))) {
+    if ((ctl.dirty || ctl.touched) && this.activityList.filter(item => item.val === ctl.value).length === 0) {
       return { 'activityErrMsg': '不存在活動清單中' }; // 驗證失敗
     }
+    // if (this.activityListDict.has(keyName)) {
+    //   return { 'activityErrMsg': '不可重複' }; // 驗證失敗
+    // }
     return null; // 驗證成功
   }
   //#endregion
+
 
   ngOnInit(): void {
   }
