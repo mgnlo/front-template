@@ -198,7 +198,8 @@ export class EchartsTimelineMultiRangeComponent implements AfterViewInit, OnDest
         dataZoom: [
           {
             type: 'inside',
-            filterMode: 'weakFilter'
+            filterMode: 'weakFilter',
+            minSpan: 50
           }
         ],
         grid: {
