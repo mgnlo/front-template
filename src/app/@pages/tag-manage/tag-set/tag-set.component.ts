@@ -31,20 +31,22 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   subCategoryList: Array<{ key: string; val: string }> = Object.entries(TagSubDimension).map(([k, v]) => ({ key: k, val: v }))
 
   //預設數學符號
-  tagMathSymbolList = [MathSymbol.is_greater_than, MathSymbol.is_less_than, MathSymbol.equals];
+  tagMathSymbolList = [MathSymbol.$gt, MathSymbol.$lt, MathSymbol.$eq];
   mathSymbolList: Array<{ key: string; val: string }> = Object.entries(MathSymbol)
     .filter(([k, v]) => {
       return this.tagMathSymbolList.includes(v);
     }).map(([k, v]) => ({ key: k, val: v }));
 
+  //預設標籤類型
   tagTypeList: Array<{ key: string; val: string }> = Object.entries(TagType).map(([k, v]) => ({ key: k, val: v }))
 
+  //預設檔案存放地方
+  condition_valueList: Array<{ key: string; val: string }> = [{ key: 'condition_A', val: '近三個月_基金_申購金額' }, { key: 'condition_B', val: '假資料B' }, { key: 'condition_C', val: '假資料C' }];
 
 
   detail: TagDetailView;
   fileName: string;
   isFile: boolean = true;//是否上傳檔案
-  err: boolean = false;
   params: any = [];//路由參數
   actionName: string;// 新增/編輯/複製
 
@@ -72,11 +74,12 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       tagSubDimension: new FormControl(null, Validators.required),
       scheduleSettings: new FormControl(null, Validators.required),
       tagDescription: new FormControl(null),
+      condition_value: new FormControl(null, Validators.required),
       conditionSettingQuery: new FormArray([
         new FormGroup({
           id: new FormControl(0),
-          mathSymbol0: new FormControl(null, Validators.required),
-          inputMath0: new FormControl(null, Validators.required),
+          detection_condition0: new FormControl(null, Validators.required),
+          threshold_value0: new FormControl(null, [Validators.required,ValidatorsUtil.number]),
           //C1: new FormControl(null, Validators.required),
         }),
       ]),
@@ -98,6 +101,24 @@ export class TagAddComponent extends BaseComponent implements OnInit {
             case 'startDate':
             case 'endDate':
               this.validateForm.controls[key].setValue(new Date(state[key]))
+              break;
+            case 'conditionSettingQuery':
+              this.conditions.removeAt(0);
+              //這裡要改呀呀呀
+              this.conditions.push(new FormGroup({
+                id: new FormControl(0),
+                ['detection_condition' + 0]: new FormControl(null, Validators.required),
+                ['threshold_value' + 0]: new FormControl(null, Validators.required)
+              }));
+              // let groupData = CommonUtil.groupBy(editData[key], 'tagGroup');
+              // Object.keys(groupData).forEach(key => {
+              //   let fg = new FormGroup({});
+              //   let condition = groupData[key] as Array<ActivityListCondition>;
+              //   condition.forEach(con => {
+              //     fg.setControl(con.tagKey.replace('tag-', ''), new FormControl(con.tagName, Validators.required));
+              //   });
+              //   this.conditions.push(fg);
+              // })
               break;
             default:
               this.validateForm.controls[key].setValue(state[key]);
@@ -245,13 +266,13 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       }
       this.conditions.push(new FormGroup({
         id: new FormControl(index),
-        ['mathSymbol' + index]: new FormControl(null, Validators.required),
-        ['inputMath' + index]: new FormControl(null, Validators.required)
+        ['detection_condition' + index]: new FormControl(null, Validators.required),
+        ['threshold_value' + index]: new FormControl(null, Validators.required)
       }));
       //最後一個選單前加入其餘欄位驗證
       for (let i = 0; i < this.conditions.length - 1; i++) {
         if (Object.keys(this.conditions.controls[i]?.value).length === 3) {
-          this.and('add', 'selectedRadio', this.conditions.controls[i].get('id').value, i)
+          this.and('add', 'join_value', this.conditions.controls[i].get('id').value, i)
         }
       }
     } else {

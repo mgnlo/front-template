@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CleanSessionGuard } from '@common/guard/clean-session-guard';
 import { PagesComponent } from './pages.component';
 
 const routes: Routes = [
@@ -27,6 +28,7 @@ const routes: Routes = [
           import('@pages/dashboard/dashboard.module').then(
             (m) => m.DashboardModule
           ),
+          canActivateChild: [CleanSessionGuard]
       },
       {
         path: 'customer-manage',
@@ -34,6 +36,7 @@ const routes: Routes = [
           import('@pages/customer-manage/customer-manage.module').then(
             (m) => m.CustomerManageModule
           ),
+          canActivateChild: [CleanSessionGuard]
       },
       {
         path: 'tag-manage',
@@ -41,6 +44,7 @@ const routes: Routes = [
           import('@pages/tag-manage/tag-manage.module').then(
             (m) => m.TagManageModule
           ),
+          canActivateChild: [CleanSessionGuard]
       },
       {
         path: 'review-manage',
@@ -48,6 +52,7 @@ const routes: Routes = [
           import('@pages/review-manage/review-manage.module').then(
             (m) => m.ReviewManageModule
           ),
+          canActivateChild: [CleanSessionGuard]
       },
       {
         path: 'account-manage',
@@ -55,13 +60,15 @@ const routes: Routes = [
           import('@pages/account-manage/account-manage.module').then(
             (m) => m.AccountManageModule
           ),
+          canActivateChild: [CleanSessionGuard]
       },
       {
         path: 'schedule-manage',
         loadChildren: () =>
           import('@pages/schedule-manage/schedule-manage.module').then(
             (m) => m.ScheduleManageModule
-          )
+          ),
+          canActivateChild: [CleanSessionGuard]
       },
       {
         path: 'charts',

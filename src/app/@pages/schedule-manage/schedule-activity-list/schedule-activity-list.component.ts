@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ScheduleManageService } from '../schedule-manage.service';
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
@@ -8,6 +8,7 @@ import { Status } from '@common/enums/common-enum';
 import { DatePipe } from '@angular/common';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { ScheduleSettingMock } from '@common/mock-data/schedule-list-mock';
+import { StorageService } from '@api/services/storage.service';
 
 @Component({
   selector: 'schedule-activity-list',
@@ -17,15 +18,31 @@ import { ScheduleSettingMock } from '@common/mock-data/schedule-list-mock';
 export class ScheduleListComponent extends BaseComponent implements OnInit {
   constructor(
     private scheduleManageService: ScheduleManageService,
-    private router: Router) {
+    private storageService: StorageService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+  ) {
     super();
   }
   scheduleSetting: Array<ScheduleSetting> = ScheduleSettingMock;
-
+  sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
   ngOnInit(): void {
     this.dataSource = new LocalDataSource();
     this.dataSource.load(this.scheduleSetting);
+  }
+
+  ngAfterViewInit(): void {
+    //get session page
+    let storage = this.storageService.getSessionVal(this.sessionKey);
+    if (!!storage?.page) {
+      this.dataSource.setPage(storage.page);
+    }
+  }
+
+  ngOnDestroy(): void {
+    let sessionData = { page: this.paginator.nowPage };
+    this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
 
   gridDefine = {

@@ -8,7 +8,7 @@
         </nb-card-header>
         <nb-card-body [formGroup]="validateForm">
             <div class="row" >
-                <basic-input class="col-12 col-lg-6" title="會員號碼" [form]="validateForm" ctlName="custId" [maxlength]="10"></basic-input>
+                <basic-input class="col-12 col-lg-6" title="會員號碼" [form]="validateForm" ctlName="customerId" [maxlength]="10"></basic-input>
                 <basic-input class="col-12 col-lg-6" title="手機號碼" [form]="validateForm" ctlName="mobile" [maxlength]="10"></basic-input>
             </div>
         </nb-card-body>
@@ -16,7 +16,7 @@
     <div class="row">
         <div class="btnGroup">
             <button nbButton status="basic" size="medium" (click)="reset()">清除</button>
-            <button nbButton status="primary" size="medium" [disabled]="validateForm.invalid" (click)="search()">查詢</button>
+            <button nbButton status="primary" size="medium" (click)="search()" [disabled]="validateForm.invalid">查詢</button>
         </div>
     </div>
     <hr/>

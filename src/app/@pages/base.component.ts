@@ -1,20 +1,16 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidationErrors } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
 import { Paginator } from '@component/table/paginator/paginator.component';
 import { LocalDataSource } from 'ng2-smart-table';
 // import { OAuth2BaseComponent, OAuth2Service } from '@module/oauth2';
 import { Subject } from 'rxjs';
+import { first } from 'rxjs/operators';
 
 @Injectable()
 export class BaseComponent implements OnDestroy {
 
   unsubscribe$ = new Subject();
   readonly dateFormat = 'yyyy-MM-dd';
-
-  // constructor(oauth2Service: OAuth2Service) {
-  //   super(oauth2Service);
-  // }
-
   dataSource: LocalDataSource; //table
   paginator: Paginator = { totalCount: 0, nowPage: 1, perPage: 10, totalPage: 1, rowStart: 0, rowEnd: 0 };  //table筆數顯示
   validateForm: FormGroup;     // 共用表單名稱
@@ -33,7 +29,7 @@ export class BaseComponent implements OnDestroy {
 
   updatePageInfo() {
     if (!!this.dataSource) {
-      this.dataSource.onChanged().subscribe(() => {
+      this.dataSource.onChanged().pipe(first()).subscribe((event) => {
         this.paginator.totalCount = this.dataSource.count();
         let page = this.dataSource.getPaging().page;
         let perPage = this.dataSource.getPaging().perPage;
@@ -43,11 +39,6 @@ export class BaseComponent implements OnDestroy {
         this.paginator.rowEnd = this.paginator.totalPage !== page ? page * perPage : (page - 1) * perPage + this.paginator.totalCount % perPage;
       });
     }
-  }
-
-  hasError(ctlName: string){
-    let ctl = this.validateForm.get(ctlName) as FormControl;
-    return (ctl.dirty || ctl.touched) && ctl?.errors;
   }
 
   getActionName(changeRouteName: string): string {

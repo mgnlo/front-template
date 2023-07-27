@@ -9,8 +9,9 @@
       <div class="row">
         <dropdown class="col-6" title="資料排序方式" [form]="validateForm" ctlName="orderBy"
           [selectList]="{options: orderByList | keyvalue, key: 'key', val: 'value'}"></dropdown>
-        <radio class="col-6" title="排序順序" [form]="validateForm" ctlName="orderType"
-          [selectList]="{options: orderTypeList | keyvalue, key: 'key', val: 'value'}"></radio>
+        <radio class="col-6" title="排序順序" [form]="validateForm" ctlName="sortType"
+          (valueChange)="changeSort($event)"
+          [selectList]="{options: sortList | keyvalue, key: 'key', val: 'value'}"></radio>
       </div>
       <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
       <paginator [source]="dataSource" [paginator]="paginator"></paginator>

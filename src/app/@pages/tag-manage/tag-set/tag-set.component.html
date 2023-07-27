@@ -53,11 +53,8 @@
             <p>條件設定</p>
         </div>
         <div class="row">
-            <div class="fieldGroup essential col-12">
+            <!-- <div class="fieldGroup essential col-12">
                 <label>偵測條件</label>
-                <!-- <div>
-                    <textarea nbInput fullWidth status="basic" type="text" formControlName="conditionSettingQuery" placeholder="請輸入"></textarea>
-                </div> -->
                 <div>
                     <nb-select fullWidth placeholder="請選擇">
                         <nb-option value="item1">item1</nb-option>
@@ -68,7 +65,8 @@
                     <nb-icon icon="alert-triangle"></nb-icon>
                     <p>欄位錯誤訊息</p>
                 </div>
-            </div>
+            </div> -->
+          <dropdown class="essential col-12 col-lg-12" title="偵測條件" [form]="validateForm" [selectList]="{options: condition_valueList, key: 'key', val: 'val'}" ctlName="condition_value"></dropdown>
         </div>
         <div class="row rightBox">
           <div class="fieldBtn col-12 col-lg-2">
@@ -80,11 +78,10 @@
         <!-- 灰底區塊 -->
         <div class="grayCard" *ngFor="let condition of conditions.controls | keyvalue; let i=index; let first = first; let last = last" formArrayName="conditionSettingQuery">
           <div class="row" formGroupName="{{i}}">
-              <!-- 下拉式選單欄位結構 -->
               <div class="fieldGroup essential col-6 col-lg-4">
-                  <label>下拉式選單</label>
+                  <label>條件值</label>
                   <div>
-                    <nb-select fullWidth placeholder="請選擇" formControlName="mathSymbol{{this.conditions.controls[i].get('id').value}}">
+                    <nb-select fullWidth placeholder="請選擇" formControlName="detection_condition{{this.conditions.controls[i].get('id').value}}">
                       <nb-option *ngFor="let mathSymbol of mathSymbolList" [value]="mathSymbol.key">{{ mathSymbol.val }}</nb-option>
                     </nb-select>
                   </div>
@@ -96,20 +93,21 @@
               <div class="fieldGroup essential col-6 col-lg-4">
                   <label>門檻值</label>
                   <div>
-                      <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" formControlName="inputMath{{this.conditions.controls[i].get('id').value}}"/>
+                      <input nbInput fullWidth status="basic" type="number" placeholder="請輸入" formControlName="threshold_value{{this.conditions.controls[i].get('id').value}}"/>
                   </div>
                   <div class="note errorText">
-                      <nb-icon icon="alert-triangle"></nb-icon>
-                      <p>欄位錯誤訊息</p>
+                    <nb-icon icon="alert-triangle"></nb-icon>
+                    <p>欄位錯誤訊息</p>
                   </div>
               </div>
+              <!-- <basic-input class="col-6 col-lg-4" title="門檻值" [form]="validateForm" [ctlName]="'threshold_value'+this.conditions.controls[i].get('id').value"></basic-input> -->
               <!-- radio欄位結構 -->
-              <div class="fieldGroup essential col-11 col-lg-3">
+              <div class="fieldGroup essential col-10 col-lg-2">
                 <label *ngIf="!last">集合</label>
                 <div *ngIf="!last">
-                    <nb-radio-group formControlName="selectedRadio{{this.conditions.controls[i].get('id').value}}">
-                        <nb-radio value="1">and</nb-radio>
-                        <nb-radio value="2">or</nb-radio>
+                    <nb-radio-group formControlName="join_value{{this.conditions.controls[i].get('id').value}}">
+                        <nb-radio value="and">and</nb-radio>
+                        <nb-radio value="or">or</nb-radio>
                     </nb-radio-group>
                 </div>
                 <div *ngIf="!last" class="note errorText">

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ActivitySetting, ScheduleSetting, Schedule_Batch_History } from '@api/models/schedule-manage.model';
+import { StorageService } from '@api/services/storage.service';
 import { StatusResult } from '@common/enums/common-enum';
 import { ScheduleSettingMock } from '@common/mock-data/schedule-list-mock';
 import { BaseComponent } from '@pages/base.component';
@@ -17,11 +18,29 @@ export class ActivityDetailComponent extends BaseComponent implements OnInit {
   schedule_Batch_History: Array<Schedule_Batch_History> = ScheduleSettingMock[0].activitySetting[0].schedule_batch_history;
 
   params: any;//路由參數
+  sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private storageService: StorageService,
+  ) {
     super();
     this.params = this.activatedRoute.snapshot.params;
     console.info('this.params', this.params)
+  }
+
+  ngAfterViewInit(): void {
+    //get session page
+    let storage = this.storageService.getSessionVal(this.sessionKey);
+    if (!!storage?.page) {
+      this.dataSource.setPage(storage.page);
+    }
+  }
+
+  ngOnDestroy(): void {
+    let sessionData = { page: this.paginator.nowPage };
+    this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
 
   gridDefine = {
