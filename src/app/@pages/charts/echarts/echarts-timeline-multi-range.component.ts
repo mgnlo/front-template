@@ -14,112 +14,136 @@ export class EchartsTimelineMultiRangeComponent implements AfterViewInit, OnDest
   themeSubscription: any;
 
   startTime;
+  endTime;
 
   //標籤名稱陣列
-  categories = ['tag1', 'tag2', 'tag3'];
+  categories = ['tag1', 'tag2', 'tag3', 'tag4'];
   // 標籤名稱陣列對應顏色
   types = [
     { name: 'tag1', color: '#7b9ce1' },
     { name: 'tag2', color: '#bd6d6c' },
-    { name: 'tag3', color: '#75d874' }
+    { name: 'tag3', color: '#75d874' },
+    { name: 'tag4', color: '#c5d874' }
   ];
   data = [
     {
-      "name": "tag1", //名稱
-      "value": [
-        0,  //名稱索引，相同標籤名稱提供同一索引值
-        new Date('2023-06-27').getTime(), //起始日, 主機直接給 getTime() 值
-        new Date('2023-07-04').getTime()  //結束日, 主機直接給 getTime() 值
+      name: "tag1", //名稱
+      value: [
+        0,  //名稱索引，相同標籤名稱提供同一索引值  rowIndex
+        new Date('2023-06-27').getTime(), //起始日, 主機直接給 getTime() 值  sDate
+        new Date('2023-07-04').getTime()  //結束日, 主機直接給 getTime() 值  eDate
       ],
       // 主機資料或許可以只提供上半部，這邊由前端依據邏輯加工資料處理
-      "itemStyle": {
-        "color": "#7b9ce1" // 指定顏色，依據 seriers type='custom' 中的 itemStyle
+      itemStyle: {
+        color: "#7b9ce1" // 指定顏色，依據 seriers type='custom' 中的 itemStyle
       }
     },
     {
-      "name": "tag1",
-      "value": [
+      name: "tag1",
+      value: [
         0,
         new Date('2023-07-08').getTime(),
         new Date('2023-08-12').getTime()
       ],
-      "itemStyle": {
-        "color": "#7b9ce1"
+      itemStyle: {
+        color: "#7b9ce1"
       }
     },
     {
-      "name": "tag2",
-      "value": [
+      name: "tag2",
+      value: [
         1,
         new Date('2023-06-29').getTime(),
         new Date('2023-07-04').getTime()
       ],
-      "itemStyle": {
-        "color": "#bd6d6c"
+      itemStyle: {
+        color: "#bd6d6c"
       }
     },
     {
-      "name": "tag2",
-      "value": [
+      name: "tag2",
+      value: [
         1,
         new Date('2023-07-17').getTime(),
         new Date('2023-08-17').getTime()
       ],
-      "itemStyle": {
-        "color": "#bd6d6c"
+      itemStyle: {
+        color: "#bd6d6c"
       }
     },
     {
-      "name": "tag2",
-      "value": [
+      name: "tag4",
+      value: [
+        3,
+        new Date('2023-06-29').getTime(),
+        new Date('2023-07-04').getTime()
+      ],
+      itemStyle: {
+        color: "#c5d874"
+      }
+    },
+    {
+      name: "tag4",
+      value: [
+        3,
+        new Date('2023-07-17').getTime(),
+        new Date('2023-08-17').getTime()
+      ],
+      itemStyle: {
+        color: "#c5d874"
+      }
+    },
+    {
+       name: "tag2",
+       value: [
         1,
         new Date('2023-08-27').getTime(),
         new Date('2023-09-17').getTime()
       ],
-      "itemStyle": {
-        "color": "#bd6d6c"
+      itemStyle: {
+        color: "#bd6d6c"
       }
     },
     {
-      "name": "tag3",
-      "value": [
+       name: "tag3",
+       value: [
         2,
         new Date('2023-06-24').getTime(),
         new Date('2023-06-27').getTime()
       ],
-      "itemStyle": {
-        "color": "#75d874"
+      itemStyle: {
+        color: "#75d874"
       }
     },
     {
-      "name": "tag3",
-      "value": [
+       name: "tag3",
+       value: [
         2,
         new Date('2023-07-12').getTime(),
         new Date('2023-07-29').getTime()
       ],
-      "itemStyle": {
-        "color": "#75d874"
+      itemStyle: {
+        color: "#75d874"
       }
     },
     {
-      "name": "tag3",
-      "value": [
+       name: "tag3",
+       value: [
         2,
         new Date('2023-07-31').getTime(),
         new Date('2023-08-27').getTime()
       ],
-      "itemStyle": {
-        "color": "#75d874"
+      itemStyle: {
+        color: "#75d874"
       }
     }
   ];
 
   constructor(private theme: NbThemeService) {
     //最小起始日期，以資料流內容最小值為準 - 86400000 * 2, //最小起始日往前兩天，這個可以調整
-    // this.startTime = new Date().getTime();
-
     this.startTime = this.data.reduce((agg, d) => Math.min(agg, d.value[1]), Infinity) - 86400000 * 2;
+    //最大結束日期，以資料流內容最大值為準 + 86400000 * 2, //最大結束日往後兩天，這個可以調整
+    this.endTime = this.data.reduce((agg, d) => Math.max(agg, d.value[2]), 0) + 86400000 * 2;
 
     // for (let index = 0; index < this.categories.length; index++) {
     //   // 每個 item 的起始日期
@@ -207,6 +231,7 @@ export class EchartsTimelineMultiRangeComponent implements AfterViewInit, OnDest
         },
         xAxis: {
           min: this.startTime,
+          max: this.endTime,
           scale: true,
           axisLabel: {
             formatter: (val) => {
@@ -220,13 +245,14 @@ export class EchartsTimelineMultiRangeComponent implements AfterViewInit, OnDest
         series: [
           {
             type: 'custom',
+            dimensions: ['rowIndex', 'sDate', 'eDate'],
             renderItem: this.renderItem,
             itemStyle: {
               opacity: 0.8
             },
             encode: {
-              x: [1, 2],
-              y: 0
+              x: ['sDate', 'eDate'],
+              y: 'rowIndex'
             },
             data: this.data
           }
