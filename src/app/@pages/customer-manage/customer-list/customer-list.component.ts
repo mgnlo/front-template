@@ -1,9 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { CustomerList } from '@api/models/customer-list.model';
 import { DialogService } from '@api/services/dialog.service';
-import { StorageService } from '@api/services/storage.service';
 import { CustomerListMock } from '@common/mock-data/customer-list-mock';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
@@ -18,14 +16,11 @@ import { DetailDialogComponent } from './detail-dialog/detail.dialog.component';
 })
 export class CustomerListComponent extends BaseComponent implements OnInit {
 
-  constructor(
-    private storageService: StorageService,
-    private activatedRoute: ActivatedRoute
-  ) {
+  constructor() {
     super();
     // 篩選條件
     this.validateForm = new FormGroup({
-      custId: new FormControl('', [ValidatorsUtil.searchCustId]),
+      customerId: new FormControl('', [ValidatorsUtil.searchCustId]),
       mobile: new FormControl('', ValidatorsUtil.number),
     });
   }
@@ -44,7 +39,7 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
       perPage: 10,
     },
     columns: {
-      custId: {
+      customerId: {
         title: '用戶編號',
         type: 'string',
         class: 'col-1',
@@ -87,7 +82,7 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
 
   reset() {
     this.dataSource.reset();
-    this.validateForm.reset({ custId: '', mobile: '' });
+    this.validateForm.reset({ customerId: '', mobile: '' });
   }
 
   search() {
@@ -112,7 +107,7 @@ export class CustomerListButtonComponent implements OnInit {
 
   detail() {
     this.dialogService.open(DetailDialogComponent, {
-      title: `${this.rowData['custId']}`,
+      title: `${this.rowData['customerId']}`,
       dataList: this.rowData,
     });
   }
