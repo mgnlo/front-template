@@ -5,6 +5,7 @@ import { NbDateFnsDateModule } from '@nebular/date-fns';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import {
   NbAccordionModule,
+  NbAutocompleteModule,
   NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbIconModule,
   NbInputModule, NbRadioModule, NbSelectModule, NbSpinnerModule, NbTabsetModule, NbTagModule, NbTreeGridModule
 } from '@nebular/theme';
@@ -27,6 +28,7 @@ export const NB_MODULES = [
   NbSelectModule,
   NbDatepickerModule,
   NbAccordionModule,
+  NbAutocompleteModule,
   NbTagModule,
   NbTabsetModule,
   NbDateFnsDateModule.forChild({ format: 'yyyy-MM-dd' }),

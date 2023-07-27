@@ -43,6 +43,10 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   //預設檔案存放地方
   condition_valueList: Array<{ key: string; val: string }> = [{ key: 'condition_A', val: '近三個月_基金_申購金額' }, { key: 'condition_B', val: '假資料B' }, { key: 'condition_C', val: '假資料C' }];
 
+  //取得新增條件區塊
+  get conditions(): FormArray {
+    return this.validateForm.get('conditionSettingQuery') as FormArray
+  }
 
   detail: TagDetailView;
   fileName: string;
@@ -79,7 +83,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
         new FormGroup({
           id: new FormControl(0),
           detection_condition0: new FormControl(null, Validators.required),
-          threshold_value0: new FormControl(null, [Validators.required,ValidatorsUtil.number]),
+          threshold_value0: new FormControl(null, [Validators.required, ValidatorsUtil.number]),
           //C1: new FormControl(null, Validators.required),
         }),
       ]),
@@ -225,7 +229,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  //標籤類型 更動時切換驗證
+  //#region 標籤類型 更動時切換驗證
   changeTagType(key: string) {
     this.isFile = true;
     this.fileName = '';
@@ -249,7 +253,9 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     }
 
   }
+  //#endregion
 
+  //#region 基本欄位檢核(新增/刪除)
   addField(fieldName: string, formState: any, fileFormatValidator: any) {
     this.validateForm.addControl(fieldName, new FormControl(formState, fileFormatValidator));
     //this.validateForm.controls[fieldName].updateValueAndValidity();
@@ -258,8 +264,10 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   removeField(fieldName: string) {
     this.validateForm.removeControl(fieldName);
   }
+  //#endregion
 
-  or(action: 'add' | 'remove', index: number) {
+  //#region 條件區塊異動
+  changeConditionsBtn(action: 'add' | 'remove', index: number) {
     if (action === 'add') {
       while (this.conditions.controls.filter(f => f.value.id === index).length > 0) {
         index = index + 1
@@ -272,30 +280,26 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       //最後一個選單前加入其餘欄位驗證
       for (let i = 0; i < this.conditions.length - 1; i++) {
         if (Object.keys(this.conditions.controls[i]?.value).length === 3) {
-          this.and('add', 'join_value', this.conditions.controls[i].get('id').value, i)
+          this.setConditions('add', 'join_value', this.conditions.controls[i].get('id').value, i)
         }
       }
     } else {
       this.conditions.removeAt(index);
     }
 
-    //console.info('or', this.conditions.getRawValue())
+    //console.info('changeConditionsBtn', this.conditions.getRawValue())
   }
 
-  and(action: 'add' | 'remove', key: string, id: number, index: number) {
+  setConditions(action: 'add' | 'remove', key: string, id: number, index: number) {
     let fg = this.conditions.at(index) as FormGroup;
     if (action === 'add') {
       fg.setControl(`${key + id}`, new FormControl(null, Validators.required));
     } else {
       fg.removeControl(`${key}`);
     }
-    //console.info('and', this.conditions.getRawValue())
+    //console.info('setConditions', this.conditions.getRawValue())
   }
-
-
-  get conditions(): FormArray {
-    return this.validateForm.get('conditionSettingQuery') as FormArray
-  }
+  //#endregion
 
   uploadFile(event: any) {
     const file: File = event.target.files[0];
@@ -342,6 +346,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   //   return null;
   // }
 
+  //條件分佈級距彈出視窗
   conditionDialog() {
     this.dialogService.open(TagConditionDialogComponent, {
       title: '條件分佈級距',
