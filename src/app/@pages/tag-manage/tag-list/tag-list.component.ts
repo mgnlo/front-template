@@ -1,17 +1,18 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { NavigationExtras, Router } from '@angular/router';
-import { BaseComponent } from '@pages/base.component';
-import { Status } from '@common/enums/common-enum';
-import { TagManageService } from '../tag-manage.service';
-import { LocalDataSource } from 'ng2-smart-table';
-import * as moment from 'moment';
-import { TagSetting } from '@api/models/tag-manage.model';
-import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { DatePipe } from '@angular/common';
-import { TagType } from '@common/enums/tag-enum';
-import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TagSetting } from '@api/models/tag-manage.model';
+import { StorageService } from '@api/services/storage.service';
+import { Status } from '@common/enums/common-enum';
+import { TagType } from '@common/enums/tag-enum';
+import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { ValidatorsUtil } from '@common/utils/validators-util';
+import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
+import { BaseComponent } from '@pages/base.component';
+import * as moment from 'moment';
+import { LocalDataSource } from 'ng2-smart-table';
+import { TagManageService } from '../tag-manage.service';
 
 @Component({
   selector: 'tag-list',
@@ -20,8 +21,10 @@ import { ValidatorsUtil } from '@common/utils/validators-util';
 })
 export class TagListComponent extends BaseComponent implements OnInit {
   constructor(
+    private router: Router,
     private tagManageService: TagManageService,
-    private router: Router) {
+    private storageService: StorageService,
+    private activatedRoute: ActivatedRoute,) {
     super();
     this.validateForm = new FormGroup({
       tagName: new FormControl(''),
@@ -32,12 +35,29 @@ export class TagListComponent extends BaseComponent implements OnInit {
   }
 
   statusList: Array<{ key: string; val: string }> = Object.entries(Status).map(([k, v]) => ({ key: k, val: v }))
-  updateTime: string = moment(new Date()).format('YYYY/MM/DD');
   mockData: Array<TagSetting> = TagSettingMock;
+  sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
   ngOnInit(): void {
     this.dataSource = new LocalDataSource();
     this.dataSource.load(this.mockData);
+    //get session filter
+    this.storageService.getSessionFilter(this.sessionKey, this.validateForm).subscribe((res) => {
+      if (res === true) { this.search(); }
+    });
+  }
+   
+  ngAfterViewInit(): void {
+    //get session page
+    let storage = this.storageService.getSessionVal(this.sessionKey);
+    if(!!storage?.page){
+      this.dataSource.setPage(storage.page);
+    }
+  }
+
+  ngOnDestroy(): void {
+    let sessionData = {page: this.paginator.nowPage, filter: this.validateForm.getRawValue()};
+    this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
 
   TagType: TagType
@@ -164,6 +184,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
   reset() {
     this.validateForm.reset({ tagName: '', status: '', startDate: null, endDate: null, });
     this.dataSource.reset();
+    console.info(this.validateForm.controls)
   }
 
   search() {
@@ -187,12 +208,8 @@ export class TagListComponent extends BaseComponent implements OnInit {
     addDateFilter('endDate', endDate, (value, searchValue) => new Date(value) <= new Date(searchValue[0]));
 
     //search other
-    for (const [k, v] of Object.entries(getForm).filter(([key, val]) => !key.includes('Date'))) {
-      this.dataSource.addFilter({
-        field: k,
-        filter: undefined,
-        search: v,
-      });
+    for (const [k, v] of Object.entries(getForm).filter(([key, val]) => !key.includes('Date') && !!val)) {
+      this.dataSource.addFilter({ field: k, filter: undefined, search: v });
     }
   }
 

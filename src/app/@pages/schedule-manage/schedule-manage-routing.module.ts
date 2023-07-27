@@ -11,11 +11,11 @@ const routes: Routes = [
     path: "", component: ScheduleManageComponent,
     children: [
       { path: '', redirectTo: 'schedule-manage', pathMatch: 'full' },
-      { path: "schedule-activity-list", component: ScheduleListComponent },
-      { path: 'schedule-activity-detail/:scheduleId', component: ScheduleDetailComponent },
+      { path: "schedule-activity-list", component: ScheduleListComponent, data: {keepSession: true}},
+      { path: 'schedule-activity-detail/:scheduleId', component: ScheduleDetailComponent, data: {keepSession: true}},
       { path: 'schedule-activity-set', component: ScheduleAddComponent },
       { path: 'schedule-activity-set/:changeRoute/:scheduleId', component: ScheduleAddComponent}, //編輯
-      { path: 'activity-detail/:scheduleId/:activityId', component: ActivityDetailComponent}, //名單查看
+      { path: 'activity-detail/:scheduleId/:activityId', component: ActivityDetailComponent, data: {keepSession: true}}, //名單查看
     ]
   }
 ]

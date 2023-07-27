@@ -1,7 +1,9 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { TagReviewHistory, TagSetting } from '@api/models/tag-manage.model';
+import { StorageService } from '@api/services/storage.service';
 import { ReviewClass, ReviewStatus } from '@common/enums/review-enum';
 import { TagType } from '@common/enums/tag-enum';
 import { TagReviewListMock } from '@common/mock-data/tag-review-mock';
@@ -19,7 +21,12 @@ import { LocalDataSource } from 'ng2-smart-table';
 })
 export class TagReviewListComponent extends BaseComponent implements OnInit {
 
-  constructor(private dateService: NbDateService<Date>) {
+  constructor(
+    private dateService: NbDateService<Date>,
+    private storageService: StorageService,
+    private activatedRoute: ActivatedRoute,
+    private cdr: ChangeDetectorRef,
+  ) {
     super();
     // 篩選條件
     this.validateForm = new FormGroup({
@@ -28,16 +35,34 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
       startDate: new FormControl(null, ValidatorsUtil.dateFmt),
       endDate: new FormControl(null, ValidatorsUtil.dateFmt),
     }, [ValidatorsUtil.dateRange]);
-
   }
 
   statusList: Array<{ key: string; val: string }> = Object.entries(ReviewStatus).map(([k, v]) => ({ key: k, val: v }))
   selected: string = '';
   mockData: Array<TagReviewHistory> = TagReviewListMock;
+  sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
   ngOnInit(): void {
     this.dataSource = new LocalDataSource();
     this.dataSource.load(this.mockData);
+    //get session filter
+    this.storageService.getSessionFilter(this.sessionKey, this.validateForm).subscribe((res) => {
+      if (res === true) { this.search(); }
+    });
+  }
+  
+  ngAfterViewInit(): void {
+    //get session page
+    let storage = this.storageService.getSessionVal(this.sessionKey);
+    if(!!storage?.page){
+      this.dataSource.setPage(storage.page);
+    }
+    this.cdr.detectChanges();
+  }
+
+  ngOnDestroy(): void {
+    let sessionData = {page: this.paginator.nowPage, filter: this.validateForm.getRawValue()};
+    this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
 
   gridDefine = {
@@ -161,18 +186,12 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
     //search modificationTime
     let sDate = filter.startDate !== null ? this.dateService.format(filter.startDate, this.dateFormat) : null;
     let eDate = filter.endDate !== null ? this.dateService.format(filter.endDate, this.dateFormat) : null;
-    this.dataSource.addFilter({
-      field: 'modificationTime',
-      filter: undefined,
-      search: [sDate, eDate],
-    });
+    if(!!sDate || !!eDate){
+      this.dataSource.addFilter({ field: 'modificationTime', filter: undefined, search: [sDate, eDate] });
+    }
     //search other
     for (const [k, v] of Object.entries(filter).filter(([key, val]) => !key.includes('Date') && !!val)) {
-      this.dataSource.addFilter({
-        field: k,
-        filter: undefined,
-        search: v,
-      });
+      this.dataSource.addFilter({ field: k, filter: undefined, search: v });
     }
   }
 }

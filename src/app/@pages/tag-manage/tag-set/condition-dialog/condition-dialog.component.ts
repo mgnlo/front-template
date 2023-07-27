@@ -4,7 +4,7 @@ import { NbDialogRef } from '@nebular/theme';
 import { DetailDialogComponent } from '@pages/customer-manage/customer-list/detail-dialog/detail.dialog.component';
 
 @Component({
-  selector: 'app-condition-dialog',
+  selector: 'condition-dialog',
   templateUrl: './condition-dialog.component.html',
   styleUrls: ['./condition-dialog.component.scss']
 })
@@ -20,7 +20,7 @@ export class TagConditionDialogComponent implements OnInit {
 
   ngOnInit() {
     // this.datas = JSON.parse(JSON.stringify(this.dataList));
-     console.info(this.dataList);
+     //console.info(this.dataList);
   }
 
   close() {

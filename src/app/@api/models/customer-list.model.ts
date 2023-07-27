@@ -1,15 +1,15 @@
 export interface CustomerList {
-    custId: string
+    customerId: string
     userName: string
     mobile: string
     userTag: Array<{tagTitle: string, tagRule: string}>
-    tagDept?: string
-    birth?: string
+    department?: string
+    birthday?: string
     gender?: string
     totalTxAmount?: number
     branchId?: string
     branchName? : string
-    addr?: string
+    address?: string
     tagHistory?: Array<Tag>
 }
 

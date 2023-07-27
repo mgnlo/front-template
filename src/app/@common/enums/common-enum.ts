@@ -37,9 +37,10 @@ export enum MathSymbol {
   minus = '減',
   times = '乘',
   divided = '除',
-  equals = '等於',
-  is_greater_than = '大於',// >
-  is_no_less_than = '大於等於',// >=
-  is_less_than = '小於',// <
-  is_no_more_than = '小於等於',// <=
+  $ne = '不等於',
+  $eq = '等於',
+  $gt = '大於',// >
+  $gte = '大於等於',// >=
+  $lt = '小於',// <
+  $lte = '小於等於',// <=
 }

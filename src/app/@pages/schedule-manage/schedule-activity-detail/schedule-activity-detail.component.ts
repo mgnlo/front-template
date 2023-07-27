@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ScheduleDetailView, ScheduleSetting, ActivitySetting, Schedule_Batch_History } from '@api/models/schedule-manage.model';
+import { StorageService } from '@api/services/storage.service';
 import { StatusResult, Status } from '@common/enums/common-enum';
 import { ScheduleSettingMock } from '@common/mock-data/schedule-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
@@ -16,8 +17,13 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   detail: ScheduleDetailView;
   isHistoryOpen: { [x: number]: boolean } = []; //異動歷程收合
   activitySetting: Array<ActivitySetting> = ScheduleSettingMock[0].activitySetting;
+  sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
-  constructor(private router: Router) {
+  constructor(
+    private storageService: StorageService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+  ) {
     super();
     const currentNavigation = this.router.getCurrentNavigation();
     if (!!currentNavigation?.extras) {
@@ -32,6 +38,19 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-list']);
       }
     }
+  }
+
+  ngAfterViewInit(): void {
+    //get session page
+    let storage = this.storageService.getSessionVal(this.sessionKey);
+    if (!!storage?.page) {
+      this.dataSource.setPage(storage.page);
+    }
+  }
+
+  ngOnDestroy(): void {
+    let sessionData = { page: this.paginator.nowPage };
+    this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
 
   gridDefine = {
@@ -133,7 +152,7 @@ export class ScheduleButtonComponent implements OnInit {
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {
     this.params = this.activatedRoute.snapshot.params;
-   }
+  }
 
   @Input() value: Schedule_Batch_History;
 
@@ -141,6 +160,6 @@ export class ScheduleButtonComponent implements OnInit {
 
   search() {
     let passData: NavigationExtras = { state: this.value };
-    this.router.navigate(['pages', 'schedule-manage', 'activity-detail',this.params.scheduleId, this.value.activityId], passData);
+    this.router.navigate(['pages', 'schedule-manage', 'activity-detail', this.params.scheduleId, this.value.activityId], passData);
   }
 }

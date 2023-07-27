@@ -1,7 +1,9 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { ActivityReviewHistory } from '@api/models/activity-list.model';
+import { StorageService } from '@api/services/storage.service';
 import { ReviewClass, ReviewStatus } from '@common/enums/review-enum';
 import { ActivityReviewListMock } from '@common/mock-data/activity-review-mock';
 import { ValidatorsUtil } from '@common/utils/validators-util';
@@ -20,7 +22,10 @@ import { LocalDataSource } from 'ng2-smart-table';
 export class ActivityReviewListComponent extends BaseComponent implements OnInit {
 
   constructor(
-    private dateService: NbDateService<Date>) {
+    private dateService: NbDateService<Date>,
+    private storageService: StorageService,
+    private activatedRoute: ActivatedRoute,
+    private cdr: ChangeDetectorRef) {
     super();
     // 篩選條件
     this.validateForm = new FormGroup({
@@ -33,18 +38,36 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
   }
 
   statusList: Array<{ key: string; val: string }> = Object.entries(ReviewStatus).map(([k, v]) => ({ key: k, val: v }))
-  selected: string = '';
   mockData: Array<ActivityReviewHistory> = ActivityReviewListMock;
+  sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
   ngOnInit(): void {
     this.dataSource = new LocalDataSource();
     this.dataSource.load(this.mockData);
+    //get session filter
+    this.storageService.getSessionFilter(this.sessionKey, this.validateForm).subscribe((res) => {
+      if (res === true) { this.search(); }
+    });
+  }
+
+  ngAfterViewInit(): void {
+    //get session page
+    let storage = this.storageService.getSessionVal(this.sessionKey);
+    if(!!storage?.page){
+      this.dataSource.setPage(storage.page);
+    }
+    this.cdr.detectChanges();
+  }
+
+  ngOnDestroy(): void {
+    let sessionData = { page: this.paginator.nowPage, filter: this.validateForm.getRawValue() };
+    this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
 
   gridDefine = {
     pager: {
       display: true,
-      perPage: 10,          
+      perPage: 10,
     },
     columns: {
       activityName: {
@@ -53,7 +76,7 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
         class: 'left',
         sort: false,
         width: '20%',
-        valuePrepareFunction: (cell:string) => {
+        valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
       },
@@ -63,7 +86,7 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
         class: 'left',
         sort: false,
         width: '25%',
-        valuePrepareFunction: (cell:string) => {
+        valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
       },
@@ -87,7 +110,7 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
         sort: false,
         valuePrepareFunction: (cell: string) => {
           const datepipe: DatePipe = new DatePipe('en-US')
-          return `<p class="date">${datepipe.transform(cell , this.dateFormat)}</p>`;
+          return `<p class="date">${datepipe.transform(cell, this.dateFormat)}</p>`;
         },
         filterFunction: (cell?: string, search?: string[]) => {
           let date = cell;
@@ -95,7 +118,7 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
           let eDate = search[1];
           let isSDate = sDate !== null;
           let isEDate = eDate !== null;
-          if(
+          if (
             (!isSDate && !isEDate) ||
             ((isSDate && isEDate) && (
               moment(date).isBetween(sDate, eDate, undefined, '[]')
@@ -106,9 +129,9 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
             ((!isSDate && isEDate) && (
               moment(eDate).isSameOrAfter(date)
             ))
-          ){
+          ) {
             return true
-          }  else {
+          } else {
             return false
           }
         }
@@ -119,7 +142,7 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
         class: 'left',
         sort: false,
         width: '30%',
-        valuePrepareFunction: (cell:string) => {
+        valuePrepareFunction: (cell: string) => {
           return `<p class="left">TODO</p>`;
         },
       },
@@ -164,18 +187,12 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
     //search modificationTime
     let sDate = filter.startDate !== null ? this.dateService.format(filter.startDate, this.dateFormat) : null;
     let eDate = filter.endDate !== null ? this.dateService.format(filter.endDate, this.dateFormat) : null;
-    this.dataSource.addFilter({
-      field: 'modificationTime',
-      filter: undefined,
-      search: [sDate, eDate],
-    });
+    if (!!sDate || !!eDate) {
+      this.dataSource.addFilter({ field: 'modificationTime', filter: undefined, search: [sDate, eDate] });
+    }
     //search other
     for (const [k, v] of Object.entries(filter).filter(([key, val]) => !key.includes('Date') && !!val)) {
-      this.dataSource.addFilter({
-        field: k,
-        filter: undefined,
-        search: v,
-      });
+      this.dataSource.addFilter({ field: k, filter: undefined, search: v });
     }
   }
 }

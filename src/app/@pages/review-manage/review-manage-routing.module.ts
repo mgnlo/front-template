@@ -11,10 +11,10 @@ const routes: Routes = [
         path: "", component: ReviewManageComponent, 
         children: [
             { path: '', redirectTo: 'tag-review', pathMatch: 'full'},
-            { path: 'tag-review-list', component: TagReviewListComponent },
-            { path: 'tag-review-detail/:historyId', component: TagReviewDetailComponent },
-            { path: 'activity-review-list', component: ActivityReviewListComponent },
-            { path: 'activity-review-detail/:historyId', component: ActivityReviewDetailComponent },
+            { path: 'tag-review-list', component: TagReviewListComponent, data: { keepSession: true, keepFrom: ['tag-review-detail/'] }},
+            { path: 'tag-review-detail/:historyId', component: TagReviewDetailComponent, data: { keepSession: true }},
+            { path: 'activity-review-list', component: ActivityReviewListComponent, data: { keepSession: true, keepFrom: ['activity-review-detail/'] }},
+            { path: 'activity-review-detail/:historyId', component: ActivityReviewDetailComponent, data: { keepSession: true }},
         ]
     }
 ]
