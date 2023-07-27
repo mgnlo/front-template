@@ -32,28 +32,10 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
 
   mockData: Array<CustomerList> = CustomerListMock;
   updateTime: string = moment(new Date()).format('YYYY/MM/DD');
-  sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
   ngOnInit(): void {
     this.dataSource = new LocalDataSource();
     this.dataSource.load(this.mockData);
-    //get session filter
-    this.storageService.getSessionFilter(this.sessionKey, this.validateForm).subscribe((res) => {
-      if (res === true) { this.search(); }
-    });
-  }
-
-  ngAfterViewInit(): void {
-    //get session page
-    let storage = this.storageService.getSessionVal(this.sessionKey);
-    if (!!storage?.page) {
-      this.dataSource.setPage(storage.page);
-    }
-  }
-
-  ngOnDestroy(): void {
-    let sessionData = { page: this.paginator.nowPage, filter: this.validateForm.getRawValue() };
-    this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
 
   gridDefine = {

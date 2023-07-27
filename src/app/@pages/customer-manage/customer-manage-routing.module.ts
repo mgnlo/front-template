@@ -13,7 +13,7 @@ const routes: Routes = [
         path: "", component: CustomerManageComponent,
         children: [
             { path: '', redirectTo: 'customer-list', pathMatch: 'full' },
-            { path: "customer-list", component: CustomerListComponent },
+            { path: 'customer-list', component: CustomerListComponent },
             { path: 'activity-list', component: ActivityListComponent, data: { keepSession: true } },
             { path: 'activity-detail/:activityId', component: ActivityDetailComponent, data: { keepSession: true } },
             { path: 'activity-set', component: ActivitySetComponent }, //新增
