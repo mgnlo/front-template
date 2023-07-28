@@ -1,34 +1,34 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import * as moment from "moment";
-import {
-    ChartComponent,
-    ApexAxisChartSeries,
-    ApexChart,
-    ApexPlotOptions,
-    ApexXAxis,
-    ApexFill,
-    ApexLegend,
-    ApexGrid
-} from "ng-apexcharts";
+// import {
+//     ChartComponent,
+//     ApexAxisChartSeries,
+//     ApexChart,
+//     ApexPlotOptions,
+//     ApexXAxis,
+//     ApexFill,
+//     ApexLegend,
+//     ApexGrid
+// } from "ng-apexcharts";
 
-export type ChartOptions = {
-    series: ApexAxisChartSeries;
-    chart: ApexChart;
-    fill: ApexFill;
-    legend: ApexLegend;
-    xaxis: ApexXAxis;
-    plotOptions: ApexPlotOptions;
-    grid: ApexGrid
-};
+// export type ChartOptions = {
+//     series: ApexAxisChartSeries;
+//     chart: ApexChart;
+//     fill: ApexFill;
+//     legend: ApexLegend;
+//     xaxis: ApexXAxis;
+//     plotOptions: ApexPlotOptions;
+//     grid: ApexGrid
+// };
 
 @Component({
     selector: 'apex-multi-range',
     templateUrl: './multi-range.component.html',
 })
 export class MultiRangeComponent implements OnInit {
-    @ViewChild('chartObj') chart: ChartComponent;
+    // @ViewChild('chartObj') chart: ChartComponent;
 
-    public chartOptions: Partial<ChartOptions>;
+    // public chartOptions: Partial<ChartOptions>;
     data = [
         {
             x: "標籤一",
@@ -94,69 +94,69 @@ export class MultiRangeComponent implements OnInit {
     ];
 
     constructor() {
-        this.chartOptions = { 
-            grid: {
-                show: true,
-                position: 'back',
-                borderColor: '#FFFFFF',
-                xaxis: {
-                    lines: {
-                        show: true
-                    }
-                },   
-                yaxis: {
-                    lines: {
-                        show: true
-                    }
-                }, 
-            },    
-            series: [
-                {
-                    name: "標籤群組(前三名)",
-                    data: this.data
-                }
-            ],
-            chart: {
-                background: '#BBBBBB',
-                height: 250,
-                type: "rangeBar",
-                toolbar: {
-                    tools: {
-                        selection: false,
-                        download: false,
-                        zoom: false,
-                        pan: true,
-                    },
-                    autoSelected: 'pan'
-                }
-            },
-            plotOptions: {
-                bar: {
-                    horizontal: true,
-                    barHeight: "40%"
-                }
-            },
-            xaxis: {
-                type: "datetime",
-                labels: {
-                    // formatter: (value,timestamp) => {
-                    //     return "" + (new Date(value).getUTCMonth());
-                    // }
-                    datetimeFormatter: {
-                        year: 'yyyy-MM-dd',
-                        month: 'yyyy-MM-dd',
-                        day: 'yyyy-MM-dd',
-                    }                  
-                }
-            },
-            fill: {
-                type: "solid"
-            },
-            legend: {
-                position: "top",
-                horizontalAlign: "left"
-            }
-        };
+        // this.chartOptions = { 
+        //     grid: {
+        //         show: true,
+        //         position: 'back',
+        //         borderColor: '#FFFFFF',
+        //         xaxis: {
+        //             lines: {
+        //                 show: true
+        //             }
+        //         },   
+        //         yaxis: {
+        //             lines: {
+        //                 show: true
+        //             }
+        //         }, 
+        //     },    
+        //     series: [
+        //         {
+        //             name: "標籤群組(前三名)",
+        //             data: this.data
+        //         }
+        //     ],
+        //     chart: {
+        //         background: '#BBBBBB',
+        //         height: 250,
+        //         type: "rangeBar",
+        //         toolbar: {
+        //             tools: {
+        //                 selection: false,
+        //                 download: false,
+        //                 zoom: false,
+        //                 pan: true,
+        //             },
+        //             autoSelected: 'pan'
+        //         }
+        //     },
+        //     plotOptions: {
+        //         bar: {
+        //             horizontal: true,
+        //             barHeight: "40%"
+        //         }
+        //     },
+        //     xaxis: {
+        //         type: "datetime",
+        //         labels: {
+        //             // formatter: (value,timestamp) => {
+        //             //     return "" + (new Date(value).getUTCMonth());
+        //             // }
+        //             datetimeFormatter: {
+        //                 year: 'yyyy-MM-dd',
+        //                 month: 'yyyy-MM-dd',
+        //                 day: 'yyyy-MM-dd',
+        //             }                  
+        //         }
+        //     },
+        //     fill: {
+        //         type: "solid"
+        //     },
+        //     legend: {
+        //         position: "top",
+        //         horizontalAlign: "left"
+        //     }
+        // };
     }
 
     ngOnInit(): void {

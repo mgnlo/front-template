@@ -14,7 +14,7 @@ import { EchartsRadarComponent } from './echarts/echarts-radar.component';
 import { EchartsTreemapHotComponent } from './echarts/echarts-treemap-hot.component';
 import { EchartsTreemapCoolComponent } from './echarts/echarts-treemap-cool.component';
 import { EchartsDoughnutComponent } from './echarts/echarts-doughnut.component';
-import { NgApexchartsModule } from 'ng-apexcharts';
+// import { NgApexchartsModule } from 'ng-apexcharts';
 import { MultiRangeComponent } from './apex_chart/multi-range.component';
 import { EchartsTimelineMultiRangeComponent } from './echarts/echarts-timeline-multi-range.component';
 
@@ -41,7 +41,7 @@ const components = [
     NgxEchartsModule,
     NbCardModule,
     NbIconModule,
-    NgApexchartsModule
+    // NgApexchartsModule
   ],
   declarations: [...routedComponents, ...components],
 })
