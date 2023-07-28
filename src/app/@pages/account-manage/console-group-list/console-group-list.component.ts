@@ -2,13 +2,12 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ConsoleGroup } from '@api/models/console-group.model';
 import { ConsoleGroupListMock } from '@common/mock-data/console-group-list-mock';
-import { ConsoleGroupScopeListMock } from '@common/mock-data/console-group-scope-list-mock';
-import { ConsoleUserListMock } from '@common/mock-data/console-user-list-mock';
 import { NbDateService } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
 import { AccountManageService } from '../account.manage.service';
+import { ConsoleGroupDetailMock } from '@common/mock-data/console-group-detail-mock';
 
 @Component({
   selector: 'console-group-list',
@@ -24,8 +23,8 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
     super();
   }
 
-  // 這邊要發查電文取得 ConsoleGroupList 內容
-  mockData: Array<ConsoleGroup>;
+  // 這邊要發查電文 6.1 取得 ConsoleGroupList 內容
+  consoleGroupList: Array<ConsoleGroup>;
 
   ngOnInit(): void {
     let cache = this.accountManageService.getConsoleGroupListCache();
@@ -33,8 +32,8 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
     this.dataSource = new LocalDataSource();
 
     if (this.activatedRoute.snapshot.queryParamMap.get("restore") && cache) {
-      this.mockData = cache.consoleGroupList;
-      this.dataSource.load(this.mockData);
+      this.consoleGroupList = cache.consoleGroupList;
+      this.dataSource.load(this.consoleGroupList);
       requestAnimationFrame(() => {
         this.dataSource.setPage(cache.page)
         requestAnimationFrame(() => {
@@ -43,8 +42,8 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
       });
     } else {
       // 這邊要發查電文取得 ConsoleGroupList 內容
-      this.mockData = ConsoleGroupListMock;
-      this.dataSource.load(this.mockData);
+      this.consoleGroupList = ConsoleGroupListMock;
+      this.dataSource.load(this.consoleGroupList);
       document.querySelector("nb-layout-column").scrollTo(0, 0);
     }
   }
@@ -83,7 +82,7 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
         title: '查看',
         type: 'custom',
         class: 'col-1',
-        valuePrepareFunction: (cell, row: ConsoleGroup) => [row, this.mockData, this.dataSource],
+        valuePrepareFunction: (cell, row: ConsoleGroup) => [row, this.consoleGroupList, this.dataSource],
         renderComponent: ConsoleGroupButtonComponent,
         sort: false,
       },
@@ -108,7 +107,7 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
         this.accountManageService.setConsoleGroupListCache({
           scrollPosition: document.querySelector("nb-layout-column").scrollTop,
           page: this.dataSource.getPaging().page,
-          consoleGroupList: this.mockData
+          consoleGroupList: this.consoleGroupList
         });
       };
     });
@@ -132,14 +131,13 @@ export class ConsoleGroupButtonComponent implements OnInit {
     let passData: NavigationExtras = {};
 
     // 這邊要發查
-    // 電文(1)取得 ConsoleUserList 內容
-    let consoleUser = ConsoleUserListMock;
+    // 電文 6.2 取得 ConsoleUserList 內容
+    let consoleGroupDetail = ConsoleGroupDetailMock;
     // master 的時候不會有 Scope，需要另外查 scope 電文(2)併入到 ConsoleGroup
-    (this.value[0] as ConsoleGroup).consoleGroupScope = ConsoleGroupScopeListMock;
+    // (this.value[0] as ConsoleGroup).consoleGroupScope = ConsoleGroupScopeListMock;
 
     passData.queryParams = {
-      consoleGroup: JSON.stringify(this.value[0]),
-      consoleUser: JSON.stringify(consoleUser)
+      consoleGroupDetail: JSON.stringify(consoleGroupDetail)
     };
     this.router.navigate(this.accountManageService.CONSOLE_GROUP_DETAIL_PATH, passData).then((res) => {
       if (res) {
