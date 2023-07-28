@@ -14,6 +14,7 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { ThemeModule } from '../../@theme/theme.module';
 import { routedComponents, UserManageRoutingModule } from './customer-manage-routing.module';
 import { CustomerManageService } from './customer-manage.service';
+import { ChartsModule } from '@pages/charts/charts.module';
 
 export const NB_MODULES = [
   NbSpinnerModule,
@@ -42,6 +43,7 @@ export const NB_MODULES = [
     UserManageRoutingModule,
     Ng2SmartTableModule,
     ComponentModule,
+    ChartsModule,
     ...NB_MODULES
   ],
   providers: [
