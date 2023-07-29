@@ -132,7 +132,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     }
 
     this.validateForm.updateValueAndValidity();
-    //this.updateActivityValidators();
+    this.updateActivityValidators();
   }
   //#endregion
 
@@ -152,18 +152,24 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     }
   }
 
+  onActivityChange(index: number) {
+    this.activityListDict.set('activityList' + index, this.activityFilter(this.getActivityInput(index)));
+    this.validateForm.updateValueAndValidity();
+    this.updateActivityValidators();
+  }
+
+  onActivitySelectChange(index: number) {
+    this.activityListDict.set('activityList' + index, this.activityFilter(""));
+    this.validateForm.updateValueAndValidity();
+    this.updateActivityValidators();
+  }
+
   activityFilter(value: string): Array<{ key: string; val: string }> {
     const filterValue = value.toLowerCase();
     if (CommonUtil.isBlank(filterValue)) return this.activityList;
     return this.activityList.filter((f) => {
       return f.val?.toLowerCase()?.includes(filterValue);
     })
-  }
-
-  onActivityChange(index: number) {
-    this.activityListDict.set('activityList' + index, this.activityFilter(this.getActivityInput(index)));
-    this.validateForm.updateValueAndValidity();
-    //this.updateActivityValidators();
   }
 
   getActivityInput(index: number) {
@@ -176,6 +182,9 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   //#region 檢查條件區是否存在清單中
   existsInActivityList(ctl: FormControl): { [key: string]: any } | null {
+    // 清空 activityErrMsg
+    ctl.setErrors(null);
+
     if (ctl.dirty || ctl.touched) {
       if (this.activityList.filter(item => item.val === ctl.value).length === 0)
         return { 'activityErrMsg': '不存在活動清單中' }; // 驗證失敗
@@ -190,9 +199,10 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   //檢查欄位是否重複
   existsInaAtivityListCondition(formGroup: FormGroup): { [key: string]: any } | null {
     const activityListConditionArray = formGroup.get('activityListCondition') as FormArray;
-    if (!activityListConditionArray) {
-      return null;
-    }
+
+    if (!activityListConditionArray) return null;
+
+    formGroup.get('activityListCondition')?.setErrors(null);
 
     const duplicateActivities: Set<string> = new Set();
     let isEmptyField = false;
@@ -255,6 +265,19 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   }
   //#endregion
 
+  //#region 判斷是否需要disabled活動(+)號
+  // 檢查是否有任何 activity(i) 具有 activityErrMsg
+  hasAnyActivityErrors(): boolean {
+    const activityListConditionArray = this.conditions;
+    if (activityListConditionArray) {
+      return activityListConditionArray.controls.some(control => {
+        return control.get('activity' + control.get('id').value)?.hasError('activityErrMsg');
+      });
+    }
+    return false;
+  }
+
+  //#endregion
 
   ngOnInit(): void {
   }
