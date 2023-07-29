@@ -91,12 +91,14 @@
                 </div>
                 <div class="note errorText">
                     <nb-icon icon="alert-triangle"></nb-icon>
-                    <p>{{item.get('activity'+i)?.errors?.activityErrMsg}}</p>
+                    <p>{{item.get('activity'+item.get('id').value)?.errors?.activityErrMsg}}</p>
                 </div>
               </div>
               <!-- 增減按鈕 -->
               <div *ngIf="last" class="fieldBtn col-1 col-lg-1">
-                  <button nbButton status="success" size="tiny" class="iconBtn" (click)="changeConditionsBtn('add', i)">
+                  <button nbButton status="success" size="tiny" class="iconBtn" (click)="changeConditionsBtn('add', i)"
+                          >
+                          <!-- [disabled]="item.get('activity'+item.get('id').value)?.errors?.activityErrMsg?.length >1" -->
                       <nb-icon icon="plus-outline"></nb-icon>
                   </button>
               </div>

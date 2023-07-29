@@ -106,7 +106,6 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   //#region 基本欄位檢核(新增/刪除)
   addField(fieldName: string, formState: any, fileFormatValidator: any) {
     this.validateForm.addControl(fieldName, new FormControl(formState, fileFormatValidator));
-    //this.validateForm.controls[fieldName].updateValueAndValidity();
   }
 
   removeField(fieldName: string) {
@@ -117,9 +116,11 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   //#region 條件區塊異動
   changeConditionsBtn(action: 'add' | 'remove', index: number) {
     if (action === 'add') {
+      // 避免重複
       while (this.conditions.controls.filter(f => f.value.id === index).length > 0) {
         index = index + 1
       }
+
       this.setDicActivityList('add', index);
       this.conditions.push(new FormGroup({
         id: new FormControl(index),
@@ -129,21 +130,23 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       this.setDicActivityList('remove', this.conditions.at(index)?.get('id').value)
       this.conditions.removeAt(index);
     }
-    this.updateActivityValidators();
+
+    this.validateForm.updateValueAndValidity();
+    //this.updateActivityValidators();
   }
   //#endregion
 
   //#region 塞選條件區活動清單
-  setDicActivityList(action: 'add' | 'remove', index: number) {
+  setDicActivityList(action: 'add' | 'remove', activityId: number) {
     switch (action) {
       case 'add':
-        if (!this.activityListDict.has('activityList' + index)) {
-          this.activityListDict.set('activityList' + index, this.activityList);
+        if (!this.activityListDict.has('activityList' + activityId)) {
+          this.activityListDict.set('activityList' + activityId, this.activityList);
         }
         break;
       case 'remove':
-        if (this.activityListDict.has('activityList' + index)) {
-          this.activityListDict.delete('activityList' + index);
+        if (this.activityListDict.has('activityList' + activityId)) {
+          this.activityListDict.delete('activityList' + activityId);
         }
         break;
     }
@@ -159,7 +162,8 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   onActivityChange(index: number) {
     this.activityListDict.set('activityList' + index, this.activityFilter(this.getActivityInput(index)));
-    this.updateActivityValidators();
+    this.validateForm.updateValueAndValidity();
+    //this.updateActivityValidators();
   }
 
   getActivityInput(index: number) {
@@ -177,11 +181,12 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         return { 'activityErrMsg': '不存在活動清單中' }; // 驗證失敗
     }
     let conditionList = this.validateForm?.get('activityListCondition') as FormArray;
-    if (conditionList?.length > 1 && CommonUtil.isBlank(ctl.value)){
+    if (conditionList?.length > 1 && CommonUtil.isBlank(ctl.value)) {
       return { 'activityErrMsg': '不可為空' };// 驗證失敗
     }
     return null; // 驗證成功
   }
+
   //檢查欄位是否重複
   existsInaAtivityListCondition(formGroup: FormGroup): { [key: string]: any } | null {
     const activityListConditionArray = formGroup.get('activityListCondition') as FormArray;
@@ -191,11 +196,6 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
     const duplicateActivities: Set<string> = new Set();
     let isEmptyField = false;
-
-    // 首先清除所有 activityErrMsg 錯誤
-    // activityListConditionArray.controls.forEach(control => {
-    //   control.get('activity' + control.get('id').value)?.setErrors(null);
-    // });
 
     for (let i = 0; i < activityListConditionArray.length - 1; i++) {
       const controlI = activityListConditionArray.at(i).get('activity' + activityListConditionArray.at(i).get('id').value);
@@ -244,7 +244,6 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   // 更新活動區塊的驗證
   updateActivityValidators(): void {
     const activityListConditionArray = this.validateForm.get('activityListCondition') as FormArray;
-
     for (let i = 0; i < activityListConditionArray.length; i++) {
       const actId = activityListConditionArray.at(i).get('id').value;
       const control = activityListConditionArray.at(i).get('activity' + actId);
