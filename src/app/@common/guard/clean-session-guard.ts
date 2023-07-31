@@ -45,7 +45,7 @@ export class CleanSessionGuard implements CanActivateChild {
     }
 
     // console.info(this.keepSessionPathList, this.previousUrl)
-    console.info(this.sessionKeyList)
+    // console.info(this.sessionKeyList)
     if (!!this.previousUrl && this.keepSessionPathList.some(path => this.previousUrl.includes(path))) {
       return true;
     }

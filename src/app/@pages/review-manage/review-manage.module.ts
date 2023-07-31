@@ -14,6 +14,7 @@ import { CustomerManageService } from '@pages/customer-manage/customer-manage.se
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { ThemeModule } from '../../@theme/theme.module';
 import { routedComponents, ReviewManageRoutingModule } from './review-manage-routing.module';
+import { ReviewManageService } from './review-manage.service';
 
 export const NB_MODULES = [
   NbSpinnerModule,
@@ -47,7 +48,8 @@ export const NB_MODULES = [
   ],
   providers: [
     DialogService,
-    CustomerManageService
+    CustomerManageService,
+    ReviewManageService
   ],
   declarations: [
     ...routedComponents,
