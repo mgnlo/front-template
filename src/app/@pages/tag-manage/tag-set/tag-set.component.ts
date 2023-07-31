@@ -40,6 +40,9 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   //預設標籤類型
   tagTypeList: Array<{ key: string; val: string }> = Object.entries(TagType).map(([k, v]) => ({ key: k, val: v }))
 
+  //預設條件設定方式
+  tagSetConditionList: Array<{ key: string; val: string }> = Object.entries(TagSetCondition).map(([k, v]) => ({ key: k, val: v }))
+
   //預設檔案存放地方
   condition_valueList: Array<{ key: string; val: string }> = [{ key: 'condition_A', val: '近三個月_基金_申購金額' }, { key: 'condition_B', val: '假資料B' }, { key: 'condition_C', val: '假資料C' }];
 
@@ -49,15 +52,16 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   }
 
   detail: TagDetailView;
-  fileName: string;
-  isFile: boolean = true;//是否上傳檔案
   params: any = [];//路由參數
   actionName: string;// 新增/編輯/複製
 
   mockData: Array<ActivitySetting> = ActivityListMock;
 
-  // maxSizeInMB = 5;//檔案大小
-  // isFileSize = false;//檔案大小是否錯誤
+  selectedFile: File | undefined;
+  maxSizeInMB: number = 5;//檔案大小
+  fileName: string = '請上傳檔案';
+  passFileArrayStr: string = '.csv,'
+  passFileArray: Array<string> = [this.passFileArrayStr] //檔案白名單
 
   isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
 
@@ -146,14 +150,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   }
 
-  //檔案判斷(白名單)
-  // static isPassFile(file: File): boolean {
-  //   const allowedTypes = ['text/csv'];
-  //   var aa = allowedTypes.includes(file.type);
-  //   debugger
-  //   return allowedTypes.includes(file.type);
-  // }
-
   gridDefine = {
     pager: {
       display: true,
@@ -231,8 +227,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   //#region 標籤類型 更動時切換驗證
   changeTagType(key: string) {
-    this.isFile = true;
-    this.fileName = '';
     if (key === 'normal') {
       if (!this.validateForm.contains('setCondition')) {
         this.addField('setCondition', 'normal', Validators.required);
@@ -301,50 +295,40 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   }
   //#endregion
 
-  uploadFile(event: any) {
+  //#region 檔案上傳驗證
+  onFileSelected(event: any) {
     const file: File = event.target.files[0];
-    if (file) {
-      this.isFile = true;
-      this.fileName = file.name;
-      //this.validateFileSize(event, this.maxSizeInMB)
-      //this.validateForm.updateValueAndValidity();
-      // const uploadFile = this.validateForm.get('uploadFile');
-      // const uploadFile_Form = uploadFile as FormControl;
-
-      // if (!TagAddComponent.isPassFile(file)) {
-      //   this.isFile = false;
-      // }
+    const fileValidatorResult = this.fileValidator(file);
+    this.fileName = CommonUtil.isBlank(file?.name) ? '請上傳檔案' : file.name;
+    if (fileValidatorResult !== null) {
+      this.validateForm.get('uploadFile').setErrors(fileValidatorResult);
+      return
+    } else {
+      this.validateForm.get('uploadFile').setErrors(null);
     }
   }
 
-  //檔案大小限制
-  // validateFileSize(event: any, maxSizeInMB: number) {
-  //   const file = event.target.files[0];
-  //   const maxSize = maxSizeInMB * 1024 * 1024; // MB
-  //   if (file && file.size < maxSize) {
-  //     this.isFileSize = true;
-  //   } else {
-  //     this.isFileSize = false;
-  //   }
-  // }
+  fileValidator(file: File): { [key: string]: any } | null {
+    if (!file) {
+      return { uploadFileMsg: '未選擇檔案' };
+    }
 
-  // validateFileSize(control: AbstractControl) {
-  //   const file = control.value;
-  //   const maxSize = 5 * 1024 * 1024; // 5MB
-  //   if (file && file.size > maxSize) {
-  //     return { maxSize: true };
-  //   }
-  //   return null;
-  // }
+    // 驗證檔案大小
+    const fileSizeInMB = file.size / (1024 * 1024);
+    if (fileSizeInMB > this.maxSizeInMB) {
+      return { uploadFileMsg: '檔案大小超過5MB' };
+    }
 
-  //檔案限制(副檔名)
-  // validateFileType(control: AbstractControl): { [key: string]: boolean } | null {
-  //   const file: File = control.value;
-  //   if (file && !TagAddComponent.isPassFile(file)) {
-  //     return { invalidFormat: true };
-  //   }
-  //   return null;
-  // }
+    // 驗證檔案格式
+    const fileExt = file.name.split('.').pop().toLowerCase();
+    if (!this.passFileArray.includes(fileExt)) {
+      return { uploadFileMsg: '檔案格式錯誤' };
+    }
+
+    // 驗證通過，返回null表示驗證成功
+    return null;
+  }
+  //#endregion
 
   //條件分佈級距彈出視窗
   conditionDialog() {

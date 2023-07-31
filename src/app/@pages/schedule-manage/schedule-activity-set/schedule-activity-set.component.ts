@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Frequency, Status } from '@common/enums/common-enum';
 import { CommonUtil } from '@common/utils/common-util';
@@ -43,7 +43,9 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     return this.validateForm.get('activityListCondition') as FormArray
   }
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+  constructor(private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private readonly changeDetectorRef: ChangeDetectorRef) {
     super();
 
     this.validateForm = new FormGroup({
@@ -60,7 +62,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
           activity0: new FormControl(null, [Validators.required, this.existsInActivityList.bind(this)]),
         }),
       ]),
-    });
+    }, this.existsInaAtivityListCondition);
 
     this.setDicActivityList('add', 0);
 
@@ -104,7 +106,6 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   //#region 基本欄位檢核(新增/刪除)
   addField(fieldName: string, formState: any, fileFormatValidator: any) {
     this.validateForm.addControl(fieldName, new FormControl(formState, fileFormatValidator));
-    //this.validateForm.controls[fieldName].updateValueAndValidity();
   }
 
   removeField(fieldName: string) {
@@ -115,9 +116,11 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   //#region 條件區塊異動
   changeConditionsBtn(action: 'add' | 'remove', index: number) {
     if (action === 'add') {
+      // 避免重複
       while (this.conditions.controls.filter(f => f.value.id === index).length > 0) {
         index = index + 1
       }
+
       this.setDicActivityList('add', index);
       this.conditions.push(new FormGroup({
         id: new FormControl(index),
@@ -127,25 +130,40 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       this.setDicActivityList('remove', this.conditions.at(index)?.get('id').value)
       this.conditions.removeAt(index);
     }
-    //console.info('changeConditionsBtn', this.conditions.getRawValue())
+
+    this.validateForm.updateValueAndValidity();
+    this.updateActivityValidators();
   }
   //#endregion
 
   //#region 塞選條件區活動清單
-  setDicActivityList(action: 'add' | 'remove', index: number) {
+  setDicActivityList(action: 'add' | 'remove', activityId: number) {
     switch (action) {
       case 'add':
-        if (!this.activityListDict.has('activityList' + index)) {
-          this.activityListDict.set('activityList' + index, this.activityList);
+        if (!this.activityListDict.has('activityList' + activityId)) {
+          this.activityListDict.set('activityList' + activityId, this.activityList);
         }
         break;
       case 'remove':
-        if (this.activityListDict.has('activityList' + index)) {
-          this.activityListDict.delete('activityList' + index);
+        if (this.activityListDict.has('activityList' + activityId)) {
+          this.activityListDict.delete('activityList' + activityId);
         }
         break;
     }
   }
+
+  onActivityChange(index: number) {
+    this.activityListDict.set('activityList' + index, this.activityFilter(this.getActivityInput(index)));
+    this.validateForm.updateValueAndValidity();
+    this.updateActivityValidators();
+  }
+
+  onActivitySelectChange(index: number) {
+    this.activityListDict.set('activityList' + index, this.activityFilter(""));
+    this.validateForm.updateValueAndValidity();
+    this.updateActivityValidators();
+  }
+
   activityFilter(value: string): Array<{ key: string; val: string }> {
     const filterValue = value.toLowerCase();
     if (CommonUtil.isBlank(filterValue)) return this.activityList;
@@ -154,34 +172,118 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     })
   }
 
-  onActivityChange(index: number) {
-    this.activityListDict.set('activityList' + index, this.activityFilter(this.getActivityInput(index)));
-  }
-
   getActivityInput(index: number) {
     const actList = this.validateForm.get('activityListCondition').value;
     const actId = this.conditions.at(index)?.get('id').value;
     if (CommonUtil.isBlank(actId)) return "";
-    const findVal = actList.find(f => f.id === actId)
-    const key = 'activity' + actId
-    return findVal[key] ?? "";
+    return actList.find(f => f.id === actId)['activity' + actId] ?? "";
   }
   //#endregion
 
   //#region 檢查條件區是否存在清單中
   existsInActivityList(ctl: FormControl): { [key: string]: any } | null {
-    if ((ctl.dirty || ctl.touched) && this.activityList.filter(item => item.val === ctl.value).length === 0) {
-      return { 'activityErrMsg': '不存在活動清單中' }; // 驗證失敗
+    // 清空 activityErrMsg
+    ctl.setErrors(null);
+
+    if (ctl.dirty || ctl.touched) {
+      if (this.activityList.filter(item => item.val === ctl.value).length === 0)
+        return { 'activityErrMsg': '不存在活動清單中' }; // 驗證失敗
     }
-    // if (this.activityListDict.has(keyName)) {
-    //   return { 'activityErrMsg': '不可重複' }; // 驗證失敗
-    // }
+    let conditionList = this.validateForm?.get('activityListCondition') as FormArray;
+    if (conditionList?.length > 1 && CommonUtil.isBlank(ctl.value)) {
+      return { 'activityErrMsg': '不可為空' };// 驗證失敗
+    }
     return null; // 驗證成功
+  }
+
+  //檢查欄位是否重複
+  existsInaAtivityListCondition(formGroup: FormGroup): { [key: string]: any } | null {
+    const activityListConditionArray = formGroup.get('activityListCondition') as FormArray;
+
+    if (!activityListConditionArray) return null;
+
+    formGroup.get('activityListCondition')?.setErrors(null);
+
+    const duplicateActivities: Set<string> = new Set();
+    let isEmptyField = false;
+
+    for (let i = 0; i < activityListConditionArray.length - 1; i++) {
+      const controlI = activityListConditionArray.at(i).get('activity' + activityListConditionArray.at(i).get('id').value);
+      const activityI = controlI?.value;
+
+      if (!activityI) {
+        isEmptyField = true;
+        controlI?.setErrors({ 'activityErrMsg': '不可為空' });
+        controlI?.markAsTouched();
+        continue;
+      }
+
+      for (let j = i + 1; j < activityListConditionArray.length; j++) {
+        const controlJ = activityListConditionArray.at(j).get('activity' + activityListConditionArray.at(j).get('id').value);
+        const activityJ = controlJ?.value;
+
+        if (!activityJ) {
+          isEmptyField = true;
+          controlJ?.setErrors({ 'activityErrMsg': '不可為空' });
+          controlJ?.markAsTouched();
+          continue;
+        }
+
+        if (activityI === activityJ) {
+          duplicateActivities.add(activityI);
+          controlI?.setErrors({ 'activityErrMsg': '不可重複選擇' });
+          controlI?.markAsTouched();
+          controlJ?.setErrors({ 'activityErrMsg': '不可重複選擇' });
+          controlJ?.markAsTouched();
+        }
+      }
+
+    }
+
+    if (isEmptyField) {
+      return { 'activityErrMsg': '不可為空' };
+    }
+
+    if (duplicateActivities.size > 0) {
+      return { 'activityErrMsg': '不可重複選擇' };
+    }
+
+    return null;
+  }
+
+  // 更新活動區塊的驗證
+  updateActivityValidators(): void {
+    const activityListConditionArray = this.validateForm.get('activityListCondition') as FormArray;
+    for (let i = 0; i < activityListConditionArray.length; i++) {
+      const actId = activityListConditionArray.at(i).get('id').value;
+      const control = activityListConditionArray.at(i).get('activity' + actId);
+      control?.setValidators([Validators.required, this.existsInActivityList.bind(this, control)]);
+      control?.updateValueAndValidity();
+    }
+
+    this.validateForm.updateValueAndValidity();
   }
   //#endregion
 
+  //#region 判斷是否需要disabled活動(+)號
+  // 檢查是否有任何 activity(i) 具有 activityErrMsg
+  hasAnyActivityErrors(): boolean {
+    const activityListConditionArray = this.conditions;
+    if (activityListConditionArray) {
+      return activityListConditionArray.controls.some(control => {
+        return control.get('activity' + control.get('id').value)?.hasError('activityErrMsg');
+      });
+    }
+    return false;
+  }
+
+  //#endregion
 
   ngOnInit(): void {
+  }
+
+  ngAfterViewChecked(): void {
+    this.changeDetectorRef.detectChanges();
   }
 
   cancel() {

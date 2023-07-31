@@ -19,25 +19,22 @@
         <div class="row">
             <radio class="col-12 col-lg-6" title="標籤類型" [form]="validateForm" ctlName="tagType" [selectList]="{options: tagTypeList, key: 'key', val: 'val'}" (valueChange)="changeTagType($event)"></radio>
             <div *ngIf="validateForm.get('tagType').value === 'normal'">
-              <radio class="essential col-12 col-lg-6" title="條件設定方式" [form]="validateForm" ctlName="setCondition" enumName="tagSetCondition"></radio>
+              <radio class="essential col-12 col-lg-6" title="條件設定方式" [form]="validateForm" ctlName="setCondition" [selectList]="{options: tagSetConditionList, key: 'key', val: 'val'}"></radio>
             </div>
-            <div *ngIf="validateForm.get('tagType').value === 'document'" class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': !isFile}">
-                <label>名單上傳</label>
-                <div>
-                    <input nbInput fullWidth [status]="isFile?'basic':'danger'" type="text" [placeholder]="fileName?fileName:'請上傳檔案'"/>
-                    <input nbInput fullWidth type="file" accept = '.csv' placeholder="請上傳檔案" formControlName="uploadFile" (change)="uploadFile($event)"/>
-                    <button nbButton status="warning" size="tiny" class="iconBtn">
-                        <nb-icon icon="folder-add-outline"></nb-icon>
-                    </button>
-                </div>
-                <div class="note errorText">
-                    <nb-icon icon="alert-triangle"></nb-icon>
-                    <p>上傳格式錯誤或檔案過大</p>
-                </div>
-                <div class="note">
-                    <nb-icon icon="alert-circle"></nb-icon>
-                    <p>請上傳csv格式檔案</p>
-                </div>
+            <div *ngIf="validateForm.get('tagType').value === 'document'" class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': validateForm.get('uploadFile')?.errors?.uploadFileMsg}">
+              <label>名單上傳</label>
+              <div>
+                <input nbInput fullWidth [status]="validateForm.get('uploadFile')?.errors?.uploadFileMsg ? 'danger' : 'basic'"
+                      type="text" formControlName="uploadFile" [placeholder] = "fileName"/>
+                <input nbInput fullWidth type="file"  [accept]="passFileArrayStr" (change)="onFileSelected($event)"  />
+                <button nbButton status="warning" size="tiny" class="iconBtn">
+                    <nb-icon icon="folder-add-outline"></nb-icon>
+                </button>
+              </div>
+              <div class="note errorText">
+                <nb-icon icon="alert-triangle"></nb-icon>
+                <p>{{validateForm.get('uploadFile')?.errors?.uploadFileMsg}}</p>
+              </div>
             </div>
         </div>
         <date-range [form]="validateForm"></date-range>

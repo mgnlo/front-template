@@ -4,7 +4,6 @@ export class Dictionary {
     this.items = {};
   }
   public has(key) {
-    console.info('key in this.items',key in this.items)
     return key in this.items;
   }
   public set(key, value) {
