@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ActivityListCondition } from '@api/models/activity-list.model';
 import { Frequency, Status } from '@common/enums/common-enum';
 import { CommonUtil } from '@common/utils/common-util';
 import { Dictionary } from '@common/utils/dictionary';
@@ -75,6 +76,19 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       Object.keys(state).forEach(key => {
         if (!!this.validateForm.controls[key]) {
           switch (key) {
+            case 'activityListCondition':
+              this.conditions.removeAt(0);
+              let groupData = CommonUtil.groupBy(state[key], 'tagGroup');
+              Object.keys(groupData).forEach(key => {
+                let fg = new FormGroup({});
+                let condition = groupData[key] as Array<ActivityListCondition>;
+                condition.forEach((con, index) => {
+                  fg.setControl('id', new FormControl(index));
+                  fg.setControl('activity' + index, new FormControl(con.tagName, Validators.required));
+                });
+                this.conditions.push(fg);
+              })
+              break;
             default:
               this.validateForm.controls[key].setValue(state[key]);
               break;
@@ -131,7 +145,6 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       this.conditions.removeAt(index);
     }
 
-    this.validateForm.updateValueAndValidity();
     this.updateActivityValidators();
   }
   //#endregion
@@ -154,7 +167,6 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   onActivityChange(index: number) {
     this.activityListDict.set('activityList' + index, this.activityFilter(this.getActivityInput(index)));
-    this.validateForm.updateValueAndValidity();
     this.updateActivityValidators();
   }
 

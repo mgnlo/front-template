@@ -99,7 +99,7 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
         sort: false,
       },
     },
-    hideSubHeader: false, //起訖日查詢要用到
+    hideSubHeader: true, //起訖日查詢要用到
     actions: {
       add: false,
       edit: false,
