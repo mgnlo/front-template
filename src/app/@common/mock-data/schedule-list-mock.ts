@@ -11,9 +11,9 @@ export const ScheduleSettingMock: Array<ScheduleSetting> = [
     "status": "enabled",
     "activitySetting": [
       {
-        "activityId": "abcdefg123456",
+        "activityId": "abcdefg1234567",
         "version": "uuid-zzzz",
-        "activityName": "女王節活動A",
+        "activityName": "女王節活動BBBB",
         "activityDescription": "女王節活動 EDM 名單",
         "filterOptions": "true",
         "listLimit": 100,
@@ -46,7 +46,7 @@ export const ScheduleSettingMock: Array<ScheduleSetting> = [
       {
         "activityId": "abcdefg123456",
         "version": "uuid-zzzz",
-        "activityName": "女王節活動B",
+        "activityName": "女王節活動AAAAA",
         "activityDescription": "女王節活動 EDM 名單",
         "filterOptions": "false",
         "listLimit": 100,
