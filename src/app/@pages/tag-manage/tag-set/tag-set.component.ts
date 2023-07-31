@@ -24,8 +24,13 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   SetCondition = TagSetCondition;
   Status = Status;
 
-  filterList: Array<{ key: string; val: string }> = Object.entries(Filter).map(([k, v]) => ({ key: k, val: v }));
-  scheduleList: Array<{ key: string; val: string }> = Object.entries(Schedule).map(([k, v]) => ({ key: k, val: v }));
+  //預設狀態
+  tagStatusList = [Status.enabled, Status.disabled];
+  statusList: Array<{ key: string; val: string }> = Object.entries(Status)
+    .filter(([k, v]) => {
+      return this.tagStatusList.includes(v);
+    }).map(([k, v]) => ({ key: k, val: v }));
+  //scheduleList: Array<{ key: string; val: string }> = Object.entries(Schedule).map(([k, v]) => ({ key: k, val: v }));
   //預設構面
   categoryList: Array<{ key: string; val: string }> = Object.entries(TagDimension).map(([k, v]) => ({ key: k, val: v }))
   subCategoryList: Array<{ key: string; val: string }> = Object.entries(TagSubDimension).map(([k, v]) => ({ key: k, val: v }))
@@ -60,8 +65,10 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   selectedFile: File | undefined;
   maxSizeInMB: number = 5;//檔案大小
   fileName: string = '請上傳檔案';
+  //#region 檔案白名單
   passFileArrayStr: string = '.csv,'
-  passFileArray: Array<string> = [this.passFileArrayStr] //檔案白名單
+  passFileArray: Array<string> = ['csv']
+  //#endregion
 
   isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
 

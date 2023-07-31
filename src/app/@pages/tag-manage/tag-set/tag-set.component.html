@@ -14,7 +14,7 @@
     <nb-card-body [formGroup]="validateForm">
         <div class="row">
             <basic-input class="col-12 col-lg-6" title="標籤名稱" [form]="validateForm" ctlName="tagName"></basic-input>
-            <radio class="col-12 col-lg-6" title="狀態" [form]="validateForm" ctlName="status"></radio>
+            <radio class="col-12 col-lg-6" title="狀態" [form]="validateForm" ctlName="status" [selectList]="{options: statusList, key: 'key', val: 'val'}"></radio>
         </div>
         <div class="row">
             <radio class="col-12 col-lg-6" title="標籤類型" [form]="validateForm" ctlName="tagType" [selectList]="{options: tagTypeList, key: 'key', val: 'val'}" (valueChange)="changeTagType($event)"></radio>
