@@ -1,6 +1,6 @@
 <nb-card class="statusDialog">
   <nb-card-body>
-    <img src="assets/images/dialog-fail.svg">
+    <img [src]="option.isSuccess ? 'assets/images/dialog-success.svg' : 'assets/images/dialog-fail.svg'">
     <p>{{option.content}}</p>
   </nb-card-body>
 </nb-card>

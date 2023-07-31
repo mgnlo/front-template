@@ -17,7 +17,7 @@ export class ApiService {
     headers: {
       'Content-type': 'application/json; charset=UTF-8;',
       'Access-Control-Allow-Origin': '*',
-    //   Authorization: '',
+      //   Authorization: '',
     },
   };
   private prefixUrl = environment.SERVER_URL + environment.API_URL;
@@ -35,20 +35,20 @@ export class ApiService {
 
     let observable: Observable<ResponseModel<T>>;
     const resultUrl = this.prefixUrl + url;
-    const requestModel = { data: requestObj };
+    // const requestModel = { requestObj };
 
     switch (method) {
       case 'post':
-        observable = this.http.post<ResponseModel<T>>(resultUrl, requestModel, this.httpOptions);
+        observable = this.http.post<ResponseModel<T>>(resultUrl, requestObj, this.httpOptions);
         break;
       case 'get':
-        observable = this.http.get<ResponseModel<T>>(resultUrl, { params: rqParams, ...this.httpOptions} );
+        observable = this.http.get<ResponseModel<T>>(resultUrl, { params: rqParams, ...this.httpOptions });
         break;
       case 'put':
-        observable = this.http.put<ResponseModel<T>>(resultUrl, requestModel, this.httpOptions);
+        observable = this.http.put<ResponseModel<T>>(resultUrl, requestObj, this.httpOptions);
         break;
       case 'delete':
-        observable = this.http.delete<ResponseModel<T>>(resultUrl, { params: rqParams, ...this.httpOptions} );
+        observable = this.http.delete<ResponseModel<T>>(resultUrl, { params: rqParams, ...this.httpOptions });
         break;
     }
 
@@ -62,7 +62,7 @@ export class ApiService {
     );
   }
 
-  doPost<T>(url: string, requestObj: any): Observable<ResponseModel<T>> {
+  doPost<T>(url: string, requestObj: T): Observable<ResponseModel<T>> {
     return this.doSend('post', url, requestObj);
   }
 
@@ -79,12 +79,11 @@ export class ApiService {
   }
 
   download(url: string, requestObj: any): void {
-    const requestModel = { data: requestObj };
     this.loadingService.open();
     this.http.post<Blob>(
       this.prefixUrl + url,
-      requestModel,
-      {observe: 'response', responseType: 'blob' as 'json', ...this.httpOptions})
+      requestObj,
+      { observe: 'response', responseType: 'blob' as 'json', ...this.httpOptions })
       .pipe(
         tap(res => {
 

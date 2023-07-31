@@ -42,10 +42,11 @@ export class DialogService {
     });
   }
 
-  alertAndBackToList(msg: string, url: string[]): void {
+  alertAndBackToList(isSuccess: boolean, msg: string, url: string[]): void {
     this.dialogService.open(AlertDialogComponent, {
       context: {
         option: {
+          isSuccess: true,
           content: msg,
           backTo: url,
         },

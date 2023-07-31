@@ -5,6 +5,7 @@ import { interval } from 'rxjs';
 import { map, takeWhile } from 'rxjs/operators';
 
 export class AlertDialogOption {
+  isSuccess: boolean;
   backTo: string[];
   content: string;
 }

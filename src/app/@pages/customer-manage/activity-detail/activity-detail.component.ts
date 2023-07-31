@@ -39,7 +39,7 @@ export class ActivityDetailComponent extends BaseComponent implements OnInit {
     this.service.getActivitySettingGet(this.activityId).pipe(
       catchError(err => {
         this.loadingService.close();
-        this.dialogService.alertAndBackToList('查無此筆資料，將為您導回客群活動名單', ['pages', 'customer-manage', 'activity-list']);
+        this.dialogService.alertAndBackToList(false, '查無此筆資料，將為您導回客群活動名單', ['pages', 'customer-manage', 'activity-list']);
         throw new Error(err.message);
       }),
       filter(res => res.code === RestStatus.SUCCESS),

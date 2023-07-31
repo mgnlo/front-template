@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActivityListCondition, ActivitySettingEditReq } from '@api/models/activity-list.model';
+import { ActivityListCondition, ActivitySettingEditReq, TagGroupView } from '@api/models/activity-list.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { Filter, Schedule } from '@common/enums/common-enum';
@@ -89,7 +89,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
       this.customerManageService.getActivitySettingGet(this.activityId).pipe(
         catchError(err => {
           this.loadingService.close();
-          this.dialogService.alertAndBackToList('查無該筆資料，將為您導回客群名單', ['pages', 'customer-manage', 'activity-list']);
+          this.dialogService.alertAndBackToList(false, '查無該筆資料，將為您導回客群名單', ['pages', 'customer-manage', 'activity-list']);
           throw new Error(err.message);
         }),
         filter(res => res.code === RestStatus.SUCCESS),
@@ -126,7 +126,9 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
           });
           this.loadingService.close();
         })
-      ).subscribe();
+      ).subscribe(res => {
+        // console.info(this.validateForm.get('activityListCondition').value)
+      });
     }
   }
 
@@ -142,38 +144,56 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
 
   submit() {
     let valid = this.validateForm.valid;
-    let reqData: ActivitySettingEditReq = null;
+    let reqData: ActivitySettingEditReq = this.getRequestData();
     if (valid && !this.activityId) {
       this.loadingService.open();
       this.customerManageService.activitySettingCreate(reqData).pipe(
         catchError((err) => {
           this.loadingService.close();
-          this.dialogService.alertAndBackToList('新增失敗將為您導回客群名單', ['pages', 'customer-manage', 'activity-list']);
+          this.dialogService.alertAndBackToList(false, '新增失敗', ['pages', 'customer-manage', 'activity-list']);
           throw new Error(err.message);
         }),
         tap(res => {
           console.info(res)
           this.loadingService.close();
-        })).subscribe();
+        })).subscribe(res => {
+          if (res.code === RestStatus.SUCCESS) {
+            this.dialogService.alertAndBackToList(true, '新增成功', ['pages', 'customer-manage', 'activity-list'])
+          }
+        });
     } else if (valid && this.activityId) {
       this.loadingService.open();
       this.customerManageService.activitySettingUpdate(this.activityId, reqData).pipe(
         catchError((err) => {
           this.loadingService.close();
-          this.dialogService.alertAndBackToList('編輯失敗將為您導回客群名單', ['pages', 'customer-manage', 'activity-list']);
+          this.dialogService.alertAndBackToList(false, '編輯失敗', ['pages', 'customer-manage', 'activity-list']);
           throw new Error(err.message);
         }),
         tap(res => {
           console.info(res)
           this.loadingService.close();
-        })).subscribe();
+        })).subscribe(res => {
+          if (res.code === RestStatus.SUCCESS) {
+            this.dialogService.alertAndBackToList(true, '編輯成功', ['pages', 'customer-manage', 'activity-list'])
+          }
+        });
     }
   }
 
-  getRequestData() {
+  getRequestData(): ActivitySettingEditReq {
     let reqData: ActivitySettingEditReq = this.validateForm.getRawValue();
-    reqData.activityListCondition = this.validateForm.getRawValue().activityListCondition;
-    console.info(reqData.activityListCondition)
+    reqData.startDate = moment(reqData.startDate).format('YYYY-MM-DD');
+    reqData.endDate = moment(reqData.endDate).format('YYYY-MM-DD');
+    let conditionId: number = 0;
+    let flatConditions: { conditionId: string, tagGroup: number, tagKey: string, tagName: string }[] = [];
+    this.validateForm.getRawValue().activityListCondition.forEach((condition, i) => {
+      Object.keys(condition).forEach((key) => {
+        conditionId++;
+        flatConditions.push({ conditionId: `${conditionId}`, tagGroup: i + 1, tagKey: `tag-${key}`, tagName: condition[key] });
+      })
+    });
+    reqData.activityListCondition = flatConditions;
+    return reqData;
   }
 
 }

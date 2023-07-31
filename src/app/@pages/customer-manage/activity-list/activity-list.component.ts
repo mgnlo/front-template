@@ -68,7 +68,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
     this.loadingService.open();
     //get session page
     let storage = this.storageService.getSessionVal(this.sessionKey);
-    if(!!storage?.page){
+    if(!!this.dataSource && !!storage?.page){
       this.dataSource.setPage(storage.page);
     }
     this.cdr.detectChanges();

@@ -18,9 +18,9 @@ export interface ActivitySetting {
   activityReviewHistory: Array<ActivityReviewHistory>;
 }
 export class ActivityListCondition {
-  activityId: string;
-  conditionId: string;
-  version: string;
+  activityId?: string;
+  conditionId?: string;
+  version?: string;
   tagGroup: number;
   tagName: string;
   tagKey: string;
