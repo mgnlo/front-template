@@ -62,8 +62,8 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       activityListCondition: new FormArray([
         new FormGroup({
           id: new FormControl(0),
-          activityId: new FormControl(null),
-          activityName0: new FormControl(null, [Validators.required, this.existsInActivityList.bind(this)]),
+          activityId_0: new FormControl(null, [Validators.required, this.existsInActivityList.bind(this)]),
+          activityName_0: new FormControl(null),
         }),
       ]),
     }, this.existsInaAtivityListCondition);
@@ -86,8 +86,8 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
           condition.forEach((con, index) => {
             let fg = new FormGroup({});
             fg.setControl('id', new FormControl(index));
-            fg.setControl('activityId', new FormControl(con['activityId']));
-            fg.setControl('activityName' + index, new FormControl(con['activityName'], [Validators.required, , this.existsInActivityList.bind(this)]));
+            fg.setControl('activityId_' + index, new FormControl(con['activityId'], [Validators.required, , this.existsInActivityList.bind(this)]));
+            fg.setControl('activityName_' + index, new FormControl(con['activityName']));
             this.conditions.push(fg);
           })
         }
@@ -142,8 +142,8 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       this.setDicActivityList('add', index);
       this.conditions.push(new FormGroup({
         id: new FormControl(index),
-        activityId: new FormControl(null),
-        ['activityName' + index]: new FormControl(null, [Validators.required, this.existsInActivityList.bind(this)]),
+        ['activityId_' + index]: new FormControl(null, [Validators.required, this.existsInActivityList.bind(this)]),
+        ['activityName_' + index]: new FormControl(null),
       }));
     } else {
       this.setDicActivityList('remove', this.conditions.at(index)?.get('id').value)
@@ -193,7 +193,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     const actList = this.validateForm.get('activityListCondition').value;
     const actId = this.conditions.at(index)?.get('id').value;
     if (CommonUtil.isBlank(actId)) return "";
-    return actList.find(f => f.id === actId)['activityName' + actId] ?? "";
+    return actList.find(f => f.id === actId)['activityId_' + actId] ?? "";
   }
   //#endregion
 
@@ -202,7 +202,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     // 清空 activityErrMsg
     ctl.setErrors(null);
     if (ctl.dirty || ctl.touched || ctl.valueChanges) {
-      if (!CommonUtil.isBlank(ctl.value) && this.activityList.filter(item => item.val === ctl.value).length === 0)
+      if (!CommonUtil.isBlank(ctl.value) && this.activityList.filter(item => item.key === ctl.value).length === 0)
         return { 'activityErrMsg': '不存在活動清單中' }; // 驗證失敗
     }
     let conditionList = this.validateForm?.get('activityListCondition') as FormArray;
@@ -224,7 +224,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     let isEmptyField = false;
 
     for (let i = 0; i < activityListConditionArray.length - 1; i++) {
-      const controlI = activityListConditionArray.at(i).get('activityName' + activityListConditionArray.at(i).get('id').value);
+      const controlI = activityListConditionArray.at(i).get('activityId_' + activityListConditionArray.at(i).get('id').value);
       const activityI = controlI?.value;
 
       if (!activityI) {
@@ -235,7 +235,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       }
 
       for (let j = i + 1; j < activityListConditionArray.length; j++) {
-        const controlJ = activityListConditionArray.at(j).get('activityName' + activityListConditionArray.at(j).get('id').value);
+        const controlJ = activityListConditionArray.at(j).get('activityId_' + activityListConditionArray.at(j).get('id').value);
         const activityJ = controlJ?.value;
 
         if (!activityJ) {
@@ -272,7 +272,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     const activityListConditionArray = this.validateForm.get('activityListCondition') as FormArray;
     for (let i = 0; i < activityListConditionArray.length; i++) {
       const actId = activityListConditionArray.at(i).get('id').value;
-      const control = activityListConditionArray.at(i).get('activityName' + actId);
+      const control = activityListConditionArray.at(i).get('activityId_' + actId);
       control?.setValidators([Validators.required, this.existsInActivityList.bind(this, control)]);
       control?.updateValueAndValidity();
     }
@@ -282,12 +282,12 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   //#endregion
 
   //#region 判斷是否需要disabled活動(+)號
-  // 檢查是否有任何 activityName(i) 具有 activityErrMsg
+  // 檢查是否有任何 activityId(i) 具有 activityErrMsg
   hasAnyActivityErrors(): boolean {
     const activityListConditionArray = this.conditions;
     if (activityListConditionArray) {
       return activityListConditionArray.controls.some(control => {
-        return control.get('activityName' + control.get('id').value)?.hasError('activityErrMsg');
+        return control.get('activityId_' + control.get('id').value)?.hasError('activityErrMsg');
       });
     }
     return false;

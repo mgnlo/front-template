@@ -11,7 +11,7 @@ export const ScheduleSettingMock: Array<ScheduleSetting> = [
     "status": "enabled",
     "activitySetting": [
       {
-        "activityId": "abcdefg1234567",
+        "activityId": "abcdefg123456",
         "version": "uuid-zzzz",
         "activityName": "女王節活動BBBB",
         "activityDescription": "女王節活動 EDM 名單",
