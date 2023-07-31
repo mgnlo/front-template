@@ -139,13 +139,6 @@ export interface HistoryGroupView {
     detail: string;
   }[]
 }
-
-export class ActivitySettingListRes {
-  data: Array<ActivitySetting>;
-}
-export class ActivitySettingRowRes {
-  data: ActivitySetting;
-}
 export class ActivitySettingEditReq {
   activityName: string;
   status: string;

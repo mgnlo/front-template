@@ -2,9 +2,10 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting } from '@api/models/activity-list.model';
+import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
 import { Status } from '@common/enums/common-enum';
-import { ActivityListMock } from '@common/mock-data/activity-list-mock';
+import { RestStatus } from '@common/enums/rest-enum';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { CheckboxIconComponent } from '@component/table/checkbox-icon/checkbox-icon.component';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
@@ -12,6 +13,7 @@ import { NbDateService } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
+import { CustomerManageService } from '../customer-manage.service';
 
 @Component({
   selector: 'activity-list',
@@ -25,6 +27,8 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
     private dateService: NbDateService<Date>,
     private storageService: StorageService,
     private activatedRoute: ActivatedRoute,
+    private customerManageService: CustomerManageService,
+    private loadingService: LoadingService,
     private cdr: ChangeDetectorRef) {
     super();
     // 篩選條件
@@ -38,28 +42,37 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
   }
 
   statusList: Array<{ key: string; val: string }> = Object.entries(Status).map(([k, v]) => ({ key: k, val: v }))
-  mockData: Array<ActivitySetting> = ActivityListMock;
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
   ngOnInit(): void {
-    this.mockData = this.mockData.map(mock => {
-      return { ...mock, during: `${mock.startDate}~${mock.endDate}` } //起訖日查詢篩選要用到
+    this.loadingService.open();
+    this.customerManageService.getActivitySettingSearch().subscribe((res) => {
+      if(res.code === RestStatus.SUCCESS){
+        res.result = res.result.map(row => {
+          return { ...row, during: `${row.startDate}~${row.endDate}` } //起訖日查詢篩選要用到
+        })
+        this.dataSource = new LocalDataSource();
+        this.dataSource.load(res.result);
+        //get session filter
+        this.storageService.getSessionFilter(this.sessionKey, this.validateForm).subscribe((res) => {
+          if (res === true) { this.search(); }
+        });
+        this.loadingService.close();
+      } else {
+        this.loadingService.close();
+      }
     })
-    this.dataSource = new LocalDataSource();
-    this.dataSource.load(this.mockData);
-    //get session filter
-    this.storageService.getSessionFilter(this.sessionKey, this.validateForm).subscribe((res) => {
-      if (res === true) { this.search(); }
-    });
   }
 
   ngAfterViewInit(): void {
+    this.loadingService.open();
     //get session page
     let storage = this.storageService.getSessionVal(this.sessionKey);
     if(!!storage?.page){
       this.dataSource.setPage(storage.page);
     }
     this.cdr.detectChanges();
+    this.loadingService.close();
   }
 
   ngOnDestroy(): void {

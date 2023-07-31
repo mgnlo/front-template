@@ -14,11 +14,13 @@ import { NbDateFnsDateModule } from '@nebular/date-fns';
 import { BasicInputComponent } from './form/basic-input/input.component';
 import { DropdownComponent } from './form/dropdown/dropdown.component';
 import { RadioComponent } from './form/radio/radio.component';
+import { AlertDialogComponent } from './dialog/alert-dialog/alert-dialog.component';
 
 export const COMPONENTS = [
   ApproveDialogComponent,
   RejectDialogComponent,
   ConfirmDialogComponent,
+  AlertDialogComponent,
   PaginatorComponent,
   CheckboxIconComponent,
   DetailButtonComponent,

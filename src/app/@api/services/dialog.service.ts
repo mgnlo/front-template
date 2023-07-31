@@ -1,5 +1,6 @@
 import { Injectable, TemplateRef, Type } from '@angular/core';
 import { Router } from '@angular/router';
+import { AlertDialogComponent } from '@component/dialog/alert-dialog/alert-dialog.component';
 import { ApproveDialogComponent, ApproveDialogOption } from '@component/dialog/approve-dialog/approve-dialog.component';
 import { RejectDialogComponent, RejectDialogOption } from '@component/dialog/reject-dialog/reject-dialog.component';
 import { NbDialogRef, NbDialogService } from '@nebular/theme';
@@ -41,19 +42,15 @@ export class DialogService {
     });
   }
 
-  // alertAndBackToList(title: string, content: string, url: string): void {
-  //   this.dialogService.open(AlertDialogComponent, {
-  //     context: {
-  //       option: {
-  //         title: title,
-  //         content: content,
-  //         buttonName: '確定',
-  //         callback: () => {
-  //           this.router.navigate([url]);
-  //         },
-  //       },
-  //     },
-  //     closeOnBackdropClick: false,
-  //   });
-  // }
+  alertAndBackToList(msg: string, url: string[]): void {
+    this.dialogService.open(AlertDialogComponent, {
+      context: {
+        option: {
+          content: msg,
+          backTo: url,
+        },
+      },
+      closeOnBackdropClick: false,
+    });
+  }
 }

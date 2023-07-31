@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { RegExpUtil } from '@common/utils/reg-exp-util';
+import * as moment from 'moment';
 
 @Component({
   selector: 'date-range',
@@ -18,15 +19,15 @@ export class DateRangeComponent implements OnInit {
   }
 
   //format date
-  fmtDate(e: KeyboardEvent, ctlName: string){
+  fmtDate(e: KeyboardEvent, ctlName: string) {
     const element = e.target as HTMLInputElement;
     const isNumber = !isNaN(parseInt(e.key, 10));
     let v = element.value;
-    if(e.key === 'v'){
+    if (e.key === 'v') {
       //貼上的日期
-      if(RegExpUtil.dateFmt1.test(v)){
-        v =  v.replace(/[- /.]/g, '-')
-      } else if(RegExpUtil.dateFmt2.test(v)){
+      if (RegExpUtil.dateFmt1.test(v)) {
+        v = v.replace(/[- /.]/g, '-')
+      } else if (RegExpUtil.dateFmt2.test(v)) {
         v = `${v.substring(0, 4)}-${v.substring(4, 6)}-${v.substring(6, 8)}`;
       }
       //datepicker只吃Date型態, 因此要轉回Date格式
@@ -39,7 +40,7 @@ export class DateRangeComponent implements OnInit {
     }
   }
 
-  hasError(ctlName: string){
+  hasError(ctlName: string) {
     let ctl = this.form.get(ctlName) as FormControl;
     return (ctl.dirty || ctl.touched) && ctl?.errors;
   }

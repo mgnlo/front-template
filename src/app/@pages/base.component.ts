@@ -27,6 +27,12 @@ export class BaseComponent implements OnDestroy {
     this.updatePageInfo();
   }
 
+  getInvalidControls(){
+    Object.keys(this.validateForm.controls).filter(ctl => this.validateForm.get(ctl).invalid).forEach(ctl => {
+      console.info(ctl+' is invalid, value:', this.validateForm.get(ctl).errors);
+    })
+  }
+
   updatePageInfo() {
     if (!!this.dataSource) {
       this.dataSource.onChanged().pipe(first()).subscribe((event) => {

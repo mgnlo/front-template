@@ -1,13 +1,17 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { ActivityListCondition, ActivitySetting } from '@api/models/activity-list.model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ActivityListCondition, ActivitySettingEditReq } from '@api/models/activity-list.model';
 import { DialogService } from '@api/services/dialog.service';
+import { LoadingService } from '@api/services/loading.service';
 import { Filter, Schedule } from '@common/enums/common-enum';
+import { RestStatus } from '@common/enums/rest-enum';
 import { CommonUtil } from '@common/utils/common-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
+import { catchError, filter, tap } from 'rxjs/operators';
+import { CustomerManageService } from '../customer-manage.service';
 import { PreviewDialogComponent } from './preview-dialog/preview.dialog.component';
 
 @Component({
@@ -17,10 +21,17 @@ import { PreviewDialogComponent } from './preview-dialog/preview.dialog.componen
 })
 export class ActivitySetComponent extends BaseComponent implements OnInit {
 
-  filterList: Array<{key: string; val: string}> = Object.entries(Filter).map(([k, v]) => ({ key: k, val: v }));
-  scheduleList: Array<{key: string; val: string}> = Object.entries(Schedule).map(([k, v]) => ({ key: k, val: v }));
+  filterList: Array<{ key: string; val: string }> = Object.entries(Filter).map(([k, v]) => ({ key: k, val: v }));
+  scheduleList: Array<{ key: string; val: string }> = Object.entries(Schedule).map(([k, v]) => ({ key: k, val: v }));
+  activityId: string;
 
-  constructor(private router: Router, private dialogService: DialogService, private readonly changeDetectorRef: ChangeDetectorRef) {
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private dialogService: DialogService,
+    private customerManageService: CustomerManageService,
+    private loadingService: LoadingService,
+    private changeDetectorRef: ChangeDetectorRef,) {
     super();
 
     this.validateForm = new FormGroup({
@@ -34,44 +45,10 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
       activityDescription: new FormControl(null),
       activityListCondition: new FormArray([
         new FormGroup({
-            1: new FormControl(null, Validators.required)
+          1: new FormControl(null, Validators.required)
         })
       ], Validators.required),
     }, [ValidatorsUtil.dateRange]);
-
-    if(!!this.router.getCurrentNavigation().extras){
-      let editData = this.router.getCurrentNavigation().extras.state as ActivitySetting;
-      if(!!editData){
-        Object.keys(editData).forEach(key => {
-          if(!!this.validateForm.controls[key]){
-            switch (key) {
-              case 'startDate':
-              case 'endDate':
-                this.validateForm.controls[key].setValue(new Date(editData[key]))
-                break;
-              case 'filterOptions':
-                this.validateForm.controls[key].setValue(editData[key] === 'true' ? true : false)
-                break;
-              case 'activityListCondition':
-                this.conditions.removeAt(0);
-                let groupData = CommonUtil.groupBy(editData[key], 'tagGroup');
-                Object.keys(groupData).forEach(key => {
-                  let fg = new FormGroup({});
-                  let condition = groupData[key] as Array<ActivityListCondition>;
-                  condition.forEach(con => {
-                    fg.setControl(con.tagKey.replace('tag-',''), new FormControl(con.tagName, Validators.required));
-                  });
-                  this.conditions.push(fg);
-                })
-                break;
-              default:
-                this.validateForm.controls[key].setValue(editData[key]);
-                break;
-            }
-          }
-        })
-      }
-    }
   }
 
   ngAfterViewChecked(): void {
@@ -79,7 +56,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
   }
 
   or(action: 'add' | 'remove', key: number) {
-    if(action === 'add') {
+    if (action === 'add') {
       let ctlName = !!key ? key++ : 1;
       this.conditions.push(new FormGroup({
         [ctlName]: new FormControl(null, Validators.required)
@@ -93,19 +70,64 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
   and(i: number, action: 'add' | 'remove', key: number) {
     let fg = this.conditions.at(i) as FormGroup;
     if (action === 'add') {
-      fg.setControl(`${key+1}`, new FormControl(null, Validators.required));
+      fg.setControl(`${key + 1}`, new FormControl(null, Validators.required));
     } else {
       fg.removeControl(`${key}`);
     }
-     console.info('and', this.conditions.getRawValue())
+    console.info('and', this.conditions.getRawValue())
   }
 
-  get conditions() : FormArray {
+  get conditions(): FormArray {
     return this.validateForm.get('activityListCondition') as FormArray
   }
 
   err: boolean = false;
-  public ngOnInit(): void {
+  ngOnInit(): void {
+    this.activityId = this.activatedRoute.snapshot.params?.activityId;
+    if (!!this.activityId) {
+      this.loadingService.open();
+      this.customerManageService.getActivitySettingGet(this.activityId).pipe(
+        catchError(err => {
+          this.loadingService.close();
+          this.dialogService.alertAndBackToList('查無該筆資料，將為您導回客群名單', ['pages', 'customer-manage', 'activity-list']);
+          throw new Error(err.message);
+        }),
+        filter(res => res.code === RestStatus.SUCCESS),
+        tap((res) => {
+          Object.keys(res.result).forEach(key => {
+            if (!!this.validateForm.controls[key]) {
+              switch (key) {
+                case 'startDate':
+                case 'endDate':
+                  this.validateForm.controls[key].setValue(new Date(res.result[key]))
+                  break;
+                case 'filterOptions':
+                  this.validateForm.controls[key].setValue(res.result[key] === 'true' ? true : false)
+                  break;
+                case 'activityListCondition':
+                  let groupData = CommonUtil.groupBy(res.result[key], 'tagGroup');
+                  if (Object.keys(groupData).length > 0) {
+                    this.conditions.removeAt(0);
+                  }
+                  Object.keys(groupData).forEach(key => {
+                    let fg = new FormGroup({});
+                    let condition = groupData[key] as Array<ActivityListCondition>;
+                    condition.forEach(con => {
+                      fg.setControl(con.tagKey.replace('tag-', ''), new FormControl(con.tagName, Validators.required));
+                    });
+                    this.conditions.push(fg);
+                  })
+                  break;
+                default:
+                  this.validateForm.controls[key].setValue(res.result[key]);
+                  break;
+              }
+            }
+          });
+          this.loadingService.close();
+        })
+      ).subscribe();
+    }
   }
 
   cancel() {
@@ -119,5 +141,39 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
   }
 
   submit() {
+    let valid = this.validateForm.valid;
+    let reqData: ActivitySettingEditReq = null;
+    if (valid && !this.activityId) {
+      this.loadingService.open();
+      this.customerManageService.activitySettingCreate(reqData).pipe(
+        catchError((err) => {
+          this.loadingService.close();
+          this.dialogService.alertAndBackToList('新增失敗將為您導回客群名單', ['pages', 'customer-manage', 'activity-list']);
+          throw new Error(err.message);
+        }),
+        tap(res => {
+          console.info(res)
+          this.loadingService.close();
+        })).subscribe();
+    } else if (valid && this.activityId) {
+      this.loadingService.open();
+      this.customerManageService.activitySettingUpdate(this.activityId, reqData).pipe(
+        catchError((err) => {
+          this.loadingService.close();
+          this.dialogService.alertAndBackToList('編輯失敗將為您導回客群名單', ['pages', 'customer-manage', 'activity-list']);
+          throw new Error(err.message);
+        }),
+        tap(res => {
+          console.info(res)
+          this.loadingService.close();
+        })).subscribe();
+    }
   }
+
+  getRequestData() {
+    let reqData: ActivitySettingEditReq = this.validateForm.getRawValue();
+    reqData.activityListCondition = this.validateForm.getRawValue().activityListCondition;
+    console.info(reqData.activityListCondition)
+  }
+
 }
