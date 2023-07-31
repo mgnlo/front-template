@@ -15,8 +15,6 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
 
   @Input() dataList: Array<string>;
 
-  // orderType: string = 'asc';
-  // orderBy: number = 110;
   orderByList = new Map([
     [110, '消費金額'],
     [111, '交易次數'],
@@ -31,7 +29,7 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
     [120, '換匯次數'],
     [121, '定存筆數'],
   ]);
-  orderTypeList = new Map([
+  sortList = new Map([
     ['asc', '升冪'],
     ['desc', '降冪'],
   ]);
@@ -40,7 +38,7 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
     this.validateForm = new FormGroup({
       listLimit: new FormControl('150', Validators.required),
       orderBy: new FormControl(110),
-      orderType: new FormControl('asc', Validators.required),
+      sortType: new FormControl('asc', Validators.required),
     });
   }
 
@@ -56,10 +54,10 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
   gridDefine = {
     pager: {
       display: true,
-      perPage: 5,          
+      perPage: 10,          
     },
     columns: {
-      custId: {
+      customerId: {
         title: '用戶編號',
         type: 'string',
         class: 'col-3',
@@ -77,7 +75,7 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
         class: 'col-3',
         sort: false,
       },
-      birth: {
+      birthday: {
         title: '生日',
         type: 'string',
         class: 'col-4',
@@ -98,6 +96,10 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
     //   return row.getData().status === 'ing' ? 'aa' : '';
     // },
   };
+
+  changeSort(sortType: string) {
+    this.dataSource.setSort([{ field: 'custId', direction: sortType }]);
+  }
 
   close() {
     this.ref.close();

@@ -40,8 +40,6 @@ export class ActivityDetailComponent extends BaseComponent implements OnInit {
           this.detail.historyGroupView[history.groupId].flows.push({time: history.time, title: history.title, detail: history.detail});
         }
       });
-      
-      console.info(this.detail)
     }
   }
 

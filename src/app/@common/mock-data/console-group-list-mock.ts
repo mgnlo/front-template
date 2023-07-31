@@ -1,6 +1,6 @@
 import { ConsoleGroup } from "@api/models/console-group.model";
 
-
+// 6.1 取得所有群組：GET /api/console-group response List<ConsoleGroup>
 export const ConsoleGroupListMock: Array<ConsoleGroup> = [
     {
         groupId: "uuid-1",

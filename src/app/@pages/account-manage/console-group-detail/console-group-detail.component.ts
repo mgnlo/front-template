@@ -15,8 +15,7 @@ import { BusinessUnit } from '@common/enums/console-user-enum';
   styleUrls: ['./console-group-detail.component.scss'],
 })
 export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit {
-  consoleGroup: ConsoleGroup;
-  consoleUser: any;
+  consoleGroupDetail: ConsoleGroup;
   consoleGroupScope: Array<GridInnerCheckBox> = [
     { featureName: "dashboard", read: false },
     { featureName: "customer", read: false },
@@ -36,71 +35,6 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
     "console-group": "帳號管理 - 權限管理"
   }
   dataSource2: LocalDataSource;
-
-  constructor(
-    private router: Router,
-    private accountManageService: AccountManageService,
-    private activatedRoute: ActivatedRoute,
-    private dateService: NbDateService<Date>) {
-    super();
-  }
-
-  ngOnInit(): void {
-    let cache = this.accountManageService.getConsoleGroupDetailCache();
-
-    this.dataSource = new LocalDataSource();
-    this.dataSource2 = new LocalDataSource();
-
-    if (this.activatedRoute.snapshot.queryParamMap.get("restore") && cache) {
-      // 返回頁面，需要 restore 資料與狀態
-      this.consoleGroup = cache.consoleGroup;
-      this.consoleUser = cache.consoleUser;
-
-      for (let scopeObj of this.consoleGroupScope) {
-        let keyList = Object.keys(scopeObj);
-  
-        for (let idx = 1; idx < keyList.length; idx++) {
-          scopeObj[keyList[idx]] =
-            (this.consoleGroup.consoleGroupScope.filter(item => item.scope == `${scopeObj[keyList[0]]}.${keyList[idx]}`).length > 0 ? true : false);
-        }
-      }
-
-      this.dataSource.load(this.consoleUser);
-      this.dataSource2.load(this.consoleGroupScope);
-      requestAnimationFrame(() => {
-        this.dataSource.setPage(cache.page)
-        requestAnimationFrame(() => {
-          document.querySelector("nb-layout-column").scrollTo(0, cache.scrollPosition);
-        });        
-      });
-    } else {
-      this.consoleGroup = JSON.parse(this.activatedRoute.snapshot.queryParamMap.get("consoleGroup"));
-      this.consoleUser = JSON.parse(this.activatedRoute.snapshot.queryParamMap.get("consoleUser"));
-
-      if(!this.consoleGroup){
-        //防止瀏覽器 F5，重新導回 list
-        this.router.navigate(this.accountManageService.CONSOLE_GROUP_LIST_PATH).then((res) => {
-          if (res) {
-            window.history.replaceState({}, '', this.router.url.split("?")[0]);
-          };
-        });
-      }
-
-      for (let scopeObj of this.consoleGroupScope) {
-        let keyList = Object.keys(scopeObj);
-  
-        for (let idx = 1; idx < keyList.length; idx++) {
-          scopeObj[keyList[idx]] =
-            (this.consoleGroup.consoleGroupScope.filter(item => item.scope == `${scopeObj[keyList[0]]}.${keyList[idx]}`).length > 0 ? true : false);
-        }
-      }
-
-      // 這邊要發查電文取得 ConsoleGroupList 內容
-      this.dataSource.load(this.consoleUser);
-      this.dataSource2.load(this.consoleGroupScope);
-      document.querySelector("nb-layout-column").scrollTo(0, 0);
-    }
-  }
 
   gridDefine2 = {
     pager: {
@@ -208,12 +142,74 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
     }
   };
 
+  constructor(
+    private router: Router,
+    private accountManageService: AccountManageService,
+    private activatedRoute: ActivatedRoute,
+    private dateService: NbDateService<Date>) {
+    super();
+  }
+
+  ngOnInit(): void {
+    let cache = this.accountManageService.getConsoleGroupDetailCache();
+
+    this.dataSource = new LocalDataSource();
+    this.dataSource2 = new LocalDataSource();
+
+    if (this.activatedRoute.snapshot.queryParamMap.get("restore") && cache) {
+      // 返回頁面，需要 restore 資料與狀態
+      this.consoleGroupDetail = cache.consoleGroupDetail;
+
+      for (let scopeObj of this.consoleGroupScope) {
+        let keyList = Object.keys(scopeObj);
+  
+        for (let idx = 1; idx < keyList.length; idx++) {
+          scopeObj[keyList[idx]] =
+            (this.consoleGroupDetail.consoleGroupScope.filter(item => item.scope == `${scopeObj[keyList[0]]}.${keyList[idx]}`).length > 0 ? true : false);
+        }
+      }
+
+      this.dataSource.load(this.consoleGroupDetail.consoleUser);
+      this.dataSource2.load(this.consoleGroupScope);
+      requestAnimationFrame(() => {
+        this.dataSource.setPage(cache.page)
+        requestAnimationFrame(() => {
+          document.querySelector("nb-layout-column").scrollTo(0, cache.scrollPosition);
+        });        
+      });
+    } else {
+      this.consoleGroupDetail = JSON.parse(this.activatedRoute.snapshot.queryParamMap.get("consoleGroupDetail"));
+
+      if(!this.consoleGroupDetail){
+        //防止瀏覽器 F5，重新導回 list
+        this.router.navigate(this.accountManageService.CONSOLE_GROUP_LIST_PATH).then((res) => {
+          if (res) {
+            window.history.replaceState({}, '', this.router.url.split("?")[0]);
+          };
+        });
+      }
+
+      for (let scopeObj of this.consoleGroupScope) {
+        let keyList = Object.keys(scopeObj);
+  
+        for (let idx = 1; idx < keyList.length; idx++) {
+          scopeObj[keyList[idx]] =
+            (this.consoleGroupDetail.consoleGroupScope.filter(item => item.scope == `${scopeObj[keyList[0]]}.${keyList[idx]}`).length > 0 ? true : false);
+        }
+      }
+
+      // 這邊要發查電文取得 ConsoleGroupList 內容
+      this.dataSource.load(this.consoleGroupDetail.consoleUser);
+      this.dataSource2.load(this.consoleGroupScope);
+      document.querySelector("nb-layout-column").scrollTo(0, 0);
+    }
+  }
+
   edit() {
     let passData: NavigationExtras = {};
 
     passData.queryParams = {
-      consoleGroup: JSON.stringify(this.consoleGroup),
-      consoleUser: JSON.stringify(this.consoleUser)
+      consoleGroupDetail: JSON.stringify(this.consoleGroupDetail)
     };
     this.router.navigate(this.accountManageService.CONSOLE_GROUP_EDIT_PATH, passData).then((res) => {
       if (res) {
@@ -221,8 +217,7 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
         this.accountManageService.setConsoleGroupDetailCache({
           scrollPosition: document.querySelector("nb-layout-column").scrollTop,
           page: this.dataSource.getPaging().page,
-          consoleGroup: this.consoleGroup,
-          consoleUser: this.consoleUser
+          consoleGroupDetail: this.consoleGroupDetail
         });
       };
     });

@@ -4,9 +4,8 @@
 
 export const environment = {
   production: false,
-  SERVER_URL: 'http://localhost:8081',
-  API_URL: '/admin/rest/',
-  API_Service_URL: '/admin/api/',
+  SERVER_URL: 'http://localhost:8080',
+  API_URL: '/portal/webcomm/api/',
 };
 
 /*

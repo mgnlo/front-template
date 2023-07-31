@@ -1,7 +1,7 @@
 export class ApiLogicError extends Error {
-  code: number;
+  code: string;
 
-  constructor(msg: string, code?: number) {
+  constructor(msg: string, code?: string) {
     super(msg);
     if (code) this.code = code;
   }

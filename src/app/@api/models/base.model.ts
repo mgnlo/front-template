@@ -1,6 +1,5 @@
 export class ResponseModel<T> {
-  success: boolean;
-  code: number;
+  code: string;
   message: string;
   result: T;
 }

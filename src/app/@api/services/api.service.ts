@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ResponseModel } from '@api/models/base.model';
+import { RestStatus } from '@common/enums/rest-enum';
 import { Observable } from 'rxjs';
 import { tap, timeout } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
@@ -54,7 +55,7 @@ export class ApiService {
     return observable.pipe(
       timeout(30000),
       tap(res => {
-        if (res && !res.success) {
+        if (res && res.code !== RestStatus.SUCCESS) {
           throw new ApiLogicError(res.message, res.code);
         }
       }),

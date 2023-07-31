@@ -14,7 +14,7 @@
         </div>
         <div class="textGroup col-6 col-lg-6">
             <p class="textBold">生日：</p>
-            <span>{{datas.birth}}</span>
+            <span>{{datas.birthday}}</span>
         </div>
         <div class="textGroup col-6 col-lg-6">
             <p class="textBold">性別：</p>
@@ -30,7 +30,7 @@
         </div>
         <div class="textGroup col-12 col-lg-12">
             <p class="textBold">地址：</p>
-            <span>{{datas.addr}}</span>
+            <span>{{datas.address}}</span>
         </div>
       </div>
       <div class="subTitle">
@@ -38,8 +38,8 @@
       </div>
       <div class="rightBox">
         <p class="textBold colorBlue">標籤所屬單位：</p>
-        <nb-select size="small" placeholder="請選擇" [selected]="datas.tagDept">
-            <nb-option [value]="datas.tagDept">{{datas.tagDept}}</nb-option>
+        <nb-select size="small" placeholder="請選擇" [selected]="datas.department">
+            <nb-option [value]="datas.department">{{datas.department}}</nb-option>
             <nb-option value="month">item 1</nb-option>
             <nb-option value="month">item 2</nb-option>
             <nb-option value="month">item 3</nb-option>
@@ -54,6 +54,7 @@
       <div class="subTitle">
         <p>標籤歷程</p>
       </div>
+      <ngx-echarts-timeline-multi-range></ngx-echarts-timeline-multi-range>
     </nb-card-body>
     <nb-card-footer>
       <button nbButton status="basic" size="medium" (click)="close()">關閉</button>
