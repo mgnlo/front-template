@@ -3,6 +3,7 @@ import { NbThemeService } from '@nebular/theme';
 
 import * as echarts from 'echarts';
 
+
 @Component({
   selector: 'ngx-echarts-timeline-multi-range',
   template: `
@@ -16,160 +17,78 @@ export class EchartsTimelineMultiRangeComponent implements AfterViewInit, OnDest
   startTime;
   endTime;
 
-  //標籤名稱陣列
-  categories = ['tag1', 'tag2', 'tag3', 'tag4'];
-  // 標籤名稱陣列對應顏色
-  types = [
-    { name: 'tag1', color: '#7b9ce1' },
-    { name: 'tag2', color: '#bd6d6c' },
-    { name: 'tag3', color: '#75d874' },
-    { name: 'tag4', color: '#c5d874' }
-  ];
-  data = [
-    {
-      name: "tag1", //名稱
-      value: [
-        0,  //名稱索引，相同標籤名稱提供同一索引值  rowIndex
-        new Date('2023-06-27').getTime(), //起始日, 主機直接給 getTime() 值  sDate
-        new Date('2023-07-04').getTime()  //結束日, 主機直接給 getTime() 值  eDate
-      ],
-      // 主機資料或許可以只提供上半部，這邊由前端依據邏輯加工資料處理
-      itemStyle: {
-        color: "#7b9ce1" // 指定顏色，依據 seriers type='custom' 中的 itemStyle
-      }
-    },
-    {
-      name: "tag1",
-      value: [
-        0,
-        new Date('2023-07-08').getTime(),
-        new Date('2023-08-12').getTime()
-      ],
-      itemStyle: {
-        color: "#7b9ce1"
-      }
-    },
-    {
-      name: "tag2",
-      value: [
-        1,
-        new Date('2023-06-29').getTime(),
-        new Date('2023-07-04').getTime()
-      ],
-      itemStyle: {
-        color: "#bd6d6c"
-      }
-    },
-    {
-      name: "tag2",
-      value: [
-        1,
-        new Date('2023-07-17').getTime(),
-        new Date('2023-08-17').getTime()
-      ],
-      itemStyle: {
-        color: "#bd6d6c"
-      }
-    },
-    {
-      name: "tag4",
-      value: [
-        3,
-        new Date('2023-06-29').getTime(),
-        new Date('2023-07-04').getTime()
-      ],
-      itemStyle: {
-        color: "#c5d874"
-      }
-    },
-    {
-      name: "tag4",
-      value: [
-        3,
-        new Date('2023-07-17').getTime(),
-        new Date('2023-08-17').getTime()
-      ],
-      itemStyle: {
-        color: "#c5d874"
-      }
-    },
-    {
-       name: "tag2",
-       value: [
-        1,
-        new Date('2023-08-27').getTime(),
-        new Date('2023-09-17').getTime()
-      ],
-      itemStyle: {
-        color: "#bd6d6c"
-      }
-    },
-    {
-       name: "tag3",
-       value: [
-        2,
-        new Date('2023-06-24').getTime(),
-        new Date('2023-06-27').getTime()
-      ],
-      itemStyle: {
-        color: "#75d874"
-      }
-    },
-    {
-       name: "tag3",
-       value: [
-        2,
-        new Date('2023-07-12').getTime(),
-        new Date('2023-07-29').getTime()
-      ],
-      itemStyle: {
-        color: "#75d874"
-      }
-    },
-    {
-       name: "tag3",
-       value: [
-        2,
-        new Date('2023-07-31').getTime(),
-        new Date('2023-08-27').getTime()
-      ],
-      itemStyle: {
-        color: "#75d874"
-      }
-    }
+  //主機提供資料
+  mockData = [{
+    tagName: "tag1", //標籤名稱
+    tracks: [
+      { startDate: '2023-06-27', endDate: '2023-07-04' },   //起始日、結束日
+      { startDate: '2023-07-27', endDate: '2023-08-29' },
+      { startDate: '2023-09-07', endDate: '2023-09-29' }
+    ]
+  }, {
+    tagName: "tag2",
+    tracks: [
+      { startDate: '2023-05-23', endDate: '2023-07-14' },
+      { startDate: '2023-07-21', endDate: '2023-08-29' }
+    ]
+  }, {
+    tagName: "tag3",
+    tracks: [
+      { startDate: '2023-04-23', endDate: '2023-05-14' },
+      { startDate: '2023-07-11', endDate: '2023-09-29' }
+    ]
+  }, {
+    tagName: "tag4",
+    tracks: [
+      { startDate: '2023-05-13', endDate: '2023-06-14' },
+      { startDate: '2023-10-21', endDate: '2023-11-29' }
+    ]
+  }];
+
+
+  // 標籤索引陣列對應顏色
+  colors = [
+    '#7b9ce1',
+    '#bd6d6c',
+    '#75d874',
+    '#c5d874'
   ];
 
+
+  //標籤名稱陣列
+  categories = [];
+
+  //資料流
+  data = [];
+
   constructor(private theme: NbThemeService) {
+    for(let idx = 0; idx < this.mockData.length; idx++){
+      this.categories.push(this.mockData[idx].tagName);
+
+      for(let offset = 0; offset < this.mockData[idx].tracks.length; offset++){
+        let item = {
+          name: "",
+          value: [],
+          itemStyle: {
+            color: ""
+          }
+        }
+        
+        item.name = this.mockData[idx].tagName;
+        item.value = [];
+        item.value.push(idx);
+        item.value.push(new Date(this.mockData[idx].tracks[offset].startDate).getTime());
+        item.value.push(new Date(this.mockData[idx].tracks[offset].endDate).getTime());
+        item.itemStyle.color = this.colors[idx];
+
+        this.data.push(item);
+      }
+    }
+
     //最小起始日期，以資料流內容最小值為準 - 86400000 * 2, //最小起始日往前兩天，這個可以調整
     this.startTime = this.data.reduce((agg, d) => Math.min(agg, d.value[1]), Infinity) - 86400000 * 2;
     //最大結束日期，以資料流內容最大值為準 + 86400000 * 2, //最大結束日往後兩天，這個可以調整
-    this.endTime = this.data.reduce((agg, d) => Math.max(agg, d.value[2]), 0) + 86400000 * 2;
-
-    // for (let index = 0; index < this.categories.length; index++) {
-    //   // 每個 item 的起始日期
-    //   var baseTime = this.startTime;
-    //   for (var i = 0; i < 3; i++) {
-    //     var typeItem = this.types[index];
-    //     var duration = Math.round(Math.random() * 10000) * 86400;
-
-    //     if (this.categories[index] == typeItem.name) {
-    //       this.data.push({
-    //         //標籤名稱
-    //         name: typeItem.name,
-    //         // 項目陣列，索引、起始日期、結束日期
-    //         value: [index, baseTime, (baseTime += duration)],
-    //         // value: [index, baseTime, (baseTime += duration), duration],
-    //         itemStyle: {
-    //           normal: {
-    //             color: typeItem.color
-    //           }
-    //         }
-    //       });
-
-    //       baseTime += duration;
-    //     }
-    //   }
-    // }
+    this.endTime = this.data.reduce((agg, d) => Math.max(agg, d.value[2]), 0) + 86400000 * 2;    
   }
 
   //自定義 render 邏輯，主要在繪製線圖
@@ -210,7 +129,7 @@ export class EchartsTimelineMultiRangeComponent implements AfterViewInit, OnDest
       this.options = {
         tooltip: {
           formatter: (params) => {
-            return `<div>${params.marker}${params.name}</div>
+            return `<div>${params.marker}${this.categories[params.value[0]]}</div>
                     <div>${this.timeFormat2(params.value[1])} ~ ${this.timeFormat2(params.value[2])}</div>`;
           }
         },
@@ -261,7 +180,7 @@ export class EchartsTimelineMultiRangeComponent implements AfterViewInit, OnDest
     });
   }
 
-  timeFormat(timestamp){
+  timeFormat(timestamp) {
     let date = new Date(timestamp);
     let year = date.getFullYear();
     let month = ("" + (date.getMonth() + 1)).padStart(2, '0');
@@ -270,7 +189,7 @@ export class EchartsTimelineMultiRangeComponent implements AfterViewInit, OnDest
     return `${year}\n${month}/${day}`;
   }
 
-  timeFormat2(timestamp){
+  timeFormat2(timestamp) {
     let date = new Date(timestamp);
     let year = date.getFullYear();
     let month = ("" + (date.getMonth() + 1)).padStart(2, '0');
