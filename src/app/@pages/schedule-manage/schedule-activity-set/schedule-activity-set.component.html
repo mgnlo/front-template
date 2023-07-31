@@ -62,24 +62,24 @@
             </div> -->
         </div>
         <div class="subTitle">
-          <p>活動名單</p>
+          <p>活動名單列表</p>
         </div>
         <!-- 灰底區塊 -->
         <div class="grayCard" *ngFor="let condition of conditions.controls | keyvalue; let i=index; let first = first; let last = last" formArrayName="activityListCondition">
           <div class="row" formGroupName="{{i}}" *ngIf="this.conditions.controls[i] as item">
-              <div class="fieldGroup essential col-10 col-lg-10" [ngClass]="{'error': item.get('activity'+item.get('id').value)?.errors?.activityErrMsg}">
-                <label>活動清單</label>
+              <div class="fieldGroup essential col-10 col-lg-10" [ngClass]="{'error': item.get('activityId_'+item.get('id').value)?.errors?.activityErrMsg}">
+                <label>活動名稱</label>
                 <div>
                     <input nbInput fullWidth type="text"  placeholder="請輸入"[nbAutocomplete]="auto"
-                        [status]="item.get('activity'+item.get('id').value)?.errors?.activityErrMsg ? 'danger' : 'basic'"
-                        (input)="onActivityChange(item.get('id').value)" formControlName="activity{{item.get('id').value}}"/>
-                    <nb-autocomplete #auto (selectedChange)="onActivitySelectChange(item.get('id').value)">
-                      <nb-option *ngFor="let mathSymbol of activityListDict.get('activityList'+item.get('id').value)" [value]="mathSymbol.val" [id]="mathSymbol.key">{{ mathSymbol.val }}</nb-option>
+                        [status]="item.get('activityId_'+item.get('id').value)?.errors?.activityErrMsg ? 'danger' : 'basic'"
+                        (input)="onActivityChange(item.get('id').value)" formControlName="activityName_{{item.get('id').value}}"/>
+                    <nb-autocomplete #auto (selectedChange)="onActivitySelectChange(item.get('id').value)" formControlName="activityId_{{item.get('id').value}}">
+                      <nb-option *ngFor="let activity of activityListDict.get('activityList'+item.get('id').value)" [value]="activity.val" [id]="activity.key">{{ activity.val }}</nb-option>
                     </nb-autocomplete>
                 </div>
                 <div class="note errorText">
                     <nb-icon icon="alert-triangle"></nb-icon>
-                    <p>{{item.get('activity'+item.get('id').value)?.errors?.activityErrMsg}}</p>
+                    <p>{{item.get('activityId_'+item.get('id').value)?.errors?.activityErrMsg}}</p>
                 </div>
               </div>
               <!-- 增減按鈕 -->
