@@ -15,7 +15,7 @@ import { EchartsTreemapHotComponent } from './echarts/echarts-treemap-hot.compon
 import { EchartsTreemapCoolComponent } from './echarts/echarts-treemap-cool.component';
 import { EchartsDoughnutComponent } from './echarts/echarts-doughnut.component';
 // import { NgApexchartsModule } from 'ng-apexcharts';
-import { MultiRangeComponent } from './apex_chart/multi-range.component';
+// import { MultiRangeComponent } from './apex_chart/multi-range.component';
 import { EchartsTimelineMultiRangeComponent } from './echarts/echarts-timeline-multi-range.component';
 
 
@@ -30,7 +30,7 @@ const components = [
   EchartsBarComponent,
   EchartsAreaStackComponent,
   EchartsRadarComponent,  
-  MultiRangeComponent,
+  // MultiRangeComponent,
   EchartsTimelineMultiRangeComponent
 ];
 
@@ -44,5 +44,6 @@ const components = [
     // NgApexchartsModule
   ],
   declarations: [...routedComponents, ...components],
+  exports: [...components]
 })
 export class ChartsModule {}
