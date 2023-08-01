@@ -8,97 +8,53 @@
       </nb-card-header>
       <nb-card-body [formGroup]="validateForm">
         <div class="row">
-            <basic-input class="col-12 col-lg-6" title="排程名稱" [form]="validateForm" ctlName="jobName"></basic-input>
-            <dropdown class="col-12 col-lg-6" title="狀態" [form]="validateForm" ctlName="status"></dropdown>
-            <div class="fieldGroup essential col-12 col-lg-6">
-              <!-- <label>排程頻率</label>
-              <div>
-                  <nb-radio-group  name="frequency" formControlName="frequency">
-                      <nb-radio value="daily">{{Frequency.daily}}</nb-radio>
-                      <nb-radio value="monthly">{{Frequency.monthly}}</nb-radio>
-                  </nb-radio-group>
-              </div> -->
-              <radio title="排程頻率" [form]="validateForm" ctlName="frequency" [selectList]="{options: frequencyList, key: 'key', val: 'val'}" (valueChange)="changeFrequencyType($event)"></radio>
-
-              <div *ngIf="validateForm.get('frequency').value === 'daily'" class="multi">
-                <nb-select fullWidth placeholder="時" formControlName="hour">
-                    <nb-option *ngFor="let val of hour" [value]="val">{{ val }}</nb-option>
-                </nb-select>
-                <span>：</span>
-                <nb-select fullWidth placeholder="分" formControlName="minute">
-                  <nb-option *ngFor="let val of minute" [value]="val">{{ val }}</nb-option>
-                </nb-select>
-              </div>
-              <div *ngIf="validateForm.get('frequency').value === 'monthly'" class="multi">
-                <nb-select fullWidth placeholder="日" formControlName="daily">
-                  <nb-option *ngFor="let val of daily" [value]="val">{{ val }}</nb-option>
+          <basic-input class="col-12 col-lg-6" title="排程名稱" [form]="validateForm" ctlName="jobName"></basic-input>
+          <dropdown class="col-12 col-lg-6" title="狀態" [form]="validateForm" ctlName="status"></dropdown>
+          <div class="fieldGroup essential col-12 col-lg-6">
+            <radio title="排程頻率" [form]="validateForm" ctlName="frequency" [selectList]="{options: frequencyList, key: 'key', val: 'val'}" (valueChange)="changeFrequencyType($event)"></radio>
+            <div *ngIf="validateForm.get('frequency').value === 'daily'" class="multi">
+              <nb-select fullWidth placeholder="時" formControlName="hour">
+                  <nb-option *ngFor="let val of hour" [value]="val">{{ val }}</nb-option>
               </nb-select>
               <span>：</span>
-                <nb-select fullWidth placeholder="時" formControlName="hour">
-                    <nb-option *ngFor="let val of hour" [value]="val">{{ val }}</nb-option>
-                </nb-select>
-                <span>：</span>
-                <nb-select fullWidth placeholder="分" formControlName="minute">
-                  <nb-option *ngFor="let val of minute" [value]="val">{{ val }}</nb-option>
-                </nb-select>
-              </div>
-              <div class="note errorText">
-                  <nb-icon icon="alert-triangle"></nb-icon>
-                  <p>欄位錯誤訊息</p>
-              </div>
+              <nb-select fullWidth placeholder="分" formControlName="minute">
+                <nb-option *ngFor="let val of minute" [value]="val">{{ val }}</nb-option>
+              </nb-select>
             </div>
-            <dropdown class="col-12 col-lg-6" title="檔案存放地方" [form]="validateForm" [selectList]="{options: filePathList, key: 'key', val: 'val'}" ctlName="file_path"></dropdown>
-            <!-- <div class="fieldGroup essential col-12 col-lg-6">
-              <label>檔案存放地方</label>
-              <div>
-                  <nb-select fullWidth placeholder="請選擇" formControlName="file_path">
-                      <nb-option value="">全部</nb-option>
-                    </nb-select>
-              </div>
-              <div class="note errorText">
-                  <nb-icon icon="alert-triangle"></nb-icon>
-                  <p>欄位錯誤訊息</p>
-              </div>
-            </div> -->
-        </div>
-        <div class="subTitle">
-          <p>活動名單列表</p>
-        </div>
-        <!-- 灰底區塊 -->
-        <div class="grayCard" *ngFor="let condition of conditions.controls | keyvalue; let i=index; let first = first; let last = last" formArrayName="activityListCondition">
-          <div class="row" formGroupName="{{i}}" *ngIf="this.conditions.controls[i] as item">
-              <div class="fieldGroup essential col-10 col-lg-10" [ngClass]="{'error': item.get('activityId_'+item.get('id').value)?.errors?.activityErrMsg}">
-                <label>活動名稱</label>
-                <div>
-                    <input nbInput fullWidth type="text"  placeholder="請輸入"[nbAutocomplete]="auto"
-                        [status]="item.get('activityId_'+item.get('id').value)?.errors?.activityErrMsg ? 'danger' : 'basic'"
-                        (input)="onActivityChange(item.get('id').value)" formControlName="activityName_{{item.get('id').value}}"/>
-                    <nb-autocomplete #auto (selectedChange)="onActivitySelectChange(item.get('id').value)" formControlName="activityId_{{item.get('id').value}}">
-                      <nb-option *ngFor="let activity of activityListDict.get('activityList'+item.get('id').value)" [value]="activity.val" [id]="activity.key">{{ activity.val }}</nb-option>
-                    </nb-autocomplete>
-                </div>
-                <div class="note errorText">
-                    <nb-icon icon="alert-triangle"></nb-icon>
-                    <p>{{item.get('activityId_'+item.get('id').value)?.errors?.activityErrMsg}}</p>
-                </div>
-              </div>
-              <!-- 增減按鈕 -->
-              <div *ngIf="last" class="fieldBtn col-1 col-lg-1">
-                  <button nbButton status="success" size="tiny" class="iconBtn" (click)="changeConditionsBtn('add', i)"
-                          [disabled]="this.hasAnyActivityErrors()" >
-                      <nb-icon icon="plus-outline"></nb-icon>
-                  </button>
-              </div>
-              <div *ngIf="!first || !last" class="fieldBtn col-1 col-lg-1">
-                  <button nbButton status="danger" size="tiny" class="iconBtn" (click)="changeConditionsBtn('remove', i)">
-                      <nb-icon icon="trash-2-outline"></nb-icon>
-                  </button>
-              </div>
+            <div *ngIf="validateForm.get('frequency').value !== 'daily'" class="multi">
+              <nb-select fullWidth placeholder="日" formControlName="daily">
+                <nb-option *ngFor="let val of daily" [value]="val">{{ val }}</nb-option>
+            </nb-select>
+            <span>：</span>
+              <nb-select fullWidth placeholder="時" formControlName="hour">
+                  <nb-option *ngFor="let val of hour" [value]="val">{{ val }}</nb-option>
+              </nb-select>
+              <span>：</span>
+              <nb-select fullWidth placeholder="分" formControlName="minute">
+                <nb-option *ngFor="let val of minute" [value]="val">{{ val }}</nb-option>
+              </nb-select>
+            </div>
+            <div class="note errorText">
+                <nb-icon icon="alert-triangle"></nb-icon>
+                <p>欄位錯誤訊息</p>
+            </div>
           </div>
+          <dropdown class="col-12 col-lg-6" title="檔案存放地方" [form]="validateForm" [selectList]="{options: filePathList, key: 'key', val: 'val'}" ctlName="file_path"></dropdown>
         </div>
       </nb-card-body>
   </nb-card>
-
+  <nb-card>
+    <nb-card-header>
+        <h2>名單列表</h2>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="rightBox">
+          <button nbButton status="primary" size="medium" (click)="add()" [disabled]="this.filterActivityList.length === 0">新增</button>
+        </div>
+        <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
+        <paginator [source]="dataSource" [paginator]="paginator"></paginator>
+    </nb-card-body>
+  </nb-card>
   <div class="row">
       <div class="btnGroup">
           <button nbButton status="basic" size="medium" (click)="cancel()">取消</button>

@@ -5,6 +5,7 @@ import { ScheduleListComponent } from "./schedule-activity-list/schedule-activit
 import { ScheduleAddComponent } from "./schedule-activity-set/schedule-activity-set.component"
 import { ScheduleButtonComponent, ScheduleDetailComponent } from "./schedule-activity-detail/schedule-activity-detail.component"
 import { ActivityButtonComponent, ActivityDetailComponent } from "./activity-detail/activity-detail.component"
+import { PreviewDialogComponent } from "./schedule-activity-set/preview-dialog/preview.dialog/preview-dialog.component"
 
 const routes: Routes = [
   {
@@ -34,4 +35,5 @@ export const routedComponents = [
   ActivityDetailComponent,
   ScheduleButtonComponent,
   ActivityButtonComponent,
+  PreviewDialogComponent
 ];

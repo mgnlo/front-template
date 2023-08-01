@@ -27,7 +27,6 @@ export class ActivityDetailComponent extends BaseComponent implements OnInit {
   ) {
     super(storageService);
     this.params = this.activatedRoute.snapshot.params;
-    console.info('this.params', this.params)
   }
 
   ngOnDestroy(): void {

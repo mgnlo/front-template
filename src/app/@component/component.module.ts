@@ -15,6 +15,7 @@ import { BasicInputComponent } from './form/basic-input/input.component';
 import { DropdownComponent } from './form/dropdown/dropdown.component';
 import { RadioComponent } from './form/radio/radio.component';
 import { AlertDialogComponent } from './dialog/alert-dialog/alert-dialog.component';
+import { DeleteButtonComponent } from './table/detail-button/delete-button.component';
 
 export const COMPONENTS = [
   ApproveDialogComponent,
@@ -23,6 +24,7 @@ export const COMPONENTS = [
   AlertDialogComponent,
   PaginatorComponent,
   CheckboxIconComponent,
+  DeleteButtonComponent,
   DetailButtonComponent,
   BasicInputComponent,
   RadioComponent,

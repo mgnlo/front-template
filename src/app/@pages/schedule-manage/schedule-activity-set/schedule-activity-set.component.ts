@@ -1,13 +1,21 @@
+import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivityListCondition, ActivitySetting } from '@api/models/activity-list.model';
 import { StorageService } from '@api/services/storage.service';
-import { Frequency, Status } from '@common/enums/common-enum';
+import { DialogService } from '@api/services/dialog.service';
+import { Frequency, Status, StatusResult } from '@common/enums/common-enum';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
+import { ScheduleSettingMock } from '@common/mock-data/schedule-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { Dictionary } from '@common/utils/dictionary';
+import { DeleteButtonComponent } from '@component/table/detail-button/delete-button.component';
+import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { BaseComponent } from '@pages/base.component';
+import { LocalDataSource } from 'ng2-smart-table';
+import { PreviewDialogComponent } from './preview-dialog/preview.dialog/preview-dialog.component';
+import { ActivitySetting as ScheduleActivitySetting, ScheduleSetting } from '@api/models/schedule-manage.model';
 
 @Component({
   selector: 'schedule-activity-set',
@@ -27,7 +35,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   minute: number[] = Array.from({ length: 60 }, (_, index) => index + 1);
 
   //預設排程頻率
-  scheduleFrequencyList = [Frequency.daily, Frequency.monthly];
+  scheduleFrequencyList = [Frequency.daily, Frequency.weekly, Frequency.monthly];
   frequencyList: Array<{ key: string; val: string }> = Object.entries(Frequency)
     .filter(([k, v]) => {
       return this.scheduleFrequencyList.includes(v);
@@ -36,20 +44,19 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   //預設檔案存放地方
   filePathList: Array<{ key: string; val: string }> = [{ key: 'path_A', val: 'A://' }, { key: 'path_B', val: 'B:/' }, { key: 'path_C', val: 'C:\\' }];
 
-  //預設活動名單
-  activityListMock: Array<ActivitySetting> = ActivityListMock;//Call API
-  activityList: Array<{ key: string; val: string }> = this.activityListMock.map(m => ({ key: m.activityId, val: m.activityName }))
-  activityInputTempList: [];
-  activityListDict = new Dictionary();
+  //預設pup-up活動名單
+  activityListSetting: Array<ActivitySetting> = ActivityListMock;//Call API
+  activityList: Array<{ key: string; val: string }> = this.activityListSetting.map(m => ({ key: m.activityId, val: m.activityName }))
+  filterActivityList: Array<{ key: string; val: string }> = new Array;
 
-  //取得新增條件區塊
-  get conditions(): FormArray {
-    return this.validateForm.get('activityListCondition') as FormArray
-  }
+  //預設名單列表
+  scheduleSetting: Array<ScheduleSetting> = ScheduleSettingMock;
+  scheduleActivitySetting: Array<ScheduleActivitySetting>;
 
   constructor(private router: Router,
     storageService: StorageService,
     private activatedRoute: ActivatedRoute,
+    private dialogService: DialogService,
     private readonly changeDetectorRef: ChangeDetectorRef) {
     super(storageService);
 
@@ -57,21 +64,10 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       jobName: new FormControl(null, Validators.required),
       status: new FormControl('active', Validators.required),
       frequency: new FormControl('daily', Validators.required),
-      //daily: new FormControl(null, Validators.required),
       hour: new FormControl(null, Validators.required),
       minute: new FormControl(null, Validators.required),
       file_path: new FormControl(null, Validators.required),
-      activityListCondition: new FormArray([
-        new FormGroup({
-          id: new FormControl(0),
-          activityId_0: new FormControl(null, [Validators.required, this.existsInActivityList.bind(this)]),
-          activityName_0: new FormControl(null),
-        }),
-      ]),
-    }, this.existsInaAtivityListCondition);
-
-    //建立第一條
-    this.setDicActivityList('add', 0);
+    });
 
     this.params = this.activatedRoute.snapshot.params;
     const changeRouteName = this.params['changeRoute'] ?? "";
@@ -81,17 +77,6 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     if (!!state) {
       Object.keys(state).forEach(key => {
         if (key === 'activitySetting') {
-          let condition = state[key] as Array<ActivityListCondition>;
-          while (this.conditions.length !== 0) {
-            this.conditions.removeAt(0)
-          }
-          condition.forEach((con, index) => {
-            let fg = new FormGroup({});
-            fg.setControl('id', new FormControl(index));
-            fg.setControl('activityId_' + index, new FormControl(con['activityId'], [Validators.required, , this.existsInActivityList.bind(this)]));
-            fg.setControl('activityName_' + index, new FormControl(con['activityName']));
-            this.conditions.push(fg);
-          })
         }
         if (!!this.validateForm.controls[key]) {
           switch (key) {
@@ -105,6 +90,80 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   }
 
+  gridDefine = {
+    pager: {
+      display: true,
+      perPage: 10,
+    },
+    columns: {
+      activityName: {
+        title: '活動名稱',
+        type: 'html',
+        class: 'col-3 left',
+        valuePrepareFunction: (cell: string) => {
+          return `<p class="left">${cell}</p>`;
+        },
+        sort: false
+      },
+      activityDescription: {
+        title: '活動說明',
+        type: 'html',
+        class: 'col-3 left',
+        valuePrepareFunction: (cell: string) => {
+          return `<p class="left">${cell}</p>`;
+        },
+        sort: false,
+      },
+      status: {
+        title: '狀態',
+        type: 'string',
+        class: 'col-2 alignCenter',
+        valuePrepareFunction: (cell: string) => {
+          return Status[cell.toLowerCase()];
+        },
+        sort: false,
+      },
+      batchUpdateTime: {
+        title: '批次更新時間',
+        type: 'html',
+        class: 'col-2',
+        valuePrepareFunction: (cell: string) => {
+          const datepipe: DatePipe = new DatePipe('en-US');
+          return `<p class="date">${datepipe.transform(cell, this.dateFormat)}</p>`;
+        },
+        sort: false,
+      },
+      filterOptions: {
+        title: '更新結果',
+        type: 'html',
+        class: 'col-1 alignCenter',
+        valuePrepareFunction: (cell: string) => {
+          const cellLow = cell?.toLowerCase();
+          return cellLow === 'true' ? StatusResult[cellLow] : `<p class="colorRed textBold">${StatusResult[cellLow]}</p>`;
+        },
+        sort: false,
+      },
+      delete: {
+        title: '移除',
+        class: 'col-1',
+        type: 'custom',
+        renderComponent: DeleteButtonComponent,
+        onComponentInitFunction: (instance) => {
+          instance.delete.subscribe(row => {
+            this.onDeleteConfirm(row); // 訂閱自訂刪除按鈕組件的 delete 事件，觸發 onDeleteConfirm 方法
+          });
+        },
+        sort: false,
+      },
+    },
+    hideSubHeader: true,
+    actions: {
+      add: false,
+      edit: false,
+      delete: false,
+    },
+  };
+
   //#region 頻率切換
   changeFrequencyType(key: string) {
     this.validateForm.patchValue({ 'hour': '', 'minute': '' });
@@ -114,6 +173,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
           this.removeField('daily');
         }
         break;
+      case 'weekly':
       case 'monthly':
         if (!this.validateForm.contains('daily')) {
           this.addField('daily', null, Validators.required);
@@ -133,171 +193,63 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   }
   //#endregion
 
-  //#region 條件區塊異動
-  changeConditionsBtn(action: 'add' | 'remove', index: number) {
-    if (action === 'add') {
-      // 避免重複
-      while (this.conditions.controls.filter(f => f.value.id === index).length > 0) {
-        index = index + 1
-      }
-
-      this.setDicActivityList('add', index);
-      this.conditions.push(new FormGroup({
-        id: new FormControl(index),
-        ['activityId_' + index]: new FormControl(null, [Validators.required, this.existsInActivityList.bind(this)]),
-        ['activityName_' + index]: new FormControl(null),
-      }));
-    } else {
-      this.setDicActivityList('remove', this.conditions.at(index)?.get('id').value)
-      this.conditions.removeAt(index);
+  //#region 刪除按鈕
+  onDeleteConfirm(row: { activityId: string; }): void {
+    //if (window.confirm('確定要刪除這筆資料嗎？')) {
+    const index = this.scheduleActivitySetting.findIndex(item => item.activityId === row.activityId);
+    if (index !== -1) {
+      this.scheduleActivitySetting.splice(index, 1);
+      this.refreshFilterActivityList();
+      this.dataSource.load(this.scheduleActivitySetting);
     }
-
-    this.updateActivityValidators();
+    //}
   }
   //#endregion
 
-  //#region 塞選條件區活動清單
-  setDicActivityList(action: 'add' | 'remove', activityId: number) {
-    switch (action) {
-      case 'add':
-        if (!this.activityListDict.has('activityList' + activityId)) {
-          this.activityListDict.set('activityList' + activityId, this.activityList);
+  //#region 新增
+  add() {
+    this.refreshFilterActivityList();
+    if (this.filterActivityList.length > 0) {
+      this.dialogService.open(PreviewDialogComponent, {
+        title: '設定名單內容',
+        dataList: this.filterActivityList,
+      }).onClose.subscribe((selectedData: { key: string; val: string }) => {
+        if (!!selectedData) {
+          const findData = this.activityListSetting.find(f => f.activityId === selectedData.key);
+          this.scheduleActivitySetting.push(new ScheduleActivitySetting({
+            activityId: findData?.activityId,
+            version: findData?.version,
+            activityName: findData?.activityName,
+            activityDescription: findData?.activityDescription,
+            filterOptions: findData?.filterOptions,
+            listLimit: findData?.listLimit,
+            status: findData?.status,
+            startDate: findData?.startDate,
+            endDate: findData?.endDate,
+            createTime: findData?.createTime,
+            modificationTime: findData?.modificationTime,
+            scheduleSettings: findData?.scheduleSettings,
+            batchUpdateTime: findData?.batchUpdateTime,
+          }))
+          this.refreshFilterActivityList();
+          this.dataSource.load(this.scheduleActivitySetting);
         }
-        break;
-      case 'remove':
-        if (this.activityListDict.has('activityList' + activityId)) {
-          this.activityListDict.delete('activityList' + activityId);
-        }
-        break;
+      });;
     }
   }
 
-  onActivityChange(index: number) {
-    this.activityListDict.set('activityList' + index, this.activityFilter(this.getActivityInput(index)));
-    this.updateActivityValidators();
+  refreshFilterActivityList() {
+    this.filterActivityList = this.activityList.filter(item =>
+      !this.scheduleActivitySetting.some(setting => setting.activityId === item.key)
+    );
   }
-
-  onActivitySelectChange(index: number) {
-    this.activityListDict.set('activityList' + index, this.activityFilter(""));
-    this.validateForm.updateValueAndValidity();
-    this.updateActivityValidators();
-  }
-
-  activityFilter(value: string): Array<{ key: string; val: string }> {
-    const filterValue = value.toLowerCase();
-    if (CommonUtil.isBlank(filterValue)) return this.activityList;
-    return this.activityList.filter((f) => {
-      return f.val?.toLowerCase()?.includes(filterValue);
-    })
-  }
-
-  getActivityInput(index: number) {
-    const actList = this.validateForm.get('activityListCondition').value;
-    const actId = this.conditions.at(index)?.get('id').value;
-    if (CommonUtil.isBlank(actId)) return "";
-    return actList.find(f => f.id === actId)['activityId_' + actId] ?? "";
-  }
-  //#endregion
-
-  //#region 檢查條件區是否存在清單中
-  existsInActivityList(ctl: FormControl): { [key: string]: any } | null {
-    // 清空 activityErrMsg
-    ctl.setErrors(null);
-    if (ctl.dirty || ctl.touched || ctl.valueChanges) {
-      if (!CommonUtil.isBlank(ctl.value) && this.activityList.filter(item => item.key === ctl.value).length === 0)
-        return { 'activityErrMsg': '不存在活動清單中' }; // 驗證失敗
-    }
-    let conditionList = this.validateForm?.get('activityListCondition') as FormArray;
-    if (conditionList?.length > 1 && CommonUtil.isBlank(ctl.value)) {
-      return { 'activityErrMsg': '不可為空' };// 驗證失敗
-    }
-    return null; // 驗證成功
-  }
-
-  //檢查欄位是否重複
-  existsInaAtivityListCondition(formGroup: FormGroup): { [key: string]: any } | null {
-    const activityListConditionArray = formGroup.get('activityListCondition') as FormArray;
-
-    if (!activityListConditionArray) return null;
-
-    formGroup.get('activityListCondition')?.setErrors(null);
-
-    const duplicateActivities: Set<string> = new Set();
-    let isEmptyField = false;
-
-    for (let i = 0; i < activityListConditionArray.length - 1; i++) {
-      const controlI = activityListConditionArray.at(i).get('activityId_' + activityListConditionArray.at(i).get('id').value);
-      const activityI = controlI?.value;
-
-      if (!activityI) {
-        isEmptyField = true;
-        controlI?.setErrors({ 'activityErrMsg': '不可為空' });
-        controlI?.markAsTouched();
-        continue;
-      }
-
-      for (let j = i + 1; j < activityListConditionArray.length; j++) {
-        const controlJ = activityListConditionArray.at(j).get('activityId_' + activityListConditionArray.at(j).get('id').value);
-        const activityJ = controlJ?.value;
-
-        if (!activityJ) {
-          isEmptyField = true;
-          controlJ?.setErrors({ 'activityErrMsg': '不可為空' });
-          controlJ?.markAsTouched();
-          continue;
-        }
-
-        if (activityI === activityJ) {
-          duplicateActivities.add(activityI);
-          controlI?.setErrors({ 'activityErrMsg': '不可重複選擇' });
-          controlI?.markAsTouched();
-          controlJ?.setErrors({ 'activityErrMsg': '不可重複選擇' });
-          controlJ?.markAsTouched();
-        }
-      }
-
-    }
-
-    if (isEmptyField) {
-      return { 'activityErrMsg': '不可為空' };
-    }
-
-    if (duplicateActivities.size > 0) {
-      return { 'activityErrMsg': '不可重複選擇' };
-    }
-
-    return null;
-  }
-
-  // 更新活動區塊的驗證
-  updateActivityValidators(): void {
-    const activityListConditionArray = this.validateForm.get('activityListCondition') as FormArray;
-    for (let i = 0; i < activityListConditionArray.length; i++) {
-      const actId = activityListConditionArray.at(i).get('id').value;
-      const control = activityListConditionArray.at(i).get('activityId_' + actId);
-      control?.setValidators([Validators.required, this.existsInActivityList.bind(this, control)]);
-      control?.updateValueAndValidity();
-    }
-
-    this.validateForm.updateValueAndValidity();
-  }
-  //#endregion
-
-  //#region 判斷是否需要disabled活動(+)號
-  // 檢查是否有任何 activityId(i) 具有 activityErrMsg
-  hasAnyActivityErrors(): boolean {
-    const activityListConditionArray = this.conditions;
-    if (activityListConditionArray) {
-      return activityListConditionArray.controls.some(control => {
-        return control.get('activityId_' + control.get('id').value)?.hasError('activityErrMsg');
-      });
-    }
-    return false;
-  }
-
   //#endregion
 
   ngOnInit(): void {
+    this.dataSource = new LocalDataSource();
+    this.scheduleActivitySetting = this.scheduleSetting?.find(f => f.scheduleId === this.params['scheduleId'])?.activitySetting as Array<ScheduleActivitySetting> ?? new Array<ScheduleActivitySetting>();
+    this.refreshFilterActivityList();
+    this.dataSource.load(this.scheduleActivitySetting);
   }
 
   ngAfterViewChecked(): void {
