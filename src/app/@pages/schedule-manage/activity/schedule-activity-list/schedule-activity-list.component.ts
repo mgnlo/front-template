@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ScheduleManageService } from '../schedule-manage.service';
+import { ScheduleManageService } from '../../schedule-manage.service';
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
 import { ScheduleSetting } from '@api/models/schedule-manage.model';

@@ -19,6 +19,9 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   activitySetting: Array<ActivitySetting> = ScheduleSettingMock[0].activitySetting;
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
+  //預設關閉CheckBox
+  enableMultiSelect: boolean = false;
+
   constructor(
     private storageService: StorageService,
     private activatedRoute: ActivatedRoute,
@@ -40,20 +43,77 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     }
   }
 
-  ngAfterViewInit(): void {
-    //get session page
-    let storage = this.storageService.getSessionVal(this.sessionKey);
-    if (!!storage?.page) {
-      this.dataSource.setPage(storage.page);
-    }
-  }
-
-  ngOnDestroy(): void {
-    let sessionData = { page: this.paginator.nowPage };
-    this.storageService.putSessionVal(this.sessionKey, sessionData);
-  }
-
   gridDefine = {
+    pager: {
+      display: true,
+      perPage: 10,
+    },
+    selectMode: 'single',
+    columns: {
+      activityName: {
+        title: '活動名稱',
+        type: 'html',
+        class: 'left',
+        width: '30%',
+        valuePrepareFunction: (cell: string) => {
+          return `<p class="left">${cell}</p>`;
+        },
+        sort: false
+      },
+      activityDescription: {
+        title: '活動說明',
+        type: 'html',
+        class: 'left',
+        width: '30%',
+        valuePrepareFunction: (cell: string) => {
+          return `<p class="left">${cell}</p>`;
+        },
+        sort: false,
+      },
+      status: {
+        title: '狀態',
+        type: 'string',
+        width: '5%',
+        class: 'alignCenter',
+        valuePrepareFunction: (cell: string) => {
+          return Status[cell];
+        },
+        sort: false,
+      },
+      batchUpdateTime: {
+        title: '批次更新時間',
+        type: 'string',
+        width: '15%',
+        sort: false,
+      },
+      filterOptions: {
+        title: '更新結果',
+        type: 'html',
+        width: '5%',
+        valuePrepareFunction: (cell: string) => {
+          const cellLow = cell?.toLowerCase();
+          return cellLow === 'true' ? StatusResult[cellLow] : `<p class="colorRed textBold">${StatusResult[cellLow]}</p>`;
+        },
+        sort: false,
+      },
+      action: {
+        title: '查看',
+        type: 'custom',
+        width: '1%',
+        valuePrepareFunction: (cell, row: Schedule_Batch_History) => row,
+        renderComponent: ScheduleButtonComponent,
+        sort: false,
+      },
+    },
+    hideSubHeader: true,
+    actions: {
+      add: false,
+      edit: false,
+      delete: false,
+    },
+  };
+
+  gridDefine_1 = {
     pager: {
       display: true,
       perPage: 10,
@@ -128,7 +188,28 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     this.dataSource.load(this.activitySetting);
   }
 
+  ngAfterViewInit(): void {
+    //get session page
+    let storage = this.storageService.getSessionVal(this.sessionKey);
+    if (!!storage?.page) {
+      this.dataSource.setPage(storage.page);
+    }
+  }
+
+  ngOnDestroy(): void {
+    let sessionData = { page: this.paginator.nowPage };
+    this.storageService.putSessionVal(this.sessionKey, sessionData);
+  }
+
   refresh() {
+    this.enableMultiSelect = true;
+  }
+
+  cancelRefresh() {
+    this.enableMultiSelect = false;
+  }
+
+  submitRefresh() {
 
   }
 
@@ -160,6 +241,6 @@ export class ScheduleButtonComponent implements OnInit {
 
   search() {
     let passData: NavigationExtras = { state: this.value };
-    this.router.navigate(['pages', 'schedule-manage', 'activity-detail', this.params.scheduleId, this.value.activityId], passData);
+    this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-export-detail', this.params.scheduleId, this.value.activityId], passData);
   }
 }

@@ -8,9 +8,9 @@ import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({
-  selector: 'activity-detail',
-  templateUrl: './activity-detail.component.html',
-  styleUrls: ['./activity-detail.component.scss']
+  selector: 'schedule-activity-export-detail',
+  templateUrl: './schedule-activity-export-detail.component.html',
+  styleUrls: ['./schedule-activity-export-detail.component.scss']
 })
 export class ActivityDetailComponent extends BaseComponent implements OnInit {
   scheduleSetting: Array<ScheduleSetting> = ScheduleSettingMock;
