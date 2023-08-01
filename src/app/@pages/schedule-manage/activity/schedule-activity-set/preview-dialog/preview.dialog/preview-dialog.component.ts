@@ -75,7 +75,6 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
     const selectedId = this.filterDataList.find((item) => item.val === selectedValue)?.key; // 根據 [value] 取得對應的 [id]
     const selectedData = { key: selectedId, val: selectedValue };
 
-    //this.selectActivity.emit(selectedData);
     this.ref.close(selectedData)
   }
 }

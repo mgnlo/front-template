@@ -3,11 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ScheduleManageService } from '../../schedule-manage.service';
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
-import { ScheduleSetting } from '@api/models/schedule-manage.model';
+import { ScheduleActivitySetting } from '@api/models/schedule-activity.model';
 import { Status } from '@common/enums/common-enum';
 import { DatePipe } from '@angular/common';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
-import { ScheduleSettingMock } from '@common/mock-data/schedule-list-mock';
+import { ScheduleSettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { StorageService } from '@api/services/storage.service';
 
 @Component({
@@ -24,12 +24,12 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
   ) {
     super();
   }
-  scheduleSetting: Array<ScheduleSetting> = ScheduleSettingMock;
+  ScheduleActivitySetting: Array<ScheduleActivitySetting> = ScheduleSettingMock;
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
   ngOnInit(): void {
     this.dataSource = new LocalDataSource();
-    this.dataSource.load(this.scheduleSetting);
+    this.dataSource.load(this.ScheduleActivitySetting);
   }
 
   ngAfterViewInit(): void {
@@ -89,7 +89,7 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
         title: '查看',
         type: 'custom',
         class: 'col-1',
-        valuePrepareFunction: (cell, row: ScheduleSetting) => row,
+        valuePrepareFunction: (cell, row: ScheduleActivitySetting) => row,
         renderComponent: DetailButtonComponent,
         sort: false,
       },

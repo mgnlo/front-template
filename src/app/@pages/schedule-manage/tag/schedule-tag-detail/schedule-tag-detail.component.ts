@@ -1,25 +1,18 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { ScheduleDetailView, ScheduleActivitySetting, ActivitySetting, Schedule_Batch_History } from '@api/models/schedule-activity.model';
+import { ScheduleBatchHistory } from '@api/models/schedule-tag.model';
 import { StorageService } from '@api/services/storage.service';
-import { StatusResult, Status } from '@common/enums/common-enum';
-import { ScheduleSettingMock } from '@common/mock-data/schedule-activity-list-mock';
-import { CommonUtil } from '@common/utils/common-util';
+import { Status, StatusResult } from '@common/enums/common-enum';
 import { BaseComponent } from '@pages/base.component';
-import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({
-  selector: 'schedule-activity-detail',
-  templateUrl: './schedule-activity-detail.component.html',
-  styleUrls: ['./schedule-activity-detail.component.scss']
+  selector: 'schedule-tag-detail',
+  templateUrl: './schedule-tag-detail.component.html',
+  styleUrls: ['./schedule-tag-detail.component.scss']
 })
-export class ScheduleDetailComponent extends BaseComponent implements OnInit {
-  detail: ScheduleDetailView;
-  isHistoryOpen: { [x: number]: boolean } = []; //異動歷程收合
-  activitySetting: Array<ActivitySetting> = ScheduleSettingMock[0].activitySetting;
+export class ScheduleTagDetailComponent extends BaseComponent implements OnInit {
+  enableMultiSelect: boolean = false;
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
-
-  enableMultiSelect: boolean = false;//預設關閉CheckBox
 
   constructor(
     private storageService: StorageService,
@@ -27,19 +20,6 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     private router: Router,
   ) {
     super();
-    const currentNavigation = this.router.getCurrentNavigation();
-    if (!!currentNavigation?.extras) {
-      const state = currentNavigation.extras.state;
-      const processedData = CommonUtil.getHistoryProcessData<ScheduleActivitySetting>('scheduleReviewHistory', state as ScheduleActivitySetting); // 異動歷程處理
-      if (!!processedData) {
-        this.isHistoryOpen = processedData.isHistoryOpen;
-        this.detail = processedData.detail;
-      }
-      else {
-        //之後可能加導頁pop-up提醒
-        this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-list']);
-      }
-    }
   }
 
   gridDefine = {
@@ -99,8 +79,8 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         title: '查看',
         type: 'custom',
         width: '1%',
-        valuePrepareFunction: (cell, row: Schedule_Batch_History) => row,
-        renderComponent: ScheduleActivityButtonComponent,
+        valuePrepareFunction: (cell, row) => row,
+        renderComponent: ScheduleTagButtonComponent,
         sort: false,
       },
     },
@@ -169,8 +149,8 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         title: '查看',
         type: 'custom',
         width: '1%',
-        valuePrepareFunction: (cell, row: Schedule_Batch_History) => row,
-        renderComponent: ScheduleActivityButtonComponent,
+        valuePrepareFunction: (cell, row) => row,
+        renderComponent: ScheduleTagButtonComponent,
         sort: false,
       },
     },
@@ -183,8 +163,6 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.dataSource = new LocalDataSource();
-    this.dataSource.load(this.activitySetting);
   }
 
   ngAfterViewInit(): void {
@@ -212,34 +190,30 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
 
   }
 
-  edit() {
-    this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-set', 'edit', this.detail.scheduleId], { state: this.detail });
-  }
-
   cancel() {
     this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-list']);
   }
+
 }
 
 
-
 @Component({
-  selector: 'schedule-activity-detail-button',
+  selector: 'schedule-tag-detail-button',
   template: '<button nbButton ghost status="info" size="medium" (click)="search()"><nb-icon icon="search"></nb-icon></button>'
 })
-export class ScheduleActivityButtonComponent implements OnInit {
+export class ScheduleTagButtonComponent implements OnInit {
   params: any;//路由參數
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {
     this.params = this.activatedRoute.snapshot.params;
   }
 
-  @Input() value: Schedule_Batch_History;
+  @Input() value: ScheduleBatchHistory;
 
   ngOnInit() { }
 
   search() {
     let passData: NavigationExtras = { state: this.value };
-    this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-export-detail', this.params.scheduleId, this.value.activityId], passData);
+    this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-export-detail', this.params.scheduleId, this.value.tagId], passData);
   }
 }
