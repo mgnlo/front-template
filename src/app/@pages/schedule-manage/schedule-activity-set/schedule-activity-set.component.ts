@@ -13,7 +13,8 @@ import { DetailButtonComponent } from '@component/table/detail-button/detail-but
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
 import { PreviewDialogComponent } from './preview-dialog/preview.dialog/preview-dialog.component';
-import { ActivitySetting, ScheduleSetting } from '@api/models/schedule-manage.model';
+import { ActivitySetting as ScheduleActivitySetting, ScheduleSetting } from '@api/models/schedule-manage.model';
+import { ActivitySetting } from '@api/models/activity-list.model';
 
 @Component({
   selector: 'schedule-activity-set',
@@ -43,13 +44,12 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   filePathList: Array<{ key: string; val: string }> = [{ key: 'path_A', val: 'A://' }, { key: 'path_B', val: 'B:/' }, { key: 'path_C', val: 'C:\\' }];
 
   //預設活動名單
-  //activityListMock: Array<ActivitySetting> = ActivityListMock;//Call API
-  //activityList: Array<{ key: string; val: string }> = this.activityListMock.map(m => ({ key: m.activityId, val: m.activityName }))
+  activityListMock: Array<ActivitySetting> = ActivityListMock;//Call API
+  activityList: Array<{ key: string; val: string }> = this.activityListMock.map(m => ({ key: m.activityId, val: m.activityName }))
 
   //預設名單列表
   scheduleSetting: Array<ScheduleSetting> = ScheduleSettingMock;
-  activitySetting: Array<ActivitySetting>;
-
+  scheduleActivitySetting: Array<ScheduleActivitySetting>;
 
   constructor(private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -190,10 +190,10 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   //#region 刪除按鈕
   onDeleteConfirm(row: { activityId: string; }): void {
     //if (window.confirm('確定要刪除這筆資料嗎？')) {
-    const index = this.activitySetting.findIndex(item => item.activityId === row.activityId);
+    const index = this.scheduleActivitySetting.findIndex(item => item.activityId === row.activityId);
     if (index !== -1) {
-      this.activitySetting.splice(index, 1);
-      this.dataSource.load(this.activitySetting);
+      this.scheduleActivitySetting.splice(index, 1);
+      this.dataSource.load(this.scheduleActivitySetting);
     }
     //}
   }
@@ -201,9 +201,8 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.dataSource = new LocalDataSource();
-    const activitySettingArray = ScheduleSettingMock?.find(f => f.scheduleId === this.params['scheduleId'])?.activitySetting as Array<ActivitySetting>;
-    this.activitySetting = activitySettingArray ?? new Array<ActivitySetting>();
-    this.dataSource.load(this.activitySetting);
+    this.scheduleActivitySetting = ScheduleSettingMock?.find(f => f.scheduleId === this.params['scheduleId'])?.activitySetting as Array<ScheduleActivitySetting> ?? new Array<ScheduleActivitySetting>();
+    this.dataSource.load(this.scheduleActivitySetting);
   }
 
   ngAfterViewChecked(): void {
