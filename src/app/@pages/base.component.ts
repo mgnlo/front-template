@@ -41,9 +41,11 @@ export class BaseComponent implements OnDestroy {
     if (!!this.dataSource) {
       this.dataSource.onChanged().pipe(takeUntil(this.unsubscribe$), filter((val, i) => i === 0)).subscribe((event) => {
         //get session page
-        let storage = this.storageService.getSessionVal(this.sessionKey);
-        if (!!storage?.page) {
-          this.dataSource.setPage(storage.page, true);
+        if(event.action === 'refresh'){
+          let storage = this.storageService.getSessionVal(this.sessionKey);
+          if (!!storage?.page) {
+            this.dataSource.setPage(storage.page, true);
+          }
         }
         this.paginator.totalCount = this.dataSource.count();
         let page = this.dataSource.getPaging().page;
