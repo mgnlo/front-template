@@ -3,6 +3,7 @@ import { Navigation, Router } from '@angular/router';
 import { ActivitySetting } from '@api/models/activity-list.model';
 import { HistoryGroupView, TagDetailView, TagReviewHistory } from '@api/models/tag-manage.model';
 import { DialogService } from '@api/services/dialog.service';
+import { StorageService } from '@api/services/storage.service';
 import { Status } from '@common/enums/common-enum';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { TagSettingMock } from '@common/mock-data/tag-list-mock';
@@ -21,18 +22,18 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   oldDetail: TagDetailView;
   newDetail: TagDetailView;
   detail: TagDetailView;
-  historyGroupView: {[x: number]: HistoryGroupView} = {};
-  isConditionOpen: {[x: number]: boolean} = {}; //活動名單條件收合
-  isHistoryOpen: {[x: number]: boolean} = {}; //異動歷程收合
-  isSameList: {[x:string]: boolean} = {}; //差異比較
+  historyGroupView: { [x: number]: HistoryGroupView } = {};
+  isConditionOpen: { [x: number]: boolean } = {}; //活動名單條件收合
+  isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
+  isSameList: { [x: string]: boolean } = {}; //差異比較
   isBefore: boolean = false;
   reviewStatus: string;
   reviewComment: string;
   mockData: Array<ActivitySetting> = ActivityListMock;
 
-  constructor(private router: Router, private dialogService: DialogService) {
-    super();
-    if(!!this.router.getCurrentNavigation()?.extras){
+  constructor(storageService: StorageService, private router: Router, private dialogService: DialogService,) {
+    super(storageService);
+    if (!!this.router.getCurrentNavigation()?.extras) {
       let tagReview = this.router.getCurrentNavigation().extras.state as TagReviewHistory;
       let list = TagSettingMock.filter(row => row.tagId === tagReview.referenceId)[0];
       this.newDetail = JSON.parse(JSON.stringify(tagReview));
@@ -43,17 +44,17 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
       this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
 
       list.tagReviewHistory.forEach(history => {
-        if(!this.historyGroupView || !this.historyGroupView[history.groupId]){
+        if (!this.historyGroupView || !this.historyGroupView[history.groupId]) {
           this.isHistoryOpen[history.groupId] = true;
           this.historyGroupView[history.groupId] = {
             type: history.type,
             flows: [
-              {historyId: history.historyId, time: history.time, title: history.title, detail: history.detail}
+              { historyId: history.historyId, time: history.time, title: history.title, detail: history.detail }
             ]
           };
         } else {
           this.historyGroupView[history.groupId].flows.push(
-            {historyId: history.historyId, time: history.time, title: history.title, detail: history.detail}
+            { historyId: history.historyId, time: history.time, title: history.title, detail: history.detail }
           );
         }
       });
@@ -63,7 +64,7 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.dataSource = new LocalDataSource();
     this.mockData = this.mockData.map(mock => {
-      return {...mock, during:`${mock.startDate}~${mock.endDate}`} //起訖日查詢篩選要用到
+      return { ...mock, during: `${mock.startDate}~${mock.endDate}` } //起訖日查詢篩選要用到
     })
     this.dataSource.load(this.mockData);
   }
@@ -71,7 +72,7 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   gridDefine = {
     pager: {
       display: true,
-      perPage: 10,          
+      perPage: 10,
     },
     columns: {
       activityName: {
@@ -79,7 +80,7 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'col-2 left',
         sort: false,
-        valuePrepareFunction: (cell:string) => {
+        valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
       },
@@ -88,7 +89,7 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'col-3 left',
         sort: false,
-        valuePrepareFunction: (cell:string) => {
+        valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
       },
@@ -108,7 +109,7 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
         title: '狀態',
         type: 'string',
         class: 'col-1',
-        valuePrepareFunction: (cell:string) => {
+        valuePrepareFunction: (cell: string) => {
           return Status[cell];
         },
         sort: false,
@@ -117,13 +118,13 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
         title: '起訖時間',
         type: 'html',
         class: 'col-3',
-        valuePrepareFunction: (cell:any) => {
+        valuePrepareFunction: (cell: any) => {
           return `<span class="date">${cell}</span>`;
         },
-        sort: false, 
+        sort: false,
       },
     },
-    hideSubHeader: false, //起訖日查詢要用到
+    hideSubHeader: true, //起訖日查詢要用到
     actions: {
       add: false,
       edit: false,
@@ -137,12 +138,12 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
 
   viewToggle() {
     this.isBefore = !this.isBefore;
-    this.detail = this.isBefore === true ? this.oldDetail: this.newDetail;
+    this.detail = this.isBefore === true ? this.oldDetail : this.newDetail;
   }
 
-  changeClass(key1: string, key2?: string){
+  changeClass(key1: string, key2?: string) {
     let isSame1 = this.isSameList[key1];
-    if(!key2){
+    if (!key2) {
       return !!isSame1 ? 'true' : !isSame1 && !!this.isBefore ? 'null' : 'false';
     } else {
       let isSame2 = this.isSameList[key2];
@@ -151,11 +152,11 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   }
 
   approve() {
-    this.dialogService.openApprove({bool: true, backTo: 'tag-review-list'});
+    this.dialogService.openApprove({ bool: true, backTo: 'tag-review-list' });
   }
 
   reject() {
-    this.dialogService.openReject({title: '標籤異動駁回說明', backTo: 'tag-review-list'});
+    this.dialogService.openReject({ title: '標籤異動駁回說明', backTo: 'tag-review-list' });
   }
 
   cancel() {

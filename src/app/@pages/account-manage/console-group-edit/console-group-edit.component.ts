@@ -8,6 +8,7 @@ import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
 import { AccountManageService } from '../account.manage.service';
 import { BusinessUnit } from '@common/enums/console-user-enum';
+import { StorageService } from '@api/services/storage.service';
 
 @Component({
   selector: 'console-group-edit',
@@ -148,11 +149,12 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
   };
 
   constructor(
+    storageService: StorageService,
     private router: Router,
     private accountManageService: AccountManageService,
     private activatedRoute: ActivatedRoute,
     private dateService: NbDateService<Date>) {
-    super();
+    super(storageService);
 
     try{
       this.consoleGroupDetail = JSON.parse(this.activatedRoute.snapshot.queryParamMap.get("consoleGroupDetail"));

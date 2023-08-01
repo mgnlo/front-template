@@ -1,17 +1,18 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ActivitySetting } from '@api/models/activity-list.model';
+import { TagDetailView, TagSetting } from '@api/models/tag-manage.model';
+import { DialogService } from '@api/services/dialog.service';
+import { StorageService } from '@api/services/storage.service';
+import { MathSymbol, Status } from '@common/enums/common-enum';
 import { TagDimension, TagSetCondition, TagSubDimension, TagType } from '@common/enums/tag-enum';
-import { TagSetting, TagDetailView } from '@api/models/tag-manage.model';
-import { Filter, Status, Schedule, MathSymbol } from '@common/enums/common-enum';
+import { ActivityListMock } from '@common/mock-data/activity-list-mock';
+import { CommonUtil } from '@common/utils/common-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
-import { CommonUtil } from '@common/utils/common-util';
 import { LocalDataSource } from 'ng2-smart-table';
-import { ActivitySetting } from '@api/models/activity-list.model';
-import { ActivityListMock } from '@common/mock-data/activity-list-mock';
-import { DialogService } from '@api/services/dialog.service';
 import { TagConditionDialogComponent } from './condition-dialog/condition-dialog.component';
 
 @Component({
@@ -24,8 +25,13 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   SetCondition = TagSetCondition;
   Status = Status;
 
-  filterList: Array<{ key: string; val: string }> = Object.entries(Filter).map(([k, v]) => ({ key: k, val: v }));
-  scheduleList: Array<{ key: string; val: string }> = Object.entries(Schedule).map(([k, v]) => ({ key: k, val: v }));
+  //預設狀態
+  tagStatusList = [Status.enabled, Status.disabled];
+  statusList: Array<{ key: string; val: string }> = Object.entries(Status)
+    .filter(([k, v]) => {
+      return this.tagStatusList.includes(v);
+    }).map(([k, v]) => ({ key: k, val: v }));
+  //scheduleList: Array<{ key: string; val: string }> = Object.entries(Schedule).map(([k, v]) => ({ key: k, val: v }));
   //預設構面
   categoryList: Array<{ key: string; val: string }> = Object.entries(TagDimension).map(([k, v]) => ({ key: k, val: v }))
   subCategoryList: Array<{ key: string; val: string }> = Object.entries(TagSubDimension).map(([k, v]) => ({ key: k, val: v }))
@@ -40,28 +46,40 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   //預設標籤類型
   tagTypeList: Array<{ key: string; val: string }> = Object.entries(TagType).map(([k, v]) => ({ key: k, val: v }))
 
+  //預設條件設定方式
+  tagSetConditionList: Array<{ key: string; val: string }> = Object.entries(TagSetCondition).map(([k, v]) => ({ key: k, val: v }))
+
   //預設檔案存放地方
   condition_valueList: Array<{ key: string; val: string }> = [{ key: 'condition_A', val: '近三個月_基金_申購金額' }, { key: 'condition_B', val: '假資料B' }, { key: 'condition_C', val: '假資料C' }];
 
+  //取得新增條件區塊
+  get conditions(): FormArray {
+    return this.validateForm.get('conditionSettingQuery') as FormArray
+  }
 
   detail: TagDetailView;
-  fileName: string;
-  isFile: boolean = true;//是否上傳檔案
   params: any = [];//路由參數
   actionName: string;// 新增/編輯/複製
 
   mockData: Array<ActivitySetting> = ActivityListMock;
 
-  // maxSizeInMB = 5;//檔案大小
-  // isFileSize = false;//檔案大小是否錯誤
+  selectedFile: File | undefined;
+  maxSizeInMB: number = 5;//檔案大小
+  fileName: string = '請上傳檔案';
+  //#region 檔案白名單
+  passFileArrayStr: string = '.csv,'
+  passFileArray: Array<string> = ['csv']
+  //#endregion
 
   isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
 
-  constructor(private router: Router,
+  constructor(
+    storageService: StorageService,
+    private router: Router,
     private activatedRoute: ActivatedRoute,
     private readonly changeDetectorRef: ChangeDetectorRef,
     private dialogService: DialogService) {
-    super();
+    super(storageService);
     this.validateForm = new FormGroup({
       tagName: new FormControl(null, Validators.required),
       status: new FormControl('enabled', Validators.required),
@@ -79,7 +97,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
         new FormGroup({
           id: new FormControl(0),
           detection_condition0: new FormControl(null, Validators.required),
-          threshold_value0: new FormControl(null, [Validators.required,ValidatorsUtil.number]),
+          threshold_value0: new FormControl(null, [Validators.required, ValidatorsUtil.number]),
           //C1: new FormControl(null, Validators.required),
         }),
       ]),
@@ -141,14 +159,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     this.changeTagType(getRawValue.tagType)
 
   }
-
-  //檔案判斷(白名單)
-  // static isPassFile(file: File): boolean {
-  //   const allowedTypes = ['text/csv'];
-  //   var aa = allowedTypes.includes(file.type);
-  //   debugger
-  //   return allowedTypes.includes(file.type);
-  // }
 
   gridDefine = {
     pager: {
@@ -225,10 +235,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  //標籤類型 更動時切換驗證
+  //#region 標籤類型 更動時切換驗證
   changeTagType(key: string) {
-    this.isFile = true;
-    this.fileName = '';
     if (key === 'normal') {
       if (!this.validateForm.contains('setCondition')) {
         this.addField('setCondition', 'normal', Validators.required);
@@ -249,7 +257,9 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     }
 
   }
+  //#endregion
 
+  //#region 基本欄位檢核(新增/刪除)
   addField(fieldName: string, formState: any, fileFormatValidator: any) {
     this.validateForm.addControl(fieldName, new FormControl(formState, fileFormatValidator));
     //this.validateForm.controls[fieldName].updateValueAndValidity();
@@ -258,8 +268,10 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   removeField(fieldName: string) {
     this.validateForm.removeControl(fieldName);
   }
+  //#endregion
 
-  or(action: 'add' | 'remove', index: number) {
+  //#region 條件區塊異動
+  changeConditionsBtn(action: 'add' | 'remove', index: number) {
     if (action === 'add') {
       while (this.conditions.controls.filter(f => f.value.id === index).length > 0) {
         index = index + 1
@@ -272,76 +284,63 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       //最後一個選單前加入其餘欄位驗證
       for (let i = 0; i < this.conditions.length - 1; i++) {
         if (Object.keys(this.conditions.controls[i]?.value).length === 3) {
-          this.and('add', 'join_value', this.conditions.controls[i].get('id').value, i)
+          this.setConditions('add', 'join_value', this.conditions.controls[i].get('id').value, i)
         }
       }
     } else {
       this.conditions.removeAt(index);
     }
 
-    //console.info('or', this.conditions.getRawValue())
+    //console.info('changeConditionsBtn', this.conditions.getRawValue())
   }
 
-  and(action: 'add' | 'remove', key: string, id: number, index: number) {
+  setConditions(action: 'add' | 'remove', key: string, id: number, index: number) {
     let fg = this.conditions.at(index) as FormGroup;
     if (action === 'add') {
       fg.setControl(`${key + id}`, new FormControl(null, Validators.required));
     } else {
       fg.removeControl(`${key}`);
     }
-    //console.info('and', this.conditions.getRawValue())
+    //console.info('setConditions', this.conditions.getRawValue())
   }
+  //#endregion
 
-
-  get conditions(): FormArray {
-    return this.validateForm.get('conditionSettingQuery') as FormArray
-  }
-
-  uploadFile(event: any) {
+  //#region 檔案上傳驗證
+  onFileSelected(event: any) {
     const file: File = event.target.files[0];
-    if (file) {
-      this.isFile = true;
-      this.fileName = file.name;
-      //this.validateFileSize(event, this.maxSizeInMB)
-      //this.validateForm.updateValueAndValidity();
-      // const uploadFile = this.validateForm.get('uploadFile');
-      // const uploadFile_Form = uploadFile as FormControl;
-
-      // if (!TagAddComponent.isPassFile(file)) {
-      //   this.isFile = false;
-      // }
+    const fileValidatorResult = this.fileValidator(file);
+    this.fileName = CommonUtil.isBlank(file?.name) ? '請上傳檔案' : file.name;
+    if (fileValidatorResult !== null) {
+      this.validateForm.get('uploadFile').setErrors(fileValidatorResult);
+      return
+    } else {
+      this.validateForm.get('uploadFile').setErrors(null);
     }
   }
 
-  //檔案大小限制
-  // validateFileSize(event: any, maxSizeInMB: number) {
-  //   const file = event.target.files[0];
-  //   const maxSize = maxSizeInMB * 1024 * 1024; // MB
-  //   if (file && file.size < maxSize) {
-  //     this.isFileSize = true;
-  //   } else {
-  //     this.isFileSize = false;
-  //   }
-  // }
+  fileValidator(file: File): { [key: string]: any } | null {
+    if (!file) {
+      return { uploadFileMsg: '未選擇檔案' };
+    }
 
-  // validateFileSize(control: AbstractControl) {
-  //   const file = control.value;
-  //   const maxSize = 5 * 1024 * 1024; // 5MB
-  //   if (file && file.size > maxSize) {
-  //     return { maxSize: true };
-  //   }
-  //   return null;
-  // }
+    // 驗證檔案大小
+    const fileSizeInMB = file.size / (1024 * 1024);
+    if (fileSizeInMB > this.maxSizeInMB) {
+      return { uploadFileMsg: '檔案大小超過5MB' };
+    }
 
-  //檔案限制(副檔名)
-  // validateFileType(control: AbstractControl): { [key: string]: boolean } | null {
-  //   const file: File = control.value;
-  //   if (file && !TagAddComponent.isPassFile(file)) {
-  //     return { invalidFormat: true };
-  //   }
-  //   return null;
-  // }
+    // 驗證檔案格式
+    const fileExt = file.name.split('.').pop().toLowerCase();
+    if (!this.passFileArray.includes(fileExt)) {
+      return { uploadFileMsg: '檔案格式錯誤' };
+    }
 
+    // 驗證通過，返回null表示驗證成功
+    return null;
+  }
+  //#endregion
+
+  //條件分佈級距彈出視窗
   conditionDialog() {
     this.dialogService.open(TagConditionDialogComponent, {
       title: '條件分佈級距',

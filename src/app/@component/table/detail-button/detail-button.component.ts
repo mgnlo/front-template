@@ -15,7 +15,7 @@ export class DetailButtonComponent<T> implements OnInit {
     let routerUrl = this.router.url;
     let preUrl = routerUrl.substring(0, routerUrl.lastIndexOf('-'));
     let url = preUrl + '-detail';
-    let directStrng = Object.keys(this.value).map(val => {
+    let directString = Object.keys(this.value).map(val => {
       switch (val) {
         case 'activityId':
         case 'historyId':
@@ -26,8 +26,8 @@ export class DetailButtonComponent<T> implements OnInit {
       }
     })[0];
     this.urlArr.push(url);
-    if (!!directStrng) {
-      this.urlArr.push(directStrng);
+    if (!!directString) {
+      this.urlArr.push(directString);
     }
     // console.info(this.urlArr)
   }

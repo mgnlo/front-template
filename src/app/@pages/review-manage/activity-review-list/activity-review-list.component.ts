@@ -22,11 +22,11 @@ import { LocalDataSource } from 'ng2-smart-table';
 export class ActivityReviewListComponent extends BaseComponent implements OnInit {
 
   constructor(
+    storageService: StorageService,
     private dateService: NbDateService<Date>,
-    private storageService: StorageService,
     private activatedRoute: ActivatedRoute,
-    private cdr: ChangeDetectorRef) {
-    super();
+    private cdr: ChangeDetectorRef,) {
+    super(storageService);
     // 篩選條件
     this.validateForm = new FormGroup({
       activityName: new FormControl(''),
@@ -48,15 +48,6 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
     this.storageService.getSessionFilter(this.sessionKey, this.validateForm).subscribe((res) => {
       if (res === true) { this.search(); }
     });
-  }
-
-  ngAfterViewInit(): void {
-    //get session page
-    let storage = this.storageService.getSessionVal(this.sessionKey);
-    if(!!storage?.page){
-      this.dataSource.setPage(storage.page);
-    }
-    this.cdr.detectChanges();
   }
 
   ngOnDestroy(): void {

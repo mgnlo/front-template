@@ -20,11 +20,11 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
   constructor(
-    private storageService: StorageService,
+    storageService: StorageService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
   ) {
-    super();
+    super(storageService);
     const currentNavigation = this.router.getCurrentNavigation();
     if (!!currentNavigation?.extras) {
       const state = currentNavigation.extras.state;
@@ -37,14 +37,6 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         //之後可能加導頁pop-up提醒
         this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-list']);
       }
-    }
-  }
-
-  ngAfterViewInit(): void {
-    //get session page
-    let storage = this.storageService.getSessionVal(this.sessionKey);
-    if (!!storage?.page) {
-      this.dataSource.setPage(storage.page);
     }
   }
 

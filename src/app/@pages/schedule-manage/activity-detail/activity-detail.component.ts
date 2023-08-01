@@ -21,21 +21,12 @@ export class ActivityDetailComponent extends BaseComponent implements OnInit {
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
   constructor(
+    storageService: StorageService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private storageService: StorageService,
   ) {
-    super();
+    super(storageService);
     this.params = this.activatedRoute.snapshot.params;
-    console.info('this.params', this.params)
-  }
-
-  ngAfterViewInit(): void {
-    //get session page
-    let storage = this.storageService.getSessionVal(this.sessionKey);
-    if (!!storage?.page) {
-      this.dataSource.setPage(storage.page);
-    }
   }
 
   ngOnDestroy(): void {

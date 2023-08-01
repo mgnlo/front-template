@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActivitySetting } from '@api/models/activity-list.model';
 import { TagDetailView, TagSetting } from '@api/models/tag-manage.model';
+import { StorageService } from '@api/services/storage.service';
 import { Status } from '@common/enums/common-enum';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
@@ -22,8 +23,8 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
 
   fileName:string = "";
 
-  constructor(private router: Router) {
-    super();
+  constructor(private router: Router, storageService: StorageService,) {
+    super(storageService);
     const currentNavigation = this.router.getCurrentNavigation();
     if (!!currentNavigation?.extras) {
       const state = currentNavigation.extras.state;
@@ -99,7 +100,7 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
         sort: false,
       },
     },
-    hideSubHeader: false, //起訖日查詢要用到
+    hideSubHeader: true, //起訖日查詢要用到
     actions: {
       add: false,
       edit: false,

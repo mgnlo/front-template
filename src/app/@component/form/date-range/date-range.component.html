@@ -4,7 +4,7 @@
     <div>
         <input nbInput fullWidth [status]="form.get('startDate').errors?.format || form.errors?.dateErrMsg ? 'danger' : 'basic'"
             placeholder="請選擇日期" [nbDatepicker]="startDatePicker" formControlName="startDate" (keyup)="fmtDate($event, 'startDate')" maxlength="10">
-        <nb-datepicker #startDatePicker [format]="dateFormat" [max]="form.get('endDate').value"></nb-datepicker>
+        <nb-datepicker #startDatePicker [format]="dateFormat"></nb-datepicker>
     </div>
     <!-- 欄位錯誤訊息 -->
     <div class="note errorText">
@@ -17,7 +17,7 @@
     <div>
         <input nbInput fullWidth [status]="form.get('endDate').errors?.format || form.errors?.dateErrMsg ? 'danger' : 'basic'"
             placeholder="請選擇日期" [nbDatepicker]="endDatePicker" formControlName="endDate" (keyup)="fmtDate($event, 'endDate')" maxlength="10">
-        <nb-datepicker #endDatePicker [format]="dateFormat" [min]="form.get('startDate').value"></nb-datepicker>
+        <nb-datepicker #endDatePicker [format]="dateFormat"></nb-datepicker>
     </div>
     <!-- 欄位錯誤訊息 -->
     <div class="note errorText">

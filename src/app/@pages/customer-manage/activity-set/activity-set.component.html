@@ -45,7 +45,7 @@
                     <div class="fieldGroup">
                         <div class="mb_0">
                             <nb-select fullWidth placeholder="請選擇" [formControlName]="''+con.key">
-                                <nb-option [value]="con.value">{{con.value}}</nb-option>
+                                <nb-option [value]="con.value" [id]="con.key">{{con.value}}</nb-option>
                                 <nb-option value="item2">item2</nb-option>
                             </nb-select>
                             <span class="and colorGreen">and</span>

@@ -25,6 +25,10 @@ export class ActivitySetting {
   scheduleSettings: string;
   batchUpdateTime: string;
   schedule_batch_history: Array<Schedule_Batch_History>;
+
+  constructor(data: Partial<ActivitySetting>) {
+    Object.assign(this, data);
+  }
 }
 
 export class Schedule_Batch_History {

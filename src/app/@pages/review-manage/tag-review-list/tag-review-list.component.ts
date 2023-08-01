@@ -4,6 +4,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TagReviewHistory, TagSetting } from '@api/models/tag-manage.model';
 import { StorageService } from '@api/services/storage.service';
+import { RestStatus } from '@common/enums/rest-enum';
 import { ReviewClass, ReviewStatus } from '@common/enums/review-enum';
 import { TagType } from '@common/enums/tag-enum';
 import { TagReviewListMock } from '@common/mock-data/tag-review-mock';
@@ -13,6 +14,7 @@ import { NbDateService } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
+import { ReviewManageService } from '../review-manage.service';
 
 @Component({
   selector: 'tag-review-list',
@@ -22,12 +24,13 @@ import { LocalDataSource } from 'ng2-smart-table';
 export class TagReviewListComponent extends BaseComponent implements OnInit {
 
   constructor(
+    storageService: StorageService,
     private dateService: NbDateService<Date>,
-    private storageService: StorageService,
     private activatedRoute: ActivatedRoute,
     private cdr: ChangeDetectorRef,
+    private reviewManageService: ReviewManageService,
   ) {
-    super();
+    super(storageService);
     // 篩選條件
     this.validateForm = new FormGroup({
       tagName: new FormControl(''),
@@ -49,15 +52,12 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
     this.storageService.getSessionFilter(this.sessionKey, this.validateForm).subscribe((res) => {
       if (res === true) { this.search(); }
     });
-  }
-  
-  ngAfterViewInit(): void {
-    //get session page
-    let storage = this.storageService.getSessionVal(this.sessionKey);
-    if(!!storage?.page){
-      this.dataSource.setPage(storage.page);
-    }
-    this.cdr.detectChanges();
+
+    this.reviewManageService.getTagReviewList().subscribe((res) => {
+      if(res.code === RestStatus.SUCCESS){
+        console.info(res.message);
+      }
+    })
   }
 
   ngOnDestroy(): void {

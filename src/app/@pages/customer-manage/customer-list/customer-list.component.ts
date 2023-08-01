@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { CustomerList } from '@api/models/customer-list.model';
 import { DialogService } from '@api/services/dialog.service';
+import { StorageService } from '@api/services/storage.service';
 import { CustomerListMock } from '@common/mock-data/customer-list-mock';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
@@ -16,8 +17,8 @@ import { DetailDialogComponent } from './detail-dialog/detail.dialog.component';
 })
 export class CustomerListComponent extends BaseComponent implements OnInit {
 
-  constructor() {
-    super();
+  constructor(storageService: StorageService,) {
+    super(storageService);
     // 篩選條件
     this.validateForm = new FormGroup({
       customerId: new FormControl('', [ValidatorsUtil.searchCustId]),

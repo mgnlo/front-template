@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { StorageService } from '@api/services/storage.service';
 import { CustomerListMock } from '@common/mock-data/customer-list-mock';
 import { NbDialogRef } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
@@ -33,8 +34,11 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
     ['asc', '升冪'],
     ['desc', '降冪'],
   ]);
-  constructor(private ref: NbDialogRef<PreviewDialogComponent>) {
-    super();
+  constructor(
+    storageService: StorageService,
+    private ref: NbDialogRef<PreviewDialogComponent>,
+  ) {
+    super(storageService);
     this.validateForm = new FormGroup({
       listLimit: new FormControl('150', Validators.required),
       orderBy: new FormControl(110),
@@ -45,7 +49,7 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
   ngOnInit() {
     this.dataSource = new LocalDataSource();
     this.dataSource.load(CustomerListMock);
-    if(!!this.dataList['listLimit']){
+    if (!!this.dataList['listLimit']) {
       this.validateForm.get('listLimit').setValue(this.dataList['listLimit']);
     }
     console.info(this.dataList);
@@ -54,7 +58,7 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
   gridDefine = {
     pager: {
       display: true,
-      perPage: 10,          
+      perPage: 10,
     },
     columns: {
       customerId: {
