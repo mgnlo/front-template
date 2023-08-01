@@ -7,7 +7,7 @@ import { Observable } from "rxjs";
 @Injectable()
 export class CustomerManageService {
 
-    private readonly activityFunc = 'activity-settings/';
+    readonly activityFunc = 'activity-settings/';
 
     constructor(private service: ApiService) { }
 

@@ -1,14 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ConsoleGroup, GridInnerCheckBox } from '@api/models/console-group.model';
+import { StorageService } from '@api/services/storage.service';
 import { NbDateService } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
-import * as moment from 'moment';
-import { LocalDataSource } from 'ng2-smart-table';
+import { LocalDataSource, ServerDataSource } from 'ng2-smart-table';
 import { AccountManageService } from '../account.manage.service';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { is } from 'date-fns/locale';
-import { ValidationError } from 'ngx-awesome-uploader';
 
 @Component({
   selector: 'console-group-add',
@@ -98,11 +96,12 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
   };
 
   constructor(
+    storageService: StorageService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private accountManageService: AccountManageService,
     private dateService: NbDateService<Date>) {
-    super();
+    super(storageService);
 
     let mode = this.activatedRoute.snapshot.queryParamMap.get("mode");
 

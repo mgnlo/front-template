@@ -3,6 +3,7 @@ import { ActivatedRoute, Navigation, Router } from '@angular/router';
 import { ActivityDetail, ActivitySetting } from '@api/models/activity-list.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
+import { StorageService } from '@api/services/storage.service';
 import { RestStatus } from '@common/enums/rest-enum';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
@@ -24,13 +25,14 @@ export class ActivityDetailComponent extends BaseComponent implements OnInit {
   activityId: string;
 
   constructor(
+    storageService: StorageService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private service: CustomerManageService,
     private dialogService: DialogService,
     private loadingService: LoadingService,
   ) {
-    super();
+    super(storageService);
   }
 
   ngOnInit(): void {

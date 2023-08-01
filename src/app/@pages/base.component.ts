@@ -1,10 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
+import { StorageService } from '@api/services/storage.service';
 import { Paginator } from '@component/table/paginator/paginator.component';
 import { LocalDataSource } from 'ng2-smart-table';
 // import { OAuth2BaseComponent, OAuth2Service } from '@module/oauth2';
 import { Subject } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { first, takeUntil } from 'rxjs/operators';
 
 @Injectable()
 export class BaseComponent implements OnDestroy {
@@ -17,6 +18,9 @@ export class BaseComponent implements OnDestroy {
   isSubmit: boolean = false;   // 確認是否送出表單 -> 初始化時須設定為false
   validationMessages: any;     // 欄位檢核提示訊息 -> 初始化時須各別設定
   tmpCtrl: AbstractControl;    // 多層次使用
+  sessionKey: string;
+
+  constructor(public storageService: StorageService) { }
 
   ngOnDestroy(): void {
     this.unsubscribe$.next(undefined);
@@ -27,15 +31,20 @@ export class BaseComponent implements OnDestroy {
     this.updatePageInfo();
   }
 
-  getInvalidControls(){
+  getInvalidControls() {
     Object.keys(this.validateForm.controls).filter(ctl => this.validateForm.get(ctl).invalid).forEach(ctl => {
-      console.info(ctl+' is invalid, value:', this.validateForm.get(ctl).errors);
+      console.info(ctl + ' is invalid, value:', this.validateForm.get(ctl).errors);
     })
   }
 
   updatePageInfo() {
     if (!!this.dataSource) {
-      this.dataSource.onChanged().pipe(first()).subscribe((event) => {
+      this.dataSource.onChanged().pipe(takeUntil(this.unsubscribe$), first()).subscribe((event) => {
+        //get session page
+        let storage = this.storageService.getSessionVal(this.sessionKey);
+        if (!!storage?.page) {
+          this.dataSource.setPage(storage.page, true);
+        }
         this.paginator.totalCount = this.dataSource.count();
         let page = this.dataSource.getPaging().page;
         let perPage = this.dataSource.getPaging().perPage;

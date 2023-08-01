@@ -17,12 +17,12 @@ import { StorageService } from '@api/services/storage.service';
 })
 export class ScheduleListComponent extends BaseComponent implements OnInit {
   constructor(
+    storageService: StorageService,
     private scheduleManageService: ScheduleManageService,
-    private storageService: StorageService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
   ) {
-    super();
+    super(storageService);
   }
   scheduleSetting: Array<ScheduleSetting> = ScheduleSettingMock;
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
@@ -30,14 +30,6 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.dataSource = new LocalDataSource();
     this.dataSource.load(this.scheduleSetting);
-  }
-
-  ngAfterViewInit(): void {
-    //get session page
-    let storage = this.storageService.getSessionVal(this.sessionKey);
-    if (!!storage?.page) {
-      this.dataSource.setPage(storage.page);
-    }
   }
 
   ngOnDestroy(): void {

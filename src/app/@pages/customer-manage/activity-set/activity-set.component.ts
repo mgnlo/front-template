@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActivityListCondition, ActivitySettingEditReq, TagGroupView } from '@api/models/activity-list.model';
+import { ActivityListCondition, ActivitySettingEditReq } from '@api/models/activity-list.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
+import { StorageService } from '@api/services/storage.service';
 import { Filter, Schedule } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
 import { CommonUtil } from '@common/utils/common-util';
@@ -26,13 +27,14 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
   activityId: string;
 
   constructor(
+    storageService: StorageService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private dialogService: DialogService,
     private customerManageService: CustomerManageService,
     private loadingService: LoadingService,
     private changeDetectorRef: ChangeDetectorRef,) {
-    super();
+    super(storageService);
 
     this.validateForm = new FormGroup({
       activityName: new FormControl(null, Validators.required),

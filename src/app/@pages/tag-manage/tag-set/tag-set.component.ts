@@ -1,17 +1,18 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ActivitySetting } from '@api/models/activity-list.model';
+import { TagDetailView, TagSetting } from '@api/models/tag-manage.model';
+import { DialogService } from '@api/services/dialog.service';
+import { StorageService } from '@api/services/storage.service';
+import { MathSymbol, Status } from '@common/enums/common-enum';
 import { TagDimension, TagSetCondition, TagSubDimension, TagType } from '@common/enums/tag-enum';
-import { TagSetting, TagDetailView } from '@api/models/tag-manage.model';
-import { Filter, Status, Schedule, MathSymbol } from '@common/enums/common-enum';
+import { ActivityListMock } from '@common/mock-data/activity-list-mock';
+import { CommonUtil } from '@common/utils/common-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
-import { CommonUtil } from '@common/utils/common-util';
 import { LocalDataSource } from 'ng2-smart-table';
-import { ActivitySetting } from '@api/models/activity-list.model';
-import { ActivityListMock } from '@common/mock-data/activity-list-mock';
-import { DialogService } from '@api/services/dialog.service';
 import { TagConditionDialogComponent } from './condition-dialog/condition-dialog.component';
 
 @Component({
@@ -72,11 +73,13 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
 
-  constructor(private router: Router,
+  constructor(
+    storageService: StorageService,
+    private router: Router,
     private activatedRoute: ActivatedRoute,
     private readonly changeDetectorRef: ChangeDetectorRef,
     private dialogService: DialogService) {
-    super();
+    super(storageService);
     this.validateForm = new FormGroup({
       tagName: new FormControl(null, Validators.required),
       status: new FormControl('enabled', Validators.required),

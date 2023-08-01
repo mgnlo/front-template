@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivityListCondition, ActivitySetting } from '@api/models/activity-list.model';
+import { StorageService } from '@api/services/storage.service';
 import { Frequency, Status } from '@common/enums/common-enum';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
@@ -47,9 +48,10 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   }
 
   constructor(private router: Router,
+    storageService: StorageService,
     private activatedRoute: ActivatedRoute,
     private readonly changeDetectorRef: ChangeDetectorRef) {
-    super();
+    super(storageService);
 
     this.validateForm = new FormGroup({
       jobName: new FormControl(null, Validators.required),

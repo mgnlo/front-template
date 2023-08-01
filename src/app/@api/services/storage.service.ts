@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { LocalDataSource } from 'ng2-smart-table';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -47,6 +48,7 @@ export class StorageService {
     }
   }
 
+  /** 取得session暫存的查詢條件 */
   getSessionFilter(sessionKey: string, form: FormGroup): BehaviorSubject<boolean> {
     let result$ = new BehaviorSubject(false);
     let storage = this.getSessionVal(sessionKey);
@@ -58,6 +60,17 @@ export class StorageService {
           form.get(key).setValue(storage.filter[key]);
         }
       })
+      result$.next(true);
+    }
+    return result$;
+  }
+
+  /** 取得session暫存的table頁數 */
+  getSessionPage(sessionKey: string, dataSource: LocalDataSource): BehaviorSubject<boolean> {
+    let result$ = new BehaviorSubject(false);
+    let storage = this.getSessionVal(sessionKey);
+    if(!!dataSource && !!storage?.page){
+      dataSource.setPage(storage.page);
       result$.next(true);
     }
     return result$;

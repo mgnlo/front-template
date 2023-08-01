@@ -24,13 +24,13 @@ import { ReviewManageService } from '../review-manage.service';
 export class TagReviewListComponent extends BaseComponent implements OnInit {
 
   constructor(
+    storageService: StorageService,
     private dateService: NbDateService<Date>,
-    private storageService: StorageService,
     private activatedRoute: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private reviewManageService: ReviewManageService,
   ) {
-    super();
+    super(storageService);
     // 篩選條件
     this.validateForm = new FormGroup({
       tagName: new FormControl(''),
@@ -58,15 +58,6 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
         console.info(res.message);
       }
     })
-  }
-  
-  ngAfterViewInit(): void {
-    //get session page
-    let storage = this.storageService.getSessionVal(this.sessionKey);
-    if(!!storage?.page){
-      this.dataSource.setPage(storage.page);
-    }
-    this.cdr.detectChanges();
   }
 
   ngOnDestroy(): void {

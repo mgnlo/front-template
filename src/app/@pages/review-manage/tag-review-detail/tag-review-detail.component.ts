@@ -3,6 +3,7 @@ import { Navigation, Router } from '@angular/router';
 import { ActivitySetting } from '@api/models/activity-list.model';
 import { HistoryGroupView, TagDetailView, TagReviewHistory } from '@api/models/tag-manage.model';
 import { DialogService } from '@api/services/dialog.service';
+import { StorageService } from '@api/services/storage.service';
 import { Status } from '@common/enums/common-enum';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { TagSettingMock } from '@common/mock-data/tag-list-mock';
@@ -30,8 +31,8 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   reviewComment: string;
   mockData: Array<ActivitySetting> = ActivityListMock;
 
-  constructor(private router: Router, private dialogService: DialogService) {
-    super();
+  constructor(storageService: StorageService, private router: Router, private dialogService: DialogService,) {
+    super(storageService);
     if (!!this.router.getCurrentNavigation()?.extras) {
       let tagReview = this.router.getCurrentNavigation().extras.state as TagReviewHistory;
       let list = TagSettingMock.filter(row => row.tagId === tagReview.referenceId)[0];

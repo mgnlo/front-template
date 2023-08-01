@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting } from '@api/models/activity-list.model';
@@ -23,14 +23,13 @@ import { CustomerManageService } from '../customer-manage.service';
 export class ActivityListComponent extends BaseComponent implements OnInit {
 
   constructor(
+    storageService: StorageService,
     private router: Router,
     private dateService: NbDateService<Date>,
-    private storageService: StorageService,
     private activatedRoute: ActivatedRoute,
     private customerManageService: CustomerManageService,
-    private loadingService: LoadingService,
-    private cdr: ChangeDetectorRef) {
-    super();
+    private loadingService: LoadingService,) {
+    super(storageService);
     // 篩選條件
     this.validateForm = new FormGroup({
       activityName: new FormControl(''),
@@ -39,15 +38,15 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
       endDate: new FormControl(null, ValidatorsUtil.dateFmt),
     }, [ValidatorsUtil.dateRange]);
 
+    this.sessionKey = this.activatedRoute.snapshot.routeConfig.path;
   }
 
-  statusList: Array<{ key: string; val: string }> = Object.entries(Status).map(([k, v]) => ({ key: k, val: v }))
-  sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
+  statusList: Array<{ key: string; val: string }> = Object.entries(Status).map(([k, v]) => ({ key: k, val: v }));
 
   ngOnInit(): void {
     this.loadingService.open();
     this.customerManageService.getActivitySettingSearch().subscribe((res) => {
-      if(res.code === RestStatus.SUCCESS){
+      if (res.code === RestStatus.SUCCESS) {
         res.result = res.result.map(row => {
           return { ...row, during: `${row.startDate}~${row.endDate}` } //起訖日查詢篩選要用到
         })
@@ -62,17 +61,6 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
         this.loadingService.close();
       }
     })
-  }
-
-  ngAfterViewInit(): void {
-    this.loadingService.open();
-    //get session page
-    let storage = this.storageService.getSessionVal(this.sessionKey);
-    if(!!this.dataSource && !!storage?.page){
-      this.dataSource.setPage(storage.page);
-    }
-    this.cdr.detectChanges();
-    this.loadingService.close();
   }
 
   ngOnDestroy(): void {
