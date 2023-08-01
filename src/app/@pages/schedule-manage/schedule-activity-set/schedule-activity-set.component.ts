@@ -43,9 +43,10 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   //預設檔案存放地方
   filePathList: Array<{ key: string; val: string }> = [{ key: 'path_A', val: 'A://' }, { key: 'path_B', val: 'B:/' }, { key: 'path_C', val: 'C:\\' }];
 
-  //預設活動名單
-  activityListMock: Array<ActivitySetting> = ActivityListMock;//Call API
-  activityList: Array<{ key: string; val: string }> = this.activityListMock.map(m => ({ key: m.activityId, val: m.activityName }))
+  //預設pup-up活動名單
+  activityListMockData: Array<ActivitySetting> = ActivityListMock;//Call API
+  activityList: Array<{ key: string; val: string }> = this.activityListMockData.map(m => ({ key: m.activityId, val: m.activityName }))
+  filterActivityList: Array<{ key: string; val: string }> = new Array;
 
   //預設名單列表
   scheduleSetting: Array<ScheduleSetting> = ScheduleSettingMock;
@@ -199,21 +200,40 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   }
   //#endregion
 
+  //#region 新增
+  add() {
+    this.getFilterActivityList();
+    if (this.filterActivityList.length > 0) {
+      this.dialogService.open(PreviewDialogComponent, {
+        title: '設定名單內容',
+        dataList: this.filterActivityList,
+      }).onClose.subscribe((selectedData: { key: string; val: string }) => {
+        console.log('filterActivityList', this.filterActivityList);
+        console.log('activityList', this.activityList);
+        console.log('接收到的選擇資料：', selectedData);
+
+        // 在這裡處理接收到的選擇資料，可以根據需要進行相應的處理
+        // 例如將資料加入到其他地方、更新畫面、發送到後端等等
+      });;
+    }
+  }
+
+  getFilterActivityList(){
+    this.filterActivityList = this.activityList.filter(item =>
+      !this.scheduleActivitySetting.some(setting => setting.activityId === item.key)
+    );
+  }
+  //#endregion
+
   ngOnInit(): void {
     this.dataSource = new LocalDataSource();
-    this.scheduleActivitySetting = ScheduleSettingMock?.find(f => f.scheduleId === this.params['scheduleId'])?.activitySetting as Array<ScheduleActivitySetting> ?? new Array<ScheduleActivitySetting>();
+    this.scheduleActivitySetting = this.scheduleSetting?.find(f => f.scheduleId === this.params['scheduleId'])?.activitySetting as Array<ScheduleActivitySetting> ?? new Array<ScheduleActivitySetting>();
+    this.getFilterActivityList();
     this.dataSource.load(this.scheduleActivitySetting);
   }
 
   ngAfterViewChecked(): void {
     this.changeDetectorRef.detectChanges();
-  }
-
-  add() {
-    this.dialogService.open(PreviewDialogComponent, {
-      title: '設定名單內容',
-      //dataList: this.activitySetting,
-    });
   }
 
   cancel() {

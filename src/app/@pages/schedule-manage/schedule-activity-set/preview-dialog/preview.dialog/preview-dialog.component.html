@@ -1,16 +1,36 @@
-<nb-card class="list-card" nbSpinnerStatus="info" nbSpinnerSize="giant">
+<nb-card class="list-card"  nbSpinnerStatus="info" nbSpinnerSize="giant">
   <nb-card-header class="text-h-center">
     <p>{{title}}</p>
   </nb-card-header>
-  <nb-card-body>
+  <nb-card-body [formGroup]="validateForm">
     <div class="row">
-      <div class="textGroup col-12 col-lg-12">
-          <p class="textBold">您可以加入尚未設定排程的名單列表</p>
+          <p>您可以加入尚未設定排程的名單列表</p>
+    </div>
+    <div class="row">
+      <!-- <div class="textGroup col-12 col-lg-12" > -->
+      <div class="fieldGroup essential col-12 col-lg-12" [ngClass]="{'error': validateForm.invalid}">
+        <label>名單列表</label>
+        <div>
+          <input nbInput fullWidth type="text"  placeholder="請輸入或選擇"[nbAutocomplete]="auto"
+          [status]="validateForm.invalid ? 'danger' : 'basic'"
+          (input)="onActivityChange($event)" formControlName="activityName"/>
+          <nb-autocomplete #auto (selectedChange)="onActivitySelectChange($event)">
+            <nb-option *ngFor="let activity of filterDataList" [value]="activity.val" [id]="activity.key">{{ activity.val }}</nb-option>
+          </nb-autocomplete>
+        </div>
+        <div class="note errorText">
+          <nb-icon icon="alert-triangle"></nb-icon>
+          <p>{{validateForm.get('activityName')?.errors?.activityErrMsg}}</p>
+        </div>
       </div>
     </div>
   </nb-card-body>
   <nb-card-footer>
-    <button nbButton status="basic" size="medium" (click)="close()">關閉</button>
+    <div class="btnGroup">
+      <button nbButton status="basic" size="medium" (click)="close()">關閉</button>
+      <button nbButton status="info" size="medium" (click)="submit()"
+      [disabled]="validateForm.get('activityName')?.value??''===''||validateForm.invalid">送出</button>
+    </div>
   </nb-card-footer>
 </nb-card>
 
