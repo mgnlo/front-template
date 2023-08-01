@@ -1,29 +1,50 @@
-import { AfterViewInit, Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import { PieSeriesData } from '@api/models/dashboard.model';
 import { NbThemeService } from '@nebular/theme';
+
+import * as echarts from 'echarts';
 
 @Component({
 	selector: 'ngx-echarts-doughnut',
 	template: `
-    <div echarts [options]="options" class="echart"></div>
+    <div #echartsContainer echarts [options]="options" class="echart"></div>
   `,
 })
 export class EchartsDoughnutComponent implements AfterViewInit, OnDestroy {
+	@ViewChild('echartsContainer', { static: true }) echartsContainer!: ElementRef;
+	
+	private _data: Array<PieSeriesData>;
+
+	get data(): Array<PieSeriesData> {
+		return this._data;
+	}
+
+	@Input() set data(value: Array<PieSeriesData>) {
+		this._data = value;
+		this.refresh();
+	}
+
+
 	options: any = {};
 	themeSubscription: any;
-
-
-	public data = [
-		{ value: 335, name: '排程' },
-		{ value: 310, name: '標籤' },
-		{ value: 234, name: '名單' },
-	];
+	chart: echarts.ECharts;
+	reviewCaseNames = [];
 
 	constructor(private theme: NbThemeService) {
 	}
 
 	ngAfterViewInit() {
-		this.themeSubscription = this.theme.getJsTheme().subscribe(config => {
+		this.prepareOption();
+		this.chart = echarts.init(this.echartsContainer.nativeElement);
+	}
 
+	prepareOption(){
+		if(this.themeSubscription){
+			this.themeSubscription.unsubscribe();
+		}
+
+		this.data.filter(item => this.reviewCaseNames.push(item.name));
+		this.themeSubscription = this.theme.getJsTheme().subscribe(config => {
 			const colors = config.variables;
 			const echarts: any = config.variables.echarts;
 
@@ -37,7 +58,7 @@ export class EchartsDoughnutComponent implements AfterViewInit, OnDestroy {
 				legend: {
 					orient: 'vertical',
 					left: 'left',
-					data: ['排程', '標籤', '名單'],
+					data: this.reviewCaseNames,
 					textStyle: {
 						color: echarts.textColor,
 					},
@@ -60,7 +81,7 @@ export class EchartsDoughnutComponent implements AfterViewInit, OnDestroy {
 							formatter: function (params: { name: string; percent: any; }) {
 								let arr = [
 									'{name|' + params.name + '}',
-									'{value| ' + params.percent! * 2 + '%}'
+									'{value| ' + params.percent + '%}'
 								];
 								return arr.join('\n');
 							},
@@ -98,5 +119,12 @@ export class EchartsDoughnutComponent implements AfterViewInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.themeSubscription.unsubscribe();
+	}
+
+	refresh() {
+		if(this.chart){
+			this.reviewCaseNames = []
+			this.prepareOption();
+		}
 	}
 }
