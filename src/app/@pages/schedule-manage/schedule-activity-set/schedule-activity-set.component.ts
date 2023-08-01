@@ -44,8 +44,8 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   filePathList: Array<{ key: string; val: string }> = [{ key: 'path_A', val: 'A://' }, { key: 'path_B', val: 'B:/' }, { key: 'path_C', val: 'C:\\' }];
 
   //預設pup-up活動名單
-  activityListMockData: Array<ActivitySetting> = ActivityListMock;//Call API
-  activityList: Array<{ key: string; val: string }> = this.activityListMockData.map(m => ({ key: m.activityId, val: m.activityName }))
+  activityListSetting: Array<ActivitySetting> = ActivityListMock;//Call API
+  activityList: Array<{ key: string; val: string }> = this.activityListSetting.map(m => ({ key: m.activityId, val: m.activityName }))
   filterActivityList: Array<{ key: string; val: string }> = new Array;
 
   //預設名單列表
@@ -97,7 +97,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       activityName: {
         title: '活動名稱',
         type: 'html',
-        class: 'col-5 left',
+        class: 'col-3 left',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
@@ -106,7 +106,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       activityDescription: {
         title: '活動說明',
         type: 'html',
-        class: 'col-2 left',
+        class: 'col-3 left',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
@@ -133,15 +133,17 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       },
       filterOptions: {
         title: '更新結果',
-        type: 'string',
-        class: 'col-2 alignCenter',
+        type: 'html',
+        class: 'col-1 alignCenter',
         valuePrepareFunction: (cell: string) => {
-          return StatusResult[cell.toLowerCase()];
+          const cellLow = cell?.toLowerCase();
+          return cellLow === 'true' ? StatusResult[cellLow] : `<p class="colorRed textBold">${StatusResult[cellLow]}</p>`;
         },
         sort: false,
       },
       delete: {
-        title: 'Delete',
+        title: '移除',
+        class: 'col-1',
         type: 'custom',
         renderComponent: DeleteButtonComponent,
         onComponentInitFunction: (instance) => {
@@ -149,6 +151,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
             this.onDeleteConfirm(row); // 訂閱自訂刪除按鈕組件的 delete 事件，觸發 onDeleteConfirm 方法
           });
         },
+        sort: false,
       },
     },
     hideSubHeader: true,
@@ -194,6 +197,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     const index = this.scheduleActivitySetting.findIndex(item => item.activityId === row.activityId);
     if (index !== -1) {
       this.scheduleActivitySetting.splice(index, 1);
+      this.refreshFilterActivityList();
       this.dataSource.load(this.scheduleActivitySetting);
     }
     //}
@@ -202,23 +206,37 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   //#region 新增
   add() {
-    this.getFilterActivityList();
+    this.refreshFilterActivityList();
     if (this.filterActivityList.length > 0) {
       this.dialogService.open(PreviewDialogComponent, {
         title: '設定名單內容',
         dataList: this.filterActivityList,
       }).onClose.subscribe((selectedData: { key: string; val: string }) => {
-        console.log('filterActivityList', this.filterActivityList);
-        console.log('activityList', this.activityList);
-        console.log('接收到的選擇資料：', selectedData);
-
-        // 在這裡處理接收到的選擇資料，可以根據需要進行相應的處理
-        // 例如將資料加入到其他地方、更新畫面、發送到後端等等
+        if (!!selectedData) {
+          const findData = this.activityListSetting.find(f => f.activityId === selectedData.key);
+          this.scheduleActivitySetting.push(new ScheduleActivitySetting({
+            activityId: findData?.activityId,
+            version: findData?.version,
+            activityName: findData?.activityName,
+            activityDescription: findData?.activityDescription,
+            filterOptions: findData?.filterOptions,
+            listLimit: findData?.listLimit,
+            status: findData?.status,
+            startDate: findData?.startDate,
+            endDate: findData?.endDate,
+            createTime: findData?.createTime,
+            modificationTime: findData?.modificationTime,
+            scheduleSettings: findData?.scheduleSettings,
+            batchUpdateTime: findData?.batchUpdateTime,
+          }))
+          this.refreshFilterActivityList();
+          this.dataSource.load(this.scheduleActivitySetting);
+        }
       });;
     }
   }
 
-  getFilterActivityList(){
+  refreshFilterActivityList() {
     this.filterActivityList = this.activityList.filter(item =>
       !this.scheduleActivitySetting.some(setting => setting.activityId === item.key)
     );
@@ -228,7 +246,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.dataSource = new LocalDataSource();
     this.scheduleActivitySetting = this.scheduleSetting?.find(f => f.scheduleId === this.params['scheduleId'])?.activitySetting as Array<ScheduleActivitySetting> ?? new Array<ScheduleActivitySetting>();
-    this.getFilterActivityList();
+    this.refreshFilterActivityList();
     this.dataSource.load(this.scheduleActivitySetting);
   }
 
