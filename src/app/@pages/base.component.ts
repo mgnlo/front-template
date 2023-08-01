@@ -5,7 +5,7 @@ import { Paginator } from '@component/table/paginator/paginator.component';
 import { LocalDataSource } from 'ng2-smart-table';
 // import { OAuth2BaseComponent, OAuth2Service } from '@module/oauth2';
 import { Subject } from 'rxjs';
-import { first, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 
 @Injectable()
 export class BaseComponent implements OnDestroy {
@@ -20,7 +20,7 @@ export class BaseComponent implements OnDestroy {
   tmpCtrl: AbstractControl;    // 多層次使用
   sessionKey: string;
 
-  constructor(public storageService: StorageService) { }
+  constructor(protected storageService: StorageService) { }
 
   ngOnDestroy(): void {
     this.unsubscribe$.next(undefined);
@@ -39,7 +39,7 @@ export class BaseComponent implements OnDestroy {
 
   updatePageInfo() {
     if (!!this.dataSource) {
-      this.dataSource.onChanged().pipe(takeUntil(this.unsubscribe$), first()).subscribe((event) => {
+      this.dataSource.onChanged().pipe(takeUntil(this.unsubscribe$)).subscribe((event) => {
         //get session page
         let storage = this.storageService.getSessionVal(this.sessionKey);
         if (!!storage?.page) {
