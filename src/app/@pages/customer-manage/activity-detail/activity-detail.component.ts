@@ -28,7 +28,7 @@ export class ActivityDetailComponent extends BaseComponent implements OnInit {
     storageService: StorageService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private service: CustomerManageService,
+    private customerManageService: CustomerManageService,
     private dialogService: DialogService,
     private loadingService: LoadingService,
   ) {
@@ -38,7 +38,7 @@ export class ActivityDetailComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.activityId = this.activatedRoute.snapshot.params.activityId;
     this.loadingService.open();
-    this.service.getActivitySettingGet(this.activityId).pipe(
+    this.customerManageService.getActivitySettingRow(this.activityId).pipe(
       catchError(err => {
         this.loadingService.close();
         this.dialogService.alertAndBackToList(false, '查無此筆資料，將為您導回客群活動名單', ['pages', 'customer-manage', 'activity-list']);

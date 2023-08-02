@@ -14,6 +14,7 @@ export class DropdownComponent implements OnInit {
   @Input() form: FormGroup;
   @Input() ctlName: string;
   @Input() selectList?: {options: any, key: string|number, val: string};
+  /** 有enumName就會以此做enum的對應, 沒enumName就會用ctlName做對應 */
   @Input() enumName?: string;
   @Input() placeholder?: string = '全部';
   @Output() valueChange? = new EventEmitter<any>();

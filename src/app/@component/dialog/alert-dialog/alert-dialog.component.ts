@@ -6,7 +6,7 @@ import { map, takeWhile } from 'rxjs/operators';
 
 export class AlertDialogOption {
   isSuccess: boolean;
-  backTo: string[];
+  backTo?: string[];
   content: string;
 }
 @Component({
@@ -25,7 +25,9 @@ export class AlertDialogComponent implements OnInit {
       map(val => 1 - val),
       takeWhile(x => x >= 0)
     ).subscribe(() => {
-      this.router.navigate(this.option.backTo);
+      if(this.option?.backTo){
+        this.router.navigate(this.option.backTo);
+      }
       this.ref.close();
     })
   }

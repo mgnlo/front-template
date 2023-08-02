@@ -1,13 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting } from '@api/models/activity-list.model';
 import { TagDetailView, TagSetting } from '@api/models/tag-manage.model';
+import { DialogService } from '@api/services/dialog.service';
+import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
 import { Status } from '@common/enums/common-enum';
+import { RestStatus } from '@common/enums/rest-enum';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
+import { catchError, filter, tap } from 'rxjs/operators';
+import { TagManageService } from '../tag-manage.service';
 
 @Component({
   selector: 'tag-detail',
@@ -20,28 +25,36 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
   mockData: Array<ActivitySetting> = ActivityListMock;
 
   isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
+  tagId: string;
 
-  fileName:string = "";
+  fileName: string = "";
 
-  constructor(private router: Router, storageService: StorageService,) {
+  constructor(
+    storageService: StorageService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private tagManageService: TagManageService,
+    private dialogService: DialogService,
+    private loadingService: LoadingService,
+  ) {
     super(storageService);
-    const currentNavigation = this.router.getCurrentNavigation();
-    if (!!currentNavigation?.extras) {
-      const state = currentNavigation.extras.state;
-      const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistory', state as TagSetting); // 異動歷程處理
-      if (!!processedData) {
-        this.isHistoryOpen = processedData.isHistoryOpen;
-        this.detail = processedData.detail;
-      }
-      else{
-        //之後可能加導頁pop-up提醒
-        this.router.navigate(['pages', 'tag-manage', 'tag-list']);
-      }
-    }
+    // const currentNavigation = this.router.getCurrentNavigation();
+    // if (!!currentNavigation?.extras) {
+    //   const state = currentNavigation.extras.state;
+    //   const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistory', state as TagSetting); // 異動歷程處理
+    //   if (!!processedData) {
+    //     this.isHistoryOpen = processedData.isHistoryOpen;
+    //     this.detail = processedData.detail;
+    //   }
+    //   else{
+    //     //之後可能加導頁pop-up提醒
+    //     this.router.navigate(['pages', 'tag-manage', 'tag-list']);
+    //   }
+    // }
     //取得檔案名稱
-    if(!!this.detail.filePath){
-      this.fileName = this.detail.filePath.split('/').pop();
-    }
+    // if(!!this.detail.filePath){
+    //   this.fileName = this.detail.filePath.split('/').pop();
+    // }
 
   }
 
@@ -56,7 +69,7 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'col-2 left',
         sort: false,
-        valuePrepareFunction: (cell:string) => {
+        valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
       },
@@ -65,7 +78,7 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'col-3 left',
         sort: false,
-        valuePrepareFunction: (cell:string) => {
+        valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
       },
@@ -85,7 +98,7 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
         title: '狀態',
         type: 'string',
         class: 'col-1',
-        valuePrepareFunction: (cell:string) => {
+        valuePrepareFunction: (cell: string) => {
           return Status[cell];
         },
         sort: false,
@@ -94,7 +107,7 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
         title: '起訖時間',
         type: 'html',
         class: 'col-3',
-        valuePrepareFunction: (cell:any) => {
+        valuePrepareFunction: (cell: any) => {
           return `<span class="date">${cell}</span>`;
         },
         sort: false,
@@ -109,19 +122,43 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
   };
 
   ngOnInit(): void {
+    this.tagId = this.activatedRoute.snapshot.params.tagId;
+    this.loadingService.open();
+    this.tagManageService.getTagSettingRow(this.tagId).pipe(
+      catchError(err => {
+        this.loadingService.close();
+        this.dialogService.alertAndBackToList(false, '查無此筆資料，將為您導回標籤管理', ['pages', 'tag-manage', 'tag-list']);
+        throw new Error(err.message);
+      }),
+      filter(res => res.code === RestStatus.SUCCESS),
+      tap((res) => {
+
+        const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistory', res.result as TagSetting); // 異動歷程處理
+        if (!!processedData) {
+          this.isHistoryOpen = processedData.isHistoryOpen;
+          this.detail = processedData.detail;
+        }
+
+        //取得檔案名稱
+        if (!!this.detail.filePath) {
+          this.fileName = this.detail.filePath.split('/').pop();
+        }
+
+        this.loadingService.close();
+      }),
+    ).subscribe();
     this.dataSource = new LocalDataSource();
-    this.mockData = this.mockData.map(mock => {
-      return {...mock, during:`${mock.startDate}~${mock.endDate}`} //起訖日查詢篩選要用到
-    })
     this.dataSource.load(this.mockData);
   }
 
   edit() {
-    this.router.navigate(['pages', 'tag-manage', 'tag-set', 'edit', this.detail.tagId], { state: this.detail });
+    // this.router.navigate(['pages', 'tag-manage', 'tag-set', 'edit', this.detail.tagId], { state: this.detail });
+    this.router.navigate(['pages', 'tag-manage', 'tag-set', 'edit', this.detail.tagId]);
   }
 
   copy() {
-    this.router.navigate(['pages', 'tag-manage', 'tag-set', 'copy', this.detail.tagId], { state: this.detail });
+    // this.router.navigate(['pages', 'tag-manage', 'tag-set', 'copy', this.detail.tagId], { state: this.detail });
+    this.router.navigate(['pages', 'tag-manage', 'tag-set', 'copy', this.detail.tagId]);
   }
 
   cancel() {

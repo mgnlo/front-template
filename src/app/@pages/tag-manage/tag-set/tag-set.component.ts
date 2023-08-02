@@ -2,10 +2,12 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting } from '@api/models/activity-list.model';
-import { TagDetailView, TagSetting } from '@api/models/tag-manage.model';
+import { TagDetailView, TagSetting, TagSettingEditReq } from '@api/models/tag-manage.model';
 import { DialogService } from '@api/services/dialog.service';
+import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
 import { MathSymbol, Status } from '@common/enums/common-enum';
+import { RestStatus } from '@common/enums/rest-enum';
 import { TagDimension, TagSetCondition, TagSubDimension, TagType } from '@common/enums/tag-enum';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
@@ -13,6 +15,8 @@ import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
+import { catchError, filter, tap } from 'rxjs/operators';
+import { TagManageService } from '../tag-manage.service';
 import { TagConditionDialogComponent } from './condition-dialog/condition-dialog.component';
 
 @Component({
@@ -24,6 +28,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   TagType = TagType;
   SetCondition = TagSetCondition;
   Status = Status;
+  tagId: string;
 
   //預設狀態
   tagStatusList = [Status.enabled, Status.disabled];
@@ -78,6 +83,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private readonly changeDetectorRef: ChangeDetectorRef,
+    private tagManageService: TagManageService,
+    private loadingService: LoadingService,
     private dialogService: DialogService) {
     super(storageService);
     this.validateForm = new FormGroup({
@@ -215,7 +222,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
         sort: false,
       },
     },
-    hideSubHeader: false, //起訖日查詢要用到
+    hideSubHeader: true,
     actions: {
       add: false,
       edit: false,
@@ -225,10 +232,65 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.dataSource = new LocalDataSource();
-    this.mockData = this.mockData.map(mock => {
-      return { ...mock, during: `${mock.startDate}~${mock.endDate}` } //起訖日查詢篩選要用到
-    })
     this.dataSource.load(this.mockData);
+    this.tagId = this.activatedRoute.snapshot.params?.tagId;
+    if (!!this.tagId) {
+      const changeRouteName = this.params['changeRoute'] ?? "";
+      this.actionName = this.getActionName(changeRouteName);
+      const getRawValue = this.validateForm.getRawValue();
+      this.loadingService.open();
+      this.tagManageService.getTagSettingRow(this.tagId).pipe(
+        catchError(err => {
+          this.loadingService.close();
+          this.dialogService.alertAndBackToList(false, '查無該筆資料，將為您導回客群名單', ['pages', 'customer-manage', 'activity-list']);
+          throw new Error(err.message);
+        }),
+        filter(res => res.code === RestStatus.SUCCESS),
+        tap((res) => {
+          const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistory', res.result as TagSetting); // 異動歷程處理
+          Object.keys(res.result).forEach(key => {
+            if (!!this.validateForm.controls[key]) {
+              switch (key) {
+                case 'startDate':
+                case 'endDate':
+                  this.validateForm.controls[key].setValue(new Date(res.result[key]))
+                  break;
+                case 'conditionSettingQuery':
+                  this.conditions.removeAt(0);
+                  //這裡要改呀呀呀
+                  this.conditions.push(new FormGroup({
+                    id: new FormControl(0),
+                    ['detection_condition' + 0]: new FormControl(null, Validators.required),
+                    ['threshold_value' + 0]: new FormControl(null, Validators.required)
+                  }));
+                  // let groupData = CommonUtil.groupBy(editData[key], 'tagGroup');
+                  // Object.keys(groupData).forEach(key => {
+                  //   let fg = new FormGroup({});
+                  //   let condition = groupData[key] as Array<ActivityListCondition>;
+                  //   condition.forEach(con => {
+                  //     fg.setControl(con.tagKey.replace('tag-', ''), new FormControl(con.tagName, Validators.required));
+                  //   });
+                  //   this.conditions.push(fg);
+                  // })
+                  break;
+                default:
+                  this.validateForm.controls[key].setValue(res.result[key]);
+                  break;
+              }
+            }
+          });
+          if (!!processedData) {
+            if (changeRouteName === 'edit') {
+              this.isHistoryOpen = processedData.isHistoryOpen;
+              this.detail = processedData.detail;
+            }
+          }
+          this.loadingService.close();
+        })
+      ).subscribe(res => {
+        // console.info(res.result);
+      });
+    }
   }
 
   ngAfterViewChecked(): void {
@@ -353,6 +415,48 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   }
 
   submit() {
+    let valid = this.validateForm.valid;
+    let reqData: TagSettingEditReq = this.getRequestData();
+    if (valid && !this.tagId) {
+      this.loadingService.open();
+      this.tagManageService.createTagSetting(reqData).pipe(
+        catchError((err) => {
+          this.loadingService.close();
+          this.dialogService.alertAndBackToList(false, '新增失敗', ['pages', 'tag-manage', 'tag-list']);
+          throw new Error(err.message);
+        }),
+        tap(res => {
+          console.info(res)
+          this.loadingService.close();
+        })).subscribe(res => {
+          if (res.code === RestStatus.SUCCESS) {
+            this.dialogService.alertAndBackToList(true, '新增成功', ['pages', 'tag-manage', 'tag-list'])
+          }
+        });
+    } else if (valid && this.tagId) {
+      this.loadingService.open();
+      this.tagManageService.updateTagSetting(this.tagId, reqData).pipe(
+        catchError((err) => {
+          this.loadingService.close();
+          this.dialogService.alertAndBackToList(false, '編輯失敗', ['pages', 'tag-manage', 'tag-list']);
+          throw new Error(err.message);
+        }),
+        tap(res => {
+          console.info(res)
+          this.loadingService.close();
+        })).subscribe(res => {
+          if (res.code === RestStatus.SUCCESS) {
+            this.dialogService.alertAndBackToList(true, '編輯成功', ['pages', 'tag-manage', 'tag-list'])
+          }
+        });
+    }
+  }
+
+  getRequestData(): TagSettingEditReq {
+    let reqData: TagSettingEditReq = this.validateForm.getRawValue();
+    reqData.startDate = moment(reqData.startDate).format('YYYY-MM-DD');
+    reqData.endDate = moment(reqData.endDate).format('YYYY-MM-DD');
+    return reqData;
   }
 
 }
