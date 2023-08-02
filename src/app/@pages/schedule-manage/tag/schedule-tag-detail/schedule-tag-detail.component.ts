@@ -1,9 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { ScheduleBatchHistory } from '@api/models/schedule-tag.model';
+import { ScheduleBatchHistory, ScheduleTagSetting, ScheduleTagSettingView } from '@api/models/schedule-tag.model';
 import { StorageService } from '@api/services/storage.service';
 import { Status, StatusResult } from '@common/enums/common-enum';
+import { ScheduleTagSettingMock } from '@common/mock-data/schedule-tag-list-mock';
+import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
+import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({
   selector: 'schedule-tag-detail',
@@ -13,6 +16,10 @@ import { BaseComponent } from '@pages/base.component';
 export class ScheduleTagDetailComponent extends BaseComponent implements OnInit {
   enableMultiSelect: boolean = false;
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
+
+  //預設拉取資料
+  scheduleTagListSetting: Array<ScheduleTagSetting> = ScheduleTagSettingMock;//Call API
+  scheduleTagSettingView: Array<ScheduleTagSettingView> = new Array;
 
   constructor(
     storageService: StorageService,
@@ -29,21 +36,21 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
     },
     selectMode: 'single',
     columns: {
-      activityName: {
-        title: '活動名稱',
+      tagName: {
+        title: '標籤名稱',
         type: 'html',
         class: 'left',
-        width: '30%',
+        width: '27.5%',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
         sort: false
       },
-      activityDescription: {
-        title: '活動說明',
+      tagDescription: {
+        title: '標籤說明',
         type: 'html',
         class: 'left',
-        width: '30%',
+        width: '27.5%',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
@@ -59,19 +66,20 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
         },
         sort: false,
       },
-      batchUpdateTime: {
+      batchTime: {
         title: '批次更新時間',
         type: 'string',
-        width: '15%',
+        width: '20%',
         sort: false,
       },
-      filterOptions: {
+      batchResult: {
         title: '更新結果',
         type: 'html',
         width: '5%',
         valuePrepareFunction: (cell: string) => {
           const cellLow = cell?.toLowerCase();
-          return cellLow === 'true' ? StatusResult[cellLow] : `<p class="colorRed textBold">${StatusResult[cellLow]}</p>`;
+          if (CommonUtil.isBlank(cellLow)) return cellLow
+          return (cellLow === 'true' || cellLow === 'success') ? StatusResult[cellLow] : `<p class="colorRed textBold">${StatusResult[cellLow]}</p>`;
         },
         sort: false,
       },
@@ -79,7 +87,7 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
         title: '查看',
         type: 'custom',
         width: '1%',
-        valuePrepareFunction: (cell, row) => row,
+        valuePrepareFunction: (cell, row: ScheduleTagSetting) => row,
         renderComponent: ScheduleTagButtonComponent,
         sort: false,
       },
@@ -99,21 +107,21 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
     },
     selectMode: 'multi',
     columns: {
-      activityName: {
-        title: '活動名稱',
+      tagName: {
+        title: '標籤名稱',
         type: 'html',
         class: 'left',
-        width: '30%',
+        width: '27.5%',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
         sort: false
       },
-      activityDescription: {
-        title: '活動說明',
+      tagDescription: {
+        title: '標籤說明',
         type: 'html',
         class: 'left',
-        width: '30%',
+        width: '27.5%',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
@@ -129,19 +137,20 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
         },
         sort: false,
       },
-      batchUpdateTime: {
+      batchTime: {
         title: '批次更新時間',
         type: 'string',
-        width: '15%',
+        width: '20%',
         sort: false,
       },
-      filterOptions: {
+      batchResult: {
         title: '更新結果',
         type: 'html',
         width: '5%',
         valuePrepareFunction: (cell: string) => {
           const cellLow = cell?.toLowerCase();
-          return cellLow === 'true' ? StatusResult[cellLow] : `<p class="colorRed textBold">${StatusResult[cellLow]}</p>`;
+          if (CommonUtil.isBlank(cellLow)) return cellLow
+          return (cellLow === 'true' || cellLow === 'success') ? StatusResult[cellLow] : `<p class="colorRed textBold">${StatusResult[cellLow]}</p>`;
         },
         sort: false,
       },
@@ -149,7 +158,7 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
         title: '查看',
         type: 'custom',
         width: '1%',
-        valuePrepareFunction: (cell, row) => row,
+        valuePrepareFunction: (cell, row: ScheduleTagSetting) => row,
         renderComponent: ScheduleTagButtonComponent,
         sort: false,
       },
@@ -163,6 +172,41 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
   };
 
   ngOnInit(): void {
+    this.dataSource = new LocalDataSource();
+    this.scheduleTagListSetting.map(m => {
+      const latestBatchTimeModel = m.scheduleBatchHistory.reduce((latest, current) => {
+        const latestDate = new Date(latest.batchTime);
+        const currentDate = new Date(current.batchTime);
+        return (latestDate < currentDate) ? current : latest;
+      });
+      this.scheduleTagSettingView.push(new ScheduleTagSettingView({
+        tagId: m.tagId,
+        version: m.version,
+        tagName: m.tagName,
+        tagDescription: m.tagDescription,
+        tagType: m.tagType,
+        department: m.department,
+        owner: m.owner,
+        createTime: m.createTime,
+        modificationTime: m.modificationTime,
+        status: m.status,
+        startDate: m.startDate,
+        endDate: m.endDate,
+        conditionSettingMethod: m.conditionSettingMethod,
+        conditionSettingQuery: m.conditionSettingQuery,
+        tagDimension: m.tagDimension,
+        tagSubdimension: m.tagSubdimension,
+        scheduleSettings: m.scheduleSettings,
+        uploadType: m.uploadType,
+        filePath: m.filePath,
+        //拿最新一筆ScheduleBatchHistory
+        historyId: latestBatchTimeModel?.historyId,
+        batchTime: latestBatchTimeModel?.batchTime,
+        batchResult: latestBatchTimeModel?.batchResult,
+        batchResultCount: latestBatchTimeModel?.batchResultCount,
+      }))
+    })
+    this.dataSource.load(this.scheduleTagSettingView);
   }
 
   ngAfterViewInit(): void {
@@ -190,10 +234,6 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
 
   }
 
-  cancel() {
-    this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-list']);
-  }
-
 }
 
 
@@ -202,10 +242,8 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
   template: '<button nbButton ghost status="info" size="medium" (click)="search()"><nb-icon icon="search"></nb-icon></button>'
 })
 export class ScheduleTagButtonComponent implements OnInit {
-  params: any;//路由參數
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
-    this.params = this.activatedRoute.snapshot.params;
+  constructor(private router: Router) {
   }
 
   @Input() value: ScheduleBatchHistory;
@@ -214,6 +252,6 @@ export class ScheduleTagButtonComponent implements OnInit {
 
   search() {
     let passData: NavigationExtras = { state: this.value };
-    this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-export-detail', this.params.scheduleId, this.value.tagId], passData);
+    this.router.navigate(['pages', 'schedule-manage', 'schedule-tag-export-detail', this.value.tagId], passData);
   }
 }

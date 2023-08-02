@@ -1,1 +1,81 @@
-<p>schedule-tag-export-detail works!</p>
+<div class="pageTitle">
+  <h1>排程紀錄</h1>
+</div>
+<div class="pageContent">
+  <nb-card>
+    <nb-card-body>
+        <div class="row">
+          <div class="textGroup col-12 col-lg-4">
+              <p class="textBold">標籤名稱：</p>
+              <span>{{detail.tagName}}</span>
+          </div>
+          <div class="textGroup col-12 col-lg-4">
+              <p class="textBold">狀態：</p>
+              <span>{{detail.status?.toLowerCase() | enum:'status'}}</span>
+          </div>
+          <div class="textGroup col-12 col-lg-4">
+            <p class="textBold">類型：</p>
+            <span>{{detail.tagType?.toLowerCase() | enum:'tagType'}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="textGroup col-12 col-lg-4">
+            <p class="textBold">所屬單位：</p>
+            <span>{{detail.department}}</span>
+          </div>
+          <div class="textGroup col-12 col-lg-4">
+            <p class="textBold">負責人：</p>
+            <span>{{detail.owner}}</span>
+          </div>
+          <div class="textGroup col-12 col-lg-4">
+            <p class="textBold">起訖時間：</p>
+            <span>{{detail.startDate | date:dateFormat}}</span>
+            <span>~</span>
+            <span>{{detail.endDate | date:dateFormat}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="textGroup col-12 col-lg-4">
+            <p class="textBold">標籤構面：</p>
+            <span>{{detail.tagDimension}}</span>
+          </div>
+          <div class="textGroup col-12 col-lg-4">
+            <p class="textBold">標籤子構面：</p>
+            <span>{{detail.tagSubdimension}}</span>
+          </div>
+          <div class="textGroup col-12 col-lg-4">
+            <p class="textBold">異動時間：</p>
+            <span>{{detail.modificationTime | date:dateFormat}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="textGroup col-12 col-lg-12">
+            <p class="textBold">說明：</p>
+            <span>{{detail.tagDescription}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="textGroup code col-12">
+              <p class="textBold">條件設定：</p>
+              <pre>{{detail.conditionSettingQuery}}</pre>
+          </div>
+        </div>
+    </nb-card-body>
+  </nb-card>
+  <nb-card>
+    <nb-card-header>
+        <h2>名單紀錄</h2>
+    </nb-card-header>
+    <nb-card-body>
+      <div>
+        <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
+        <paginator [source]="dataSource" [paginator]="paginator"></paginator>
+      </div>
+    </nb-card-body>
+  </nb-card>
+  <div class="row">
+      <div class="btnGroup">
+          <button nbButton status="basic" size="medium" (click)="cancel()">返回</button>
+      </div>
+  </div>
+</div>
