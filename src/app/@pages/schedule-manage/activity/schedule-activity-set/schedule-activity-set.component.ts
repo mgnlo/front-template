@@ -7,7 +7,7 @@ import { StorageService } from '@api/services/storage.service';
 import { DialogService } from '@api/services/dialog.service';
 import { Frequency, Status, StatusResult } from '@common/enums/common-enum';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
-import { ScheduleSettingMock } from '@common/mock-data/schedule-list-mock';
+import { ScheduleSettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { Dictionary } from '@common/utils/dictionary';
 import { DeleteButtonComponent } from '@component/table/detail-button/delete-button.component';
@@ -15,7 +15,7 @@ import { DetailButtonComponent } from '@component/table/detail-button/detail-but
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
 import { PreviewDialogComponent } from './preview-dialog/preview.dialog/preview-dialog.component';
-import { ActivitySetting as ScheduleActivitySetting, ScheduleSetting } from '@api/models/schedule-manage.model';
+import { ScheduleActivitySetting, ActivitySetting as ScheduleActivitySettingModel,  } from '@api/models/schedule-activity.model';
 
 @Component({
   selector: 'schedule-activity-set',
@@ -50,8 +50,8 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   filterActivityList: Array<{ key: string; val: string }> = new Array;
 
   //預設名單列表
-  scheduleSetting: Array<ScheduleSetting> = ScheduleSettingMock;
-  scheduleActivitySetting: Array<ScheduleActivitySetting>;
+  ScheduleActivitySetting: Array<ScheduleActivitySetting> = ScheduleSettingMock;
+  ScheduleActivitySettingModel: Array<ScheduleActivitySettingModel>;
 
   constructor(private router: Router,
     storageService: StorageService,
@@ -196,11 +196,11 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   //#region 刪除按鈕
   onDeleteConfirm(row: { activityId: string; }): void {
     //if (window.confirm('確定要刪除這筆資料嗎？')) {
-    const index = this.scheduleActivitySetting.findIndex(item => item.activityId === row.activityId);
+    const index = this.ScheduleActivitySettingModel.findIndex(item => item.activityId === row.activityId);
     if (index !== -1) {
-      this.scheduleActivitySetting.splice(index, 1);
+      this.ScheduleActivitySettingModel.splice(index, 1);
       this.refreshFilterActivityList();
-      this.dataSource.load(this.scheduleActivitySetting);
+      this.dataSource.load(this.ScheduleActivitySettingModel);
     }
     //}
   }
@@ -216,7 +216,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       }).onClose.subscribe((selectedData: { key: string; val: string }) => {
         if (!!selectedData) {
           const findData = this.activityListSetting.find(f => f.activityId === selectedData.key);
-          this.scheduleActivitySetting.push(new ScheduleActivitySetting({
+          this.ScheduleActivitySettingModel.push(new ScheduleActivitySettingModel({
             activityId: findData?.activityId,
             version: findData?.version,
             activityName: findData?.activityName,
@@ -232,7 +232,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
             batchUpdateTime: findData?.batchUpdateTime,
           }))
           this.refreshFilterActivityList();
-          this.dataSource.load(this.scheduleActivitySetting);
+          this.dataSource.load(this.ScheduleActivitySettingModel);
         }
       });;
     }
@@ -240,16 +240,16 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   refreshFilterActivityList() {
     this.filterActivityList = this.activityList.filter(item =>
-      !this.scheduleActivitySetting.some(setting => setting.activityId === item.key)
+      !this.ScheduleActivitySettingModel.some(setting => setting.activityId === item.key)
     );
   }
   //#endregion
 
   ngOnInit(): void {
     this.dataSource = new LocalDataSource();
-    this.scheduleActivitySetting = this.scheduleSetting?.find(f => f.scheduleId === this.params['scheduleId'])?.activitySetting as Array<ScheduleActivitySetting> ?? new Array<ScheduleActivitySetting>();
+    this.ScheduleActivitySettingModel = this.ScheduleActivitySetting?.find(f => f.scheduleId === this.params['scheduleId'])?.activitySetting as Array<ScheduleActivitySettingModel> ?? new Array<ScheduleActivitySettingModel>();
     this.refreshFilterActivityList();
-    this.dataSource.load(this.scheduleActivitySetting);
+    this.dataSource.load(this.ScheduleActivitySettingModel);
   }
 
   ngAfterViewChecked(): void {

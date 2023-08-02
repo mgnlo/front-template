@@ -8,7 +8,7 @@
   </button>
 </div>
 <div class="pageContent">
-  <nb-card>
+  <nb-card *ngIf="detail">
       <nb-card-body>
           <div class="row">
             <div class="textGroup col-12 col-lg-4">
@@ -41,11 +41,13 @@
           <div class="row">
             <div class="textGroup col-12 col-lg-4">
               <p class="textBold">標籤構面：</p>
-              <span>{{detail.tagDimension | enum:'tagDimension'}}</span>
+              <!-- <span>{{detail.tagDimension | enum:'tagDimension'}}</span> -->
+              <span>{{detail.tagDimension}}</span>
             </div>
             <div class="textGroup col-12 col-lg-4">
               <p class="textBold">標籤子構面：</p>
-              <span>{{detail.tagSubDimension | enum:'tagSubDimension'}}</span>
+              <!-- <span>{{detail.tagSubDimension | enum:'tagSubDimension'}}</span> -->
+              <span>{{detail.tagSubDimension}}</span>
             </div>
             <div class="textGroup col-12 col-lg-4">
                 <p class="textBold">異動時間：</p>
@@ -73,10 +75,10 @@
           </div>
       </nb-card-body>
   </nb-card>
-  <nb-card>
+  <nb-card *ngIf="detail?.historyGroupView || !!dataSource">
     <nb-card-body>
         <nb-tabset>
-            <nb-tab tabTitle="異動歷程">
+            <nb-tab tabTitle="異動歷程" *ngIf="detail?.historyGroupView">
               <div class="historyList">
                 <ng-container *ngFor="let hg of detail.historyGroupView | keyvalue; let i=index;">
                     <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
@@ -100,7 +102,7 @@
                 </ng-container>
               </div>
             </nb-tab>
-            <nb-tab tabTitle="標籤使用範圍">
+            <nb-tab tabTitle="標籤使用範圍" *ngIf="!!dataSource">
                 <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
                 <paginator [source]="dataSource" [paginator]="paginator"></paginator>
             </nb-tab>

@@ -92,12 +92,6 @@ export interface HistoryGroupView {
   }[]
 }
 
-export class TagSettingListResp {
-  data: Array<TagSetting>;
-}
-export class TagSettingRowResp {
-  data: TagSetting;
-}
 export class TagSettingEditReq {
   TagName: string;
   status: string;

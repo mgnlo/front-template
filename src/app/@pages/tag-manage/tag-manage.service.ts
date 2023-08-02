@@ -1,8 +1,9 @@
-import { Injectable } from "@angular/core"
-import { Observable } from "rxjs"
-import { ApiService } from "@api/services/api.service";
+import { Injectable } from "@angular/core";
+import { TagSetting } from "@api/models/activity-list.model";
 import { ResponseModel } from "@api/models/base.model";
-import { TagSettingEditReq, TagSettingListResp, TagSettingRowResp } from "@api/models/tag-manage.model";
+import { TagSettingEditReq } from "@api/models/tag-manage.model";
+import { ApiService } from "@api/services/api.service";
+import { Observable } from "rxjs";
 
 @Injectable()
 export class TagManageService {
@@ -11,20 +12,20 @@ export class TagManageService {
 
   constructor(private service: ApiService) {}
 
-  gettagSettingList(): Observable<ResponseModel<TagSettingListResp>> {
-      return this.service.doGet(this.tagFunc + 'tagSettingList');
+  getTagSettingList(): Observable<ResponseModel<Array<TagSetting>>> {
+      return this.service.doGet(this.tagFunc);
   }
 
-  gettagSettingRow(tagId: number): Observable<ResponseModel<TagSettingRowResp>> {
-      return this.service.doGet(this.tagFunc + 'tagSettingRow', {'tagId': tagId});
+  getTagSettingRow(tagId: string): Observable<ResponseModel<TagSetting>> {
+      return this.service.doGet(this.tagFunc + tagId);
   }
 
-  tagSettingSave(data: TagSettingEditReq): Observable<ResponseModel<any>> {
-      return this.service.doPost(this.tagFunc + 'tagSettingSave', data);
+  createTagSetting(data: TagSettingEditReq): Observable<ResponseModel<any>> {
+      return this.service.doPost(this.tagFunc, data);
   }
 
-  tagSettingUpdate(data: TagSettingEditReq): Observable<ResponseModel<any>> {
-      return this.service.doPut(this.tagFunc + 'tagSettingUpdate', data);
+  updateTagSetting(tagId: string, data: TagSettingEditReq): Observable<ResponseModel<any>> {
+      return this.service.doPut(this.tagFunc + tagId, data);
   }
 
 }

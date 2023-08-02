@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting } from '@api/models/activity-list.model';
+import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
 import { Status } from '@common/enums/common-enum';
@@ -13,6 +14,7 @@ import { NbDateService } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
+import { catchError, filter, tap } from 'rxjs/operators';
 import { CustomerManageService } from '../customer-manage.service';
 
 @Component({
@@ -28,6 +30,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
     private dateService: NbDateService<Date>,
     private activatedRoute: ActivatedRoute,
     private customerManageService: CustomerManageService,
+    private dialogService: DialogService,
     private loadingService: LoadingService,) {
     super(storageService);
     // 篩選條件
@@ -45,8 +48,14 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadingService.open();
-    this.customerManageService.getActivitySettingSearch().subscribe((res) => {
-      if (res.code === RestStatus.SUCCESS) {
+    this.customerManageService.getActivitySettingList().pipe(
+      catchError(err => {
+        this.loadingService.close();
+        this.dialogService.alertAndBackToList(false, '查無資料');
+        throw new Error(err.message);
+      }),
+      filter(res => res.code === RestStatus.SUCCESS),
+      tap((res) => {
         res.result = res.result.map(row => {
           return { ...row, during: `${row.startDate}~${row.endDate}` } //起訖日查詢篩選要用到
         })
@@ -57,10 +66,8 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
           if (res === true) { this.search(); }
         });
         this.loadingService.close();
-      } else {
-        this.loadingService.close();
-      }
-    })
+      })
+    ).subscribe();
   }
 
   ngOnDestroy(): void {

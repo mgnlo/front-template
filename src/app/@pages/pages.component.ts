@@ -86,7 +86,16 @@ export class PagesComponent implements OnInit {
       {
         title: "排程管理",
         icon: "file-text-outline",
-        link: "/pages/schedule-manage/schedule-activity-list"
+        children: [
+          {
+            title: "貼標排程",
+            link: "/pages/schedule-manage/schedule-tag-detail",
+          },
+          {
+            title: "名單排程",
+            link: "/pages/schedule-manage/schedule-activity-list",
+          },
+        ]
       },
       {
         title: "帳號管理",

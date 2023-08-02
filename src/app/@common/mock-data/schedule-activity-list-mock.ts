@@ -1,6 +1,6 @@
-import { ScheduleSetting } from "@api/models/schedule-manage.model";
+import { ScheduleActivitySetting } from "@api/models/schedule-activity.model";
 
-export const ScheduleSettingMock: Array<ScheduleSetting> = [
+export const ScheduleSettingMock: Array<ScheduleActivitySetting> = [
   {
     "scheduleId": "uuid-1",
     "version": "uuid-zzzz",

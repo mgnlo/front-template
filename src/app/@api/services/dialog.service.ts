@@ -42,11 +42,16 @@ export class DialogService {
     });
   }
 
-  alertAndBackToList(isSuccess: boolean, msg: string, url: string[]): void {
+  /** 成功或失敗的彈跳視窗 1.5s後關閉視窗
+   * @param isSuccess 成功 or 失敗 boolean
+   * @param msg 要顯示的訊息
+   * @param url 有傳就會導頁, 沒傳就停留原頁
+   * */
+  alertAndBackToList(isSuccess: boolean, msg: string, url?: string[]): void {
     this.dialogService.open(AlertDialogComponent, {
       context: {
         option: {
-          isSuccess: true,
+          isSuccess: isSuccess,
           content: msg,
           backTo: url,
         },
