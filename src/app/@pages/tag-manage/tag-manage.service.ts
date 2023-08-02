@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
-import { TagSetting } from "@api/models/activity-list.model";
 import { ResponseModel } from "@api/models/base.model";
-import { TagSettingEditReq } from "@api/models/tag-manage.model";
+import { TagSetting, TagSettingEditReq } from "@api/models/tag-manage.model";
 import { ApiService } from "@api/services/api.service";
 import { Observable } from "rxjs";
 

@@ -27,6 +27,7 @@ export class TagConditionSetting {
   detectionCondition: string
   conditionValue: string
   thresholdValue: string
+  joinValue?: string
 }
 
 export class TagReviewHistory {
