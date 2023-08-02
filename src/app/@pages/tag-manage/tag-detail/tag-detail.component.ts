@@ -148,6 +148,9 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
       }),
     ).subscribe();
     this.dataSource = new LocalDataSource();
+    this.mockData = this.mockData.map(mock => {
+      return { ...mock, during: `${mock.startDate}~${mock.endDate}` } //起訖日區間
+    })
     this.dataSource.load(this.mockData);
   }
 
