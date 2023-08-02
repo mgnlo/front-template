@@ -56,6 +56,9 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   //預設檔案存放地方
   condition_valueList: Array<{ key: string; val: string }> = [{ key: 'condition_A', val: '近三個月_基金_申購金額' }, { key: 'condition_B', val: '假資料B' }, { key: 'condition_C', val: '假資料C' }];
+  
+  //集合方式
+  joinValueList: Array<{ key: string; val: string }> = [{ key: 'and', val: 'and' }, { key: 'or', val: 'or' }];
 
   //取得新增條件區塊
   get conditions(): FormArray {
@@ -99,12 +102,12 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       tagSubDimension: new FormControl(null, Validators.required),
       scheduleSettings: new FormControl(null, Validators.required),
       tagDescription: new FormControl(null),
-      condition_value: new FormControl(null, Validators.required),
+      conditionValue: new FormControl(null, Validators.required),
       conditionSettingQuery: new FormArray([
         new FormGroup({
           id: new FormControl(0),
-          detection_condition0: new FormControl(null, Validators.required),
-          threshold_value0: new FormControl(null, [Validators.required, ValidatorsUtil.number]),
+          detectionCondition_0: new FormControl(null, Validators.required),
+          thresholdValue_0: new FormControl(null, [Validators.required, ValidatorsUtil.number]),
           //C1: new FormControl(null, Validators.required),
         }),
       ]),
@@ -118,50 +121,50 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     this.changeTagType(getRawValue.tagType)
 
     const state = this.router.getCurrentNavigation()?.extras?.state;
-    if (!!state) {
-      const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistory', state as TagSetting); // 異動歷程處理
-      Object.keys(state).forEach(key => {
-        if (!!this.validateForm.controls[key]) {
-          switch (key) {
-            case 'startDate':
-            case 'endDate':
-              this.validateForm.controls[key].setValue(new Date(state[key]))
-              break;
-            case 'conditionSettingQuery':
-              this.conditions.removeAt(0);
-              //這裡要改呀呀呀
-              this.conditions.push(new FormGroup({
-                id: new FormControl(0),
-                ['detection_condition' + 0]: new FormControl(null, Validators.required),
-                ['threshold_value' + 0]: new FormControl(null, Validators.required)
-              }));
-              // let groupData = CommonUtil.groupBy(editData[key], 'tagGroup');
-              // Object.keys(groupData).forEach(key => {
-              //   let fg = new FormGroup({});
-              //   let condition = groupData[key] as Array<ActivityListCondition>;
-              //   condition.forEach(con => {
-              //     fg.setControl(con.tagKey.replace('tag-', ''), new FormControl(con.tagName, Validators.required));
-              //   });
-              //   this.conditions.push(fg);
-              // })
-              break;
-            default:
-              this.validateForm.controls[key].setValue(state[key]);
-              break;
-          }
-        }
-      })
-      if (!!processedData) {
-        if (changeRouteName === 'edit') {
-          this.isHistoryOpen = processedData.isHistoryOpen;
-          this.detail = processedData.detail;
-        }
-      }
-      else {
-        //之後可能加導頁pop-up提醒
-        this.router.navigate(['pages', 'tag-manage', 'tag-list']);
-      }
-    }
+    // if (!!state) {
+    //   const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistory', state as TagSetting); // 異動歷程處理
+    //   Object.keys(state).forEach(key => {
+    //     if (!!this.validateForm.controls[key]) {
+    //       switch (key) {
+    //         case 'startDate':
+    //         case 'endDate':
+    //           this.validateForm.controls[key].setValue(new Date(state[key]))
+    //           break;
+    //         case 'conditionSettingQuery':
+    //           this.conditions.removeAt(0);
+    //           //這裡要改呀呀呀
+    //           this.conditions.push(new FormGroup({
+    //             id: new FormControl(0),
+    //             ['detection_condition' + 0]: new FormControl(null, Validators.required),
+    //             ['threshold_value' + 0]: new FormControl(null, Validators.required),
+    //           }));
+    //           // let groupData = CommonUtil.groupBy(editData[key], 'tagGroup');
+    //           // Object.keys(groupData).forEach(key => {
+    //           //   let fg = new FormGroup({});
+    //           //   let condition = groupData[key] as Array<ActivityListCondition>;
+    //           //   condition.forEach(con => {
+    //           //     fg.setControl(con.tagKey.replace('tag-', ''), new FormControl(con.tagName, Validators.required));
+    //           //   });
+    //           //   this.conditions.push(fg);
+    //           // })
+    //           break;
+    //         default:
+    //           this.validateForm.controls[key].setValue(state[key]);
+    //           break;
+    //       }
+    //     }
+    //   })
+    //   if (!!processedData) {
+    //     if (changeRouteName === 'edit') {
+    //       this.isHistoryOpen = processedData.isHistoryOpen;
+    //       this.detail = processedData.detail;
+    //     }
+    //   }
+    //   else {
+    //     //之後可能加導頁pop-up提醒
+    //     this.router.navigate(['pages', 'tag-manage', 'tag-list']);
+    //   }
+    // }
 
     this.changeTagType(getRawValue.tagType)
 
@@ -260,21 +263,23 @@ export class TagAddComponent extends BaseComponent implements OnInit {
                   break;
                 case 'conditionSettingQuery':
                   this.conditions.removeAt(0);
-                  //這裡要改呀呀呀
-                  this.conditions.push(new FormGroup({
-                    id: new FormControl(0),
-                    ['detection_condition' + 0]: new FormControl(null, Validators.required),
-                    ['threshold_value' + 0]: new FormControl(null, Validators.required)
-                  }));
-                  // let groupData = CommonUtil.groupBy(editData[key], 'tagGroup');
-                  // Object.keys(groupData).forEach(key => {
-                  //   let fg = new FormGroup({});
-                  //   let condition = groupData[key] as Array<ActivityListCondition>;
-                  //   condition.forEach(con => {
-                  //     fg.setControl(con.tagKey.replace('tag-', ''), new FormControl(con.tagName, Validators.required));
-                  //   });
-                  //   this.conditions.push(fg);
-                  // })
+                  res.result.tagConditionSetting.forEach((conditionSetting, index) => {
+                    if(!!conditionSetting.joinValue){
+                      this.conditions.push(new FormGroup({
+                        id: new FormControl(index),
+                        ['detectionCondition_' + index]: new FormControl(conditionSetting.detectionCondition, Validators.required),
+                        ['thresholdValue_' + index]: new FormControl(+conditionSetting.thresholdValue, Validators.required),
+                        ['joinValue_' + index]: new FormControl(conditionSetting.joinValue, Validators.required)
+                      }));
+                    } else {
+                      this.conditions.push(new FormGroup({
+                        id: new FormControl(index),
+                        ['detectionCondition_' + index]: new FormControl(conditionSetting.detectionCondition, Validators.required),
+                        ['thresholdValue_' + index]: new FormControl(+conditionSetting.thresholdValue, Validators.required),
+                      }));
+                    }
+                  })
+                  console.info(this.conditions.getRawValue());
                   break;
                 default:
                   this.validateForm.controls[key].setValue(res.result[key]);
@@ -343,13 +348,13 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       }
       this.conditions.push(new FormGroup({
         id: new FormControl(index),
-        ['detection_condition' + index]: new FormControl(null, Validators.required),
-        ['threshold_value' + index]: new FormControl(null, Validators.required)
+        ['detectionCondition_' + index]: new FormControl(null, Validators.required),
+        ['thresholdValue_' + index]: new FormControl(null, Validators.required)
       }));
       //最後一個選單前加入其餘欄位驗證
       for (let i = 0; i < this.conditions.length - 1; i++) {
         if (Object.keys(this.conditions.controls[i]?.value).length === 3) {
-          this.setConditions('add', 'join_value', this.conditions.controls[i].get('id').value, i)
+          this.setConditions('add', 'joinValue_', this.conditions.controls[i].get('id').value, i)
         }
       }
     } else {
@@ -405,6 +410,11 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   }
   //#endregion
 
+  getConditionSettingQueryFormGroup(index: number){
+    let conditionArray = this.validateForm.get('conditionSettingQuery') as FormArray;
+    return conditionArray.at(index) as FormGroup;
+  }
+
   //條件分佈級距彈出視窗
   conditionDialog() {
     this.dialogService.open(TagConditionDialogComponent, {
@@ -420,45 +430,46 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   submit() {
     let valid = this.validateForm.valid;
     let reqData: TagSettingEditReq = this.getRequestData();
-    if (valid && !this.tagId) {
-      this.loadingService.open();
-      this.tagManageService.createTagSetting(reqData).pipe(
-        catchError((err) => {
-          this.loadingService.close();
-          this.dialogService.alertAndBackToList(false, '新增失敗', ['pages', 'tag-manage', 'tag-list']);
-          throw new Error(err.message);
-        }),
-        tap(res => {
-          console.info(res)
-          this.loadingService.close();
-        })).subscribe(res => {
-          if (res.code === RestStatus.SUCCESS) {
-            this.dialogService.alertAndBackToList(true, '新增成功', ['pages', 'tag-manage', 'tag-list'])
-          }
-        });
-    } else if (valid && this.tagId) {
-      this.loadingService.open();
-      this.tagManageService.updateTagSetting(this.tagId, reqData).pipe(
-        catchError((err) => {
-          this.loadingService.close();
-          this.dialogService.alertAndBackToList(false, '編輯失敗', ['pages', 'tag-manage', 'tag-list']);
-          throw new Error(err.message);
-        }),
-        tap(res => {
-          console.info(res)
-          this.loadingService.close();
-        })).subscribe(res => {
-          if (res.code === RestStatus.SUCCESS) {
-            this.dialogService.alertAndBackToList(true, '編輯成功', ['pages', 'tag-manage', 'tag-list'])
-          }
-        });
-    }
+    // if (valid && !this.tagId) {
+    //   this.loadingService.open();
+    //   this.tagManageService.createTagSetting(reqData).pipe(
+    //     catchError((err) => {
+    //       this.loadingService.close();
+    //       this.dialogService.alertAndBackToList(false, '新增失敗', ['pages', 'tag-manage', 'tag-list']);
+    //       throw new Error(err.message);
+    //     }),
+    //     tap(res => {
+    //       console.info(res)
+    //       this.loadingService.close();
+    //     })).subscribe(res => {
+    //       if (res.code === RestStatus.SUCCESS) {
+    //         this.dialogService.alertAndBackToList(true, '新增成功', ['pages', 'tag-manage', 'tag-list'])
+    //       }
+    //     });
+    // } else if (valid && this.tagId) {
+    //   this.loadingService.open();
+    //   this.tagManageService.updateTagSetting(this.tagId, reqData).pipe(
+    //     catchError((err) => {
+    //       this.loadingService.close();
+    //       this.dialogService.alertAndBackToList(false, '編輯失敗', ['pages', 'tag-manage', 'tag-list']);
+    //       throw new Error(err.message);
+    //     }),
+    //     tap(res => {
+    //       console.info(res)
+    //       this.loadingService.close();
+    //     })).subscribe(res => {
+    //       if (res.code === RestStatus.SUCCESS) {
+    //         this.dialogService.alertAndBackToList(true, '編輯成功', ['pages', 'tag-manage', 'tag-list'])
+    //       }
+    //     });
+    // }
   }
 
   getRequestData(): TagSettingEditReq {
     let reqData: TagSettingEditReq = this.validateForm.getRawValue();
     reqData.startDate = moment(reqData.startDate).format('YYYY-MM-DD');
     reqData.endDate = moment(reqData.endDate).format('YYYY-MM-DD');
+    console.info(reqData);
     return reqData;
   }
 
