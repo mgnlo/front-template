@@ -60,7 +60,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
     this.validateForm = new FormGroup({
       jobName: new FormControl(null, Validators.required),
-      status: new FormControl('active', Validators.required),
+      status: new FormControl(null, Validators.required),
       frequency: new FormControl('daily', Validators.required),
       hour: new FormControl(null, Validators.required),
       minute: new FormControl(null, Validators.required),
