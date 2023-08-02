@@ -65,6 +65,11 @@ export class EchartsTimelineMultiRangeComponent implements AfterViewInit, OnDest
   }];
 
 
+
+  // TODO 此款圖示顏色對應 標籤類型(TagType)，其值與色票對應如下：
+  // "normal" = 規則標籤  -> #29A7E6
+  // "document" = 名單標籤 -> #FFAA00
+
   // 標籤索引陣列對應顏色
   colors = [
     '#7b9ce1',
