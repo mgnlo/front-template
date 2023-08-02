@@ -88,7 +88,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     this.activityId = this.activatedRoute.snapshot.params?.activityId;
     if (!!this.activityId) {
       this.loadingService.open();
-      this.customerManageService.getActivitySettingGet(this.activityId).pipe(
+      this.customerManageService.getActivitySettingRow(this.activityId).pipe(
         catchError(err => {
           this.loadingService.close();
           this.dialogService.alertAndBackToList(false, '查無該筆資料，將為您導回客群名單', ['pages', 'customer-manage', 'activity-list']);
@@ -149,7 +149,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     let reqData: ActivitySettingEditReq = this.getRequestData();
     if (valid && !this.activityId) {
       this.loadingService.open();
-      this.customerManageService.activitySettingCreate(reqData).pipe(
+      this.customerManageService.createActivitySetting(reqData).pipe(
         catchError((err) => {
           this.loadingService.close();
           this.dialogService.alertAndBackToList(false, '新增失敗', ['pages', 'customer-manage', 'activity-list']);
@@ -165,7 +165,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
         });
     } else if (valid && this.activityId) {
       this.loadingService.open();
-      this.customerManageService.activitySettingUpdate(this.activityId, reqData).pipe(
+      this.customerManageService.updateActivitySetting(this.activityId, reqData).pipe(
         catchError((err) => {
           this.loadingService.close();
           this.dialogService.alertAndBackToList(false, '編輯失敗', ['pages', 'customer-manage', 'activity-list']);

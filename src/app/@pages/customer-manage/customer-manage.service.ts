@@ -11,19 +11,19 @@ export class CustomerManageService {
 
     constructor(private service: ApiService) { }
 
-    getActivitySettingSearch(): Observable<ResponseModel<Array<ActivitySetting>>> {
+    getActivitySettingList(): Observable<ResponseModel<Array<ActivitySetting>>> {
         return this.service.doGet(this.activityFunc);
     }
 
-    getActivitySettingGet(activityId: string): Observable<ResponseModel<ActivitySetting>> {
+    getActivitySettingRow(activityId: string): Observable<ResponseModel<ActivitySetting>> {
         return this.service.doGet(this.activityFunc + activityId);
     }
 
-    activitySettingCreate(data: ActivitySettingEditReq): Observable<ResponseModel<any>> {
+    createActivitySetting(data: ActivitySettingEditReq): Observable<ResponseModel<any>> {
         return this.service.doPost(this.activityFunc, data);
     }
 
-    activitySettingUpdate(activityId: string, data: ActivitySettingEditReq): Observable<ResponseModel<any>> {
+    updateActivitySetting(activityId: string, data: ActivitySettingEditReq): Observable<ResponseModel<any>> {
         return this.service.doPut(this.activityFunc + activityId, data);
     }
 

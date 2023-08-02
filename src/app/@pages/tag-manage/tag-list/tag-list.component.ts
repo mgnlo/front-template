@@ -3,8 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TagSetting } from '@api/models/tag-manage.model';
+import { DialogService } from '@api/services/dialog.service';
+import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
 import { Status } from '@common/enums/common-enum';
+import { RestStatus } from '@common/enums/rest-enum';
 import { TagType } from '@common/enums/tag-enum';
 import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { ValidatorsUtil } from '@common/utils/validators-util';
@@ -12,6 +15,7 @@ import { DetailButtonComponent } from '@component/table/detail-button/detail-but
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
+import { catchError, filter, tap } from 'rxjs/operators';
 import { TagManageService } from '../tag-manage.service';
 
 @Component({
@@ -24,7 +28,10 @@ export class TagListComponent extends BaseComponent implements OnInit {
     storageService: StorageService,
     private router: Router,
     private tagManageService: TagManageService,
-    private activatedRoute: ActivatedRoute,) {
+    private activatedRoute: ActivatedRoute,
+    private loadingService: LoadingService,
+    private dialogService: DialogService,
+  ) {
     super(storageService);
     this.validateForm = new FormGroup({
       tagName: new FormControl(''),
@@ -39,16 +46,36 @@ export class TagListComponent extends BaseComponent implements OnInit {
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
   ngOnInit(): void {
-    this.dataSource = new LocalDataSource();
-    this.dataSource.load(this.mockData);
-    //get session filter
-    this.storageService.getSessionFilter(this.sessionKey, this.validateForm).subscribe((res) => {
-      if (res === true) { this.search(); }
-    });
+    // mock data
+    // this.dataSource = new LocalDataSource();
+    // this.dataSource.load(this.mockData);
+    // //get session filter
+    // this.storageService.getSessionFilter(this.sessionKey, this.validateForm).subscribe((res) => {
+    //   if (res === true) { this.search(); }
+    // });
+
+    this.loadingService.open();
+    this.tagManageService.getTagSettingList().pipe(
+      catchError(err => {
+        this.loadingService.close();
+        this.dialogService.alertAndBackToList(false, '查無資料');
+        throw new Error(err.message);
+      }),
+      filter(res => res.code === RestStatus.SUCCESS),
+      tap((res) => {
+        this.dataSource = new LocalDataSource();
+        this.dataSource.load(res.result);
+        //get session filter
+        this.storageService.getSessionFilter(this.sessionKey, this.validateForm).subscribe((res) => {
+          if (res === true) { this.search(); }
+        });
+        this.loadingService.close();
+      })
+    ).subscribe();
   }
 
   ngOnDestroy(): void {
-    let sessionData = {page: this.paginator.nowPage, filter: this.validateForm.getRawValue()};
+    let sessionData = { page: this.paginator.nowPage, filter: this.validateForm.getRawValue() };
     this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
 
