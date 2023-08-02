@@ -1,22 +1,29 @@
 import { NgModule } from "@angular/core"
 import { RouterModule, Routes } from "@angular/router"
 import { ScheduleManageComponent } from "./schedule-manage.component"
-import { ScheduleListComponent } from "./schedule-activity-list/schedule-activity-list.component"
-import { ScheduleAddComponent } from "./schedule-activity-set/schedule-activity-set.component"
-import { ScheduleButtonComponent, ScheduleDetailComponent } from "./schedule-activity-detail/schedule-activity-detail.component"
-import { ActivityButtonComponent, ActivityDetailComponent } from "./activity-detail/activity-detail.component"
-import { PreviewDialogComponent } from "./schedule-activity-set/preview-dialog/preview.dialog/preview-dialog.component"
+import { ScheduleListComponent } from "./activity/schedule-activity-list/schedule-activity-list.component"
+import { ScheduleActivityButtonComponent, ScheduleDetailComponent } from "./activity/schedule-activity-detail/schedule-activity-detail.component"
+import { ActivityButtonComponent, ActivityDetailComponent } from "./activity/schedule-activity-export-detail/schedule-activity-export-detail.component"
+import { ScheduleAddComponent } from "./activity/schedule-activity-set/schedule-activity-set.component"
+import { PreviewDialogComponent } from "./activity/schedule-activity-set/preview-dialog/preview.dialog/preview-dialog.component"
+import { ScheduleTagButtonComponent, ScheduleTagDetailComponent } from "./tag/schedule-tag-detail/schedule-tag-detail.component"
+import { ScheduleTagExportDetailComponent } from "./tag/schedule-tag-export-detail/schedule-tag-export-detail.component"
 
 const routes: Routes = [
   {
     path: "", component: ScheduleManageComponent,
     children: [
       { path: '', redirectTo: 'schedule-manage', pathMatch: 'full' },
+      //活動列表
       { path: "schedule-activity-list", component: ScheduleListComponent, data: {keepSession: true}},
       { path: 'schedule-activity-detail/:scheduleId', component: ScheduleDetailComponent, data: {keepSession: true}},
       { path: 'schedule-activity-set', component: ScheduleAddComponent },
       { path: 'schedule-activity-set/:changeRoute/:scheduleId', component: ScheduleAddComponent}, //編輯
-      { path: 'activity-detail/:scheduleId/:activityId', component: ActivityDetailComponent, data: {keepSession: true}}, //名單查看
+      { path: 'schedule-activity-export-detail/:scheduleId/:activityId', component: ActivityDetailComponent, data: {keepSession: true}}, //名單查看
+
+      //標籤列表
+      { path: "schedule-tag-detail", component: ScheduleTagDetailComponent, data: {keepSession: true}},
+      { path: "schedule-tag-export-detail", component: ScheduleTagExportDetailComponent, data: {keepSession: true}},
     ]
   }
 ]
@@ -33,7 +40,10 @@ export const routedComponents = [
   ScheduleAddComponent,
   ScheduleDetailComponent,
   ActivityDetailComponent,
-  ScheduleButtonComponent,
+  ScheduleActivityButtonComponent,
   ActivityButtonComponent,
-  PreviewDialogComponent
+  PreviewDialogComponent,
+  ScheduleTagDetailComponent,
+  ScheduleTagExportDetailComponent,
+  ScheduleTagButtonComponent,
 ];

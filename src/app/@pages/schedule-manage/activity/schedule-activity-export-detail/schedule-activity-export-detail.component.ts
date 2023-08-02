@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { ActivitySetting, ScheduleSetting, Schedule_Batch_History } from '@api/models/schedule-manage.model';
+import { ActivitySetting, ScheduleActivitySetting, Schedule_Batch_History } from '@api/models/schedule-activity.model';
 import { StorageService } from '@api/services/storage.service';
 import { StatusResult } from '@common/enums/common-enum';
-import { ScheduleSettingMock } from '@common/mock-data/schedule-list-mock';
+import { ScheduleSettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({
-  selector: 'activity-detail',
-  templateUrl: './activity-detail.component.html',
-  styleUrls: ['./activity-detail.component.scss']
+  selector: 'schedule-activity-export-detail',
+  templateUrl: './schedule-activity-export-detail.component.html',
+  styleUrls: ['./schedule-activity-export-detail.component.scss']
 })
 export class ActivityDetailComponent extends BaseComponent implements OnInit {
-  scheduleSetting: Array<ScheduleSetting> = ScheduleSettingMock;
+  ScheduleActivitySetting: Array<ScheduleActivitySetting> = ScheduleSettingMock;
   activitySetting: ActivitySetting = ScheduleSettingMock[0].activitySetting[0];
   schedule_Batch_History: Array<Schedule_Batch_History> = ScheduleSettingMock[0].activitySetting[0].schedule_batch_history;
 

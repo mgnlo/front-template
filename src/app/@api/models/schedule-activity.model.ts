@@ -1,4 +1,4 @@
-export interface ScheduleSetting {
+export interface ScheduleActivitySetting {
   scheduleId: string;
   version: string;
   jobName: string;

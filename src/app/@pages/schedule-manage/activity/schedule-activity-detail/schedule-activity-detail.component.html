@@ -32,9 +32,16 @@
         <h2>名單紀錄</h2>
     </nb-card-header>
     <nb-card-body>
-        <div class="rightBox"><button nbButton status="primary" size="medium" (click)="refresh()">手動更新</button></div>
-        <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
+      <div>
+        <div class="rightBox" *ngIf="!enableMultiSelect"><button nbButton status="primary" size="medium" (click)="refresh()">手動更新</button></div>
+        <div class="rightBox" *ngIf="enableMultiSelect">
+          <button nbButton status="basic" size="medium" (click)="cancelRefresh()">取消</button>
+          <button nbButton status="primary" size="medium" (click)="submitRefresh()">確定</button>
+        </div>
+        <ng2-smart-table *ngIf="!enableMultiSelect" [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
+        <ng2-smart-table *ngIf="enableMultiSelect" [settings]="gridDefine_1" [source]="dataSource"></ng2-smart-table>
         <paginator [source]="dataSource" [paginator]="paginator"></paginator>
+      </div>
     </nb-card-body>
   </nb-card>
   <nb-card>
