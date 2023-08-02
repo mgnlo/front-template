@@ -3,7 +3,7 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ScheduleDetailView, ScheduleActivitySetting, ActivitySetting, Schedule_Batch_History } from '@api/models/schedule-activity.model';
 import { StorageService } from '@api/services/storage.service';
 import { StatusResult, Status } from '@common/enums/common-enum';
-import { ScheduleSettingMock } from '@common/mock-data/schedule-activity-list-mock';
+import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
@@ -16,7 +16,7 @@ import { LocalDataSource } from 'ng2-smart-table';
 export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   detail: ScheduleDetailView;
   isHistoryOpen: { [x: number]: boolean } = []; //異動歷程收合
-  activitySetting: Array<ActivitySetting> = ScheduleSettingMock[0].activitySetting;
+  activitySetting: Array<ActivitySetting> = ScheduleActivitySettingMock[0].activitySetting;
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
   enableMultiSelect: boolean = false;//預設關閉CheckBox
@@ -91,6 +91,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         width: '5%',
         valuePrepareFunction: (cell: string) => {
           const cellLow = cell?.toLowerCase();
+          if (CommonUtil.isBlank(cellLow)) return cellLow
           return cellLow === 'true' ? StatusResult[cellLow] : `<p class="colorRed textBold">${StatusResult[cellLow]}</p>`;
         },
         sort: false,
@@ -161,6 +162,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         width: '5%',
         valuePrepareFunction: (cell: string) => {
           const cellLow = cell?.toLowerCase();
+          if (CommonUtil.isBlank(cellLow)) return cellLow
           return cellLow === 'true' ? StatusResult[cellLow] : `<p class="colorRed textBold">${StatusResult[cellLow]}</p>`;
         },
         sort: false,

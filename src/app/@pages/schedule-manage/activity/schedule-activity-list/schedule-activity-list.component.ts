@@ -7,7 +7,7 @@ import { ScheduleActivitySetting } from '@api/models/schedule-activity.model';
 import { Status } from '@common/enums/common-enum';
 import { DatePipe } from '@angular/common';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
-import { ScheduleSettingMock } from '@common/mock-data/schedule-activity-list-mock';
+import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { StorageService } from '@api/services/storage.service';
 
 @Component({
@@ -24,7 +24,7 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
   ) {
     super(storageService);
   }
-  ScheduleActivitySetting: Array<ScheduleActivitySetting> = ScheduleSettingMock;
+  ScheduleActivitySetting: Array<ScheduleActivitySetting> = ScheduleActivitySettingMock;
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
   ngOnInit(): void {

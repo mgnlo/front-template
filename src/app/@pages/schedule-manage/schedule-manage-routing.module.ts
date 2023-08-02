@@ -3,11 +3,11 @@ import { RouterModule, Routes } from "@angular/router"
 import { ScheduleManageComponent } from "./schedule-manage.component"
 import { ScheduleListComponent } from "./activity/schedule-activity-list/schedule-activity-list.component"
 import { ScheduleActivityButtonComponent, ScheduleDetailComponent } from "./activity/schedule-activity-detail/schedule-activity-detail.component"
-import { ActivityButtonComponent, ActivityDetailComponent } from "./activity/schedule-activity-export-detail/schedule-activity-export-detail.component"
+import { ActivityButtonComponent, ActivityExportDetailComponent } from "./activity/schedule-activity-export-detail/schedule-activity-export-detail.component"
 import { ScheduleAddComponent } from "./activity/schedule-activity-set/schedule-activity-set.component"
 import { PreviewDialogComponent } from "./activity/schedule-activity-set/preview-dialog/preview.dialog/preview-dialog.component"
 import { ScheduleTagButtonComponent, ScheduleTagDetailComponent } from "./tag/schedule-tag-detail/schedule-tag-detail.component"
-import { ScheduleTagExportDetailComponent } from "./tag/schedule-tag-export-detail/schedule-tag-export-detail.component"
+import { ScheduleTagExportDetailComponent, TagButtonComponent } from "./tag/schedule-tag-export-detail/schedule-tag-export-detail.component"
 
 const routes: Routes = [
   {
@@ -19,11 +19,11 @@ const routes: Routes = [
       { path: 'schedule-activity-detail/:scheduleId', component: ScheduleDetailComponent, data: {keepSession: true}},
       { path: 'schedule-activity-set', component: ScheduleAddComponent },
       { path: 'schedule-activity-set/:changeRoute/:scheduleId', component: ScheduleAddComponent}, //編輯
-      { path: 'schedule-activity-export-detail/:scheduleId/:activityId', component: ActivityDetailComponent, data: {keepSession: true}}, //名單查看
+      { path: 'schedule-activity-export-detail/:scheduleId/:activityId', component: ActivityExportDetailComponent, data: {keepSession: true}}, //名單查看
 
       //標籤列表
       { path: "schedule-tag-detail", component: ScheduleTagDetailComponent, data: {keepSession: true}},
-      { path: "schedule-tag-export-detail", component: ScheduleTagExportDetailComponent, data: {keepSession: true}},
+      { path: "schedule-tag-export-detail/:tagId", component: ScheduleTagExportDetailComponent, data: {keepSession: true}},
     ]
   }
 ]
@@ -39,11 +39,12 @@ export const routedComponents = [
   ScheduleListComponent,
   ScheduleAddComponent,
   ScheduleDetailComponent,
-  ActivityDetailComponent,
+  ActivityExportDetailComponent,
   ScheduleActivityButtonComponent,
   ActivityButtonComponent,
   PreviewDialogComponent,
   ScheduleTagDetailComponent,
   ScheduleTagExportDetailComponent,
   ScheduleTagButtonComponent,
+  TagButtonComponent,
 ];
