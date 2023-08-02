@@ -14,6 +14,7 @@ import { ConsoleUser } from '@api/models/console-user.model';
 import { ChangeDialogComponent } from './change-dialog/change.dialog.component';
 import { DialogService } from '@api/services/dialog.service';
 import { ValidateUtil } from '@common/utils/validate-util';
+import { StorageService } from '@api/services/storage.service';
 
 @Component({
   selector: 'console-user',
@@ -40,12 +41,13 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
   dataSource: LocalDataSource; //table
 
   constructor(
+    storageService: StorageService,
     private router: Router,
     private formBuilder: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private accountManageService: AccountManageService,
     private dateService: NbDateService<Date>) {
-    super();
+    super(storageService);
 
     this.consoleUserForm = new FormGroup({
       account: new FormControl('', [this.maxLengthValidate(20)]),

@@ -21,11 +21,11 @@ import { TagManageService } from '../tag-manage.service';
 })
 export class TagListComponent extends BaseComponent implements OnInit {
   constructor(
+    storageService: StorageService,
     private router: Router,
     private tagManageService: TagManageService,
-    private storageService: StorageService,
     private activatedRoute: ActivatedRoute,) {
-    super();
+    super(storageService);
     this.validateForm = new FormGroup({
       tagName: new FormControl(''),
       status: new FormControl(''),
@@ -45,14 +45,6 @@ export class TagListComponent extends BaseComponent implements OnInit {
     this.storageService.getSessionFilter(this.sessionKey, this.validateForm).subscribe((res) => {
       if (res === true) { this.search(); }
     });
-  }
-   
-  ngAfterViewInit(): void {
-    //get session page
-    let storage = this.storageService.getSessionVal(this.sessionKey);
-    if(!!storage?.page){
-      this.dataSource.setPage(storage.page);
-    }
   }
 
   ngOnDestroy(): void {

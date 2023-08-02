@@ -18,9 +18,9 @@ export interface ActivitySetting {
   activityReviewHistory: Array<ActivityReviewHistory>;
 }
 export class ActivityListCondition {
-  activityId: string;
-  conditionId: string;
-  version: string;
+  activityId?: string;
+  conditionId?: string;
+  version?: string;
   tagGroup: number;
   tagName: string;
   tagKey: string;
@@ -138,13 +138,6 @@ export interface HistoryGroupView {
     title: string;
     detail: string;
   }[]
-}
-
-export class ActivitySettingListRes {
-  data: Array<ActivitySetting>;
-}
-export class ActivitySettingRowRes {
-  data: ActivitySetting;
 }
 export class ActivitySettingEditReq {
   activityName: string;

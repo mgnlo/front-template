@@ -20,7 +20,7 @@ export class ApproveDialogComponent implements OnInit {
   constructor(protected ref: NbDialogRef<ApproveDialogComponent>, private router: Router) {}
 
   ngOnInit() {
-    interval(1000).pipe(
+    interval(1500).pipe(
       map(val => 1 - val),
       takeWhile(x => x >= 0)
     ).subscribe(() => {

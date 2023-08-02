@@ -2,6 +2,8 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ActivityListCondition, ActivitySetting } from '@api/models/activity-list.model';
+import { StorageService } from '@api/services/storage.service';
 import { DialogService } from '@api/services/dialog.service';
 import { Frequency, Status, StatusResult } from '@common/enums/common-enum';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
@@ -14,7 +16,6 @@ import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
 import { PreviewDialogComponent } from './preview-dialog/preview.dialog/preview-dialog.component';
 import { ScheduleActivitySetting, ActivitySetting as ScheduleActivitySettingModel,  } from '@api/models/schedule-activity.model';
-import { ActivitySetting } from '@api/models/activity-list.model';
 
 @Component({
   selector: 'schedule-activity-set',
@@ -53,10 +54,11 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   ScheduleActivitySettingModel: Array<ScheduleActivitySettingModel>;
 
   constructor(private router: Router,
+    storageService: StorageService,
     private activatedRoute: ActivatedRoute,
     private dialogService: DialogService,
     private readonly changeDetectorRef: ChangeDetectorRef) {
-    super();
+    super(storageService);
 
     this.validateForm = new FormGroup({
       jobName: new FormControl(null, Validators.required),

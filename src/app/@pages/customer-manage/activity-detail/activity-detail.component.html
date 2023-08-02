@@ -5,7 +5,7 @@
     </button>
 </div>
 <div class="pageContent">
-    <nb-card>
+    <nb-card *ngIf="detail">
         <nb-card-body>
             <div class="row">
                 <div class="textGroup col-12 col-lg-4">
@@ -66,7 +66,7 @@
             </ng-container>
         </nb-card-body>
     </nb-card>
-    <nb-card>
+    <nb-card *ngIf="detail?.historyGroupView">
         <nb-card-header>
             <h2>異動歷程</h2>
         </nb-card-header>

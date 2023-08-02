@@ -69,7 +69,7 @@ export const CommonUtil = {
     })
     return result;
   },
-  /** 將flat資料group*/
+  /** 將flat資料group */
   groupBy<T>(datas: T[], key: string) {
     return datas.reduce(function (group, data) {
       (group[data[key]] = group[data[key]] || []).push(data);

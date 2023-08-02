@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { ActivitySettingEditReq, ActivitySettingListRes, ActivitySettingRowRes } from "@api/models/activity-list.model";
+import { ActivitySetting, ActivitySettingEditReq } from "@api/models/activity-list.model";
 import { ResponseModel } from "@api/models/base.model";
 import { ApiService } from "@api/services/api.service";
 import { Observable } from "rxjs";
@@ -9,22 +9,22 @@ export class CustomerManageService {
 
     readonly activityFunc = 'activity-settings/';
 
-    constructor(private service: ApiService) {}
+    constructor(private service: ApiService) { }
 
-    getActivitySettingList(): Observable<ResponseModel<ActivitySettingListRes>> {
-        return this.service.doGet(this.activityFunc + 'activitySettingList');
+    getActivitySettingSearch(): Observable<ResponseModel<Array<ActivitySetting>>> {
+        return this.service.doGet(this.activityFunc);
     }
 
-    getActivitySettingRow(activityId: number): Observable<ResponseModel<ActivitySettingRowRes>> {
-        return this.service.doGet(this.activityFunc + 'activitySettingRow', {'activityId': activityId});
+    getActivitySettingGet(activityId: string): Observable<ResponseModel<ActivitySetting>> {
+        return this.service.doGet(this.activityFunc + activityId);
     }
 
-    activitySettingSave(data: ActivitySettingEditReq): Observable<ResponseModel<any>> {
-        return this.service.doPost(this.activityFunc + 'activitySettingSave', data);
+    activitySettingCreate(data: ActivitySettingEditReq): Observable<ResponseModel<any>> {
+        return this.service.doPost(this.activityFunc, data);
     }
 
-    activitySettingUpdate(data: ActivitySettingEditReq): Observable<ResponseModel<any>> {
-        return this.service.doPut(this.activityFunc + 'activitySettingUpdate', data);
+    activitySettingUpdate(activityId: string, data: ActivitySettingEditReq): Observable<ResponseModel<any>> {
+        return this.service.doPut(this.activityFunc + activityId, data);
     }
 
 }

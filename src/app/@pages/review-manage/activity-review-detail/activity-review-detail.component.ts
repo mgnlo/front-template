@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Navigation, Router } from '@angular/router';
 import { ActivityDetail, ActivityReviewHistory, ActivitySetting, HistoryGroupView, TagGroupView } from '@api/models/activity-list.model';
 import { DialogService } from '@api/services/dialog.service';
+import { StorageService } from '@api/services/storage.service';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
@@ -28,8 +29,8 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
   reviewStatus: string;
   reviewComment: string;
 
-  constructor(private router: Router, private dialogService: DialogService) {
-    super();
+  constructor(storageService: StorageService, private router: Router, private dialogService: DialogService) {
+    super(storageService);
     if(!!this.router.getCurrentNavigation()?.extras){
       this.newReview = this.router.getCurrentNavigation().extras.state as ActivityReviewHistory;
       this.reviewStatus = this.newReview.reviewStatus;

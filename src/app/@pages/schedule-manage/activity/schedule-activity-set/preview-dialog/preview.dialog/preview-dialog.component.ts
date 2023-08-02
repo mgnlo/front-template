@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { StorageService } from '@api/services/storage.service';
 import { CommonUtil } from '@common/utils/common-util';
 import { NbDialogRef } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
@@ -16,8 +17,8 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
 
   filterDataList: Array<{ key: string; val: string }> = [];
 
-  constructor(private ref: NbDialogRef<PreviewDialogComponent>) {
-    super();
+  constructor(private ref: NbDialogRef<PreviewDialogComponent>, storageService: StorageService) {
+    super(storageService);
     this.validateForm = new FormGroup({
       activityName: new FormControl(null, this.existsInActivityList),
     });

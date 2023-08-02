@@ -22,11 +22,11 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   enableMultiSelect: boolean = false;//預設關閉CheckBox
 
   constructor(
-    private storageService: StorageService,
+    storageService: StorageService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
   ) {
-    super();
+    super(storageService);
     const currentNavigation = this.router.getCurrentNavigation();
     if (!!currentNavigation?.extras) {
       const state = currentNavigation.extras.state;

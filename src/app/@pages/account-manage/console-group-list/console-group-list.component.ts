@@ -8,6 +8,7 @@ import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
 import { AccountManageService } from '../account.manage.service';
 import { ConsoleGroupDetailMock } from '@common/mock-data/console-group-detail-mock';
+import { StorageService } from '@api/services/storage.service';
 
 @Component({
   selector: 'console-group-list',
@@ -16,11 +17,12 @@ import { ConsoleGroupDetailMock } from '@common/mock-data/console-group-detail-m
 })
 export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
   constructor(
+    storageService: StorageService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private accountManageService: AccountManageService,
     private dateService: NbDateService<Date>) {
-    super();
+    super(storageService);
   }
 
   // 這邊要發查電文 6.1 取得 ConsoleGroupList 內容

@@ -15,11 +15,11 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
   constructor(
-    private storageService: StorageService,
+    storageService: StorageService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
   ) {
-    super();
+    super(storageService);
   }
 
   gridDefine = {
