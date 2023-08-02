@@ -19,29 +19,48 @@ export class EchartsTimelineMultiRangeComponent implements AfterViewInit, OnDest
 
   //主機提供資料
   mockData = [{
-    tagName: "tag1", //標籤名稱
+    tagName: "淨流出", //標籤名稱
     tracks: [
-      { startDate: '2023-06-27', endDate: '2023-07-04' },   //起始日、結束日
-      { startDate: '2023-07-27', endDate: '2023-08-29' },
+      { startDate: '2021-06-27', endDate: '2021-12-04' },   //起始日、結束日
+      { startDate: '2022-07-27', endDate: '2023-02-29' },
       { startDate: '2023-09-07', endDate: '2023-09-29' }
     ]
   }, {
-    tagName: "tag2",
+    tagName: "淨流入",
     tracks: [
-      { startDate: '2023-05-23', endDate: '2023-07-14' },
+      { startDate: '2022-05-23', endDate: '2023-07-14' },
       { startDate: '2023-07-21', endDate: '2023-08-29' }
     ]
   }, {
-    tagName: "tag3",
+    tagName: "產品持有－JCB白",
     tracks: [
-      { startDate: '2023-04-23', endDate: '2023-05-14' },
+      { startDate: '2021-04-23', endDate: '2022-12-14' },
       { startDate: '2023-07-11', endDate: '2023-09-29' }
     ]
   }, {
-    tagName: "tag4",
+    tagName: "轉入金額－多",
+    tracks: [
+      { startDate: '2021-02-23', endDate: '2021-08-14' },
+      { startDate: '2022-07-11', endDate: '2023-09-29' }
+    ]
+  }, {
+    tagName: "忠誠戶",
+    tracks: [
+      { startDate: '2021-07-23', endDate: '2022-02-14' },
+      { startDate: '2022-03-23', endDate: '2022-11-14' },
+      { startDate: '2023-07-11', endDate: '2023-09-29' }
+    ]
+  }, {
+    tagName: "透支金額－少",
+    tracks: [
+      { startDate: '2020-04-23', endDate: '2021-05-14' },
+      { startDate: '2022-03-23', endDate: '2023-11-14' }
+    ]
+  }, {
+    tagName: "官網平均停留時間－長",
     tracks: [
       { startDate: '2023-05-13', endDate: '2023-06-14' },
-      { startDate: '2023-10-21', endDate: '2023-11-29' }
+      { startDate: '2022-10-21', endDate: '2023-11-29' }
     ]
   }];
 
@@ -96,7 +115,9 @@ export class EchartsTimelineMultiRangeComponent implements AfterViewInit, OnDest
     var categoryIndex = api.value(0);
     var start = api.coord([api.value(1), categoryIndex]);
     var end = api.coord([api.value(2), categoryIndex]);
-    var height = api.size([0, 1])[1] * 0.6;
+    // var height = api.size([0, 1])[1] * 0.6;
+    var height = 10;
+
     var rectShape = echarts.graphic.clipRectByRect(
       {
         x: start[0],
@@ -133,20 +154,22 @@ export class EchartsTimelineMultiRangeComponent implements AfterViewInit, OnDest
                     <div>${this.timeFormat2(params.value[1])} ~ ${this.timeFormat2(params.value[2])}</div>`;
           }
         },
-        title: {
-          text: 'echart - 標籤群組',
-          left: 'center'
-        },
         // 放大縮小
         dataZoom: [
           {
             type: 'inside',
             filterMode: 'weakFilter',
-            minSpan: 50
+            minSpan: 10,
           }
         ],
         grid: {
-          height: 300
+          show: true,
+          top: '2%',
+          bottom: '2%',
+          left: '1%',
+          right: '1%',
+          containLabel: true,
+          borderColor: '#393C3E',
         },
         xAxis: {
           min: this.startTime,
@@ -156,26 +179,43 @@ export class EchartsTimelineMultiRangeComponent implements AfterViewInit, OnDest
             formatter: (val) => {
               return this.timeFormat(val);
             }
-          }
+          },
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: '#ffffff'
+            }
+          },
         },
         yAxis: {
-          data: this.categories
+          data: this.categories,
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: '#ffffff'
+            }
+          },
+          axisTick: {
+            show: false,
+          },
         },
         series: [
           {
             type: 'custom',
             dimensions: ['rowIndex', 'sDate', 'eDate'],
             renderItem: this.renderItem,
-            itemStyle: {
-              opacity: 0.8
-            },
             encode: {
               x: ['sDate', 'eDate'],
               y: 'rowIndex'
             },
-            data: this.data
+            data: this.data,
           }
-        ]
+        ],
+        backgroundColor: '#393C3E',
+        color: '#ffffff',
+        textStyle: {
+          color: '#ffffff',
+        }
       };
     });
   }
