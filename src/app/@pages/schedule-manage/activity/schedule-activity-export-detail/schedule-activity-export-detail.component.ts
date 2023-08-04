@@ -3,7 +3,8 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ActivitySetting, ScheduleActivitySetting, Schedule_Batch_History } from '@api/models/schedule-activity.model';
 import { StorageService } from '@api/services/storage.service';
 import { StatusResult } from '@common/enums/common-enum';
-import { ScheduleSettingMock } from '@common/mock-data/schedule-activity-list-mock';
+import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
+import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
 
@@ -12,10 +13,10 @@ import { LocalDataSource } from 'ng2-smart-table';
   templateUrl: './schedule-activity-export-detail.component.html',
   styleUrls: ['./schedule-activity-export-detail.component.scss']
 })
-export class ActivityDetailComponent extends BaseComponent implements OnInit {
-  ScheduleActivitySetting: Array<ScheduleActivitySetting> = ScheduleSettingMock;
-  activitySetting: ActivitySetting = ScheduleSettingMock[0].activitySetting[0];
-  schedule_Batch_History: Array<Schedule_Batch_History> = ScheduleSettingMock[0].activitySetting[0].schedule_batch_history;
+export class ActivityExportDetailComponent extends BaseComponent implements OnInit {
+  ScheduleActivitySetting: Array<ScheduleActivitySetting> = ScheduleActivitySettingMock;
+  activitySetting: ActivitySetting = ScheduleActivitySettingMock[0].activitySetting[0];
+  schedule_Batch_History: Array<Schedule_Batch_History> = ScheduleActivitySettingMock[0].activitySetting[0].schedule_batch_history;
 
   params: any;//路由參數
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
@@ -74,6 +75,7 @@ export class ActivityDetailComponent extends BaseComponent implements OnInit {
         valuePrepareFunction: (cell: string) => {
           const lableName = '批次排程'
           const cellLow = cell?.toLowerCase();
+          if (CommonUtil.isBlank(cellLow)) return cellLow
           return cellLow === 'success' ? `<p class="left">${lableName}${StatusResult[cellLow]}</p>` : `<p class="left colorRed textBold">${lableName}${StatusResult[cellLow]}</p>`;
         },
         sort: false,

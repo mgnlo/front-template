@@ -1,21 +1,19 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActivityListCondition, ActivitySetting } from '@api/models/activity-list.model';
+import {  ActivitySetting } from '@api/models/activity-list.model';
 import { StorageService } from '@api/services/storage.service';
 import { DialogService } from '@api/services/dialog.service';
 import { Frequency, Status, StatusResult } from '@common/enums/common-enum';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
-import { ScheduleSettingMock } from '@common/mock-data/schedule-activity-list-mock';
-import { CommonUtil } from '@common/utils/common-util';
-import { Dictionary } from '@common/utils/dictionary';
+import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { DeleteButtonComponent } from '@component/table/detail-button/delete-button.component';
-import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
 import { PreviewDialogComponent } from './preview-dialog/preview.dialog/preview-dialog.component';
 import { ScheduleActivitySetting, ActivitySetting as ScheduleActivitySettingModel,  } from '@api/models/schedule-activity.model';
+import { CommonUtil } from '@common/utils/common-util';
 
 @Component({
   selector: 'schedule-activity-set',
@@ -50,7 +48,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   filterActivityList: Array<{ key: string; val: string }> = new Array;
 
   //預設名單列表
-  ScheduleActivitySetting: Array<ScheduleActivitySetting> = ScheduleSettingMock;
+  ScheduleActivitySetting: Array<ScheduleActivitySetting> = ScheduleActivitySettingMock;
   ScheduleActivitySettingModel: Array<ScheduleActivitySettingModel>;
 
   constructor(private router: Router,
@@ -139,6 +137,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         class: 'col-1 alignCenter',
         valuePrepareFunction: (cell: string) => {
           const cellLow = cell?.toLowerCase();
+          if (CommonUtil.isBlank(cellLow)) return cellLow
           return cellLow === 'true' ? StatusResult[cellLow] : `<p class="colorRed textBold">${StatusResult[cellLow]}</p>`;
         },
         sort: false,

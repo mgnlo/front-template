@@ -410,8 +410,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   }
   //#endregion
 
-  getConditionSettingQueryFormGroup(index: number){
-    let conditionArray = this.validateForm.get('conditionSettingQuery') as FormArray;
+  getFormArraysFormGroup(formArrayName:string, index: number){
+    let conditionArray = this.validateForm.get(formArrayName) as FormArray;
     return conditionArray.at(index) as FormGroup;
   }
 
