@@ -53,7 +53,7 @@ export class BaseComponent implements OnDestroy {
         this.paginator.nowPage = page;
         this.paginator.totalPage = Math.ceil(this.paginator.totalCount / perPage);
         this.paginator.rowStart = (page - 1) * perPage + 1;
-        this.paginator.rowEnd = this.paginator.totalPage !== page ? page * perPage : (page - 1) * perPage + this.paginator.totalCount % perPage;
+        this.paginator.rowEnd = this.paginator.rowStart + (perPage - 1);
       });
     }
   }
