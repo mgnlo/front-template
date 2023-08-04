@@ -127,16 +127,6 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
           }
         }
       },
-      modifyContent: {
-        title: '異動內容',
-        type: 'html',
-        class: 'left',
-        sort: false,
-        width: '30%',
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="left">TODO</p>`;
-        },
-      },
       reviewStatus: {
         title: '狀態',
         type: 'html',
