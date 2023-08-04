@@ -18,6 +18,7 @@ import { LocalDataSource } from 'ng2-smart-table';
 import { catchError, filter, tap, map } from 'rxjs/operators';
 import { TagManageService } from '../tag-manage.service';
 import { TagConditionDialogComponent } from './condition-dialog/condition-dialog.component';
+import { RegExpUtil } from '@common/utils/reg-exp-util';
 
 @Component({
   selector: 'tag-set',
@@ -102,22 +103,12 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       tagDescription: new FormControl(null),
       conditionValue: new FormControl(null, Validators.required),
       conditionSettingQuery: new FormControl(null, Validators.required),
-      tagConditionSetting: new FormArray([
-        new FormGroup({
-          id: new FormControl(0),
-          detectionCondition_0: new FormControl(null, Validators.required),
-          thresholdValue_0: new FormControl(null, [Validators.required, ValidatorsUtil.number]),
-          //C1: new FormControl(null, Validators.required),
-        }),
-      ]),
+      tagConditionSetting: new FormArray([]),
     }, [ValidatorsUtil.dateRange]);
 
     this.params = this.activatedRoute.snapshot.params;
     const changeRouteName = this.params['changeRoute'] ?? "";
     this.actionName = this.getActionName(changeRouteName);
-    const getRawValue = this.validateForm.getRawValue();
-
-    this.changeTagType(getRawValue.tagType)
   }
 
   gridDefine = {
@@ -193,7 +184,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     if (!!this.tagId) {
       const changeRouteName = this.params['changeRoute'] ?? "";
       this.actionName = this.getActionName(changeRouteName);
-      const getRawValue = this.validateForm.getRawValue();
       this.loadingService.open();
       this.tagManageService.getTagSettingRow(this.tagId).pipe(
         catchError(err => {
@@ -218,14 +208,14 @@ export class TagAddComponent extends BaseComponent implements OnInit {
                       this.conditions.push(new FormGroup({
                         id: new FormControl(index),
                         ['detectionCondition_' + index]: new FormControl(conditionSetting.detectionCondition, Validators.required),
-                        ['thresholdValue_' + index]: new FormControl(+conditionSetting.thresholdValue, Validators.required),
+                        ['thresholdValue_' + index]: new FormControl(+conditionSetting.thresholdValue, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
                         ['joinValue_' + index]: new FormControl(conditionSetting.joinValue, Validators.required)
                       }));
                     } else {
                       this.conditions.push(new FormGroup({
                         id: new FormControl(index),
                         ['detectionCondition_' + index]: new FormControl(conditionSetting.detectionCondition, Validators.required),
-                        ['thresholdValue_' + index]: new FormControl(+conditionSetting.thresholdValue, Validators.required),
+                        ['thresholdValue_' + index]: new FormControl(+conditionSetting.thresholdValue, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
                       }));
                     }
                   })
@@ -243,16 +233,39 @@ export class TagAddComponent extends BaseComponent implements OnInit {
               this.detail = processedData.detail;
             }
           }
+
           this.loadingService.close();
         })
       ).subscribe(res => {
         console.info(res.result);
       });
     }
+
+
+    //更新驗證
+    const getRawValue = this.validateForm.getRawValue();
+    debugger
+    this.changeTagType(getRawValue.tagType)
+    this.changeConditionSettingMethod(getRawValue.conditionSettingMethod)
   }
 
   ngAfterViewChecked(): void {
     this.changeDetectorRef.detectChanges();
+  }
+
+  ngDoCheck() {
+    console.info('this.findInvalidControls()', this.findInvalidControls())
+  }
+
+  findInvalidControls() {
+    const invalid = [];
+    const controls = this.validateForm.controls;
+    for (const name in controls) {
+      if (controls[name].invalid) {
+        invalid.push(name);
+      }
+    }
+    return invalid;
   }
 
   //#region 標籤類型 更動時切換驗證
@@ -260,6 +273,9 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     if (key === 'normal') {
       if (!this.validateForm.contains('conditionSettingMethod')) {
         this.addField('conditionSettingMethod', 'normal', Validators.required);
+      }
+      if (!this.validateForm.contains('conditionSettingQuery')) {
+        this.addField('conditionSettingQuery', null, Validators.required);
       }
       if (this.validateForm.contains('fileName')) {
         this.removeField('fileName');
@@ -275,7 +291,39 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       }
       //this.addField('fileName', null, [Validators.required,this.validateFileType]);
     }
+  }
+  //#endregion
 
+  //#region 條件設定方式 更動時切換驗證
+  changeConditionSettingMethod(key: string) {
+    debugger
+    if (this.validateForm.contains('tagConditionSetting')) {
+      this.conditions.clearValidators();
+    }
+    if (key === 'normal') {
+      if (!this.validateForm.contains('conditionSettingQuery')) {
+        this.addField('conditionSettingQuery', null, Validators.required);
+      }
+      if (this.validateForm.contains('conditionValue')) {
+        this.removeField('conditionValue');
+      }
+    }
+
+    if (key === 'field') {
+      if (this.validateForm.contains('conditionSettingQuery')) {
+        this.removeField('conditionSettingQuery');
+      }
+      if (!this.validateForm.contains('conditionValue')) {
+        this.addField('conditionValue', null, Validators.required);
+      }
+      this.conditions.push(new FormGroup({
+        id: new FormControl(0),
+        ['detectionCondition_' + 0]: new FormControl(null, Validators.required),
+        ['thresholdValue_' + 0]: new FormControl(null, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
+      }));
+    }
+
+    this.conditions?.updateValueAndValidity();
   }
   //#endregion
 

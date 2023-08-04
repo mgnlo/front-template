@@ -19,7 +19,7 @@
         <div class="row">
             <radio class="col-12 col-lg-6" title="標籤類型" [form]="validateForm" ctlName="tagType" [selectList]="{options: tagTypeList, key: 'key', val: 'val'}" (valueChange)="changeTagType($event)"></radio>
             <div *ngIf="validateForm.get('tagType')?.value === 'normal'">
-              <radio class="essential col-12 col-lg-6" title="條件設定方式" [form]="validateForm" ctlName="conditionSettingMethod" [selectList]="{options: tagSetConditionList, key: 'key', val: 'val'}"></radio>
+              <radio class="essential col-12 col-lg-6" title="條件設定方式" [form]="validateForm" ctlName="conditionSettingMethod" [selectList]="{options: tagSetConditionList, key: 'key', val: 'val'}" (valueChange)="changeConditionSettingMethod($event)"></radio>
             </div>
             <div *ngIf="validateForm.get('tagType')?.value === 'document'" class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': validateForm.get('fileName')?.errors?.uploadFileMsg}">
               <label>名單上傳</label>
