@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import {  ActivitySetting } from '@api/models/activity-list.model';
+import { ActivitySetting } from '@api/models/activity-list.model';
 import { StorageService } from '@api/services/storage.service';
 import { DialogService } from '@api/services/dialog.service';
 import { Frequency, Status, StatusResult } from '@common/enums/common-enum';
@@ -12,7 +12,7 @@ import { DeleteButtonComponent } from '@component/table/detail-button/delete-but
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
 import { PreviewDialogComponent } from './preview-dialog/preview.dialog/preview-dialog.component';
-import { ScheduleActivitySetting, ActivitySetting as ScheduleActivitySettingModel,  } from '@api/models/schedule-activity.model';
+import { ScheduleActivitySetting, ActivitySetting as ScheduleActivitySettingModel, } from '@api/models/schedule-activity.model';
 import { CommonUtil } from '@common/utils/common-util';
 
 @Component({
@@ -28,9 +28,9 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   actionName: string;// 新增/編輯/複製
 
   //預設下拉時間日期
-  daily: number[] = Array.from({ length: 31 }, (_, index) => index + 1);
-  hour: number[] = Array.from({ length: 12 }, (_, index) => index + 1);
-  minute: number[] = Array.from({ length: 60 }, (_, index) => index + 1);
+  daily = Array.from({ length: 32 }, (_, index) => index.toString().padStart(2, '0'));
+  hour = Array.from({ length: 13 }, (_, index) => index.toString().padStart(2, '0'));
+  minute = Array.from({ length: 61 }, (_, index) => index.toString().padStart(2, '0'));
 
   //預設排程頻率
   scheduleFrequencyList = [Frequency.daily, Frequency.weekly, Frequency.monthly];
@@ -40,7 +40,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     }).map(([k, v]) => ({ key: k, val: v }));
 
   //預設檔案存放地方
-  filePathList: Array<{ key: string; val: string }> = [{ key: 'path_A', val: 'A://' }, { key: 'path_B', val: 'B:/' }, { key: 'path_C', val: 'C:\\' }];
+  filePathList: Array<{ key: string; val: string }> = [{ key: 'path_A', val: 'A://' }, { key: 'path_B', val: 'B:/' }, { key: 'path_C', val: 'C:\\' }, { key: '/file/path/', val: '/file/path/' }];
 
   //預設pup-up活動名單
   activityListSetting: Array<ActivitySetting> = ActivityListMock;//Call API
@@ -64,7 +64,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       frequency: new FormControl('daily', Validators.required),
       hour: new FormControl(null, Validators.required),
       minute: new FormControl(null, Validators.required),
-      file_path: new FormControl(null, Validators.required),
+      filePath: new FormControl(null, Validators.required),
     });
 
     this.params = this.activatedRoute.snapshot.params;
@@ -73,9 +73,22 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
     const state = this.router.getCurrentNavigation()?.extras?.state;
     if (!!state) {
-      Object.keys(state).forEach(key => {
-        if (key === 'activitySetting') {
+      //日期塞資料
+      const frequencyTime = state?.frequencyTime;
+      const frequencyTimeArray = frequencyTime.split(/[:：]/);
+      if (frequencyTimeArray.length > 0 && state.executionFrequency) {
+        if (state.executionFrequency?.toLowerCase() === 'daily') {
+          this.validateForm.controls['hour'].setValue(frequencyTimeArray[0]);
+          this.validateForm.controls['minute'].setValue(frequencyTimeArray[1]);
         }
+        else {
+          this.validateForm.controls['daily'].setValue(frequencyTimeArray[0]);
+          this.validateForm.controls['hour'].setValue(frequencyTimeArray[1]);
+          this.validateForm.controls['minute'].setValue(frequencyTimeArray[2]);
+        }
+      }
+      //塞資料
+      Object.keys(state).forEach(key => {
         if (!!this.validateForm.controls[key]) {
           switch (key) {
             default:

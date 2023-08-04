@@ -3,6 +3,8 @@ export interface ScheduleActivitySetting {
   version: string;
   jobName: string;
   executionFrequency: string;
+  frequencyTime: string;
+  filePath: string;
   creationTime: string;
   modificationTime: string;
   status: string;
@@ -35,7 +37,7 @@ export class Schedule_Batch_History {
   historyId: string;
   activityId: string;
   version: string;
-  batchResultCount:number;
+  batchResultCount: number;
   batchTime: string;
   batchResult: string;
 }
