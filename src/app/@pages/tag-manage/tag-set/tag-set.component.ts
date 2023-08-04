@@ -62,7 +62,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   //取得新增條件區塊
   get conditions(): FormArray {
-    return this.validateForm.get('conditionSettingQuery') as FormArray
+    return this.validateForm.get('tagConditionSetting') as FormArray
   }
 
   detail: TagDetailView;
@@ -103,7 +103,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       scheduleSettings: new FormControl(null, Validators.required),
       tagDescription: new FormControl(null),
       conditionValue: new FormControl(null, Validators.required),
-      conditionSettingQuery: new FormArray([
+      tagConditionSetting: new FormArray([
         new FormGroup({
           id: new FormControl(0),
           detectionCondition_0: new FormControl(null, Validators.required),
@@ -130,7 +130,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     //         case 'endDate':
     //           this.validateForm.controls[key].setValue(new Date(state[key]))
     //           break;
-    //         case 'conditionSettingQuery':
+    //         case 'tagConditionSetting':
     //           this.conditions.removeAt(0);
     //           //這裡要改呀呀呀
     //           this.conditions.push(new FormGroup({
@@ -261,7 +261,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
                 case 'endDate':
                   this.validateForm.controls[key].setValue(new Date(res.result[key]))
                   break;
-                case 'conditionSettingQuery':
+                case 'tagConditionSetting':
                   this.conditions.removeAt(0);
                   res.result.tagConditionSetting.forEach((conditionSetting, index) => {
                     if (!!conditionSetting.joinValue) {
