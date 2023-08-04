@@ -100,11 +100,12 @@ export const CommonUtil = {
     return null;
   },
   /** 取得FormArray裡的FormGroup
-   * @param formArrayName
-   * @param index FormArray裡的第幾個FormGroup
+   * @param validateForm 最外圈的FormGroup
+   * @param formArrayName FormArray名字
+   * @param index FormArray裡的第幾個FormGroup (取第二層的FormGroup)
   */
-  getFormGroupInFormArray(formArrayName: string, index: number): FormGroup {
-    let conditionArray = this.validateForm.get(formArrayName) as FormArray;
+  getFormGroupInFormArray(validateForm: FormGroup, formArrayName: string, index: number): FormGroup {
+    let conditionArray = validateForm.get(formArrayName) as FormArray;
     return conditionArray.at(index) as FormGroup;
   },
 }; // End

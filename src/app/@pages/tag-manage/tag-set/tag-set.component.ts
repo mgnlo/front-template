@@ -56,7 +56,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   //預設檔案存放地方
   condition_valueList: Array<{ key: string; val: string }> = [{ key: 'condition_A', val: '近三個月_基金_申購金額' }, { key: 'condition_B', val: '假資料B' }, { key: 'condition_C', val: '假資料C' }];
-  
+
   //集合方式
   joinValueList: Array<{ key: string; val: string }> = [{ key: 'and', val: 'and' }, { key: 'or', val: 'or' }];
 
@@ -264,7 +264,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
                 case 'conditionSettingQuery':
                   this.conditions.removeAt(0);
                   res.result.tagConditionSetting.forEach((conditionSetting, index) => {
-                    if(!!conditionSetting.joinValue){
+                    if (!!conditionSetting.joinValue) {
                       this.conditions.push(new FormGroup({
                         id: new FormControl(index),
                         ['detectionCondition_' + index]: new FormControl(conditionSetting.detectionCondition, Validators.required),
@@ -411,8 +411,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   //#endregion
 
   //取得FormArray裡的FormGroup
-  getFormGroupInFormArray(formArrayName:string, index: number): FormGroup{
-    return CommonUtil.getFormGroupInFormArray(formArrayName, index);
+  getFormGroupInFormArray(formArrayName: string, index: number): FormGroup {
+    return CommonUtil.getFormGroupInFormArray(this.validateForm, formArrayName, index);
   }
 
   //條件分佈級距彈出視窗
