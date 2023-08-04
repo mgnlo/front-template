@@ -27,6 +27,7 @@ export class TagConditionSetting {
   detectionCondition: string
   conditionValue: string
   thresholdValue: string
+  joinValue?: string
 }
 
 export class TagReviewHistory {
@@ -92,12 +93,6 @@ export interface HistoryGroupView {
   }[]
 }
 
-export class TagSettingListResp {
-  data: Array<TagSetting>;
-}
-export class TagSettingRowResp {
-  data: TagSetting;
-}
 export class TagSettingEditReq {
   TagName: string;
   status: string;

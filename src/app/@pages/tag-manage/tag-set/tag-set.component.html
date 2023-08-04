@@ -63,7 +63,7 @@
                     <p>欄位錯誤訊息</p>
                 </div>
             </div> -->
-          <dropdown class="essential col-12 col-lg-12" title="偵測條件" [form]="validateForm" [selectList]="{options: condition_valueList, key: 'key', val: 'val'}" ctlName="condition_value"></dropdown>
+          <dropdown class="col-12 col-lg-12" title="偵測條件" [form]="validateForm" [selectList]="{options: condition_valueList, key: 'key', val: 'val'}" ctlName="conditionValue"></dropdown>
         </div>
         <div class="row rightBox">
           <div class="fieldBtn col-12 col-lg-2">
@@ -75,44 +75,10 @@
         <!-- 灰底區塊 -->
         <div class="grayCard" *ngFor="let condition of conditions.controls | keyvalue; let i=index; let first = first; let last = last" formArrayName="conditionSettingQuery">
           <div class="row" formGroupName="{{i}}">
-              <div class="fieldGroup essential col-6 col-lg-4">
-                  <label>條件值</label>
-                  <div>
-                    <nb-select fullWidth placeholder="請選擇" formControlName="detection_condition{{this.conditions.controls[i].get('id').value}}">
-                      <nb-option *ngFor="let mathSymbol of mathSymbolList" [value]="mathSymbol.key">{{ mathSymbol.val }}</nb-option>
-                    </nb-select>
-                  </div>
-                  <div class="note errorText">
-                      <nb-icon icon="alert-triangle"></nb-icon>
-                      <p>欄位錯誤訊息</p>
-                  </div>
-              </div>
-              <div class="fieldGroup essential col-6 col-lg-4">
-                  <label>門檻值</label>
-                  <div>
-                      <input nbInput fullWidth status="basic" type="number" placeholder="請輸入" formControlName="threshold_value{{this.conditions.controls[i].get('id').value}}"/>
-                  </div>
-                  <div class="note errorText">
-                    <nb-icon icon="alert-triangle"></nb-icon>
-                    <p>欄位錯誤訊息</p>
-                  </div>
-              </div>
-              <!-- <basic-input class="col-6 col-lg-4" title="門檻值" [form]="validateForm" [ctlName]="'threshold_value'+this.conditions.controls[i].get('id').value"></basic-input> -->
+              <dropdown class="col-6 col-lg-4" title="條件值" [form]="getFormGroupInFormArray('conditionSettingQuery', i)" ctlName="detectionCondition_{{i}}" [selectList]="{options: mathSymbolList, key: 'key', val: 'val'}"></dropdown>
+              <basic-input class="col-6 col-lg-4" title="門檻值" type="number" [form]="getFormGroupInFormArray('conditionSettingQuery', i)" ctlName="thresholdValue_{{i}}"></basic-input>
               <!-- radio欄位結構 -->
-              <div class="fieldGroup essential col-10 col-lg-2">
-                <label *ngIf="!last">集合</label>
-                <div *ngIf="!last">
-                    <nb-radio-group formControlName="join_value{{this.conditions.controls[i].get('id').value}}">
-                        <nb-radio value="and">and</nb-radio>
-                        <nb-radio value="or">or</nb-radio>
-                    </nb-radio-group>
-                </div>
-                <div *ngIf="!last" class="note errorText">
-                    <nb-icon icon="alert-triangle"></nb-icon>
-                    <p>欄位錯誤訊息</p>
-                </div>
-              </div>
-
+              <radio *ngIf="!last" class="col-10 col-lg-2" title="集合" [form]="getFormGroupInFormArray('conditionSettingQuery', i)" ctlName="joinValue_{{i}}" [selectList]="{options: joinValueList, key: 'key', val: 'val'}"></radio>
               <!-- 增減按鈕 -->
               <div *ngIf="last" class="fieldBtn col-1 col-lg-1">
                   <button nbButton status="success" size="tiny" class="iconBtn" (click)="changeConditionsBtn('add', i)">
@@ -128,10 +94,10 @@
         </div>
     </nb-card-body>
   </nb-card>
-  <nb-card *ngIf="this.params['changeRoute'] === 'edit'">
+  <nb-card *ngIf="this.params['changeRoute'] === 'edit' && (detail?.historyGroupView || !!dataSource)">
     <nb-card-body>
         <nb-tabset>
-            <nb-tab tabTitle="異動歷程">
+            <nb-tab tabTitle="異動歷程" *ngIf="detail?.historyGroupView">
               <div class="historyList">
                 <ng-container *ngFor="let hg of detail.historyGroupView | keyvalue; let i=index;">
                     <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
@@ -155,7 +121,7 @@
                 </ng-container>
               </div>
             </nb-tab>
-            <nb-tab tabTitle="標籤使用範圍">
+            <nb-tab tabTitle="標籤使用範圍" *ngIf="!!dataSource">
                 <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
                 <paginator [source]="dataSource" [paginator]="paginator"></paginator>
             </nb-tab>

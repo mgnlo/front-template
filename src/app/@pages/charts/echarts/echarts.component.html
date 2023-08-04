@@ -13,47 +13,12 @@
 				</nb-card-header>
 				<nb-card-body>
 					<ul class="categoryList">
-						<li>
+						<li *ngFor="let category of categories">
 							<div>
 								<nb-icon icon="folder-outline"></nb-icon>
-								<h3>構面一 25%</h3>
+								<h3>{{ category.name }} {{ (category.tags / this.totalTags * 100).toFixed(1) }}%</h3>
 							</div>
-							<p><span>425</span>標籤數</p>
-						</li>
-						<li>
-							<div>
-								<nb-icon icon="folder-outline"></nb-icon>
-								<h3>構面二 8%</h3>
-							</div>
-							<p><span>84</span>標籤數</p>
-						</li>
-						<li>
-							<div>
-								<nb-icon icon="folder-outline"></nb-icon>
-								<h3>構面三 24%</h3>
-							</div>
-							<p><span>485</span>標籤數</p>
-						</li>
-						<li>
-							<div>
-								<nb-icon icon="folder-outline"></nb-icon>
-								<h3>構面四 32%</h3>
-							</div>
-							<p><span>1425</span>標籤數</p>
-						</li>
-						<li>
-							<div>
-								<nb-icon icon="folder-outline"></nb-icon>
-								<h3>構面五 5%</h3>
-							</div>
-							<p><span>25</span>標籤數</p>
-						</li>
-						<li>
-							<div>
-								<nb-icon icon="folder-outline"></nb-icon>
-								<h3>構面六 14%</h3>
-							</div>
-							<p><span>225</span>標籤數</p>
+							<p><span>{{ category.tags }}</span>標籤數</p>
 						</li>
 					</ul>
 					<ul class="categoryList userList">
@@ -62,7 +27,7 @@
 								<nb-icon icon="file-outline"></nb-icon>
 								<h3>客群名單</h3>
 							</div>
-							<p><span>21</span>份</p>
+							<p><span>{{ this.mockData.customers }}</span>份</p>
 						</li>
 					</ul>
 				</nb-card-body>
@@ -74,10 +39,10 @@
 					</div>
 					<div class="details">
 						<h3>今日總計已貼標籤數</h3>
-						<p>2,875,612</p>
+						<p>{{ this.mockData.tagRecord.tagged | number }}</p>
 						<span>
 							<nb-icon icon="alert-circle-outline"></nb-icon>
-							250 筆貼標失敗
+							{{ this.mockData.tagRecord.fail | number }} 筆貼標失敗
 						</span>
 					</div>
 				</nb-card-body>
@@ -89,37 +54,37 @@
 					<h2>標籤組成統計</h2>
 				</nb-card-header>
 				<nb-card-body>
-					<ngx-echarts-tree></ngx-echarts-tree>
+					<ngx-echarts-tree [data]="seriesService.converTreeSeriesData(mockData.categorys)"></ngx-echarts-tree>
 				</nb-card-body>
 			</nb-card>
 		</div>
 		<div class="col-lg-6">
 			<nb-card>
 				<nb-card-header>
-					<h2>熱門名單採用標籤</h2>
+					<h2>{{ mockData.hotTags.title }}</h2>
 				</nb-card-header>
 				<nb-card-body>
-					<ngx-echarts-treemap-hot></ngx-echarts-treemap-hot>
+					<ngx-echarts-treemap-hot [data]="seriesService.convertTreeMapSeriesData(mockData.hotTags)"></ngx-echarts-treemap-hot>
 				</nb-card-body>
 			</nb-card>
 		</div>
 		<div class="col-lg-6">
 			<nb-card>
 				<nb-card-header>
-					<h2>冷門名單採用標籤</h2>
+					<h2>{{ mockData.coldTags.title }}</h2>
 				</nb-card-header>
 				<nb-card-body>
-					<ngx-echarts-treemap-cool></ngx-echarts-treemap-cool>
+					<ngx-echarts-treemap-cool [data]="seriesService.convertTreeMapSeriesData(mockData.coldTags)"></ngx-echarts-treemap-cool>
 				</nb-card-body>
 			</nb-card>
 		</div>
 		<div class="col-lg-4">
 			<nb-card>
 				<nb-card-header>
-					<h2>審核案件比例</h2>
+					<h2>審核案件比例 {{ pieSeriesDataDate }}</h2>
 				</nb-card-header>
 				<nb-card-body>
-					<ngx-echarts-doughnut></ngx-echarts-doughnut>
+					<ngx-echarts-doughnut [data]="pieSeriesData"></ngx-echarts-doughnut>
 				</nb-card-body>
 			</nb-card>
 		</div>
@@ -129,7 +94,7 @@
 					<h2>每日案件審核數量</h2>
 				</nb-card-header>
 				<nb-card-body>
-					<ngx-echarts-line></ngx-echarts-line>
+					<ngx-echarts-line [data]="seriesService.convertLineSeriesData(mockData.reviewCaseInfos)" (chartEvent)="lineSeriesClick($event)"></ngx-echarts-line>
 				</nb-card-body>
 			</nb-card>
 		</div>

@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy } from '@angular/core';
+import { TreeMapSeriesData } from '@api/models/dashboard.model';
 import { NbThemeService } from '@nebular/theme';
 
 @Component({
@@ -8,26 +9,10 @@ import { NbThemeService } from '@nebular/theme';
   `,
 })
 export class EchartsTreemapCoolComponent implements AfterViewInit, OnDestroy {
+	@Input() data: Array<TreeMapSeriesData>;
+
 	options: any = {};
 	themeSubscription: any;
-
-	public data = [
-		{
-			name: '熱門名單採用標籤',
-			children: [
-				{ name: '近一個月_基金_申購金額_高', value: 494 },
-				{ name: '近三個月_基金_申購金額_高', value: 394 },
-				{ name: '近六個月_基金_申購金額_高', value: 274 },
-				{ name: '近一個月_信用卡_消費金額_高', value: 144 },
-				{ name: '近一個月_信用卡_消費金額_中', value: 134 },
-				{ name: '近三個月_信用卡_消費金額_低', value: 94 },
-				{ name: '近一個月_基金_申購金額_低', value: 74 },
-				{ name: '信用卡戶', value: 44 },
-				{ name: '居住地_高雄市', value: 34 },
-				{ name: '居住地_新北市', value: 24 },
-			],
-		}
-	];
 
 	constructor(private theme: NbThemeService) {
 	}
@@ -55,7 +40,7 @@ export class EchartsTreemapCoolComponent implements AfterViewInit, OnDestroy {
 					formatter: function (params: { name: string; value: any; }) {
 						let arr = [
 							'{name|' + params.name + '}',
-							'{value|$ ' + params.value + '}'
+							'{value| ' + params.value + '}'
 						];
 						return arr.join('\n');
 					},

@@ -1,15 +1,23 @@
-import { AfterViewInit, Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { LineSeriesData } from '@api/models/dashboard.model';
 import { NbThemeService } from '@nebular/theme';
+
+import * as echarts from 'echarts';
 
 @Component({
   selector: 'ngx-echarts-line',
   template: `
-    <div echarts [options]="options" class="echart"></div>
+    <div #echartsContainer echarts [options]="options" class="echart"></div>
   `,
 })
 export class EchartsLineComponent implements AfterViewInit, OnDestroy {
+  @ViewChild('echartsContainer', { static: true }) echartsContainer!: ElementRef;
+  @Input() data: LineSeriesData;
+  @Output() chartEvent = new EventEmitter();
+
   options: any = {};
   themeSubscription: any;
+  chart: any;
 
   constructor(private theme: NbThemeService) {
   }
@@ -29,7 +37,7 @@ export class EchartsLineComponent implements AfterViewInit, OnDestroy {
         },
         legend: {
           left: 'left',
-          data: ['排程', '標籤', '名單'],
+          data: this.data.legends, //['排程', '標籤', '名單'],
           textStyle: {
             color: echarts.textColor,
           },
@@ -37,7 +45,7 @@ export class EchartsLineComponent implements AfterViewInit, OnDestroy {
         xAxis: [
           {
             type: 'category',
-            data: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+            data: this.data.dates,
             axisTick: {
               alignWithLabel: true,
             },
@@ -55,7 +63,7 @@ export class EchartsLineComponent implements AfterViewInit, OnDestroy {
         ],
         yAxis: [
           {
-            type: 'log',
+            type: 'log', // value | log | 
             axisLine: {
               lineStyle: {
                 color: echarts.axisLineColor,
@@ -79,31 +87,22 @@ export class EchartsLineComponent implements AfterViewInit, OnDestroy {
           bottom: '3%',
           containLabel: true,
         },
-        series: [
-          {
-            name: '排程',
-            type: 'line',
-            smooth: true,
-            data: [1, 13, 9, 127, 81, 247, 41, 2223, 6669],
-          },
-          {
-            name: '標籤',
-            type: 'line',
-            smooth: true,
-            data: [14, 12, 40, 8, 36, 3, 49, 128, 256],
-          },
-          {
-            name: '名單',
-            type: 'line',
-            smooth: true,
-            data: [84, 42, 120, 90, 39, 32, 48, 88, 36],
-          },
-        ],
+        series: this.data.seriesData,
       };
+    });
+
+    this.chart = echarts.init(this.echartsContainer.nativeElement);
+    this.chart.on('click', (param) => {
+      this.onChartClick(param);
     });
   }
 
   ngOnDestroy(): void {
     this.themeSubscription.unsubscribe();
+    this.chart.off('click', this.onChartClick);
+  }
+
+  onChartClick(param: any): void {
+    this.chartEvent.emit(param.name);
   }
 }
