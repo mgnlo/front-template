@@ -7,6 +7,8 @@ import { CustomerManageService } from '@pages/customer-manage/customer-manage.se
 import { ThemeModule } from 'app/@theme/theme.module';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { DashboardRoutingModule, routedComponents } from './dashboard-routing.module';
+import { ChartsModule } from '@pages/charts/charts.module';
+import { NbCardModule, NbIconModule } from '@nebular/theme';
 
 @NgModule({
   imports: [
@@ -17,6 +19,9 @@ import { DashboardRoutingModule, routedComponents } from './dashboard-routing.mo
     DashboardRoutingModule,
     Ng2SmartTableModule,
     ComponentModule,
+    ChartsModule,
+    NbCardModule,
+    NbIconModule
   ],
   providers: [
     DialogService,
