@@ -78,6 +78,7 @@
               <dropdown class="col-6 col-lg-4" title="條件值" [form]="getFormGroupInFormArray('conditionSettingQuery', i)" ctlName="detectionCondition_{{i}}" [selectList]="{options: mathSymbolList, key: 'key', val: 'val'}"></dropdown>
               <basic-input class="col-6 col-lg-4" title="門檻值" type="number" [form]="getFormGroupInFormArray('conditionSettingQuery', i)" ctlName="thresholdValue_{{i}}"></basic-input>
               <!-- radio欄位結構 -->
+              <div *ngIf="last" class="col-10 col-lg-2"></div>
               <radio *ngIf="!last" class="col-10 col-lg-2" title="集合" [form]="getFormGroupInFormArray('conditionSettingQuery', i)" ctlName="joinValue_{{i}}" [selectList]="{options: joinValueList, key: 'key', val: 'val'}"></radio>
               <!-- 增減按鈕 -->
               <div *ngIf="last" class="fieldBtn col-1 col-lg-1">
