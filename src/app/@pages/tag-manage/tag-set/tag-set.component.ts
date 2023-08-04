@@ -72,7 +72,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   selectedFile: File | undefined;
   maxSizeInMB: number = 5;//檔案大小
-  fileName: string = '請上傳檔案';
+  filePlaceholderName: string = '請上傳檔案';
   //#region 檔案白名單
   passFileArrayStr: string = '.csv,'
   passFileArray: Array<string> = ['csv']
@@ -99,7 +99,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       endDate: new FormControl(moment(new Date()).add(3, 'months').toDate(), ValidatorsUtil.dateFmt),
       tagDimension: new FormControl(null, Validators.required),
       tagSubDimension: new FormControl(null, Validators.required),
-      scheduleSettings: new FormControl(null, Validators.required),
       tagDescription: new FormControl(null),
       conditionValue: new FormControl(null, Validators.required),
       conditionSettingQuery: new FormControl(null, Validators.required),
@@ -330,7 +329,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     const fileValidatorResult = this.fileValidator(file);
-    this.fileName = CommonUtil.isBlank(file?.name) ? '請上傳檔案' : file.name;
+    this.filePlaceholderName = CommonUtil.isBlank(file?.name) ? this.filePlaceholderName : file.name;
     if (fileValidatorResult !== null) {
       this.validateForm.get('fileName').setErrors(fileValidatorResult);
       return
