@@ -75,10 +75,10 @@
         <!-- 灰底區塊 -->
         <div class="grayCard" *ngFor="let condition of conditions.controls | keyvalue; let i=index; let first = first; let last = last" formArrayName="conditionSettingQuery">
           <div class="row" formGroupName="{{i}}">
-              <dropdown class="col-6 col-lg-4" title="條件值" [form]="getFormArraysFormGroup('conditionSettingQuery', i)" ctlName="detectionCondition_{{i}}" [selectList]="{options: mathSymbolList, key: 'key', val: 'val'}"></dropdown>
-              <basic-input class="col-6 col-lg-4" title="門檻值" type="number" [form]="getFormArraysFormGroup('conditionSettingQuery', i)" ctlName="thresholdValue_{{i}}"></basic-input>
+              <dropdown class="col-6 col-lg-4" title="條件值" [form]="getFormGroupInFormArray('conditionSettingQuery', i)" ctlName="detectionCondition_{{i}}" [selectList]="{options: mathSymbolList, key: 'key', val: 'val'}"></dropdown>
+              <basic-input class="col-6 col-lg-4" title="門檻值" type="number" [form]="getFormGroupInFormArray('conditionSettingQuery', i)" ctlName="thresholdValue_{{i}}"></basic-input>
               <!-- radio欄位結構 -->
-              <radio *ngIf="!last" class="col-10 col-lg-2" title="集合" [form]="getFormArraysFormGroup('conditionSettingQuery', i)" ctlName="joinValue_{{i}}" [selectList]="{options: joinValueList, key: 'key', val: 'val'}"></radio>
+              <radio *ngIf="!last" class="col-10 col-lg-2" title="集合" [form]="getFormGroupInFormArray('conditionSettingQuery', i)" ctlName="joinValue_{{i}}" [selectList]="{options: joinValueList, key: 'key', val: 'val'}"></radio>
               <!-- 增減按鈕 -->
               <div *ngIf="last" class="fieldBtn col-1 col-lg-1">
                   <button nbButton status="success" size="tiny" class="iconBtn" (click)="changeConditionsBtn('add', i)">

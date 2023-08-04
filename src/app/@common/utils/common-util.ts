@@ -1,4 +1,4 @@
-import { ValidationErrors } from '@angular/forms';
+import { FormArray, FormGroup, ValidationErrors } from '@angular/forms';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 
@@ -79,7 +79,7 @@ export const CommonUtil = {
   /** 取得歷程資料 */
   getHistoryProcessData<T>(reviewHistory: string, data: T): any {
     if (!!data) {
-      if(!data[reviewHistory]) return null;
+      if (!data[reviewHistory]) return null;
       let detail = JSON.parse(JSON.stringify(data));
       let isHistoryOpen = {};
 
@@ -98,6 +98,13 @@ export const CommonUtil = {
       return { isHistoryOpen, detail };
     }
     return null;
-  }
-
+  },
+  /** 取得FormArray裡的FormGroup
+   * @param formArrayName
+   * @param index FormArray裡的第幾個FormGroup
+  */
+  getFormGroupInFormArray(formArrayName: string, index: number): FormGroup {
+    let conditionArray = this.validateForm.get(formArrayName) as FormArray;
+    return conditionArray.at(index) as FormGroup;
+  },
 }; // End
