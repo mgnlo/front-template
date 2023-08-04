@@ -26,7 +26,7 @@ import { TagConditionDialogComponent } from './condition-dialog/condition-dialog
 })
 export class TagAddComponent extends BaseComponent implements OnInit {
   TagType = TagType;
-  SetCondition = TagSetCondition;
+  conditionSettingMethod = TagSetCondition;
   Status = Status;
   tagId: string;
 
@@ -94,7 +94,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       tagName: new FormControl(null, Validators.required),
       status: new FormControl('enabled', Validators.required),
       tagType: new FormControl('normal', Validators.required),
-      setCondition: new FormControl('normal', Validators.required),
+      conditionSettingMethod: new FormControl('normal', Validators.required),
       uploadFile: new FormControl(null, Validators.required),
       startDate: new FormControl(new Date(), ValidatorsUtil.dateFmt),
       endDate: new FormControl(moment(new Date()).add(3, 'months').toDate(), ValidatorsUtil.dateFmt),
@@ -308,8 +308,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   //#region 標籤類型 更動時切換驗證
   changeTagType(key: string) {
     if (key === 'normal') {
-      if (!this.validateForm.contains('setCondition')) {
-        this.addField('setCondition', 'normal', Validators.required);
+      if (!this.validateForm.contains('conditionSettingMethod')) {
+        this.addField('conditionSettingMethod', 'normal', Validators.required);
       }
       if (this.validateForm.contains('uploadFile')) {
         this.removeField('uploadFile');
@@ -320,8 +320,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       if (!this.validateForm.contains('uploadFile')) {
         this.addField('uploadFile', null, Validators.required);
       }
-      if (this.validateForm.contains('setCondition')) {
-        this.removeField('setCondition');
+      if (this.validateForm.contains('conditionSettingMethod')) {
+        this.removeField('conditionSettingMethod');
       }
       //this.addField('uploadFile', null, [Validators.required,this.validateFileType]);
     }
