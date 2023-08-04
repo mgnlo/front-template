@@ -1,6 +1,6 @@
-<div class="pageTitle">
+<div class="pageTitle" *ngIf="detail">
     <h1>客群活動名單</h1>
-    <button nbButton status="info" size="tiny" class="iconBtn" (click)="edit()">
+    <button nbButton [status]="detail.status === 'reviewing' ? 'basic': 'info'" size="tiny" class="iconBtn" (click)="edit()" [disabled]="detail.status === 'reviewing'">
         <nb-icon icon="edit-outline"></nb-icon>
     </button>
 </div>

@@ -1,9 +1,9 @@
-<div class="pageTitle">
+<div class="pageTitle" *ngIf="detail">
   <h1>標籤管理</h1>
-  <button nbButton status="info" size="tiny" class="iconBtn" (click)="edit()">
+  <button nbButton [status]="detail?.status === 'reviewing' ? 'basic' : 'info'" size="tiny" class="iconBtn" (click)="edit()" [disabled]="detail?.status === 'reviewing'">
       <nb-icon icon="edit-outline"></nb-icon>
   </button>
-  <button nbButton status="success" size="tiny" class="iconBtn"  (click)="copy()">
+  <button nbButton [status]="detail?.status === 'reviewing' ? 'basic' : 'success'" size="tiny" class="iconBtn"  (click)="copy()" [disabled]="detail?.status === 'reviewing'">
       <nb-icon icon="copy-outline"></nb-icon>
   </button>
 </div>
