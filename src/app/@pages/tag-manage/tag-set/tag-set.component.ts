@@ -415,6 +415,10 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     return CommonUtil.getFormGroupInFormArray(this.validateForm, formArrayName, index);
   }
 
+  getConditionId(index: number): number{
+    return CommonUtil.getFormGroupInFormArray(this.validateForm, 'tagConditionSetting', index).get('id').value;
+  }
+
   //條件分佈級距彈出視窗
   conditionDialog() {
     this.dialogService.open(TagConditionDialogComponent, {
