@@ -11,8 +11,8 @@
           <basic-input class="col-12 col-lg-6" title="排程名稱" [form]="validateForm" ctlName="jobName"></basic-input>
           <dropdown class="col-12 col-lg-6" title="狀態" [form]="validateForm" ctlName="status"></dropdown>
           <div class="fieldGroup essential col-12 col-lg-6">
-            <radio title="排程頻率" [form]="validateForm" ctlName="frequency" [selectList]="{options: frequencyList, key: 'key', val: 'val'}" (valueChange)="changeFrequencyType($event)"></radio>
-            <div *ngIf="validateForm.get('frequency').value === 'daily'" class="multi">
+            <radio title="排程頻率" [form]="validateForm" ctlName="executionFrequency" [selectList]="{options: frequencyList, key: 'key', val: 'val'}" (valueChange)="changeFrequencyType($event)"></radio>
+            <div *ngIf="validateForm.get('executionFrequency').value?.toLowerCase() === 'daily'" class="multi">
               <nb-select fullWidth placeholder="時" formControlName="hour">
                   <nb-option *ngFor="let val of hour" [value]="val">{{ val }}</nb-option>
               </nb-select>
@@ -21,7 +21,7 @@
                 <nb-option *ngFor="let val of minute" [value]="val">{{ val }}</nb-option>
               </nb-select>
             </div>
-            <div *ngIf="validateForm.get('frequency').value !== 'daily'" class="multi">
+            <div *ngIf="validateForm.get('executionFrequency').value?.toLowerCase() !== 'daily'" class="multi">
               <nb-select fullWidth placeholder="日" formControlName="daily">
                 <nb-option *ngFor="let val of daily" [value]="val">{{ val }}</nb-option>
             </nb-select>

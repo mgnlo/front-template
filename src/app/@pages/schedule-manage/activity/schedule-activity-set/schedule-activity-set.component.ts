@@ -61,7 +61,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     this.validateForm = new FormGroup({
       jobName: new FormControl(null, Validators.required),
       status: new FormControl(null, Validators.required),
-      frequency: new FormControl('daily', Validators.required),
+      executionFrequency: new FormControl(null, Validators.required),
       hour: new FormControl(null, Validators.required),
       minute: new FormControl(null, Validators.required),
       filePath: new FormControl(null, Validators.required),
@@ -92,7 +92,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         if (!!this.validateForm.controls[key]) {
           switch (key) {
             default:
-              this.validateForm.controls[key].setValue(state[key]);
+              this.validateForm.controls[key].setValue(state[key]?.toLowerCase());
               break;
           }
         }
