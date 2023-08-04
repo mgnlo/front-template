@@ -83,7 +83,10 @@ export const CommonUtil = {
       let detail = JSON.parse(JSON.stringify(data));
       let isHistoryOpen = {};
 
-      detail.historyGroupView = {};
+      if (data[reviewHistory].length > 0) {
+        detail.historyGroupView = {};
+      }
+
       data[reviewHistory].forEach(history => {
         if (!detail.historyGroupView || !detail.historyGroupView[history.groupId]) {
           isHistoryOpen[history.groupId] = true;
