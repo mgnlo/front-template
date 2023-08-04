@@ -47,7 +47,7 @@ export class RadioComponent implements OnInit {
   }
 
   get required(){
-    if(this.ctl.validator) {
+    if(this.ctl?.validator) {
       return this.ctl.validator({} as AbstractControl)?.required !== undefined ? true : false;
     } else {
       return false;
@@ -56,14 +56,14 @@ export class RadioComponent implements OnInit {
   
   ngDoCheck(): void {
     // console.info(this.ctl.errors)
-    if(!!this.ctl.errors){
+    if(!!this.ctl?.errors){
       //只取第一個錯誤訊息
       this.firstErr = Object.values(this.ctl.errors).map(val => val as string)[0];
     }
   }
 
   hasError(){
-    return (this.ctl.dirty || this.ctl.touched) && this.ctl?.errors;
+    return (this.ctl?.dirty || this.ctl?.touched) && this.ctl?.errors;
   }
 
   valueChangeFn(param: any){

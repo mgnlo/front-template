@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ScheduleBatchHistory, ScheduleTagSetting, ScheduleTagSettingView } from '@api/models/schedule-tag.model';
 import { StorageService } from '@api/services/storage.service';
@@ -6,7 +6,7 @@ import { Status, StatusResult } from '@common/enums/common-enum';
 import { ScheduleTagSettingMock } from '@common/mock-data/schedule-tag-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
-import { LocalDataSource } from 'ng2-smart-table';
+import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
 
 @Component({
   selector: 'schedule-tag-detail',
@@ -20,6 +20,7 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
   //預設拉取資料
   scheduleTagListSetting: Array<ScheduleTagSetting> = ScheduleTagSettingMock;//Call API
   scheduleTagSettingView: Array<ScheduleTagSettingView> = new Array;
+  @ViewChild(Ng2SmartTableComponent) ng2SmartTable: Ng2SmartTableComponent;
 
   constructor(
     storageService: StorageService,
@@ -35,77 +36,6 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
       perPage: 10,
     },
     selectMode: 'single',
-    columns: {
-      tagName: {
-        title: '標籤名稱',
-        type: 'html',
-        class: 'left',
-        width: '27.5%',
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
-        },
-        sort: false
-      },
-      tagDescription: {
-        title: '標籤說明',
-        type: 'html',
-        class: 'left',
-        width: '27.5%',
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
-        },
-        sort: false,
-      },
-      status: {
-        title: '狀態',
-        type: 'string',
-        width: '5%',
-        class: 'alignCenter',
-        valuePrepareFunction: (cell: string) => {
-          return Status[cell];
-        },
-        sort: false,
-      },
-      batchTime: {
-        title: '批次更新時間',
-        type: 'string',
-        width: '20%',
-        sort: false,
-      },
-      batchResult: {
-        title: '更新結果',
-        type: 'html',
-        width: '5%',
-        valuePrepareFunction: (cell: string) => {
-          const cellLow = cell?.toLowerCase();
-          if (CommonUtil.isBlank(cellLow)) return cellLow
-          return (cellLow === 'true' || cellLow === 'success') ? StatusResult[cellLow] : `<p class="colorRed textBold">${StatusResult[cellLow]}</p>`;
-        },
-        sort: false,
-      },
-      action: {
-        title: '查看',
-        type: 'custom',
-        width: '1%',
-        valuePrepareFunction: (cell, row: ScheduleTagSetting) => row,
-        renderComponent: ScheduleTagButtonComponent,
-        sort: false,
-      },
-    },
-    hideSubHeader: true,
-    actions: {
-      add: false,
-      edit: false,
-      delete: false,
-    },
-  };
-
-  gridDefine_1 = {
-    pager: {
-      display: true,
-      perPage: 10,
-    },
-    selectMode: 'multi',
     columns: {
       tagName: {
         title: '標籤名稱',
@@ -224,10 +154,14 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
 
   refresh() {
     this.enableMultiSelect = true;
+    this.gridDefine.selectMode = 'multi';
+    this.ng2SmartTable.initGrid();
   }
 
   cancelRefresh() {
     this.enableMultiSelect = false;
+    this.gridDefine.selectMode = 'single';
+    this.ng2SmartTable.initGrid();
   }
 
   submitRefresh() {
