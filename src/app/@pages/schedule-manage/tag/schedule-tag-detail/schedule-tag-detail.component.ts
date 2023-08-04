@@ -14,7 +14,6 @@ import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
   styleUrls: ['./schedule-tag-detail.component.scss']
 })
 export class ScheduleTagDetailComponent extends BaseComponent implements OnInit {
-  enableMultiSelect: boolean = false;
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
   //預設拉取資料
@@ -147,19 +146,23 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
     }
   }
 
-  ngOnDestroy(): void {
+  setSessionVal(){
     let sessionData = { page: this.paginator.nowPage };
     this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
 
+  ngOnDestroy(): void {
+    this.setSessionVal();
+  }
+
   refresh() {
-    this.enableMultiSelect = true;
+    this.setSessionVal();
     this.gridDefine.selectMode = 'multi';
     this.ng2SmartTable.initGrid();
   }
 
   cancelRefresh() {
-    this.enableMultiSelect = false;
+    this.setSessionVal();
     this.gridDefine.selectMode = 'single';
     this.ng2SmartTable.initGrid();
   }

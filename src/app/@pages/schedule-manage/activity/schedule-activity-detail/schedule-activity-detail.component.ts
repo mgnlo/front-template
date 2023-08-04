@@ -19,7 +19,6 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   activitySetting: Array<ActivitySetting> = ScheduleActivitySettingMock[0].activitySetting;
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
-  enableMultiSelect: boolean = false;//預設關閉CheckBox
   @ViewChild(Ng2SmartTableComponent) ng2SmartTable: Ng2SmartTableComponent;
 
   constructor(
@@ -127,19 +126,23 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     }
   }
 
-  ngOnDestroy(): void {
+  setSessionVal(){
     let sessionData = { page: this.paginator.nowPage };
     this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
 
+  ngOnDestroy(): void {
+    this.setSessionVal();
+  }
+
   refresh() {
-    this.enableMultiSelect = true;
+    this.setSessionVal();
     this.gridDefine.selectMode = 'multi';
     this.ng2SmartTable.initGrid();
   }
-  
+
   cancelRefresh() {
-    this.enableMultiSelect = false;
+    this.setSessionVal();
     this.gridDefine.selectMode = 'single';
     this.ng2SmartTable.initGrid();
   }
