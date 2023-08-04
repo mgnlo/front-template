@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ScheduleDetailView, ScheduleActivitySetting, ActivitySetting, Schedule_Batch_History } from '@api/models/schedule-activity.model';
 import { StorageService } from '@api/services/storage.service';
@@ -6,7 +6,7 @@ import { StatusResult, Status } from '@common/enums/common-enum';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
-import { LocalDataSource } from 'ng2-smart-table';
+import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
 
 @Component({
   selector: 'schedule-activity-detail',
@@ -19,7 +19,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   activitySetting: Array<ActivitySetting> = ScheduleActivitySettingMock[0].activitySetting;
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
-  enableMultiSelect: boolean = false;//預設關閉CheckBox
+  @ViewChild(Ng2SmartTableComponent) ng2SmartTable: Ng2SmartTableComponent;
 
   constructor(
     storageService: StorageService,
@@ -113,77 +113,6 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     },
   };
 
-  gridDefine_1 = {
-    pager: {
-      display: true,
-      perPage: 10,
-    },
-    selectMode: 'multi',
-    columns: {
-      activityName: {
-        title: '活動名稱',
-        type: 'html',
-        class: 'left',
-        width: '30%',
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
-        },
-        sort: false
-      },
-      activityDescription: {
-        title: '活動說明',
-        type: 'html',
-        class: 'left',
-        width: '30%',
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
-        },
-        sort: false,
-      },
-      status: {
-        title: '狀態',
-        type: 'string',
-        width: '5%',
-        class: 'alignCenter',
-        valuePrepareFunction: (cell: string) => {
-          return Status[cell];
-        },
-        sort: false,
-      },
-      batchUpdateTime: {
-        title: '批次更新時間',
-        type: 'string',
-        width: '15%',
-        sort: false,
-      },
-      filterOptions: {
-        title: '更新結果',
-        type: 'html',
-        width: '5%',
-        valuePrepareFunction: (cell: string) => {
-          const cellLow = cell?.toLowerCase();
-          if (CommonUtil.isBlank(cellLow)) return cellLow
-          return cellLow === 'true' ? StatusResult[cellLow] : `<p class="colorRed textBold">${StatusResult[cellLow]}</p>`;
-        },
-        sort: false,
-      },
-      action: {
-        title: '查看',
-        type: 'custom',
-        width: '1%',
-        valuePrepareFunction: (cell, row: Schedule_Batch_History) => row,
-        renderComponent: ScheduleActivityButtonComponent,
-        sort: false,
-      },
-    },
-    hideSubHeader: true,
-    actions: {
-      add: false,
-      edit: false,
-      delete: false,
-    },
-  };
-
   ngOnInit(): void {
     this.dataSource = new LocalDataSource();
     this.dataSource.load(this.activitySetting);
@@ -197,17 +126,25 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     }
   }
 
-  ngOnDestroy(): void {
+  setSessionVal(){
     let sessionData = { page: this.paginator.nowPage };
     this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
 
+  ngOnDestroy(): void {
+    this.setSessionVal();
+  }
+
   refresh() {
-    this.enableMultiSelect = true;
+    this.setSessionVal();
+    this.gridDefine.selectMode = 'multi';
+    this.ng2SmartTable.initGrid();
   }
 
   cancelRefresh() {
-    this.enableMultiSelect = false;
+    this.setSessionVal();
+    this.gridDefine.selectMode = 'single';
+    this.ng2SmartTable.initGrid();
   }
 
   submitRefresh() {

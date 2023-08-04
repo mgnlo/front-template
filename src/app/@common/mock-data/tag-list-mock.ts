@@ -12,7 +12,7 @@ export const TagSettingMock: Array<TagSetting> = [
     "status": "enabled",
     "startDate": "2023-07-01",
     "endDate": "2023-07-10",
-    "conditionSettingMethod": "條件設定方式",
+    "conditionSettingMethod": "normal",//field
     "conditionSettingQuery": "條件設定語法",
     "tagDimension": "A",
     "tagSubDimension": "A",
