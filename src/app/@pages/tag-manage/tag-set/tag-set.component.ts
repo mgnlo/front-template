@@ -410,9 +410,9 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   }
   //#endregion
 
-  getFormArraysFormGroup(formArrayName:string, index: number){
-    let conditionArray = this.validateForm.get(formArrayName) as FormArray;
-    return conditionArray.at(index) as FormGroup;
+  //取得FormArray裡的FormGroup
+  getFormGroupInFormArray(formArrayName:string, index: number): FormGroup{
+    return CommonUtil.getFormGroupInFormArray(formArrayName, index);
   }
 
   //條件分佈級距彈出視窗
