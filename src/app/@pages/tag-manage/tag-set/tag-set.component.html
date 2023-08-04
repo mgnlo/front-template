@@ -26,10 +26,14 @@
               <div>
                 <input nbInput fullWidth [status]="validateForm.get('fileName')?.errors?.uploadFileMsg ? 'danger' : 'basic'"
                       type="text" formControlName="fileName" [placeholder] = "filePlaceholderName"/>
-                <input nbInput fullWidth type="file"  [accept]="passFileArrayStr" (change)="onFileSelected($event)"  />
+                <input nbInput fullWidth type="file"  [accept]="removeLastCharIfEquals(passFileArrayStr,',')" (change)="onFileSelected($event)"  />
                 <button nbButton status="warning" size="tiny" class="iconBtn">
                     <nb-icon icon="folder-add-outline"></nb-icon>
                 </button>
+              </div>
+              <div class="note">
+                <nb-icon icon="alert-circle"></nb-icon>
+                <p>請上傳{{removeLastCharIfEquals(passFileArrayStr,',')}}格式類型檔案</p>
               </div>
               <div class="note errorText">
                 <nb-icon icon="alert-triangle"></nb-icon>

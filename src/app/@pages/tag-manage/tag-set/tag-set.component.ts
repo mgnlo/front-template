@@ -15,7 +15,7 @@ import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
-import { catchError, filter, tap } from 'rxjs/operators';
+import { catchError, filter, tap, map } from 'rxjs/operators';
 import { TagManageService } from '../tag-manage.service';
 import { TagConditionDialogComponent } from './condition-dialog/condition-dialog.component';
 
@@ -74,7 +74,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   maxSizeInMB: number = 5;//檔案大小
   filePlaceholderName: string = '請上傳檔案';
   //#region 檔案白名單
-  passFileArrayStr: string = '.csv,'
+  passFileArrayStr: string = '.csv,,,,'
   passFileArray: Array<string> = ['csv']
   //#endregion
 
@@ -246,7 +246,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
           this.loadingService.close();
         })
       ).subscribe(res => {
-         console.info(res.result);
+        console.info(res.result);
       });
     }
   }
@@ -360,6 +360,20 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   }
   //#endregion
 
+  //#region 刪除最後一個特定字元(含重複)
+  removeLastCharIfEquals(inputString, targetChar) {
+    if (!inputString || !targetChar) {
+      return inputString;
+    }
+
+    const regex = new RegExp(`${targetChar}+[^${targetChar}]*$`);
+    const result = inputString.replace(regex, '');
+
+    return result;
+  }
+  //#endregion
+
+  //#region 取得FormArray裡的FormGroup 和 getConditionId
   //取得FormArray裡的FormGroup
   getFormGroupInFormArray(formArrayName: string, index: number): FormGroup {
     return CommonUtil.getFormGroupInFormArray(this.validateForm, formArrayName, index);
@@ -368,14 +382,16 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   getConditionId(index: number): number {
     return CommonUtil.getFormGroupInFormArray(this.validateForm, 'tagConditionSetting', index).get('id').value;
   }
+  //#endregion
 
-  //條件分佈級距彈出視窗
+  //#region 條件分佈級距彈出視窗
   conditionDialog() {
     this.dialogService.open(TagConditionDialogComponent, {
       title: '條件分佈級距',
       dataList: this.validateForm,
     });
   }
+  //#endregion
 
   cancel() {
     this.router.navigate(['pages', 'tag-manage', 'tag-list']);
