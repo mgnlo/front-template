@@ -3,7 +3,7 @@
 </div>
 <div class="pageContent">
   <!-- 提示訊息 -->
-  <div *ngIf="this.params['changeRoute'] === 'edit' && this.validateForm.get('tagType').value ==='document'" class="noteText">
+  <div *ngIf="this.params['changeRoute'] === 'edit' && this.validateForm.get('tagType')?.value ==='document'" class="noteText">
         <nb-icon icon="info-outline"></nb-icon>
         <p>重新選取檔案後，將以新版上傳資料為貼標標準</p>
   </div>
@@ -18,14 +18,14 @@
         </div>
         <div class="row">
             <radio class="col-12 col-lg-6" title="標籤類型" [form]="validateForm" ctlName="tagType" [selectList]="{options: tagTypeList, key: 'key', val: 'val'}" (valueChange)="changeTagType($event)"></radio>
-            <div *ngIf="validateForm.get('tagType').value === 'normal'">
+            <div *ngIf="validateForm.get('tagType')?.value === 'normal'">
               <radio class="essential col-12 col-lg-6" title="條件設定方式" [form]="validateForm" ctlName="conditionSettingMethod" [selectList]="{options: tagSetConditionList, key: 'key', val: 'val'}"></radio>
             </div>
-            <div *ngIf="validateForm.get('tagType').value === 'document'" class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': validateForm.get('uploadFile')?.errors?.uploadFileMsg}">
+            <div *ngIf="validateForm.get('tagType')?.value === 'document'" class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': validateForm.get('fileName')?.errors?.uploadFileMsg}">
               <label>名單上傳</label>
               <div>
-                <input nbInput fullWidth [status]="validateForm.get('uploadFile')?.errors?.uploadFileMsg ? 'danger' : 'basic'"
-                      type="text" formControlName="uploadFile" [placeholder] = "fileName"/>
+                <input nbInput fullWidth [status]="validateForm.get('fileName')?.errors?.uploadFileMsg ? 'danger' : 'basic'"
+                      type="text" formControlName="fileName" [placeholder] = "fileName"/>
                 <input nbInput fullWidth type="file"  [accept]="passFileArrayStr" (change)="onFileSelected($event)"  />
                 <button nbButton status="warning" size="tiny" class="iconBtn">
                     <nb-icon icon="folder-add-outline"></nb-icon>
@@ -33,7 +33,7 @@
               </div>
               <div class="note errorText">
                 <nb-icon icon="alert-triangle"></nb-icon>
-                <p>{{validateForm.get('uploadFile')?.errors?.uploadFileMsg}}</p>
+                <p>{{validateForm.get('fileName')?.errors?.uploadFileMsg}}</p>
               </div>
             </div>
         </div>
@@ -46,21 +46,23 @@
             <dropdown class="col-12 col-lg-6" title="排程設定" [form]="validateForm" ctlName="scheduleSettings" enumName="schedule"></dropdown>
             <basic-input class="col-12 col-lg-6" title="描述說明" [form]="validateForm" ctlName="tagDescription"></basic-input>
         </div>
-        <div *ngIf="validateForm.get('conditionSettingMethod').value === 'normal'">
+        <div *ngIf="validateForm.get('conditionSettingMethod')?.value === 'normal'">
           <div class="row">
-            <div class="fieldGroup essential error col-12">
+            <div class="fieldGroup essential col-12" [ngClass]="{'error': ((validateForm.get('conditionSettingQuery')?.dirty || validateForm.get('conditionSettingQuery')?.touched) && validateForm.get('conditionSettingQuery')?.invalid)}">
                 <label>條件設定</label>
                 <div>
-                    <textarea nbInput fullWidth status="danger" placeholder="請輸入" formControlName="conditionSettingQuery"></textarea>
+                    <textarea nbInput fullWidth placeholder="請輸入" formControlName="conditionSettingQuery"
+                              [status]="((validateForm.get('conditionSettingQuery')?.dirty || validateForm.get('conditionSettingQuery')?.touched) && validateForm.get('conditionSettingQuery')?.invalid)? 'danger' : 'basic'">
+                    </textarea>
                 </div>
                 <div class="note errorText">
                     <nb-icon icon="alert-triangle"></nb-icon>
-                    <p>欄位錯誤訊息</p>
+                    <p>此為必填欄位</p>
                 </div>
             </div>
           </div>
         </div>
-        <div *ngIf="validateForm.get('conditionSettingMethod').value === 'field'">
+        <div *ngIf="validateForm.get('conditionSettingMethod')?.value === 'field'">
           <div class="subTitle">
               <p>條件設定</p>
           </div>
@@ -104,7 +106,7 @@
             <nb-tab tabTitle="異動歷程" *ngIf="detail?.historyGroupView">
               <div class="historyList">
                 <ng-container *ngFor="let hg of detail.historyGroupView | keyvalue; let i=index;">
-                    <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
+                    <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg?.value as history;">
                         <div class="mainItem">
                             <h4 (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">{{history.type}}</h4>
                             <button nbButton status="control" size="tiny" class="iconBtn" (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">

@@ -36,7 +36,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     .filter(([k, v]) => {
       return this.tagStatusList.includes(v);
     }).map(([k, v]) => ({ key: k, val: v }));
-  //scheduleList: Array<{ key: string; val: string }> = Object.entries(Schedule).map(([k, v]) => ({ key: k, val: v }));
   //預設構面
   categoryList: Array<{ key: string; val: string }> = Object.entries(TagDimension).map(([k, v]) => ({ key: k, val: v }))
   subCategoryList: Array<{ key: string; val: string }> = Object.entries(TagSubDimension).map(([k, v]) => ({ key: k, val: v }))
@@ -95,7 +94,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       status: new FormControl('enabled', Validators.required),
       tagType: new FormControl('normal', Validators.required),
       conditionSettingMethod: new FormControl('normal', Validators.required),
-      uploadFile: new FormControl(null, Validators.required),
+      fileName: new FormControl(null, Validators.required),
       startDate: new FormControl(new Date(), ValidatorsUtil.dateFmt),
       endDate: new FormControl(moment(new Date()).add(3, 'months').toDate(), ValidatorsUtil.dateFmt),
       tagDimension: new FormControl(null, Validators.required),
@@ -103,6 +102,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       scheduleSettings: new FormControl(null, Validators.required),
       tagDescription: new FormControl(null),
       conditionValue: new FormControl(null, Validators.required),
+      conditionSettingQuery: new FormControl(null, Validators.required),
       tagConditionSetting: new FormArray([
         new FormGroup({
           id: new FormControl(0),
@@ -119,55 +119,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     const getRawValue = this.validateForm.getRawValue();
 
     this.changeTagType(getRawValue.tagType)
-
-    const state = this.router.getCurrentNavigation()?.extras?.state;
-    // if (!!state) {
-    //   const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistory', state as TagSetting); // 異動歷程處理
-    //   Object.keys(state).forEach(key => {
-    //     if (!!this.validateForm.controls[key]) {
-    //       switch (key) {
-    //         case 'startDate':
-    //         case 'endDate':
-    //           this.validateForm.controls[key].setValue(new Date(state[key]))
-    //           break;
-    //         case 'tagConditionSetting':
-    //           this.conditions.removeAt(0);
-    //           //這裡要改呀呀呀
-    //           this.conditions.push(new FormGroup({
-    //             id: new FormControl(0),
-    //             ['detection_condition' + 0]: new FormControl(null, Validators.required),
-    //             ['threshold_value' + 0]: new FormControl(null, Validators.required),
-    //           }));
-    //           // let groupData = CommonUtil.groupBy(editData[key], 'tagGroup');
-    //           // Object.keys(groupData).forEach(key => {
-    //           //   let fg = new FormGroup({});
-    //           //   let condition = groupData[key] as Array<ActivityListCondition>;
-    //           //   condition.forEach(con => {
-    //           //     fg.setControl(con.tagKey.replace('tag-', ''), new FormControl(con.tagName, Validators.required));
-    //           //   });
-    //           //   this.conditions.push(fg);
-    //           // })
-    //           break;
-    //         default:
-    //           this.validateForm.controls[key].setValue(state[key]);
-    //           break;
-    //       }
-    //     }
-    //   })
-    //   if (!!processedData) {
-    //     if (changeRouteName === 'edit') {
-    //       this.isHistoryOpen = processedData.isHistoryOpen;
-    //       this.detail = processedData.detail;
-    //     }
-    //   }
-    //   else {
-    //     //之後可能加導頁pop-up提醒
-    //     this.router.navigate(['pages', 'tag-manage', 'tag-list']);
-    //   }
-    // }
-
-    this.changeTagType(getRawValue.tagType)
-
   }
 
   gridDefine = {
@@ -296,7 +247,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
           this.loadingService.close();
         })
       ).subscribe(res => {
-        // console.info(res.result);
+         console.info(res.result);
       });
     }
   }
@@ -311,19 +262,19 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       if (!this.validateForm.contains('conditionSettingMethod')) {
         this.addField('conditionSettingMethod', 'normal', Validators.required);
       }
-      if (this.validateForm.contains('uploadFile')) {
-        this.removeField('uploadFile');
+      if (this.validateForm.contains('fileName')) {
+        this.removeField('fileName');
       }
     }
 
     if (key === 'document') {
-      if (!this.validateForm.contains('uploadFile')) {
-        this.addField('uploadFile', null, Validators.required);
+      if (!this.validateForm.contains('fileName')) {
+        this.addField('fileName', null, Validators.required);
       }
       if (this.validateForm.contains('conditionSettingMethod')) {
         this.removeField('conditionSettingMethod');
       }
-      //this.addField('uploadFile', null, [Validators.required,this.validateFileType]);
+      //this.addField('fileName', null, [Validators.required,this.validateFileType]);
     }
 
   }
@@ -381,10 +332,10 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     const fileValidatorResult = this.fileValidator(file);
     this.fileName = CommonUtil.isBlank(file?.name) ? '請上傳檔案' : file.name;
     if (fileValidatorResult !== null) {
-      this.validateForm.get('uploadFile').setErrors(fileValidatorResult);
+      this.validateForm.get('fileName').setErrors(fileValidatorResult);
       return
     } else {
-      this.validateForm.get('uploadFile').setErrors(null);
+      this.validateForm.get('fileName').setErrors(null);
     }
   }
 
@@ -415,7 +366,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     return CommonUtil.getFormGroupInFormArray(this.validateForm, formArrayName, index);
   }
 
-  getConditionId(index: number): number{
+  getConditionId(index: number): number {
     return CommonUtil.getFormGroupInFormArray(this.validateForm, 'tagConditionSetting', index).get('id').value;
   }
 
