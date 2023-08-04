@@ -13,51 +13,51 @@
           <div class="row">
             <div class="textGroup col-12 col-lg-4">
                   <p class="textBold">標籤名稱：</p>
-                  <span>{{detail.tagName}}</span>
+                  <span>{{detail?.tagName}}</span>
             </div>
             <div class="textGroup col-12 col-lg-4">
                   <p class="textBold">狀態：</p>
-                  <span>{{detail.status | enum:'status'}}</span>
+                  <span>{{detail?.status | enum:'status'}}</span>
             </div>
             <div class="textGroup col-12 col-lg-4">
                   <p class="textBold">類型：</p>
-                  <span>{{detail.tagType | enum:'tagType'}}</span>
+                  <span>{{detail?.tagType | enum:'tagType'}}</span>
             </div>
           </div>
           <div class="row">
             <div class="textGroup col-12 col-lg-4">
               <p class="textBold">所屬單位：</p>
-              <span>{{detail.department}}</span>
+              <span>{{detail?.department}}</span>
             </div>
             <div class="textGroup col-12 col-lg-4">
               <p class="textBold">負責人：</p>
-              <span>{{detail.owner}}</span>
+              <span>{{detail?.owner}}</span>
             </div>
             <div class="textGroup col-12 col-lg-4">
                 <p class="textBold">起迄時間：</p>
-                <span>{{detail.startDate}}~{{detail.endDate}}</span>
+                <span>{{detail?.startDate}}~{{detail?.endDate}}</span>
             </div>
           </div>
           <div class="row">
             <div class="textGroup col-12 col-lg-4">
               <p class="textBold">標籤構面：</p>
-              <!-- <span>{{detail.tagDimension | enum:'tagDimension'}}</span> -->
-              <span>{{detail.tagDimension}}</span>
+              <!-- <span>{{detail?.tagDimension | enum:'tagDimension'}}</span> -->
+              <span>{{detail?.tagDimension}}</span>
             </div>
             <div class="textGroup col-12 col-lg-4">
               <p class="textBold">標籤子構面：</p>
-              <!-- <span>{{detail.tagSubDimension | enum:'tagSubDimension'}}</span> -->
-              <span>{{detail.tagSubDimension}}</span>
+              <!-- <span>{{detail?.tagSubDimension | enum:'tagSubDimension'}}</span> -->
+              <span>{{detail?.tagSubDimension}}</span>
             </div>
             <div class="textGroup col-12 col-lg-4">
                 <p class="textBold">異動時間：</p>
-                <span>{{detail.modificationTime | date:dateFormat}}</span>
+                <span>{{detail?.modificationTime | date:dateFormat}}</span>
             </div>
           </div>
           <div class="row">
             <div class="textGroup col-12 col-lg-4">
                 <p class="textBold">描述說明：</p>
-                <span>{{detail.tagDescription}}</span>
+                <span>{{detail?.tagDescription}}</span>
             </div>
             <div class="textGroup col-12 col-lg-4">
                 <p class="textBold">名單上傳：</p>
@@ -70,7 +70,7 @@
           <div class="row">
               <div class="textGroup code col-12">
                   <p class="textBold">偵測條件：</p>
-                  <pre>{{detail.conditionSettingQuery}}</pre>
+                  <pre>{{detail?.conditionSettingQuery}}</pre>
               </div>
           </div>
       </nb-card-body>

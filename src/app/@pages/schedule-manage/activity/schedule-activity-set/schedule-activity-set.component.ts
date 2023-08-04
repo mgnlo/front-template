@@ -207,14 +207,12 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   //#region 刪除按鈕
   onDeleteConfirm(row: { activityId: string; }): void {
-    //if (window.confirm('確定要刪除這筆資料嗎？')) {
     const index = this.ScheduleActivitySettingModel.findIndex(item => item.activityId === row.activityId);
     if (index !== -1) {
       this.ScheduleActivitySettingModel.splice(index, 1);
       this.refreshFilterActivityList();
       this.dataSource.load(this.ScheduleActivitySettingModel);
     }
-    //}
   }
   //#endregion
 
@@ -269,6 +267,10 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   }
 
   cancel() {
+    if ((this.params['changeRoute'] ?? "") === 'edit') {
+      this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-detail', this.params['scheduleId']]);
+      return
+    }
     this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-list']);
   }
 

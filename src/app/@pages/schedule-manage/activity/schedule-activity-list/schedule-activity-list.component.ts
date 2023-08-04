@@ -16,6 +16,10 @@ import { StorageService } from '@api/services/storage.service';
   styleUrls: ['./schedule-activity-list.component.scss']
 })
 export class ScheduleListComponent extends BaseComponent implements OnInit {
+
+  ScheduleActivitySetting: Array<ScheduleActivitySetting> = ScheduleActivitySettingMock;
+  sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
+
   constructor(
     storageService: StorageService,
     private scheduleManageService: ScheduleManageService,
@@ -23,18 +27,6 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
     private router: Router,
   ) {
     super(storageService);
-  }
-  ScheduleActivitySetting: Array<ScheduleActivitySetting> = ScheduleActivitySettingMock;
-  sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
-
-  ngOnInit(): void {
-    this.dataSource = new LocalDataSource();
-    this.dataSource.load(this.ScheduleActivitySetting);
-  }
-
-  ngOnDestroy(): void {
-    let sessionData = { page: this.paginator.nowPage };
-    this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
 
   gridDefine = {
@@ -93,6 +85,16 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
       delete: false,
     },
   };
+
+  ngOnInit(): void {
+    this.dataSource = new LocalDataSource();
+    this.dataSource.load(this.ScheduleActivitySetting);
+  }
+
+  ngOnDestroy(): void {
+    let sessionData = { page: this.paginator.nowPage };
+    this.storageService.putSessionVal(this.sessionKey, sessionData);
+  }
 
   add() {
     this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-set']);

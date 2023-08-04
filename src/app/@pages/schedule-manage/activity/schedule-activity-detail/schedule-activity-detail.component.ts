@@ -27,17 +27,18 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     private router: Router,
   ) {
     super(storageService);
-    const currentNavigation = this.router.getCurrentNavigation();
-    if (!!currentNavigation?.extras) {
-      const state = currentNavigation.extras.state;
+    const state = this.router.getCurrentNavigation()?.extras?.state;
+    if (!!state) {
       const processedData = CommonUtil.getHistoryProcessData<ScheduleActivitySetting>('scheduleReviewHistory', state as ScheduleActivitySetting); // 異動歷程處理
       if (!!processedData) {
         this.isHistoryOpen = processedData.isHistoryOpen;
         this.detail = processedData.detail;
       }
-      else {
-        //之後可能加導頁pop-up提醒
-        this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-list']);
+    }else{//假資料，之後要Call API
+      const processedData = CommonUtil.getHistoryProcessData<ScheduleActivitySetting>('scheduleReviewHistory', ScheduleActivitySettingMock[0] as ScheduleActivitySetting); // 異動歷程處理
+      if (!!processedData) {
+        this.isHistoryOpen = processedData.isHistoryOpen;
+        this.detail = processedData.detail;
       }
     }
   }
