@@ -244,7 +244,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
     //更新驗證
     const getRawValue = this.validateForm.getRawValue();
-    debugger
     this.changeTagType(getRawValue.tagType)
     this.changeConditionSettingMethod(getRawValue.conditionSettingMethod)
   }
@@ -285,7 +284,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   //#region 條件設定方式 更動時切換驗證
   changeConditionSettingMethod(key: string) {
-    debugger
     if (this.validateForm.contains('tagConditionSetting')) {
       this.conditions.clearValidators();
     }
