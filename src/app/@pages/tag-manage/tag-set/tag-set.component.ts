@@ -26,10 +26,26 @@ import { RegExpUtil } from '@common/utils/reg-exp-util';
   styleUrls: ['./tag-set.component.scss']
 })
 export class TagAddComponent extends BaseComponent implements OnInit {
-  TagType = TagType;
-  conditionSettingMethod = TagSetCondition;
-  Status = Status;
-  tagId: string;
+
+  //取得新增條件區塊
+  get conditions(): FormArray {
+    return this.validateForm.get('tagConditionSetting') as FormArray
+  }
+
+  detail: TagDetailView;
+  params: any = [];//路由參數
+  actionName: string;// 新增/編輯/複製
+
+  mockData: Array<ActivitySetting> = ActivityListMock;
+
+  maxSizeInMB: number = 5;//檔案大小
+  filePlaceholderName: string = '請上傳檔案';
+  //#region 檔案白名單
+  passFileArrayStr: string = '.csv,,,,'
+  passFileArray: Array<string> = ['csv']
+  //#endregion
+
+  isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
 
   //預設狀態
   tagStatusList = [Status.enabled, Status.disabled];
@@ -59,27 +75,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   //集合方式
   joinValueList: Array<{ key: string; val: string }> = [{ key: 'and', val: 'and' }, { key: 'or', val: 'or' }];
-
-  //取得新增條件區塊
-  get conditions(): FormArray {
-    return this.validateForm.get('tagConditionSetting') as FormArray
-  }
-
-  detail: TagDetailView;
-  params: any = [];//路由參數
-  actionName: string;// 新增/編輯/複製
-
-  mockData: Array<ActivitySetting> = ActivityListMock;
-
-  selectedFile: File | undefined;
-  maxSizeInMB: number = 5;//檔案大小
-  filePlaceholderName: string = '請上傳檔案';
-  //#region 檔案白名單
-  passFileArrayStr: string = '.csv,,,,'
-  passFileArray: Array<string> = ['csv']
-  //#endregion
-
-  isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
 
   constructor(
     storageService: StorageService,
@@ -180,12 +175,11 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       return { ...mock, during: `${mock.startDate}~${mock.endDate}` } //起訖日區間
     })
     this.dataSource.load(this.mockData);
-    this.tagId = this.activatedRoute.snapshot.params?.tagId;
-    if (!!this.tagId) {
+    if (!!this.params['tagId']) {
       const changeRouteName = this.params['changeRoute'] ?? "";
       this.actionName = CommonUtil.getActionName(changeRouteName);
       this.loadingService.open();
-      this.tagManageService.getTagSettingRow(this.tagId).pipe(
+      this.tagManageService.getTagSettingRow(this.params['tagId']).pipe(
         catchError(err => {
           this.loadingService.close();
           this.dialogService.alertAndBackToList(false, '查無該筆資料，將為您導回客群名單', ['pages', 'customer-manage', 'activity-list']);
@@ -429,41 +423,42 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   }
 
   submit() {
+    debugger
     let valid = this.validateForm.valid;
     let reqData: TagSettingEditReq = this.getRequestData();
-    // if (valid && !this.tagId) {
-    //   this.loadingService.open();
-    //   this.tagManageService.createTagSetting(reqData).pipe(
-    //     catchError((err) => {
-    //       this.loadingService.close();
-    //       this.dialogService.alertAndBackToList(false, '新增失敗', ['pages', 'tag-manage', 'tag-list']);
-    //       throw new Error(err.message);
-    //     }),
-    //     tap(res => {
-    //       console.info(res)
-    //       this.loadingService.close();
-    //     })).subscribe(res => {
-    //       if (res.code === RestStatus.SUCCESS) {
-    //         this.dialogService.alertAndBackToList(true, '新增成功', ['pages', 'tag-manage', 'tag-list'])
-    //       }
-    //     });
-    // } else if (valid && this.tagId) {
-    //   this.loadingService.open();
-    //   this.tagManageService.updateTagSetting(this.tagId, reqData).pipe(
-    //     catchError((err) => {
-    //       this.loadingService.close();
-    //       this.dialogService.alertAndBackToList(false, '編輯失敗', ['pages', 'tag-manage', 'tag-list']);
-    //       throw new Error(err.message);
-    //     }),
-    //     tap(res => {
-    //       console.info(res)
-    //       this.loadingService.close();
-    //     })).subscribe(res => {
-    //       if (res.code === RestStatus.SUCCESS) {
-    //         this.dialogService.alertAndBackToList(true, '編輯成功', ['pages', 'tag-manage', 'tag-list'])
-    //       }
-    //     });
-    // }
+    if (valid && !this.params['tagId']) {
+      this.loadingService.open();
+      this.tagManageService.createTagSetting(reqData).pipe(
+        catchError((err) => {
+          this.loadingService.close();
+          this.dialogService.alertAndBackToList(false, '新增失敗', ['pages', 'tag-manage', 'tag-list']);
+          throw new Error(err.message);
+        }),
+        tap(res => {
+          console.info(res)
+          this.loadingService.close();
+        })).subscribe(res => {
+          if (res.code === RestStatus.SUCCESS) {
+            this.dialogService.alertAndBackToList(true, '新增成功', ['pages', 'tag-manage', 'tag-list'])
+          }
+        });
+    } else if (valid && this.params['tagId']) {
+      this.loadingService.open();
+      this.tagManageService.updateTagSetting(this.params['tagId'], reqData).pipe(
+        catchError((err) => {
+          this.loadingService.close();
+          this.dialogService.alertAndBackToList(false, '編輯失敗', ['pages', 'tag-manage', 'tag-list']);
+          throw new Error(err.message);
+        }),
+        tap(res => {
+          console.info(res)
+          this.loadingService.close();
+        })).subscribe(res => {
+          if (res.code === RestStatus.SUCCESS) {
+            this.dialogService.alertAndBackToList(true, '編輯成功', ['pages', 'tag-manage', 'tag-list'])
+          }
+        });
+    }
   }
 
   getRequestData(): TagSettingEditReq {

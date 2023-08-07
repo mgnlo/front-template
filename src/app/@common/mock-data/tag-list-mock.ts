@@ -18,7 +18,9 @@ export const TagSettingMock: Array<TagSetting> = [
     "tagSubDimension": "A",
     "scheduleSettings": "daily",
     "uploadType": "名單上傳類型",
+    "fileName": "上傳檔案名稱",
     "filePath": "上傳檔案路徑/A/AAA/B\BB.config",
+    "fileData": "上傳檔案資料",
     "tagConditionSetting": [
       {
         "tagId": "cccccc123456",
@@ -130,7 +132,9 @@ export const TagSettingMock: Array<TagSetting> = [
     "tagSubDimension": "B",
     "scheduleSettings": "daily",
     "uploadType": "名單上傳類型",
-    "filePath": "上傳檔案路徑",
+    "fileName": "上傳檔案名稱",
+    "filePath": "上傳檔案路徑/A/AAA/B\BB.config",
+    "fileData": "上傳檔案資料",
     "tagConditionSetting": [
       {
         "tagId": "cccccc123456",
