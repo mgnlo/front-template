@@ -175,11 +175,12 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       return { ...mock, during: `${mock.startDate}~${mock.endDate}` } //起訖日區間
     })
     this.dataSource.load(this.mockData);
-    if (!!this.params['tagId']) {
+    const tagId = this.params['tagId'];
+    if (!!tagId) {
       const changeRouteName = this.params['changeRoute'] ?? "";
       this.actionName = CommonUtil.getActionName(changeRouteName);
       this.loadingService.open();
-      this.tagManageService.getTagSettingRow(this.params['tagId']).pipe(
+      this.tagManageService.getTagSettingRow(tagId).pipe(
         catchError(err => {
           this.loadingService.close();
           this.dialogService.alertAndBackToList(false, '查無該筆資料，將為您導回客群名單', ['pages', 'customer-manage', 'activity-list']);
@@ -227,9 +228,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
               this.detail = processedData.detail;
             }
           }
-          const getRawValue = this.validateForm.getRawValue();
-          this.changeTagType(getRawValue.tagType);
-          this.changeConditionSettingMethod(getRawValue.conditionSettingMethod);
           this.loadingService.close();
         })
       ).subscribe(res => {
@@ -237,6 +235,9 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       });
     }
 
+    const getRawValue = this.validateForm.getRawValue();
+    this.changeTagType(getRawValue.tagType);
+    this.changeConditionSettingMethod(getRawValue.conditionSettingMethod);
 
     //更新驗證
 
@@ -423,10 +424,10 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   }
 
   submit() {
-    debugger
-    let valid = this.validateForm.valid;
-    let reqData: TagSettingEditReq = this.getRequestData();
-    if (valid && !this.params['tagId']) {
+    const valid = this.validateForm.valid;
+    const tagId = this.params['tagId'];
+    const reqData: TagSettingEditReq = this.getRequestData();
+    if (valid && !tagId) {
       this.loadingService.open();
       this.tagManageService.createTagSetting(reqData).pipe(
         catchError((err) => {
@@ -442,9 +443,9 @@ export class TagAddComponent extends BaseComponent implements OnInit {
             this.dialogService.alertAndBackToList(true, '新增成功', ['pages', 'tag-manage', 'tag-list'])
           }
         });
-    } else if (valid && this.params['tagId']) {
+    } else if (valid && tagId) {
       this.loadingService.open();
-      this.tagManageService.updateTagSetting(this.params['tagId'], reqData).pipe(
+      this.tagManageService.updateTagSetting(tagId, reqData).pipe(
         catchError((err) => {
           this.loadingService.close();
           this.dialogService.alertAndBackToList(false, '編輯失敗', ['pages', 'tag-manage', 'tag-list']);
@@ -462,10 +463,10 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   }
 
   getRequestData(): TagSettingEditReq {
-    let reqData: TagSettingEditReq = this.validateForm.getRawValue();
+    const reqData: TagSettingEditReq = this.validateForm.getRawValue();
     reqData.startDate = moment(reqData.startDate).format('YYYY-MM-DD');
     reqData.endDate = moment(reqData.endDate).format('YYYY-MM-DD');
-    //console.info(reqData);
+    console.info('reqData', reqData);
     return reqData;
   }
 
