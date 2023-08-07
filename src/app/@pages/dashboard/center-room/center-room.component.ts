@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Category, TreeMapSeriesData, LineSeriesData, PieSeriesData, TreeSeriesData } from '@api/models/dashboard.model';
 import { SeriesService } from '@api/services/series.service';
 import { DashboardInfoMock } from '@common/mock-data/dasthboard.mock';
@@ -8,7 +8,7 @@ import { DashboardInfoMock } from '@common/mock-data/dasthboard.mock';
   styleUrls: ['./center-room.component.scss'],
   templateUrl: './center-room.component.html',
 })
-export class CenterRoomComponent {
+export class CenterRoomComponent implements OnInit {
   mockData = DashboardInfoMock
 
   //構面數據佔比資料表
@@ -45,6 +45,9 @@ export class CenterRoomComponent {
 
     this.pieSeriesDataDate = lastPieSeries.date;
     this.pieSeriesData = lastPieSeries.items;    
+  }
+  ngOnInit(): void {
+    document.querySelector("nb-layout-column").scrollTo(0, 0);
   }
 
   lineSeriesClick(date: string){

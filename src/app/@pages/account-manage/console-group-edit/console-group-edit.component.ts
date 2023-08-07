@@ -9,6 +9,10 @@ import { LocalDataSource } from 'ng2-smart-table';
 import { AccountManageService } from '../account.manage.service';
 import { BusinessUnit } from '@common/enums/console-user-enum';
 import { StorageService } from '@api/services/storage.service';
+import { catchError, tap } from 'rxjs/operators';
+import { LoadingService } from '@api/services/loading.service';
+import { DialogService } from '@api/services/dialog.service';
+import { RestStatus } from '@common/enums/rest-enum';
 
 @Component({
   selector: 'console-group-edit',
@@ -153,6 +157,8 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
     private router: Router,
     private accountManageService: AccountManageService,
     private activatedRoute: ActivatedRoute,
+    private loadingService: LoadingService,
+    private dialogService: DialogService,
     private dateService: NbDateService<Date>) {
     super(storageService);
 
@@ -190,7 +196,6 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
     event.confirm.resolve();
     // setTimeout(() => {
     //   this.dataSource.getAll().then(rs => {
-    //     var x = rs;
     //   });
     // }, 100);    
   }
@@ -209,8 +214,6 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
   }
 
   ok(){
-    // 這邊要發送電文 6.4 更新群組設定去進行修改，request 內容同 6.2 的 response
-    // 修改成功後是否要再發送電文重新 query 資料或者是就直接 update?
     let passData: NavigationExtras = {};
 
     this.consoleGroupDetail.consoleGroupScope = [];
@@ -228,6 +231,21 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
         }
       }
     }
+
+    // 這邊要發送電文 7.4 更新群組設定去進行修改，request 內容同 7.2 的 response
+    this.accountManageService.updateConsoleGroup(this.consoleGroupDetail.groupId, this.consoleGroupDetail).pipe(
+        catchError((err) => {
+          this.loadingService.close();
+          throw new Error(err.message);
+        }),
+        tap(res => {
+          console.info(res)
+          this.loadingService.close();
+        })).subscribe(res => {
+          if (res.code === RestStatus.SUCCESS) {
+          // 修改成功後是否要再發送電文重新 query 資料或者是就直接 update?  
+          }
+        });
 
     passData.queryParams = {
       consoleGroupDetail: JSON.stringify(this.consoleGroupDetail)
