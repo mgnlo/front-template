@@ -18,6 +18,7 @@ export interface TagSetting {
   fileName: string;
   filePath: string;
   fileData: string;
+  version: string
   tagConditionSetting: Array<TagConditionSetting>;
   tagReviewHistory: Array<TagReviewHistory>;
 }
@@ -81,6 +82,9 @@ export interface TagDetailView {
   scheduleSettings: string;
   uploadType: string;
   filePath: string;
+  fileName: string
+  fileData: string
+  version: string
   historyGroupView: { [x: number]: HistoryGroupView };
 }
 
