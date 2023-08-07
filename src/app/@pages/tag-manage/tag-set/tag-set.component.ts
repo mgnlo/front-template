@@ -219,7 +219,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
                       }));
                     }
                   })
-                  console.info(this.conditions.getRawValue());
+                  //console.info(this.conditions.getRawValue());
                   break;
                 default:
                   this.validateForm.controls[key].setValue(res.result[key]);
@@ -237,15 +237,16 @@ export class TagAddComponent extends BaseComponent implements OnInit {
           this.loadingService.close();
         })
       ).subscribe(res => {
-        console.info(res.result);
+        //console.info(res.result);
+        const getRawValue = this.validateForm.getRawValue();
+        this.changeTagType(getRawValue.tagType)
+        this.changeConditionSettingMethod(getRawValue.conditionSettingMethod)
       });
     }
 
 
     //更新驗證
-    const getRawValue = this.validateForm.getRawValue();
-    this.changeTagType(getRawValue.tagType)
-    this.changeConditionSettingMethod(getRawValue.conditionSettingMethod)
+
   }
 
   ngAfterViewChecked(): void {
@@ -253,16 +254,16 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   }
 
   ngDoCheck() {
-    console.info('this.findInvalidControls()', this.findInvalidControls())
+    //console.info('this.findInvalidControls()', this.findInvalidControls())
   }
 
   //#region 標籤類型 更動時切換驗證
   changeTagType(key: string) {
+    this.filePlaceholderName = '請上傳檔案';
     this.removeFieldIfExists('fileName');
     this.removeFieldIfExists('conditionSettingMethod');
     this.removeFieldIfExists('conditionSettingQuery');
     this.removeFieldIfExists('tagConditionSetting');
-    this.filePlaceholderName = '請上傳檔案';
 
     switch (key?.toLocaleLowerCase()) {
       case 'normal':
@@ -361,10 +362,11 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     const fileValidatorResult = this.fileValidator(file);
     this.filePlaceholderName = CommonUtil.isBlank(file?.name) ? this.filePlaceholderName : file.name;
     if (fileValidatorResult !== null) {
-      this.validateForm.get('fileName').setErrors(fileValidatorResult);
+      this.validateForm?.get('fileName')?.setErrors(fileValidatorResult);
+      this.filePlaceholderName = '請上傳檔案';
       return
     } else {
-      this.validateForm.get('fileName').setErrors(null);
+      this.validateForm?.get('fileName')?.setErrors(null);
     }
   }
 
@@ -469,7 +471,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     let reqData: TagSettingEditReq = this.validateForm.getRawValue();
     reqData.startDate = moment(reqData.startDate).format('YYYY-MM-DD');
     reqData.endDate = moment(reqData.endDate).format('YYYY-MM-DD');
-    console.info(reqData);
+    //console.info(reqData);
     return reqData;
   }
 
