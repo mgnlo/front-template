@@ -25,12 +25,16 @@ export interface TagSetting {
 
 export class TagConditionSetting {
   tagId: string;
-  conditionKey: string;
+  conditionId: string;
   groupId: number
   detectionCondition: string;
   conditionValue: string;
   thresholdValue: string;
   joinValue?: string;
+
+  constructor(data: Partial<TagConditionSetting>) {
+    Object.assign(this, data);
+  }
 }
 
 export class TagReviewHistory {
@@ -103,7 +107,7 @@ export interface HistoryGroupView {
 //#region 新增&編輯
 export class TagSettingEditReq {
   tagId: string;
-  TagName: string;
+  tagName: string;
   status: string;
   tagType: string;
   fileName?: string;
@@ -114,7 +118,7 @@ export class TagSettingEditReq {
   endDate: string;
   tagDimension: string;
   tagSubDimension: string;
-  TagDescription: string;
+  tagDescription: string;
   conditionSettingQuery?: string; //條件設定語法
   tagConditionSetting?: Array<TagConditionSetting>;
 

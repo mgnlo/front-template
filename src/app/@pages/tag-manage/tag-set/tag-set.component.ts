@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting } from '@api/models/activity-list.model';
-import { TagDetailView, TagSetting, TagSettingEditReq } from '@api/models/tag-manage.model';
+import { TagConditionSetting, TagDetailView, TagSetting, TagSettingEditReq } from '@api/models/tag-manage.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
@@ -15,7 +15,7 @@ import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
-import { catchError, filter, tap, map } from 'rxjs/operators';
+import { catchError, filter, tap } from 'rxjs/operators';
 import { TagManageService } from '../tag-manage.service';
 import { TagConditionDialogComponent } from './condition-dialog/condition-dialog.component';
 import { RegExpUtil } from '@common/utils/reg-exp-util';
@@ -427,6 +427,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     const valid = this.validateForm.valid;
     const tagId = this.params['tagId'];
     const reqData: TagSettingEditReq = this.getRequestData();
+
     if (valid && !tagId) {
       this.loadingService.open();
       this.tagManageService.createTagSetting(reqData).pipe(
@@ -463,10 +464,41 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   }
 
   getRequestData(): TagSettingEditReq {
-    const reqData: TagSettingEditReq = this.validateForm.getRawValue();
-    reqData.startDate = moment(reqData.startDate).format('YYYY-MM-DD');
-    reqData.endDate = moment(reqData.endDate).format('YYYY-MM-DD');
-    console.info('reqData', reqData);
+    const tagId = this.params['tagId'];
+    const getRawValue = this.validateForm.getRawValue();
+
+    let reqData = new TagSettingEditReq({
+      tagId: tagId,
+      tagName: getRawValue.tagName,
+      status: getRawValue.status,
+      tagType: getRawValue.tagType,
+      fileName: getRawValue.fileName,
+      filePath: getRawValue.filePath,
+      fileData: getRawValue.fileData,
+      conditionSettingMethod: getRawValue.conditionSettingMethod, //條件設定方式
+      startDate: moment(getRawValue.startDate).format('YYYY-MM-DD'),
+      endDate: moment(getRawValue.endDate).format('YYYY-MM-DD'),
+      tagDimension: getRawValue.tagDimension,
+      tagSubDimension: getRawValue.tagSubDimension,
+      tagDescription: getRawValue.TagDescription,
+      conditionSettingQuery: getRawValue.TagName, //條件設定語法
+    });
+
+    if (!!getRawValue?.tagConditionSetting) {
+      const tagConditionSettingArray = [...getRawValue.tagConditionSetting];
+      reqData.tagConditionSetting = new Array<TagConditionSetting>();
+      tagConditionSettingArray.forEach(f => {
+        let id = f['id'];
+        reqData.tagConditionSetting.push(new TagConditionSetting({
+          tagId: tagId,
+          conditionValue: getRawValue?.conditionValue,
+          detectionCondition: f['detectionCondition_' + id],
+          thresholdValue: f['thresholdValue_' + id],
+          joinValue: f['joinValue_' + id]
+        }))
+      })
+    }
+
     return reqData;
   }
 

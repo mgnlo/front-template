@@ -70,7 +70,7 @@ export class TagSetting {
 }
 export class TagConditionSetting {
   tagId: string;
-  conditionKey: string;
+  conditionId: string;
   groupId: number;
   detectionCondition: string;
   conditionValue: string;
