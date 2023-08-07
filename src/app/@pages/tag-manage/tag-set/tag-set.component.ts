@@ -258,56 +258,47 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   //#region 標籤類型 更動時切換驗證
   changeTagType(key: string) {
-    if (key === 'normal') {
-      if (!this.validateForm.contains('conditionSettingMethod')) {
-        this.addField('conditionSettingMethod', 'normal', Validators.required);
-      }
-      if (!this.validateForm.contains('conditionSettingQuery')) {
-        this.addField('conditionSettingQuery', null, Validators.required);
-      }
-      if (this.validateForm.contains('fileName')) {
-        this.removeField('fileName');
-      }
-    }
+    this.removeFieldIfExists('fileName');
+    this.removeFieldIfExists('conditionSettingMethod');
+    this.removeFieldIfExists('conditionSettingQuery');
+    this.removeFieldIfExists('tagConditionSetting');
+    this.filePlaceholderName = '請上傳檔案';
 
-    if (key === 'document') {
-      if (!this.validateForm.contains('fileName')) {
-        this.addField('fileName', null, Validators.required);
-      }
-      if (this.validateForm.contains('conditionSettingMethod')) {
-        this.removeField('conditionSettingMethod');
-      }
-      //this.addField('fileName', null, [Validators.required,this.validateFileType]);
+    switch (key?.toLocaleLowerCase()) {
+      case 'normal':
+        this.addFieldIfNotExists('conditionSettingMethod', 'normal', Validators.required);
+        this.addFieldIfNotExists('conditionSettingQuery', null, Validators.required);
+        break;
+      case 'document':
+        this.addFieldIfNotExists('fileName', null, Validators.required);
+        break;
     }
   }
   //#endregion
 
   //#region 條件設定方式 更動時切換驗證
   changeConditionSettingMethod(key: string) {
-    if (this.validateForm.contains('tagConditionSetting')) {
-      this.conditions.clearValidators();
-    }
-    if (key === 'normal') {
-      if (!this.validateForm.contains('conditionSettingQuery')) {
-        this.addField('conditionSettingQuery', null, Validators.required);
-      }
-      if (this.validateForm.contains('conditionValue')) {
-        this.removeField('conditionValue');
-      }
-    }
+    this.removeFieldIfExists('conditionValue');
+    this.removeFieldIfExists('tagConditionSetting');
+    this.removeFieldIfExists('conditionSettingQuery');
 
-    if (key === 'field') {
-      if (this.validateForm.contains('conditionSettingQuery')) {
-        this.removeField('conditionSettingQuery');
-      }
-      if (!this.validateForm.contains('conditionValue')) {
-        this.addField('conditionValue', null, Validators.required);
-      }
-      this.conditions.push(new FormGroup({
-        id: new FormControl(0),
-        ['detectionCondition_' + 0]: new FormControl(null, Validators.required),
-        ['thresholdValue_' + 0]: new FormControl(null, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
-      }));
+    switch (key?.toLocaleLowerCase()) {
+      case 'normal':
+        this.addFieldIfNotExists('conditionSettingQuery', null, Validators.required);
+        break;
+      case 'field':
+        if (!this.validateForm.contains('tagConditionSetting')) {
+          this.validateForm.addControl('tagConditionSetting', new FormArray([]));
+        }
+        this.addFieldIfNotExists('conditionValue', null, Validators.required);
+        if (this.conditions?.getRawValue()?.length === 0) {
+          this.conditions.push(new FormGroup({
+            id: new FormControl(0),
+            ['detectionCondition_' + 0]: new FormControl(null, Validators.required),
+            ['thresholdValue_' + 0]: new FormControl(null, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
+          }));
+        }
+        break;
     }
 
     this.conditions?.updateValueAndValidity();
@@ -315,14 +306,18 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   //#endregion
 
   //#region 基本欄位檢核(新增/刪除)
-  addField(fieldName: string, formState: any, fileFormatValidator: any) {
-    this.validateForm.addControl(fieldName, new FormControl(formState, fileFormatValidator));
-    //this.validateForm.controls[fieldName].updateValueAndValidity();
+  addFieldIfNotExists(fieldName: string, defaultValue: any, validationRules?: any) {
+    if (!this.validateForm.contains(fieldName)) {
+      this.validateForm.addControl(fieldName, new FormControl(defaultValue, validationRules));
+    }
   }
 
-  removeField(fieldName: string) {
-    this.validateForm.removeControl(fieldName);
+  removeFieldIfExists(fieldName: string) {
+    if (this.validateForm.contains(fieldName)) {
+      this.validateForm.removeControl(fieldName);
+    }
   }
+
   //#endregion
 
   //#region 條件區塊異動
