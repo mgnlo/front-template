@@ -197,7 +197,7 @@
                         <div class="fieldGroup col-12 col-lg-4">
                             <label>日期元件</label>
                             <div>
-                                <input nbInput fullWidth placeholder="請選擇日期" [nbDatepicker]="dateTimePicker">
+                                <input nbInput fullWidth placeholder="請選擇日期" [nbDatepicker]="dateTimePicker" />
                                 <nb-datepicker #dateTimePicker format="yyyy/MM/dd"></nb-datepicker>
                             </div>
                             <!-- 欄位錯誤訊息 -->
@@ -211,7 +211,8 @@
                         <div class="fieldGroup automatic col-12 col-lg-4">
                             <label>自動帶入數值</label>
                             <div>
-                                <input nbInput fullWidth placeholder="請選擇日期" value="2022/11/11" [nbDatepicker]="dateTimePicker1">
+                                <input nbInput fullWidth placeholder="請選擇日期" value="2022/11/11"
+                                    [nbDatepicker]="dateTimePicker1" />
                                 <nb-datepicker #dateTimePicker1 format="yyyy/MM/dd"></nb-datepicker>
                             </div>
                             <!-- 欄位錯誤訊息 -->
@@ -225,7 +226,7 @@
                         <div class="fieldGroup disabled col-12 col-lg-4">
                             <label>日期元件</label>
                             <div>
-                                <input nbInput fullWidth placeholder="請選擇日期" [nbDatepicker]="dateTimePicker2">
+                                <input nbInput fullWidth placeholder="請選擇日期" [nbDatepicker]="dateTimePicker2" />
                                 <nb-datepicker #dateTimePicker2 format="yyyy/MM/dd"></nb-datepicker>
                             </div>
                             <!-- 欄位錯誤訊息 -->
@@ -243,7 +244,7 @@
                             <label>密碼元件</label>
                             <div>
                                 <input nbInput fullWidth status="basic" [type]="getInputType()" placeholder="請輸入" />
-                                <button nbSuffix nbButton ghost (click)="toggleShowPassword()">
+                                <button nbSuffix nbButton ghost (click)="this.showPassword = !this.showPassword;">
                                     <nb-icon [icon]="showPassword ? 'eye-outline' : 'eye-off-2-outline'" pack="eva"
                                         [attr.aria-label]="showPassword ? 'hide password' : 'show password'">
                                     </nb-icon>
@@ -262,7 +263,7 @@
                             <div>
                                 <input nbInput fullWidth status="basic" [type]="getInputType()" value="password"
                                     placeholder="請輸入" />
-                                <button nbSuffix nbButton ghost (click)="toggleShowPassword()">
+                                <button nbSuffix nbButton ghost (click)="this.showPassword = !this.showPassword;">
                                     <nb-icon [icon]="showPassword ? 'eye-outline' : 'eye-off-2-outline'" pack="eva"
                                         [attr.aria-label]="showPassword ? 'hide password' : 'show password'">
                                     </nb-icon>
@@ -280,7 +281,7 @@
                             <label>密碼元件</label>
                             <div>
                                 <input nbInput fullWidth status="basic" [type]="getInputType()" placeholder="請輸入" />
-                                <button nbSuffix nbButton ghost (click)="toggleShowPassword()">
+                                <button nbSuffix nbButton ghost (click)="this.showPassword = !this.showPassword;">
                                     <nb-icon [icon]="showPassword ? 'eye-outline' : 'eye-off-2-outline'" pack="eva"
                                         [attr.aria-label]="showPassword ? 'hide password' : 'show password'">
                                     </nb-icon>
@@ -300,7 +301,7 @@
                         <div class="fieldGroup col-12 col-lg-4">
                             <label>radio</label>
                             <div>
-                                <nb-radio-group>
+                                <nb-radio-group status="info">
                                     <nb-radio value="1">選項1</nb-radio>
                                     <nb-radio value="2">選項2</nb-radio>
                                     <nb-radio value="3">選項3</nb-radio>
@@ -320,7 +321,7 @@
                             <label>不可編輯樣式</label>
                             <div>
                                 <!-- 增加 disabled 屬性如下 -->
-                                <nb-radio-group disabled name="disabled">
+                                <nb-radio-group status="info" disabled name="disabled">
                                     <nb-radio value="1" [checked]="true">選項1</nb-radio>
                                     <nb-radio value="2">選項2</nb-radio>
                                     <nb-radio value="3">選項3</nb-radio>
@@ -351,11 +352,11 @@
                             <label>checkbox</label>
                             <div>
                                 <div class="checkboxGroup">
-                                    <nb-checkbox status="basic">選項1</nb-checkbox>
-                                    <nb-checkbox status="basic">選項2</nb-checkbox>
-                                    <nb-checkbox status="basic">選項3</nb-checkbox>
-                                    <nb-checkbox status="basic">選項100</nb-checkbox>
-                                    <nb-checkbox status="basic">選項字很多很多</nb-checkbox>
+                                    <nb-checkbox status="info">選項1</nb-checkbox>
+                                    <nb-checkbox status="info">選項2</nb-checkbox>
+                                    <nb-checkbox status="info">選項3</nb-checkbox>
+                                    <nb-checkbox status="info">選項100</nb-checkbox>
+                                    <nb-checkbox status="info">選項字很多很多</nb-checkbox>
                                 </div>
                             </div>
                             <!-- 欄位錯誤訊息 -->
@@ -371,11 +372,11 @@
                             <div>
                                 <div class="checkboxGroup">
                                     <!-- 增加 disabled 屬性如下 -->
-                                    <nb-checkbox [checked]="true" disabled status="basic">選項1</nb-checkbox>
-                                    <nb-checkbox [checked]="true" disabled status="basic">選項2</nb-checkbox>
-                                    <nb-checkbox disabled status="basic">選項3</nb-checkbox>
-                                    <nb-checkbox [checked]="true" disabled status="basic">選項100</nb-checkbox>
-                                    <nb-checkbox disabled status="basic">選項字很多很多</nb-checkbox>
+                                    <nb-checkbox status="info" [checked]="true" disabled>選項1</nb-checkbox>
+                                    <nb-checkbox status="info" [checked]="true" disabled>選項2</nb-checkbox>
+                                    <nb-checkbox status="info" disabled>選項3</nb-checkbox>
+                                    <nb-checkbox status="info" [checked]="true" disabled>選項100</nb-checkbox>
+                                    <nb-checkbox status="info" disabled>選項字很多很多</nb-checkbox>
                                 </div>
                             </div>
                             <!-- 欄位錯誤訊息 -->
@@ -514,7 +515,7 @@
                             <label>日期元件</label>
                             <div>
                                 <input nbInput fullWidth status="danger" placeholder="請選擇日期"
-                                    [nbDatepicker]="dateTimePicker3">
+                                    [nbDatepicker]="dateTimePicker3" />
                                 <nb-datepicker #dateTimePicker3 format="yyyy/MM/dd"></nb-datepicker>
                             </div>
                             <!-- 欄位錯誤訊息 -->
@@ -534,7 +535,7 @@
                             <label>密碼元件</label>
                             <div>
                                 <input nbInput fullWidth status="danger" [type]="getInputType()" placeholder="請輸入" />
-                                <button nbSuffix nbButton ghost (click)="toggleShowPassword()">
+                                <button nbSuffix nbButton ghost (click)="this.showPassword = !this.showPassword;">
                                     <nb-icon [icon]="showPassword ? 'eye-outline' : 'eye-off-2-outline'" pack="eva"
                                         [attr.aria-label]="showPassword ? 'hide password' : 'show password'">
                                     </nb-icon>
@@ -842,7 +843,7 @@
                             </div>
                             <div>
                                 <div class="checkboxGroup">
-                                    <nb-checkbox status="basic">記得我</nb-checkbox>
+                                    <nb-checkbox status="info">記得我</nb-checkbox>
                                 </div>
                             </div>
                             <!-- 欄位錯誤訊息 -->
@@ -856,7 +857,7 @@
                         <div class="fieldGroup col-12 col-lg-4">
                             <label>radio結構 + 輸入欄位</label>
                             <div>
-                                <nb-radio-group>
+                                <nb-radio-group status="info">
                                     <nb-radio value="1">選項1</nb-radio>
                                     <nb-radio value="2">選項2</nb-radio>
                                 </nb-radio-group>
@@ -875,7 +876,7 @@
                         <div class="fieldGroup col-12 col-lg-4">
                             <label>radio結構 + 下拉式選單</label>
                             <div>
-                                <nb-radio-group>
+                                <nb-radio-group status="info">
                                     <nb-radio value="1">選項1</nb-radio>
                                     <nb-radio value="2">選項2</nb-radio>
                                 </nb-radio-group>
@@ -901,7 +902,7 @@
 
                     <!-- 欄位群組 -->
                     <div class="row">
-                        <div class="fieldGroups col-12 col-md-6">
+                        <div class="fieldGroupContainer col-12 col-md-6">
                             <!-- 基礎樣式 -->
                             <div class="fieldGroup toggleBasic">
                                 <label>toggele</label>
@@ -947,7 +948,7 @@
                             </div>
                         </div>
 
-                        <div class="fieldGroups col-12 col-md-6">
+                        <div class="fieldGroupContainer col-12 col-md-6">
                             <!-- 基礎樣式 -->
                             <div class="fieldGroup toggleBasic">
                                 <label>toggele</label>
@@ -1222,11 +1223,11 @@
                             <label>起訖日</label>
                             <div class="multi tel">
                                 <span>起日</span>
-                                <input nbInput fullWidth placeholder="請選擇日期" [nbDatepicker]="dateTimePicker">
-                                <nb-datepicker #dateTimePicker format="yyyy/MM/dd"></nb-datepicker>
+                                <input nbInput fullWidth placeholder="請選擇日期" [nbDatepicker]="dateTimePicker4" />
+                                <nb-datepicker #dateTimePicker4 format="yyyy/MM/dd"></nb-datepicker>
                                 <span>訖日</span>
-                                <input nbInput fullWidth placeholder="請選擇日期" [nbDatepicker]="dateTimePicker">
-                                <nb-datepicker #dateTimePicker format="yyyy/MM/dd"></nb-datepicker>
+                                <input nbInput fullWidth placeholder="請選擇日期" [nbDatepicker]="dateTimePicker5" />
+                                <nb-datepicker #dateTimePicker5 format="yyyy/MM/dd"></nb-datepicker>
                             </div>
                             <!-- 欄位錯誤訊息 -->
                             <div class="note errorText">
@@ -1249,14 +1250,14 @@
                             <div>
                                 <div>
                                     <div class="checkboxGroup">
-                                        <nb-checkbox status="basic">選項1</nb-checkbox>
-                                        <nb-checkbox status="basic">選項2</nb-checkbox>
-                                        <nb-checkbox status="basic">選項3</nb-checkbox>
-                                        <nb-checkbox status="basic">選項4</nb-checkbox>
-                                        <nb-checkbox status="basic">選項5</nb-checkbox>
+                                        <nb-checkbox status="info">選項1</nb-checkbox>
+                                        <nb-checkbox status="info">選項2</nb-checkbox>
+                                        <nb-checkbox status="info">選項3</nb-checkbox>
+                                        <nb-checkbox status="info">選項4</nb-checkbox>
+                                        <nb-checkbox status="info">選項5</nb-checkbox>
                                     </div>
                                     <div class="customOption">
-                                        <nb-checkbox status="basic">其它</nb-checkbox>
+                                        <nb-checkbox status="info">其它</nb-checkbox>
                                         <input nbInput fullWidth type="text" placeholder="請輸入" />
                                     </div>
                                 </div>
@@ -1273,17 +1274,81 @@
                             <label>radio選項 + 輸入欄位</label>
                             <div>
                                 <div>
-                                    <nb-radio-group>
+                                    <nb-radio-group status="info">
                                         <nb-radio value="1">選項1</nb-radio>
                                         <nb-radio value="2">選項2</nb-radio>
                                         <nb-radio value="3">選項3</nb-radio>
                                     </nb-radio-group>
                                     <div class="customOption">
-                                        <nb-radio value="4">其它</nb-radio>
+                                        <nb-radio status="info" value="4">其它</nb-radio>
                                         <input nbInput fullWidth type="text" placeholder="請輸入" />
                                     </div>
                                 </div>
                             </div>
+                            <!-- 欄位錯誤訊息 -->
+                            <div class="note errorText">
+                                <nb-icon icon="alert-triangle"></nb-icon>
+                                <p>欄位錯誤訊息</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 特殊組合 -->
+                    <div class="row">
+                        <!-- radio選項 + 輸入欄位 -->
+                        <div class="fieldGroup col-12 col-md-6">
+                            <label>radio選項 + 下拉</label>
+                            <div>
+                                <nb-radio-group status="info">
+                                    <nb-radio value="date" checked (click)="onRadioChange('date')">每日</nb-radio>
+                                    <nb-radio value="week" (click)="onRadioChange('week')">每週</nb-radio>
+                                    <nb-radio value="month" (click)="onRadioChange('month')">每月</nb-radio>
+                                </nb-radio-group>
+                            </div>
+                            <div class="multi">
+                                <ng-container *ngIf="selectedValue === 'month'">
+                                    <nb-select fullWidth placeholder="請選擇">
+                                        <nb-option *ngFor="let item of dates" [value]="item.value">{{ item.value }}</nb-option>
+                                    </nb-select>
+                                    <span>日</span>
+                                </ng-container>
+                                <ng-container *ngIf="selectedValue === 'week'">
+                                    <nb-select fullWidth placeholder="請選擇">
+                                        <nb-option *ngFor="let item of weeks" [value]="item">{{ item }}</nb-option>
+                                    </nb-select>
+                                </ng-container>
+                                <ng-container>
+                                    <nb-select fullWidth placeholder="請選擇">
+                                        <nb-option *ngFor="let item of hours" [value]="item.value">{{ item.value }}</nb-option>
+                                    </nb-select>
+                                    <span>：</span>
+                                    <nb-select fullWidth placeholder="請選擇">
+                                        <nb-option *ngFor="let item of minutes" [value]="item.value">{{ item.value }}</nb-option>
+                                    </nb-select>
+                                </ng-container>
+                            </div>
+                            <!-- 欄位錯誤訊息 -->
+                            <div class="note errorText">
+                                <nb-icon icon="alert-triangle"></nb-icon>
+                                <p>欄位錯誤訊息</p>
+                            </div>
+                        </div>
+
+                        <!-- AutoComplete + 標籤 -->
+                        <div class="fieldGroup col-12 col-lg-6">
+                            <label>自動完成輸入 + 標籤</label>
+                            <div>
+                                <input #autoInput nbTagInput fullWidth type="text" (input)="onChange()" (tagAdd)="addTag($event)" placeholder="請輸入"
+                                    [nbAutocomplete]="auto" />
+                                <nb-autocomplete #auto (selectedChange)="onSelectionChange($event)" >
+                                    <nb-option *ngFor="let option of filteredOptions$ | async" [value]="option">{{ option }}</nb-option>
+                                </nb-autocomplete>
+                            </div>
+                            <ng-container>
+                                <nb-tag-list (tagRemove)="removeTag($event)">
+                                    <nb-tag removable status="info" appearance="outline" *ngFor="let tag of tags" [text]="tag"></nb-tag>
+                                </nb-tag-list>
+                            </ng-container>
                             <!-- 欄位錯誤訊息 -->
                             <div class="note errorText">
                                 <nb-icon icon="alert-triangle"></nb-icon>

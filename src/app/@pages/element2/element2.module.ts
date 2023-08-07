@@ -6,7 +6,6 @@ import { FilePickerModule } from "ngx-awesome-uploader";
 import { Element2RoutingModule } from "./element2-routing.module"
 import { Element2Component } from "./element2.component"
 import { CommonModule } from '@angular/common';
-import { NbDateFnsDateModule } from "@nebular/date-fns";
 
 @NgModule({
     imports: [
@@ -22,7 +21,6 @@ import { NbDateFnsDateModule } from "@nebular/date-fns";
         NbTimepickerModule,
         NbDatepickerModule.forRoot(),
         NbTimepickerModule.forRoot(),
-        NbDateFnsDateModule,
         NbRadioModule,
         NbCheckboxModule,
         CKEditorModule,

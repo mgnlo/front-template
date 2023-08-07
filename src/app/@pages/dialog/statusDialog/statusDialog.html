@@ -1,0 +1,12 @@
+<nb-card class="dialogCard statusDialog small">
+    <nb-card-body>
+        <ng-container *ngIf="isSuccess ; else errorBlock">
+            <nb-icon status="success" icon="checkmark-circle-outline"></nb-icon>
+            <p>{{title}}</p>
+        </ng-container>
+        <ng-template #errorBlock>
+            <nb-icon status="danger" icon="alert-triangle-outline"></nb-icon>
+            <p>{{title}}</p>
+        </ng-template>
+  </nb-card-body>
+</nb-card>

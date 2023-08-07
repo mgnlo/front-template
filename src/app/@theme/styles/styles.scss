@@ -1,7 +1,5 @@
 @import "themes";
 @import "~@nebular/theme/styles/globals";
-
-@import "./pace.theme";
 @import "./layout";
 @import "./overrides";
 
@@ -12,10 +10,8 @@
     // @include nb-auth-global();
 
     @include ngx-layout();
-    // loading progress bar
-    @include ngx-pace-theme();
-
     @include nb-overrides();
 }
 
+@import 'basic';
 @import 'we-style';

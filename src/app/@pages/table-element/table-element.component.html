@@ -1,0 +1,294 @@
+<!-- 頁面標題 -->
+<div class="pageTitle">
+    <h1>頁面標題</h1>
+</div>
+
+<!-- 頁面內容 -->
+<div class="pageContent">
+    <!-- 展開收合卡片區塊 -->
+    <nb-accordion>
+        <nb-accordion-item>
+            <nb-accordion-item-header>
+                <h2>表格使用說明</h2>
+            </nb-accordion-item-header>
+            <nb-accordion-item-body>
+                <!-- 區塊內小標題 -->
+                <div class="subTitle">
+                    <p>寬度說明</p>
+                </div>
+
+                <!-- 純文字 -->
+                <div class="textBlock">
+                    <p class="text_bold color_blue">表格寬度</p>
+                    <p>當網頁中的表格寬度足夠時，欄位會動態延伸寬度以達到響應式效果，確保資訊完整顯示。</p>
+                    <p>若遇到欄位較多的情況，將出現水平捲軸，以確保資訊完整呈現。</p>
+
+                    <p class="text_bold color_blue">欄位寬度</p>
+                    <ul>
+                        <li>基本上，標題會保持在一行內，不會換行。</li>
+                        <li>也因為標題不換行，最小寬度＝欄位標題寬度（也就是標題文字越長，最小寬度越寬）。</li>
+                        <li>使用特定的class名稱，可自訂控制欄位寬度，以適應不同需求。
+                            <ul class="disc">
+                                <li>使用 "w" 開頭的class，後方接欄位寬度的數字，例如「w100」表示寬度100px；「w200」表示寬度200px。</li>
+                                <li>使用 "min_w" 開頭的class，後方接最小欄位寬度的數字，例如「min_w100」表示最小寬度為100px；「min_w200」表示最小寬度為200px。</li>
+                                <li>依上述兩點類推，寬度每次增加50，最小為100；最大為500。</li>
+                            </ul>
+                        </li>
+                        <li>欄位寬度100px時，可容納4個字元，超過會換行；欄位寬度200px時，可容納10個字元，超過會換行...以此類推。</li>
+                    </ul>
+                    <p class="color_skyBlue">
+                        寬度使用時機<br>
+                        固定欄位寬度：在大版畫面時不會占到太多的空間，多用於長度較一致的欄位(ex:姓名、狀態)<br>
+                        設定最小寬度：可確保欄位不會過於縮小，而導致文字無法正確顯示，多用於不適合換行的欄位(ex:電話)
+                    </p>
+                </div>
+
+                <!-- 區塊內小標題 -->
+                <div class="subTitle">
+                    <p>ng2-smart-table 功能</p>
+                </div>
+
+                <!-- 純文字 -->
+                <div class="textBlock">
+                    <p class="text_bold color_blue">篩選</p>
+                    <p>可視需求使用，此功能適用於文字欄位，標籤、按鈕、顯示狀態欄位較不適用。</p>
+                    <p class="text_bold color_blue">新增欄位</p>
+                    <p>此案不使用smart-table新增功能。</p>
+                    <p class="text_bold color_blue">編輯欄位</p>
+                    <p>可視需求使用，可編輯此筆所有欄位，編輯完成後，點選勾勾即可完成編輯；點選叉叉可取消此次編輯。</p>
+                    <p class="text_bold color_blue">刪除欄位</p>
+                    <p>可視需求使用，點選後，會直接將此筆資料移除。</p>
+                    <p class="color_red">注意：此動作不會有警告訊息！</p>
+                </div>
+
+                <!-- 區塊內小標題 -->
+                <div class="subTitle">
+                    <p>按鈕欄位說明</p>
+                </div>
+
+                <!-- 純文字 -->
+                <div class="textBlock">
+                    <ul>
+                        <li>表格內按鈕使用無底色按鈕。</li>
+                        <li>顏色使用規範同「基本元件 - 按鈕」之說明。</li>
+                        <li>六種顏色：主題藍(primary)、藍(info)、綠(success)、紅(danger)、橘(warning)、灰(basic)</li>
+                    </ul>
+                </div>
+            </nb-accordion-item-body>
+        </nb-accordion-item>
+    </nb-accordion>
+
+    <!-- 卡片區塊 -->
+    <nb-card>
+        <!-- 卡片區塊大標題 -->
+        <nb-card-header>
+            <h2>卡片區塊大標題 - SmartTable 表格</h2>
+        </nb-card-header>
+
+        <!-- SmartTable 表格 -->
+        <nb-card-body>
+            <!-- 區塊內小標題 -->
+            <div class="subTitle">
+                <p>卡片區塊內小標題 - 表格一</p>
+            </div>
+
+            <!-- 基本表格 -->
+            <div class="tableContainer">
+                <ng2-smart-table [settings]="basicTable" [source]="basicdata"></ng2-smart-table>
+            </div>
+
+            <!-- 區塊內小標題 -->
+            <div class="subTitle">
+                <p>卡片區塊內小標題 - 表格二</p>
+            </div>
+
+            <!-- 基本表格 -->
+            <div class="tableContainer">
+                <ng2-smart-table [settings]="basicTable2" [source]="basicdata2"></ng2-smart-table>
+            </div>
+
+            <!-- 區塊內小標題 -->
+            <div class="subTitle">
+                <p>卡片區塊內小標題 - 表格三</p>
+            </div>
+
+            <!-- 基本表格 -->
+            <div class="tableContainer">
+                <!-- TODO:全選功能，若表格中只有部分被欄位勾選 isIndeterminate = true -->
+                <div class="selectAll">
+                    <nb-checkbox status="info" [indeterminate]="isIndeterminate" [checked]="isAllSelected"></nb-checkbox>
+                </div>
+                <ng2-smart-table [settings]="basicTable3" [source]="basicdata3"></ng2-smart-table>
+            </div>
+
+            <!-- 區塊內小標題 -->
+            <div class="subTitle">
+                <p>卡片區塊內小標題 - 表格四</p>
+            </div>
+
+            <!-- 基本表格 -->
+            <div class="tableContainer">
+                <ng2-smart-table [settings]="basicTable4" [source]="basicdata4"></ng2-smart-table>
+            </div>
+
+        </nb-card-body>
+    </nb-card>
+
+    <!-- 卡片區塊 -->
+    <nb-card>
+        <!-- 卡片區塊大標題 -->
+        <nb-card-header>
+            <h2>卡片區塊大標題 - 客製表格</h2>
+        </nb-card-header>
+
+        <!-- 客製表格 -->
+        <nb-card-body>
+
+            <!-- 區塊內小標題 -->
+            <div class="subTitle">
+                <p>卡片區塊內小標題 - 客製表格01</p>
+            </div>
+
+            <!-- 客製表格01 -->
+            <div class="tableContainer">
+                <table class="expandTable">
+                    <thead>
+                        <tr>
+                            <th>名稱</th>
+                            <th>欄位標題</th>
+                            <th>欄位標題</th>
+                            <th>欄位標題</th>
+                            <th>欄位標題</th>
+                            <th>欄位標題</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let item of treeTable">
+                            <tr class="expand_row" [ngClass]="item.showSubRow ? 'expanded' : ''">
+                                <td>
+                                    <nb-icon icon="arrow-ios-forward" class="toggleIcon" (click)="toggleShowSubRow(item)"></nb-icon>
+                                    {{item.name}}
+                                </td>
+                                <td>{{item.col01}}</td>
+                                <td>{{item.col02}}</td>
+                                <td>{{item.col03}}</td>
+                                <td>{{item.col04}}</td>
+                                <td>{{item.col05}}</td>
+                            </tr>
+                            <ng-container *ngFor="let subItem of item.sub">
+                                <ng-container *ngIf="subItem.child.length > 0; else elseRow">
+                                    <tr class="expand_row sub_row"
+                                        [ngClass]="[item.showSubRow ? '' : 'collapsed', subItem.showChild ? 'expanded' : '']">
+                                        <td>
+                                            <nb-icon icon="arrow-ios-forward" class="toggleIcon"
+                                                (click)="toggleShowChild(subItem)"></nb-icon>
+                                            {{subItem.name}}
+                                        </td>
+                                        <td>{{subItem.col01}}</td>
+                                        <td>{{subItem.col02}}</td>
+                                        <td>{{subItem.col03}}</td>
+                                        <td>{{subItem.col04}}</td>
+                                        <td>{{subItem.col05}}</td>
+                                    </tr>
+                                    <ng-container *ngFor="let childItem of subItem.child">
+                                        <tr class="child_row" [ngClass]="subItem.showChild ? '' : 'collapsed'">
+                                            <td colspan="8">
+                                                <div class="row">
+                                                    <div class="col-12 col-md-6">
+                                                        <!-- 標題與內容皆置左 -->
+                                                        <div class="textGroup">
+                                                            <p>文字標題：</p>
+                                                            <span>{{childItem.col01}}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-6">
+                                                        <!-- 標題與內容皆置左 -->
+                                                        <div class="textGroup">
+                                                            <p>文字標題：</p>
+                                                            <span>{{childItem.col02}}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12 col-md-6">
+                                                        <!-- 標題與內容左右分開 -->
+                                                        <div class="textGroup jc_between">
+                                                            <p>文字標題</p>
+                                                            <span>{{childItem.col03}}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-6">
+                                                        <!-- 標題與內容左右分開 -->
+                                                        <div class="textGroup jc_between">
+                                                            <p>文字標題</p>
+                                                            <span>{{childItem.col04}}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                </ng-container>
+                                <ng-template #elseRow>
+                                    <tr class="sub_row"
+                                        [ngClass]="[item.showSubRow ? '' : 'collapsed', subItem.showChild ? 'expanded' : '']">
+                                        <td>{{subItem.name}}</td>
+                                        <td>{{subItem.col01}}</td>
+                                        <td>{{subItem.col02}}</td>
+                                        <td>{{subItem.col03}}</td>
+                                        <td>{{subItem.col04}}</td>
+                                        <td>{{subItem.col05}}</td>
+                                    </tr>
+                                </ng-template>
+                            </ng-container>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 區塊內小標題 -->
+            <div class="subTitle">
+                <p>卡片區塊內小標題 - 客製表格02</p>
+            </div>
+
+            <!-- 客製表格02 -->
+            <div class="tableContainer">
+                <table class="expandTable">
+                    <thead>
+                        <tr>
+                            <th>部門/職位</th>
+                            <th class="text_center">新增</th>
+                            <th class="text_center">檢視</th>
+                            <th class="text_center">編輯</th>
+                            <th class="text_center">刪除</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let item of department">
+                            <tr class="expand_row border_none" [ngClass]="item.showSubRow ? 'expanded' : ''">
+                                <td>
+                                    <nb-icon icon="arrow-ios-forward" class="toggleIcon" (click)="toggleShowPosition(item)"></nb-icon>
+                                    {{item.name}}
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <ng-container *ngFor="let subItem of item.sub">
+                                <tr class="sub_row" [ngClass]="[item.showSubRow ? '' : 'collapsed']">
+                                    <td> {{subItem.name}}</td>
+                                    <td><nb-checkbox status="info" [checked]="subItem.create"></nb-checkbox></td>
+                                    <td><nb-checkbox status="info" [checked]="subItem.read"></nb-checkbox></td>
+                                    <td><nb-checkbox status="info" [checked]="subItem.update"></nb-checkbox></td>
+                                    <td><nb-checkbox status="info" [checked]="subItem.delete"></nb-checkbox></td>
+                                </tr>
+                            </ng-container>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+
+        </nb-card-body>
+    </nb-card>
+</div>

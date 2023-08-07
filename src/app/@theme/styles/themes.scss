@@ -36,25 +36,34 @@ $nb-themes: nb-register-theme(
         color-info-800: #0D4685,
         color-info-900: #07316E,
 
-        color-primary-hover: #008CD0,
-        color-primary-active: #29A7E6,
-        color-primary-disabled: color-primary-500,
-        color-success-hover: #00AD74,
-        color-success-active: #01dd94,
-        color-success-disabled: color-success-500,
-        color-info-hover: #0078B2,
-        color-info-active: #66CAFC,
-        color-info-disabled: color-info-500,
-        color-warning-hover: #FFC653,
-        color-warning-active: #FFD800,
-        color-warning-disabled: color-warning-500,
-        color-danger-hover: #FF0044,
-        color-danger-active: #FF85A6,
-        color-danger-disabled: color-danger-500,
+        color-primary-hover: #4B79A2,
+        color-primary-active: #24527B,
+        color-primary-disabled: rgba(#2A6191, 0.48),
+
+        color-success-hover: #26DD84,
+        color-success-active: #04B75E,
+        color-success-disabled: rgba(#00D68F, 0.48),
+
+        color-info-hover: #4AB4EA,
+        color-info-active: #238DC3,
+        color-info-disabled: rgba(#29A7E6, 0.48),
+
+        color-warning-hover: #FFB727,
+        color-warning-active: #D89000,
+        color-warning-disabled: rgba(#FFAA00, 0.48),
+
+        color-danger-hover: #FF5B87,
+        color-danger-active: #D83460,
+        color-danger-disabled: rgba(#FF3D71, 0.48), 
+
         color-basic-default: #BBC1C5,
-        color-basic-hover: #60676D,
-        color-basic-active: #B2B9BE,
-        color-basic-disabled: color-basic-500,
+        color-basic-hover: #C5CACE,
+        color-basic-active: #9EA3A7,
+        color-basic-disabled: rgba(#BBC1C5, 0.48),
+
+        // button
+        button-filled-border-width: 0,
+        button-filled-basic-text-color: #FFFFFF,
 
         // text-setting
         text-basic-color: #121A23,
@@ -98,6 +107,7 @@ $nb-themes: nb-register-theme(
         input-danger-focus-border-color: #FF3D71,
         input-medium-text-font-weight: 400,
 
+        // select-setting
         select-outline-basic-background-color: #FAFAFA,
         select-outline-basic-placeholder-text-color: rgba(#121A23, 0.5),
         select-outline-basic-hover-background-color: #FFFFFF,
@@ -115,12 +125,12 @@ $nb-themes: nb-register-theme(
         select-outline-danger-focus-border-color: #FF3D71,
         select-medium-text-font-weight: 400,
 
+        // spinner
+        spinner-primary-background-color: rgba(#000000, 0.35),
+
+        // tag
+        tag-text-transform: none
     ),
     default,
     default
 );
-
-$title-color: #0B3255;
-$label-color: #393C3E;
-$option-color: #82878B;
-$scrollbar: #BBC1C5;

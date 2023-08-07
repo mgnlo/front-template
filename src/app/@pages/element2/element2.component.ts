@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from "@angular/core"
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { HttpClient } from '@angular/common/http';
-import { DemoFilePickerAdapter } from './demo-file-picker.adapter';
+import { NbTagComponent, NbTagInputAddEvent } from "@nebular/theme";
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -10,19 +9,44 @@ import { map } from 'rxjs/operators';
   templateUrl: "./element2.component.html",
   styleUrls: ["./element2.component.scss"]
 })
+
 export class Element2Component implements OnInit {  
-  public editor = ClassicEditor;
-  @ViewChild('autoInput') txnInput: { nativeElement: { value: string; }; };
+
+  showPassword = false;
+  selected = '1';
   options: string[];
+  dates: { value: string;}[] = [];
+  weeks = ['一','二','三','四','五','六','日'];
+  hours: { value: string;}[] = [];
+  minutes: { value: string;}[] = [];
   filteredOptions$: Observable<string[]>;
+  tags: Set<string> = new Set();
+  selectedValue: string = "date";
+
+  @ViewChild('autoInput') txnInput: { nativeElement: { value: string; }; };
+
+  public editor = ClassicEditor;
+
   public ngOnInit(): void {
     this.options = ['Option 1', 'Option 2', 'Option 3'];
     this.filteredOptions$ = of(this.options);
   }
 
-  adapter = new DemoFilePickerAdapter(this.http);
-  constructor(private http: HttpClient) { }
-
+  constructor() {
+    for (let i = 0; i <= 31; i++) {
+      const value = (i < 10 ? '0' : '') + i;
+      this.dates.push({ value: value });
+    }
+    for (let i = 0; i < 24; i++) {
+      const value = (i < 10 ? '0' : '') + i;
+      this.hours.push({ value: value });
+    }
+    for (let i = 0; i < 60; i++) {
+      const value = (i < 10 ? '0' : '') + i;
+      this.minutes.push({ value: value });
+    }
+  }
+  
   private filter(value: string): string[] {
     const filterValue = value.toLowerCase();
     return this.options.filter(optionValue => optionValue.toLowerCase().includes(filterValue));
@@ -38,20 +62,24 @@ export class Element2Component implements OnInit {
   }
   onSelectionChange($event: any) {
     this.filteredOptions$ = this.getFilteredOptions($event);
+    this.tags.add($event);
   }
-
-  // 密碼欄位設定
-  showPassword = false;
   getInputType() {
     if (this.showPassword) {
       return 'text';
     }
     return 'password';
   }
-  toggleShowPassword() {
-    this.showPassword = !this.showPassword;
+  removeTag(tagToRemove: NbTagComponent): void {
+    this.tags.delete(tagToRemove.text);
   }
-  // 下拉是選單自動帶入值
-  selected = '1';
+  addTag({ value, input }: NbTagInputAddEvent): void {
+    if (value) {
+      this.tags.add(value)
+    }
+    input.nativeElement.value = '';
+  }
+  onRadioChange(value: string) {
+    this.selectedValue = value;
+  }
 }
-

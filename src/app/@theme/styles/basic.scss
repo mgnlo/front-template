@@ -1,0 +1,239 @@
+// font-size 變數設定
+$f10: 0.625rem;
+$f11: 0.6875rem;
+$f12: 0.75rem;
+$f13: 0.8125rem;
+$f14: 0.875rem;
+$f15: 0.9375rem;
+$f16: 1rem;
+$f17: 1.0625rem;
+$f18: 1.125rem;
+$f19: 1.1875rem;
+$f20: 1.25rem;
+$f21: 1.3125rem;
+$f22: 1.375rem;
+$f23: 1.4375rem;
+$f24: 1.5rem;
+$f25: 1.5625rem;
+$f26: 1.625rem;
+$f27: 1.6875rem;
+$f28: 1.75rem;
+$f29: 1.8125rem;
+$f30: 1.875rem;
+$f31: 1.9375rem;
+$f32: 2rem;
+$f33: 2.0625rem;
+$f34: 2.125rem;
+$f35: 2.1875rem;
+$f36: 2.25rem;
+$f37: 2.3125rem;
+$f38: 2.375rem;
+$f39: 2.4375rem;
+$f40: 2.5rem;
+
+// text-align、text-decoration、font-weight
+.text {
+    &_center { text-align: center !important; }
+    &_left { text-align: left !important; }
+    &_right { text-align: right !important; }
+    &_lighter { font-weight: lighter !important; }
+    &_normal { font-weight: normal !important; }
+    &_bold { font-weight: bold !important; }
+    &_underline { text-decoration: underline !important; }
+    &_line_through { text-decoration: line-through !important; }
+    &_overline { text-decoration: overline !important; }
+    &_none { text-decoration: none !important; }
+}
+// font-style
+.font {
+    &_normal { font-style: normal !important; }
+    &_italic { font-style: italic !important; }
+    &_oblique { font-style: oblique !important; }
+}
+// display
+.dis{
+    &_block { display: block !important; }
+    &_flex { display: flex !important; }
+    &_cont { display: contents !important; }
+    &_none { display: none !important; }
+    &_inl { display: inline !important; }
+    &_inlb { display: inline-block !important; }
+    &_inlf { display: inline-flex !important; }
+    &_inlt { display: inline-table !important; }
+}
+// flex-direction
+.flex {
+    &_col { flex-direction: column !important; }
+    &_row { flex-direction: row !important; }
+    &_col_reverse { flex-direction: column-reverse !important; }
+    &_row_reverse { flex-direction: row-reverse !important; }
+    &_wrap { flex-wrap: wrap !important; }
+    &_nowrap { flex-wrap: nowrap !important; }
+    &_center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+// justify-content
+.jc {
+    &_start { justify-content: flex-start !important; }
+    &_end { justify-content: flex-end !important; }
+    &_center { justify-content: center !important; }
+    &_between { justify-content: space-between !important; }
+    &_around { justify-content: space-around !important; }
+    &_evenly { justify-content: space-evenly !important; }
+}
+// align-items
+.ai {
+    &_start { align-items: flex-start !important; }
+    &_end { align-items: flex-end !important; }
+    &_center { align-items: center !important; }
+    &_baseline { align-items: baseline !important; }
+    &_stretch { align-items: stretch !important; }
+}
+// visibility
+.vis {
+    &_visible { visibility: visible !important; }
+    &_hidden { visibility: hidden !important; }
+}
+// show、hide
+.show { display: block !important; }
+.hide { display: none !important; }
+
+// font-size 設定
+$font_size_map: (
+    10: 0.625rem,
+    11: 0.6875rem,
+    12: 0.75rem,
+    13: 0.8125rem,
+    14: 0.875rem,
+    15: 0.9375rem,
+    16: 1rem,
+    17: 1.0625rem,
+    18: 1.125rem,
+    19: 1.1875rem,
+    20: 1.25rem,
+    21: 1.3125rem,
+    22: 1.375rem,
+    23: 1.4375rem,
+    24: 1.5rem,
+    25: 1.5625rem,
+    26: 1.625rem,
+    27: 1.6875rem,
+    28: 1.75rem,
+    29: 1.8125rem,
+    30: 1.875rem,
+    31: 1.9375rem,
+    32: 2rem,
+    33: 2.0625rem,
+    34: 2.125rem,
+    35: 2.1875rem,
+    36: 2.25rem,
+    37: 2.3125rem,
+    38: 2.375rem,
+    39: 2.4375rem,
+    40: 2.5rem,
+    41: 2.5625rem,
+    42: 2.625rem,
+    43: 2.6875rem,
+    44: 2.75rem,
+    45: 2.8125rem,
+    46: 2.875rem,
+    47: 2.9375rem,
+    48: 3rem,
+    49: 3.0625rem,
+    50: 3.125rem,
+    51: 3.1875rem,
+    52: 3.25rem,
+    53: 3.3125rem,
+    54: 3.375rem,
+    55: 3.4375rem,
+    56: 3.5rem,
+    57: 3.5625rem,
+    58: 3.625rem,
+    59: 3.6875rem,
+    60: 3.75rem,
+);
+
+@each $key, $value in map-remove($font_size_map) {
+    $i: index($font_size_map, $key $value);
+    .fs_#{$key} { font-size: nth(map-values($font_size_map), $i) !important; }
+}
+
+// margin & padding 設定
+// 使用方式：mar_10、mar_t_4、mar_1d、mar_b_2d
+$spacing_map: (
+    auto: auto,
+    0: 0,
+    1: 1px,
+    2: 2px,
+    3: 3px,
+    4: 4px,
+    5: 5px,
+    6: 6px,
+    7: 7px,
+    8: 8px,
+    9: 9px,
+    10: 10px,
+    11: 11px,
+    12: 12px,
+    13: 13px,
+    14: 14px,
+    15: 15px,
+    16: 16px,
+    17: 17px,
+    18: 18px,
+    19: 19px,
+    20: 20px,
+    0d25: 0.25rem,
+    0d5: 0.5rem,
+    0d75: 0.75rem,
+    1d: 1rem,
+    1d25: 1.25rem,
+    1d5: 1.5rem,
+    1d75: 1.75rem,
+    2d: 2rem,
+    2d25: 2.25rem,
+    2d5: 2.5rem,
+    2d75: 2.75rem,
+    3d: 3rem,
+    3d25: 3.25rem,
+    3d5: 3.5rem,
+    3d75: 3.75rem,
+    4d: 4rem,
+    4d25: 4.25rem,
+    4d5: 4.5rem,
+    4d75: 4.75rem,
+    5d: 5rem,
+);
+
+@each $key, $value in map-remove($spacing_map) {
+    $i: index($spacing_map, $key $value);
+    .mar_#{$key} { margin: nth(map-values($spacing_map), $i) !important; }
+    .mar_t_#{$key} { margin-top: nth(map-values($spacing_map), $i) !important; }
+    .mar_b_#{$key} { margin-bottom: nth(map-values($spacing_map), $i) !important; }
+    .mar_l_#{$key} { margin-left: nth(map-values($spacing_map), $i) !important; }
+    .mar_r_#{$key} { margin-right: nth(map-values($spacing_map), $i) !important; }
+    .mar_hor_#{$key} {
+        margin-left: nth(map-values($spacing_map), $i) !important;
+        margin-right: nth(map-values($spacing_map), $i) !important;
+    }
+    .mar_ver_#{$key} {
+        margin-top: nth(map-values($spacing_map), $i) !important;
+        margin-bottom: nth(map-values($spacing_map), $i) !important;
+    }
+    .pad_#{$key} { padding: nth(map-values($spacing_map), $i) !important; }
+    .pad_t_#{$key} { padding-top: nth(map-values($spacing_map), $i) !important; }
+    .pad_b_#{$key} { padding-bottom: nth(map-values($spacing_map), $i) !important; }
+    .pad_l_#{$key} { padding-left: nth(map-values($spacing_map), $i) !important; }
+    .pad_r_#{$key} { padding-right: nth(map-values($spacing_map), $i) !important; }
+    .pad_hor_#{$key} {
+        padding-left: nth(map-values($spacing_map), $i) !important;
+        padding-right: nth(map-values($spacing_map), $i) !important;
+    }
+    .pad_ver_#{$key} {
+        padding-top: nth(map-values($spacing_map), $i) !important;
+        padding-bottom: nth(map-values($spacing_map), $i) !important;
+    }
+}

@@ -22,6 +22,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'table',
+        loadChildren: () =>
+          import('@pages/table-element/table-element.module').then(
+            (m) => m.TablePageModule
+          ),
+      },
+      {
         path: 'charts',
         loadChildren: () =>
           import('@pages/charts/charts.module').then(
