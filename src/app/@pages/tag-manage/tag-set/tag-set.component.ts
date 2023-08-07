@@ -34,6 +34,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   detail: TagDetailView;
   params: any = [];//路由參數
+
+  changeRouteName: string;
   actionName: string;// 新增/編輯/複製
 
   mockData: Array<ActivitySetting> = ActivityListMock;
@@ -102,8 +104,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     }, [ValidatorsUtil.dateRange]);
 
     this.params = this.activatedRoute.snapshot.params;
-    const changeRouteName = this.params['changeRoute'] ?? "";
-    this.actionName = CommonUtil.getActionName(changeRouteName);
+    this.changeRouteName = this.params['changeRoute'] ?? "";
+    this.actionName = CommonUtil.getActionName(this.changeRouteName);
   }
 
   gridDefine = {
@@ -177,8 +179,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     this.dataSource.load(this.mockData);
     const tagId = this.params['tagId'];
     if (!!tagId) {
-      const changeRouteName = this.params['changeRoute'] ?? "";
-      this.actionName = CommonUtil.getActionName(changeRouteName);
       this.loadingService.open();
       this.tagManageService.getTagSettingRow(tagId).pipe(
         catchError(err => {
@@ -223,7 +223,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
             }
           });
           if (!!processedData) {
-            if (changeRouteName === 'edit') {
+            if (this.changeRouteName === 'edit') {
               this.isHistoryOpen = processedData.isHistoryOpen;
               this.detail = processedData.detail;
             }
@@ -433,17 +433,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       return
     }
 
-    // 調用新增
-    if (!tagId) {
-      this.saveTagSetting(null, reqData);
-      return
-    }
-
-    // 調用編輯
-    if (tagId) {
-      this.saveTagSetting(tagId, reqData);
-      return
-    }
+    // 調用新增或編輯
+    this.saveTagSetting(tagId, reqData);
 
   }
 
@@ -457,7 +448,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     requestObservable.pipe(
       catchError((err) => {
         this.loadingService.close();
-        this.dialogService.alertAndBackToList(false, `${this.actionName}失敗`, ['pages', 'tag-manage', 'tag-set', tagId]);
+        const route = tagId ? [this.changeRouteName, tagId] : [];
+        this.dialogService.alertAndBackToList(false, `${this.actionName}失敗`, ['pages', 'tag-manage', 'tag-set', ...route]);
         throw new Error(err.message);
       }),
       tap(res => {
