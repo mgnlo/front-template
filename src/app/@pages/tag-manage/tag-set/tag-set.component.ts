@@ -104,7 +104,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     }, [ValidatorsUtil.dateRange]);
 
     this.params = this.activatedRoute.snapshot.params;
-    this.changeRouteName = this.params['changeRoute'] ?? "";
+    this.changeRouteName = this.params['changeRoute']?.toLocaleLowerCase() ?? "";
     this.actionName = CommonUtil.getActionName(this.changeRouteName);
   }
 
@@ -183,7 +183,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       this.tagManageService.getTagSettingRow(tagId).pipe(
         catchError(err => {
           this.loadingService.close();
-          this.dialogService.alertAndBackToList(false, '查無該筆資料，將為您導回客群名單', ['pages', 'customer-manage', 'activity-list']);
+          this.dialogService.alertAndBackToList(false, '查無該筆資料，將為您導回標籤列表', ['pages', 'tag-manage', 'tag-list']);
           throw new Error(err.message);
         }),
         filter(res => res.code === RestStatus.SUCCESS),
@@ -238,9 +238,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     const getRawValue = this.validateForm.getRawValue();
     this.changeTagType(getRawValue.tagType);
     this.changeConditionSettingMethod(getRawValue.conditionSettingMethod);
-
-    //更新驗證
-
   }
 
   ngAfterViewChecked(): void {
@@ -435,9 +432,9 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
     // 調用新增或編輯
     this.saveTagSetting(tagId, reqData);
-
   }
 
+  //#region 新增或編輯
   saveTagSetting(tagId: string | null, reqData: any) {
     this.loadingService.open();
 
@@ -462,7 +459,9 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       }
     });
   }
+  //#endregion
 
+  //#region 組送出資料
   getRequestData(): TagSettingEditReq {
     const tagId = this.params['tagId'];
     const getRawValue = this.validateForm.getRawValue();
@@ -501,5 +500,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
     return reqData;
   }
+  //#endregion
 
 }
