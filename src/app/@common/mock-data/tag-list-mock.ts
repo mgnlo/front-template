@@ -17,8 +17,11 @@ export const TagSettingMock: Array<TagSetting> = [
     "tagDimension": "A",
     "tagSubDimension": "A",
     "scheduleSettings": "daily",
-    "uploadType": "名單上傳類型",
+    "uploadType": ".csv",
     "filePath": "上傳檔案路徑/A/AAA/B\BB.config",
+    "fileName": "檔案名稱",
+    "fileData": "上傳檔案資料",
+    "version": "123-321",
     "tagConditionSetting": [
       {
         "tagId": "cccccc123456",
@@ -129,8 +132,11 @@ export const TagSettingMock: Array<TagSetting> = [
     "tagDimension": "B",
     "tagSubDimension": "B",
     "scheduleSettings": "daily",
-    "uploadType": "名單上傳類型",
+    "uploadType": ".csv",
     "filePath": "上傳檔案路徑",
+    "fileName": "檔案名稱",
+    "fileData": "上傳檔案資料",
+    "version": "123-321",
     "tagConditionSetting": [
       {
         "tagId": "cccccc123456",
