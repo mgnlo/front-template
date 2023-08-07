@@ -428,39 +428,47 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     const tagId = this.params['tagId'];
     const reqData: TagSettingEditReq = this.getRequestData();
 
-    if (valid && !tagId) {
-      this.loadingService.open();
-      this.tagManageService.createTagSetting(reqData).pipe(
-        catchError((err) => {
-          this.loadingService.close();
-          this.dialogService.alertAndBackToList(false, '新增失敗', ['pages', 'tag-manage', 'tag-list']);
-          throw new Error(err.message);
-        }),
-        tap(res => {
-          console.info(res)
-          this.loadingService.close();
-        })).subscribe(res => {
-          if (res.code === RestStatus.SUCCESS) {
-            this.dialogService.alertAndBackToList(true, '新增成功', ['pages', 'tag-manage', 'tag-list'])
-          }
-        });
-    } else if (valid && tagId) {
-      this.loadingService.open();
-      this.tagManageService.updateTagSetting(tagId, reqData).pipe(
-        catchError((err) => {
-          this.loadingService.close();
-          this.dialogService.alertAndBackToList(false, '編輯失敗', ['pages', 'tag-manage', 'tag-list']);
-          throw new Error(err.message);
-        }),
-        tap(res => {
-          console.info(res)
-          this.loadingService.close();
-        })).subscribe(res => {
-          if (res.code === RestStatus.SUCCESS) {
-            this.dialogService.alertAndBackToList(true, '編輯成功', ['pages', 'tag-manage', 'tag-list'])
-          }
-        });
+    if (!valid) {
+      this.dialogService.alertAndBackToList(false, `${this.actionName}驗證失敗`, ['pages', 'tag-manage', 'tag-set', tagId]);
+      return
     }
+
+    // 調用新增
+    if (!tagId) {
+      this.saveTagSetting(null, reqData);
+      return
+    }
+
+    // 調用編輯
+    if (tagId) {
+      this.saveTagSetting(tagId, reqData);
+      return
+    }
+
+  }
+
+  saveTagSetting(tagId: string | null, reqData: any) {
+    this.loadingService.open();
+
+    const requestObservable = tagId
+      ? this.tagManageService.updateTagSetting(tagId, reqData)
+      : this.tagManageService.createTagSetting(reqData);
+
+    requestObservable.pipe(
+      catchError((err) => {
+        this.loadingService.close();
+        this.dialogService.alertAndBackToList(false, `${this.actionName}失敗`, ['pages', 'tag-manage', 'tag-set', tagId]);
+        throw new Error(err.message);
+      }),
+      tap(res => {
+        console.info(res);
+        this.loadingService.close();
+      })
+    ).subscribe(res => {
+      if (res.code === RestStatus.SUCCESS) {
+        this.dialogService.alertAndBackToList(true, `${this.actionName}成功`, ['pages', 'tag-manage', 'tag-list']);
+      }
+    });
   }
 
   getRequestData(): TagSettingEditReq {
