@@ -69,7 +69,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
     this.params = this.activatedRoute.snapshot.params;
     const changeRouteName = this.params['changeRoute'] ?? "";
-    this.actionName = this.getActionName(changeRouteName);
+    this.actionName = CommonUtil.getActionName(changeRouteName);
 
     const state = this.router.getCurrentNavigation()?.extras?.state;
     if (!!state) {

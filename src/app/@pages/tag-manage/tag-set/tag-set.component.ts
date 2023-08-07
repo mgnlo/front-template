@@ -108,7 +108,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
     this.params = this.activatedRoute.snapshot.params;
     const changeRouteName = this.params['changeRoute'] ?? "";
-    this.actionName = this.getActionName(changeRouteName);
+    this.actionName = CommonUtil.getActionName(changeRouteName);
   }
 
   gridDefine = {
@@ -183,7 +183,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     this.tagId = this.activatedRoute.snapshot.params?.tagId;
     if (!!this.tagId) {
       const changeRouteName = this.params['changeRoute'] ?? "";
-      this.actionName = this.getActionName(changeRouteName);
+      this.actionName = CommonUtil.getActionName(changeRouteName);
       this.loadingService.open();
       this.tagManageService.getTagSettingRow(this.tagId).pipe(
         catchError(err => {
@@ -255,17 +255,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   ngDoCheck() {
     console.info('this.findInvalidControls()', this.findInvalidControls())
-  }
-
-  findInvalidControls() {
-    const invalid = [];
-    const controls = this.validateForm.controls;
-    for (const name in controls) {
-      if (controls[name].invalid) {
-        invalid.push(name);
-      }
-    }
-    return invalid;
   }
 
   //#region 標籤類型 更動時切換驗證

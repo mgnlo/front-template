@@ -3,6 +3,17 @@ import * as moment from 'moment';
 import { Moment } from 'moment';
 
 export const CommonUtil = {
+  /** 取得路由中文 */
+  getActionName(changeRouteName: string): string {
+    switch (changeRouteName) {
+      case 'edit':
+        return '編輯';
+      case 'copy':
+        return '複製';
+      default:
+        return '新增';
+    }
+  },
   /** 取得第一個 FormControl error 的 key 來套 i18n */
   getFirstFormContorlError: (errors: ValidationErrors): string => {
     if (!errors) { return ''; }
