@@ -26,7 +26,7 @@ import { TagConditionDialogComponent } from './condition-dialog/condition-dialog
 })
 export class TagAddComponent extends BaseComponent implements OnInit {
   TagType = TagType;
-  SetCondition = TagSetCondition;
+  conditionSettingMethod = TagSetCondition;
   Status = Status;
   tagId: string;
 
@@ -62,7 +62,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   //取得新增條件區塊
   get conditions(): FormArray {
-    return this.validateForm.get('conditionSettingQuery') as FormArray
+    return this.validateForm.get('tagConditionSetting') as FormArray
   }
 
   detail: TagDetailView;
@@ -94,7 +94,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       tagName: new FormControl(null, Validators.required),
       status: new FormControl('enabled', Validators.required),
       tagType: new FormControl('normal', Validators.required),
-      setCondition: new FormControl('normal', Validators.required),
+      conditionSettingMethod: new FormControl('normal', Validators.required),
       uploadFile: new FormControl(null, Validators.required),
       startDate: new FormControl(new Date(), ValidatorsUtil.dateFmt),
       endDate: new FormControl(moment(new Date()).add(3, 'months').toDate(), ValidatorsUtil.dateFmt),
@@ -103,7 +103,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       scheduleSettings: new FormControl(null, Validators.required),
       tagDescription: new FormControl(null),
       conditionValue: new FormControl(null, Validators.required),
-      conditionSettingQuery: new FormArray([
+      tagConditionSetting: new FormArray([
         new FormGroup({
           id: new FormControl(0),
           detectionCondition_0: new FormControl(null, Validators.required),
@@ -130,7 +130,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     //         case 'endDate':
     //           this.validateForm.controls[key].setValue(new Date(state[key]))
     //           break;
-    //         case 'conditionSettingQuery':
+    //         case 'tagConditionSetting':
     //           this.conditions.removeAt(0);
     //           //這裡要改呀呀呀
     //           this.conditions.push(new FormGroup({
@@ -261,7 +261,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
                 case 'endDate':
                   this.validateForm.controls[key].setValue(new Date(res.result[key]))
                   break;
-                case 'conditionSettingQuery':
+                case 'tagConditionSetting':
                   this.conditions.removeAt(0);
                   res.result.tagConditionSetting.forEach((conditionSetting, index) => {
                     if (!!conditionSetting.joinValue) {
@@ -308,8 +308,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   //#region 標籤類型 更動時切換驗證
   changeTagType(key: string) {
     if (key === 'normal') {
-      if (!this.validateForm.contains('setCondition')) {
-        this.addField('setCondition', 'normal', Validators.required);
+      if (!this.validateForm.contains('conditionSettingMethod')) {
+        this.addField('conditionSettingMethod', 'normal', Validators.required);
       }
       if (this.validateForm.contains('uploadFile')) {
         this.removeField('uploadFile');
@@ -320,8 +320,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       if (!this.validateForm.contains('uploadFile')) {
         this.addField('uploadFile', null, Validators.required);
       }
-      if (this.validateForm.contains('setCondition')) {
-        this.removeField('setCondition');
+      if (this.validateForm.contains('conditionSettingMethod')) {
+        this.removeField('conditionSettingMethod');
       }
       //this.addField('uploadFile', null, [Validators.required,this.validateFileType]);
     }
@@ -413,6 +413,10 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   //取得FormArray裡的FormGroup
   getFormGroupInFormArray(formArrayName: string, index: number): FormGroup {
     return CommonUtil.getFormGroupInFormArray(this.validateForm, formArrayName, index);
+  }
+
+  getConditionId(index: number): number{
+    return CommonUtil.getFormGroupInFormArray(this.validateForm, 'tagConditionSetting', index).get('id').value;
   }
 
   //條件分佈級距彈出視窗
