@@ -233,14 +233,13 @@ export class TagAddComponent extends BaseComponent implements OnInit {
               this.detail = processedData.detail;
             }
           }
-
+          const getRawValue = this.validateForm.getRawValue();
+          this.changeTagType(getRawValue.tagType);
+          this.changeConditionSettingMethod(getRawValue.conditionSettingMethod);
           this.loadingService.close();
         })
       ).subscribe(res => {
         //console.info(res.result);
-        const getRawValue = this.validateForm.getRawValue();
-        this.changeTagType(getRawValue.tagType)
-        this.changeConditionSettingMethod(getRawValue.conditionSettingMethod)
       });
     }
 
