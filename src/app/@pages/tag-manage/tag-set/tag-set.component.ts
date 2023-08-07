@@ -177,6 +177,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       return { ...mock, during: `${mock.startDate}~${mock.endDate}` } //起訖日區間
     })
     this.dataSource.load(this.mockData);
+
+    //#region 載入編輯資料
     const tagId = this.params['tagId'];
     if (!!tagId) {
       this.loadingService.open();
@@ -234,10 +236,13 @@ export class TagAddComponent extends BaseComponent implements OnInit {
         //console.info(res.result);
       });
     }
+    //#endregion
 
+    //#region 設定欄位
     const getRawValue = this.validateForm.getRawValue();
     this.changeTagType(getRawValue.tagType);
     this.changeConditionSettingMethod(getRawValue.conditionSettingMethod);
+    //#endregion
   }
 
   ngAfterViewChecked(): void {
@@ -309,7 +314,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       this.validateForm.removeControl(fieldName);
     }
   }
-
   //#endregion
 
   //#region 條件區塊異動
@@ -471,6 +475,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       tagName: getRawValue.tagName,
       status: getRawValue.status,
       tagType: getRawValue.tagType,
+      uploadType: getRawValue.uploadType,
       fileName: getRawValue.fileName,
       filePath: getRawValue.filePath,
       fileData: getRawValue.fileData,

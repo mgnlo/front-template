@@ -110,6 +110,7 @@ export class TagSettingEditReq {
   tagName: string;
   status: string;
   tagType: string;
+  uploadType?: string;
   fileName?: string;
   filePath?: string;
   fileData?: string;

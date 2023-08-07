@@ -181,27 +181,27 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     this.validateForm.patchValue({ 'hour': '', 'minute': '' });
     switch (key) {
       case 'daily':
-        if (this.validateForm.contains('daily')) {
-          this.removeField('daily');
-        }
+        this.removeFieldIfExists('daily');
         break;
       case 'weekly':
       case 'monthly':
-        if (!this.validateForm.contains('daily')) {
-          this.addField('daily', null, Validators.required);
-        }
+        this.addFieldIfNotExists('daily', null, Validators.required);
         break;
     }
   }
   //#endregion
 
   //#region 基本欄位檢核(新增/刪除)
-  addField(fieldName: string, formState: any, fileFormatValidator: any) {
-    this.validateForm.addControl(fieldName, new FormControl(formState, fileFormatValidator));
+  addFieldIfNotExists(fieldName: string, defaultValue: any, validationRules?: any) {
+    if (!this.validateForm.contains(fieldName)) {
+      this.validateForm.addControl(fieldName, new FormControl(defaultValue, validationRules));
+    }
   }
 
-  removeField(fieldName: string) {
-    this.validateForm.removeControl(fieldName);
+  removeFieldIfExists(fieldName: string) {
+    if (this.validateForm.contains(fieldName)) {
+      this.validateForm.removeControl(fieldName);
+    }
   }
   //#endregion
 
