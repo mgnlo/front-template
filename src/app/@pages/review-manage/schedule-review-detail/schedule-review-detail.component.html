@@ -1,0 +1,92 @@
+<div class="pageTitle">
+  <h1>名單排程審核</h1>
+  <button nbButton size="small" status="primary" (click)="changeBeforeAfter()">查看異動{{beforeAfterTitle}}內容</button><!-- tiny -->
+</div>
+<div class="pageContent">
+  <nb-card>
+    <nb-card-body>
+      <div class="row">
+        <div class="textGroup col-12 col-lg-4">
+            <p class="textBold" [ngClass]="changeClass('jobName') | enum: 'reviewCompareClass'">作業名稱：</p>
+            <span>{{detail?.jobName}}</span>
+        </div>
+        <div class="textGroup col-12 col-lg-4">
+            <p class="textBold" [ngClass]="changeClass('status') | enum: 'reviewCompareClass'">狀態：</p>
+            <span>{{detail?.status | enum:'status'}}</span>
+        </div>
+        <div class="textGroup col-12 col-lg-4">
+            <p class="textBold" [ngClass]="changeClass('executionFrequency') | enum: 'reviewCompareClass'">執行頻率：</p>
+            <span>{{detail?.executionFrequency | enum:'frequency'+' '+detail?.frequencyTime}}</span>
+        </div>
+      </div>
+      <div class="row justify-content-between">
+        <div class="textGroup col-12 col-lg-4">
+            <p class="textBold" [ngClass]="changeClass('filePath') | enum: 'reviewCompareClass'">檔案存放位置：</p>
+            <span>{{detail?.filePath}}</span>
+        </div>
+        <div class="textGroup col-12 col-lg-4">
+            <p class="textBold" [ngClass]="changeClass('modificationTime') | enum: 'reviewCompareClass'">異動時間：</p>
+            <span>{{detail?.modificationTime | date:dateFormat}}</span>
+        </div>
+      </div>
+      <div class="subTitle">
+        <p>名單列表</p>
+      </div>
+      <div class="tagBlock">
+        <div class="tagItem">
+            <nb-tag status="danger" appearance="filled" text="本次新增"></nb-tag>
+            <p class="tagContent">本次新增</p>
+        </div>
+        <div class="tagItem">
+          <nb-tag status="info" appearance="filled" text="本次刪除"></nb-tag>
+          <p class="tagContent">本次刪除</p>
+        </div>
+        <div class="tagItem">
+          <nb-tag status="basic" appearance="filled" text="無異動"></nb-tag>
+          <p class="tagContent">無異動</p>
+        </div>
+      </div>
+    </nb-card-body>
+  </nb-card>
+  <!-- <div class="row" *ngIf="reviewStatus!=='reviewing'">
+      <div class="btnGroup">
+          <button nbButton status="basic" size="medium" (click)="cancel()">返回</button>
+      </div>
+  </div> -->
+  <div class="row"><!-- *ngIf="reviewStatus==='reviewing'" -->
+    <div class="btnGroup">
+        <button nbButton status="basic" size="medium" (click)="cancel()">返回</button>
+        <button nbButton status="danger" size="medium" (click)="reject()">不同意</button>
+        <button nbButton status="info" size="medium" (click)="approve()">同意</button>
+    </div>
+  </div>
+  <nb-card *ngIf="detail?.historyGroupView">
+    <nb-card-header>
+        <h2>異動歷程</h2>
+    </nb-card-header>
+    <nb-card-body>
+      <div class="historyList">
+          <ng-container *ngFor="let hg of detail.historyGroupView | keyvalue; let i=index;">
+              <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
+                  <div class="mainItem">
+                      <h4 (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">{{history.type}}</h4>
+                      <button nbButton status="control" size="tiny" class="iconBtn" (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">
+                          <nb-icon icon="chevron-down-outline"></nb-icon>
+                      </button>
+                  </div>
+                  <div class="subItem" [ngClass]="isHistoryOpen[hg.key] ? '' : 'displayNone'" *ngFor="let flow of history.flows">
+                      <div>
+                          <p>{{flow.time | date:dateFormat}}</p>
+                          <p>{{flow.time | date:'hh:mm:ss'}}</p>
+                      </div>
+                      <div>
+                          <p>{{flow.title}}</p>
+                          <p>{{flow.detail}}</p>
+                      </div>
+                  </div>
+              </div>
+          </ng-container>
+      </div>
+    </nb-card-body>
+  </nb-card>
+</div>

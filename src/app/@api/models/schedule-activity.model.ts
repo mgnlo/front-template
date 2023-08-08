@@ -74,10 +74,16 @@ export interface ScheduleDetailView {
   version: string;
   jobName: string;
   executionFrequency: string;
+  frequencyTime?: string;
   creationTime: string;
   modificationTime: string;
   status: string;
+  filePath?: string;
   historyGroupView: { [x: number]: HistoryGroupView };
+
+  //
+  //這裡要添加名單列表(本次新增/刪除/無異動)
+  //
 }
 
 //for HTML diaplay ViewModel
