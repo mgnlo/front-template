@@ -19,14 +19,14 @@
         <div class="row">
             <radio class="col-12 col-lg-6" title="標籤類型" [form]="validateForm" ctlName="tagType" [selectList]="{options: tagTypeList, key: 'key', val: 'val'}" (valueChange)="changeTagType($event)"></radio>
             <div *ngIf="validateForm.get('tagType')?.value === 'normal'">
-              <radio class="essential col-12 col-lg-6" title="條件設定方式" [form]="validateForm" ctlName="conditionSettingMethod" [selectList]="{options: tagSetConditionList, key: 'key', val: 'val'}"></radio>
+              <radio class="essential col-12 col-lg-6" title="條件設定方式" [form]="validateForm" ctlName="conditionSettingMethod" [selectList]="{options: tagSetConditionList, key: 'key', val: 'val'}" (valueChange)="changeConditionSettingMethod($event)"></radio>
             </div>
             <div *ngIf="validateForm.get('tagType')?.value === 'document'" class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': validateForm.get('fileName')?.errors?.uploadFileMsg}">
               <label>名單上傳</label>
               <div>
                 <input nbInput fullWidth [status]="validateForm.get('fileName')?.errors?.uploadFileMsg ? 'danger' : 'basic'"
                       type="text" formControlName="fileName" [placeholder] = "filePlaceholderName"/>
-                <input nbInput fullWidth type="file"  [accept]="passFileArrayStr" (change)="onFileSelected($event)"  />
+                <input nbInput fullWidth type="file"  [accept]="removeLastCharIfEquals(passFileArrayStr,',')" (change)="onFileSelected($event)" (click)="onFileSelected($event)" />
                 <button nbButton status="warning" size="tiny" class="iconBtn">
                     <nb-icon icon="folder-add-outline"></nb-icon>
                 </button>
@@ -34,6 +34,10 @@
               <div class="note errorText">
                 <nb-icon icon="alert-triangle"></nb-icon>
                 <p>{{validateForm.get('fileName')?.errors?.uploadFileMsg}}</p>
+              </div>
+              <div class="note">
+                <nb-icon icon="alert-circle"></nb-icon>
+                <p>請上傳{{removeLastCharIfEquals(passFileArrayStr,',')}}格式類型檔案</p>
               </div>
             </div>
         </div>
@@ -85,7 +89,7 @@
                 <radio *ngIf="!last" class="col-10 col-lg-2" title="集合" [form]="getFormGroupInFormArray('tagConditionSetting', i)" ctlName="joinValue_{{getConditionId(i)}}" [selectList]="{options: joinValueList, key: 'key', val: 'val'}"></radio>
                 <!-- 增減按鈕 -->
                 <div *ngIf="last" class="fieldBtn col-1 col-lg-1">
-                    <button nbButton status="success" size="tiny" class="iconBtn" (click)="changeConditionsBtn('add', i)">
+                    <button nbButton status="success" size="tiny" class="iconBtn" (click)="changeConditionsBtn('add', i)" [disabled]="validateForm?.get('tagConditionSetting')?.invalid">
                         <nb-icon icon="plus-outline"></nb-icon>
                     </button>
                 </div>

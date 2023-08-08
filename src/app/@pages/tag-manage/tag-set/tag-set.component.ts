@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting } from '@api/models/activity-list.model';
-import { TagDetailView, TagSetting, TagSettingEditReq } from '@api/models/tag-manage.model';
+import { TagConditionSetting, TagDetailView, TagSetting, TagSettingEditReq } from '@api/models/tag-manage.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
@@ -18,6 +18,7 @@ import { LocalDataSource } from 'ng2-smart-table';
 import { catchError, filter, tap } from 'rxjs/operators';
 import { TagManageService } from '../tag-manage.service';
 import { TagConditionDialogComponent } from './condition-dialog/condition-dialog.component';
+import { RegExpUtil } from '@common/utils/reg-exp-util';
 
 @Component({
   selector: 'tag-set',
@@ -25,10 +26,28 @@ import { TagConditionDialogComponent } from './condition-dialog/condition-dialog
   styleUrls: ['./tag-set.component.scss']
 })
 export class TagAddComponent extends BaseComponent implements OnInit {
-  TagType = TagType;
-  conditionSettingMethod = TagSetCondition;
-  Status = Status;
-  tagId: string;
+
+  //取得新增條件區塊
+  get conditions(): FormArray {
+    return this.validateForm.get('tagConditionSetting') as FormArray
+  }
+
+  detail: TagDetailView;
+  params: any = [];//路由參數
+
+  changeRouteName: string;
+  actionName: string;// 新增/編輯/複製
+
+  mockData: Array<ActivitySetting> = ActivityListMock;
+
+  maxSizeInMB: number = 5;//檔案大小
+  filePlaceholderName: string = '請上傳檔案';
+  //#region 檔案白名單
+  passFileArrayStr: string = '.csv,,,,'
+  passFileArray: Array<string> = ['csv']
+  //#endregion
+
+  isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
 
   //預設狀態
   tagStatusList = [Status.enabled, Status.disabled];
@@ -59,27 +78,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   //集合方式
   joinValueList: Array<{ key: string; val: string }> = [{ key: 'and', val: 'and' }, { key: 'or', val: 'or' }];
 
-  //取得新增條件區塊
-  get conditions(): FormArray {
-    return this.validateForm.get('tagConditionSetting') as FormArray
-  }
-
-  detail: TagDetailView;
-  params: any = [];//路由參數
-  actionName: string;// 新增/編輯/複製
-
-  mockData: Array<ActivitySetting> = ActivityListMock;
-
-  selectedFile: File | undefined;
-  maxSizeInMB: number = 5;//檔案大小
-  filePlaceholderName: string = '請上傳檔案';
-  //#region 檔案白名單
-  passFileArrayStr: string = '.csv,'
-  passFileArray: Array<string> = ['csv']
-  //#endregion
-
-  isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
-
   constructor(
     storageService: StorageService,
     private router: Router,
@@ -102,22 +100,12 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       tagDescription: new FormControl(null),
       conditionValue: new FormControl(null, Validators.required),
       conditionSettingQuery: new FormControl(null, Validators.required),
-      tagConditionSetting: new FormArray([
-        new FormGroup({
-          id: new FormControl(0),
-          detectionCondition_0: new FormControl(null, Validators.required),
-          thresholdValue_0: new FormControl(null, [Validators.required, ValidatorsUtil.number]),
-          //C1: new FormControl(null, Validators.required),
-        }),
-      ]),
+      tagConditionSetting: new FormArray([]),
     }, [ValidatorsUtil.dateRange]);
 
     this.params = this.activatedRoute.snapshot.params;
-    const changeRouteName = this.params['changeRoute'] ?? "";
-    this.actionName = this.getActionName(changeRouteName);
-    const getRawValue = this.validateForm.getRawValue();
-
-    this.changeTagType(getRawValue.tagType)
+    this.changeRouteName = this.params['changeRoute']?.toLocaleLowerCase() ?? "";
+    this.actionName = CommonUtil.getActionName(this.changeRouteName);
   }
 
   gridDefine = {
@@ -189,16 +177,15 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       return { ...mock, during: `${mock.startDate}~${mock.endDate}` } //起訖日區間
     })
     this.dataSource.load(this.mockData);
-    this.tagId = this.activatedRoute.snapshot.params?.tagId;
-    if (!!this.tagId) {
-      const changeRouteName = this.params['changeRoute'] ?? "";
-      this.actionName = this.getActionName(changeRouteName);
-      const getRawValue = this.validateForm.getRawValue();
+
+    //#region 載入編輯資料
+    const tagId = this.params['tagId'];
+    if (!!tagId) {
       this.loadingService.open();
-      this.tagManageService.getTagSettingRow(this.tagId).pipe(
+      this.tagManageService.getTagSettingRow(tagId).pipe(
         catchError(err => {
           this.loadingService.close();
-          this.dialogService.alertAndBackToList(false, '查無該筆資料，將為您導回客群名單', ['pages', 'customer-manage', 'activity-list']);
+          this.dialogService.alertAndBackToList(false, '查無該筆資料，將為您導回標籤列表', ['pages', 'tag-manage', 'tag-list']);
           throw new Error(err.message);
         }),
         filter(res => res.code === RestStatus.SUCCESS),
@@ -218,18 +205,18 @@ export class TagAddComponent extends BaseComponent implements OnInit {
                       this.conditions.push(new FormGroup({
                         id: new FormControl(index),
                         ['detectionCondition_' + index]: new FormControl(conditionSetting.detectionCondition, Validators.required),
-                        ['thresholdValue_' + index]: new FormControl(+conditionSetting.thresholdValue, Validators.required),
+                        ['thresholdValue_' + index]: new FormControl(+conditionSetting.thresholdValue, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
                         ['joinValue_' + index]: new FormControl(conditionSetting.joinValue, Validators.required)
                       }));
                     } else {
                       this.conditions.push(new FormGroup({
                         id: new FormControl(index),
                         ['detectionCondition_' + index]: new FormControl(conditionSetting.detectionCondition, Validators.required),
-                        ['thresholdValue_' + index]: new FormControl(+conditionSetting.thresholdValue, Validators.required),
+                        ['thresholdValue_' + index]: new FormControl(+conditionSetting.thresholdValue, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
                       }));
                     }
                   })
-                  console.info(this.conditions.getRawValue());
+                  //console.info(this.conditions.getRawValue());
                   break;
                 default:
                   this.validateForm.controls[key].setValue(res.result[key]);
@@ -238,7 +225,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
             }
           });
           if (!!processedData) {
-            if (changeRouteName === 'edit') {
+            if (this.changeRouteName === 'edit') {
               this.isHistoryOpen = processedData.isHistoryOpen;
               this.detail = processedData.detail;
             }
@@ -246,47 +233,86 @@ export class TagAddComponent extends BaseComponent implements OnInit {
           this.loadingService.close();
         })
       ).subscribe(res => {
-         console.info(res.result);
+        //console.info(res.result);
       });
     }
+    //#endregion
+
+    //#region 設定欄位
+    const formData = this.validateForm.getRawValue();
+    this.changeTagType(formData.tagType);
+    this.changeConditionSettingMethod(formData.conditionSettingMethod);
+    //#endregion
   }
 
   ngAfterViewChecked(): void {
     this.changeDetectorRef.detectChanges();
   }
 
+  ngDoCheck() {
+    //console.info('this.findInvalidControls()', this.findInvalidControls())
+  }
+
   //#region 標籤類型 更動時切換驗證
   changeTagType(key: string) {
-    if (key === 'normal') {
-      if (!this.validateForm.contains('conditionSettingMethod')) {
-        this.addField('conditionSettingMethod', 'normal', Validators.required);
-      }
-      if (this.validateForm.contains('fileName')) {
-        this.removeField('fileName');
-      }
+    this.filePlaceholderName = '請上傳檔案';
+    this.removeFieldIfExists('fileName');
+    this.removeFieldIfExists('conditionSettingMethod');
+    this.removeFieldIfExists('conditionSettingQuery');
+    this.removeFieldIfExists('tagConditionSetting');
+
+    switch (key?.toLocaleLowerCase()) {
+      case 'normal':
+        this.addFieldIfNotExists('conditionSettingMethod', 'normal', Validators.required);
+        this.addFieldIfNotExists('conditionSettingQuery', null, Validators.required);
+        break;
+      case 'document':
+        this.addFieldIfNotExists('fileName', null, Validators.required);
+        break;
+    }
+  }
+  //#endregion
+
+  //#region 條件設定方式 更動時切換驗證
+  changeConditionSettingMethod(key: string) {
+    this.removeFieldIfExists('conditionValue');
+    this.removeFieldIfExists('tagConditionSetting');
+    this.removeFieldIfExists('conditionSettingQuery');
+
+    switch (key?.toLocaleLowerCase()) {
+      case 'normal':
+        this.addFieldIfNotExists('conditionSettingQuery', null, Validators.required);
+        break;
+      case 'field':
+        if (!this.validateForm.contains('tagConditionSetting')) {
+          this.validateForm.addControl('tagConditionSetting', new FormArray([]));
+        }
+        this.addFieldIfNotExists('conditionValue', null, Validators.required);
+        if (this.conditions?.getRawValue()?.length === 0) {
+          this.conditions.push(new FormGroup({
+            id: new FormControl(0),
+            ['detectionCondition_' + 0]: new FormControl(null, Validators.required),
+            ['thresholdValue_' + 0]: new FormControl(null, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
+          }));
+        }
+        break;
     }
 
-    if (key === 'document') {
-      if (!this.validateForm.contains('fileName')) {
-        this.addField('fileName', null, Validators.required);
-      }
-      if (this.validateForm.contains('conditionSettingMethod')) {
-        this.removeField('conditionSettingMethod');
-      }
-      //this.addField('fileName', null, [Validators.required,this.validateFileType]);
-    }
-
+    this.conditions?.updateValueAndValidity();
   }
   //#endregion
 
   //#region 基本欄位檢核(新增/刪除)
-  addField(fieldName: string, formState: any, fileFormatValidator: any) {
-    this.validateForm.addControl(fieldName, new FormControl(formState, fileFormatValidator));
-    //this.validateForm.controls[fieldName].updateValueAndValidity();
+  addFieldIfNotExists(fieldName: string, defaultValue: any, validationRules?: any) {
+    if (!this.validateForm.contains(fieldName)) {
+      this.validateForm.addControl(fieldName, new FormControl(defaultValue, validationRules));
+    }
   }
 
-  removeField(fieldName: string) {
-    this.validateForm.removeControl(fieldName);
+  removeFieldIfExists(fieldName: string) {
+    if (this.validateForm.contains(fieldName)) {
+      this.validateForm.removeControl(fieldName);
+    }
   }
   //#endregion
 
@@ -331,10 +357,11 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     const fileValidatorResult = this.fileValidator(file);
     this.filePlaceholderName = CommonUtil.isBlank(file?.name) ? this.filePlaceholderName : file.name;
     if (fileValidatorResult !== null) {
-      this.validateForm.get('fileName').setErrors(fileValidatorResult);
+      this.validateForm?.get('fileName')?.setErrors(fileValidatorResult);
+      this.filePlaceholderName = '請上傳檔案';
       return
     } else {
-      this.validateForm.get('fileName').setErrors(null);
+      this.validateForm?.get('fileName')?.setErrors(null);
     }
   }
 
@@ -360,6 +387,20 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   }
   //#endregion
 
+  //#region 刪除最後一個特定字元(含重複)
+  removeLastCharIfEquals(inputString, targetChar) {
+    if (!inputString || !targetChar) {
+      return inputString;
+    }
+
+    const regex = new RegExp(`${targetChar}+[^${targetChar}]*$`);
+    const result = inputString.replace(regex, '');
+
+    return result;
+  }
+  //#endregion
+
+  //#region 取得FormArray裡的FormGroup 和 getConditionId
   //取得FormArray裡的FormGroup
   getFormGroupInFormArray(formArrayName: string, index: number): FormGroup {
     return CommonUtil.getFormGroupInFormArray(this.validateForm, formArrayName, index);
@@ -368,63 +409,104 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   getConditionId(index: number): number {
     return CommonUtil.getFormGroupInFormArray(this.validateForm, 'tagConditionSetting', index).get('id').value;
   }
+  //#endregion
 
-  //條件分佈級距彈出視窗
+  //#region 條件分佈級距彈出視窗
   conditionDialog() {
     this.dialogService.open(TagConditionDialogComponent, {
       title: '條件分佈級距',
       dataList: this.validateForm,
     });
   }
+  //#endregion
 
   cancel() {
     this.router.navigate(['pages', 'tag-manage', 'tag-list']);
   }
 
   submit() {
-    let valid = this.validateForm.valid;
-    let reqData: TagSettingEditReq = this.getRequestData();
-    // if (valid && !this.tagId) {
-    //   this.loadingService.open();
-    //   this.tagManageService.createTagSetting(reqData).pipe(
-    //     catchError((err) => {
-    //       this.loadingService.close();
-    //       this.dialogService.alertAndBackToList(false, '新增失敗', ['pages', 'tag-manage', 'tag-list']);
-    //       throw new Error(err.message);
-    //     }),
-    //     tap(res => {
-    //       console.info(res)
-    //       this.loadingService.close();
-    //     })).subscribe(res => {
-    //       if (res.code === RestStatus.SUCCESS) {
-    //         this.dialogService.alertAndBackToList(true, '新增成功', ['pages', 'tag-manage', 'tag-list'])
-    //       }
-    //     });
-    // } else if (valid && this.tagId) {
-    //   this.loadingService.open();
-    //   this.tagManageService.updateTagSetting(this.tagId, reqData).pipe(
-    //     catchError((err) => {
-    //       this.loadingService.close();
-    //       this.dialogService.alertAndBackToList(false, '編輯失敗', ['pages', 'tag-manage', 'tag-list']);
-    //       throw new Error(err.message);
-    //     }),
-    //     tap(res => {
-    //       console.info(res)
-    //       this.loadingService.close();
-    //     })).subscribe(res => {
-    //       if (res.code === RestStatus.SUCCESS) {
-    //         this.dialogService.alertAndBackToList(true, '編輯成功', ['pages', 'tag-manage', 'tag-list'])
-    //       }
-    //     });
-    // }
+    const valid = this.validateForm.valid;
+    const tagId = this.params['tagId'];
+    const reqData: TagSettingEditReq = this.getRequestData();
+
+    if (!valid || !reqData) {
+      const route = tagId ? [this.changeRouteName, tagId] : [];
+      this.dialogService.alertAndBackToList(false, `${this.actionName}驗證失敗`, ['pages', 'tag-manage', 'tag-set', ...route]);
+      return
+    }
+
+    // 調用新增或編輯
+    this.saveTagSetting(tagId, reqData);
   }
 
+  //#region 新增或編輯
+  saveTagSetting(tagId: string | null, reqData: any) {
+    this.loadingService.open();
+
+    const requestObservable = tagId
+      ? this.tagManageService.updateTagSetting(tagId, reqData)
+      : this.tagManageService.createTagSetting(reqData);
+
+    requestObservable.pipe(
+      catchError((err) => {
+        this.loadingService.close();
+        const route = tagId ? [this.changeRouteName, tagId] : [];
+        this.dialogService.alertAndBackToList(false, `${this.actionName}失敗`, ['pages', 'tag-manage', 'tag-set', ...route]);
+        throw new Error(err.message);
+      }),
+      tap(res => {
+        console.info(res);
+        this.loadingService.close();
+      })
+    ).subscribe(res => {
+      if (res.code === RestStatus.SUCCESS) {
+        this.dialogService.alertAndBackToList(true, `${this.actionName}成功`, ['pages', 'tag-manage', 'tag-list']);
+      }
+    });
+  }
+  //#endregion
+
+  //#region 組送出資料
   getRequestData(): TagSettingEditReq {
-    let reqData: TagSettingEditReq = this.validateForm.getRawValue();
-    reqData.startDate = moment(reqData.startDate).format('YYYY-MM-DD');
-    reqData.endDate = moment(reqData.endDate).format('YYYY-MM-DD');
-    console.info(reqData);
+    const tagId = this.params['tagId'];
+    const formData = this.validateForm.getRawValue();
+
+    //throw new Error('(tagId || formData) is bad');
+    if (!tagId || !formData) return undefined
+
+    let reqData = new TagSettingEditReq({
+      tagId: tagId,
+      tagName: formData.tagName,
+      status: formData.status,
+      tagType: formData.tagType,
+      uploadType: formData.uploadType,
+      fileName: formData.fileName,
+      filePath: formData.filePath,
+      fileData: formData.fileData,
+      conditionSettingMethod: formData.conditionSettingMethod, //條件設定方式
+      startDate: formData.startDate ? moment(formData.startDate).format(this.dateFormat) : null,
+      endDate: formData.endDate ? moment(formData.endDate).format(this.dateFormat) : null,
+      tagDimension: formData.tagDimension,
+      tagSubDimension: formData.tagSubDimension,
+      tagDescription: formData.TagDescription,
+      conditionSettingQuery: formData.TagName, //條件設定語法
+    });
+
+    if (Array.isArray(formData.tagConditionSetting)) {
+      reqData.tagConditionSetting = formData.tagConditionSetting.map((m) => {
+        const id = m['id'];
+        return new TagConditionSetting({
+          tagId: tagId,
+          conditionValue: formData.conditionValue,
+          detectionCondition: m['detectionCondition_' + id],
+          thresholdValue: m['thresholdValue_' + id],
+          joinValue: m['joinValue_' + id],
+        });
+      });
+    }
+
     return reqData;
   }
+  //#endregion
 
 }
