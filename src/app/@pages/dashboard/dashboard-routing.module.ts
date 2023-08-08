@@ -1,14 +1,15 @@
 import { NgModule } from "@angular/core"
 import { RouterModule, Routes } from "@angular/router"
 import { DashboardComponent } from "./dashboard.component"
+import { CenterRoomComponent } from "./center-room/center-room.component";
 
 const routes: Routes = [
     {
         path: "", component: DashboardComponent,
-        // children: [
-        //     { path: '', redirectTo: 'dashboard', pathMatch: 'full'},
-        //     { path: 'dashboard', component: DashboardComponent },
-        // ]
+        children: [
+            { path: '', redirectTo: 'dashboard', pathMatch: 'full'},
+            { path: "center-room", component: CenterRoomComponent }
+        ]
     }
 ]
 
@@ -19,5 +20,6 @@ const routes: Routes = [
 export class DashboardRoutingModule { }
 
 export const routedComponents = [
-    DashboardComponent
+    DashboardComponent,
+    CenterRoomComponent
 ];

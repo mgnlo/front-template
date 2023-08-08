@@ -13,7 +13,7 @@
                     <label>權限名稱</label>
                     <div>
                         <input formControlName="groupName" nbInput fullWidth [status]="isError('groupName') ? 'danger' : 'basic'"
-                               type="text" maxlength="20" placeholder="請輸入，最多20個字元" [(ngModel)]="groupName"/>
+                               type="text" maxlength="20" placeholder="請輸入，最多20個字元" [(ngModel)]="consoleGroup.groupName"/>
                     </div>
                     <div class="note errorText">
                         <nb-icon icon="alert-triangle"></nb-icon>

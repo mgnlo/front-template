@@ -13,8 +13,8 @@ export class CustomerManageService {
 
     constructor(private service: ApiService) { }
 
-    getActivitySettingList(data: ActivitySettingSearchReq): Observable<ResponseModel<ResData<Array<ActivitySetting>>>> {
-        return this.service.doGet(this.activityFunc, data);
+    getActivitySettingList(): Observable<ResponseModel<ResData<Array<ActivitySetting>>>> {
+        return this.service.doGet(this.activityFunc);
     }
 
     getActivitySettingRow(activityId: string): Observable<ResponseModel<ActivitySetting>> {

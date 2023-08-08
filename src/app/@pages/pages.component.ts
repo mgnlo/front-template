@@ -44,7 +44,7 @@ export class PagesComponent implements OnInit {
       {
         title: "儀表板",
         icon: "pie-chart-outline",
-        link: "/pages/dashboard"
+        link: "/pages/dashboard/center-room"
       },
       {
         title: "用戶管理",

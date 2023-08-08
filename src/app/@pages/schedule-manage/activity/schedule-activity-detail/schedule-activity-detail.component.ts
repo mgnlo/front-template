@@ -138,14 +138,13 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
       }),
       filter(res => res.code === RestStatus.SUCCESS),
       tap((res) => {
-        this.detail = JSON.parse(JSON.stringify(res.result));
         const processedData = CommonUtil.getHistoryProcessData<ScheduleActivitySetting>('scheduleReviewHistory', res.result as ScheduleActivitySetting); // 異動歷程處理
         if (!!processedData) {
           this.isHistoryOpen = processedData.isHistoryOpen;
           this.detail = processedData.detail;
         }
 
-        if(res.result?.activitySetting){
+        if (res.result?.activitySetting) {
           this.dataSource = new LocalDataSource();
           this.dataSource.load(res.result.activitySetting);
         }
@@ -155,7 +154,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     ).subscribe();
   }
 
-  setSessionVal(){
+  setSessionVal() {
     let sessionData = { page: this.paginator.nowPage };
     this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
