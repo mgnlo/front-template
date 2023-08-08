@@ -61,13 +61,13 @@ export class AccountManageService {
     // 6.1 取得所有使用者：GET /api/console-user
     // List<ConsoleUser> with ConsoleGroup
     // 用於當無任何查詢條件參數時使用
-    getAllConsoleUser(): Observable<ResponseModel<Array<ConsoleGroup>>> {
+    getAllConsoleUser(): Observable<ResponseModel<Array<ConsoleUser>>> {
         return this.service.doGet(this.consoleUserFunc);
     }
 
     // 6.2 搜尋使用者：GET /api/console-user?filterField=filterValue
     // List<ConsoleUser> with ConsoleGroup
-    getConsoleUser(reqData: ConsoleUserReq): Observable<ResponseModel<Array<ConsoleGroup>>> {
+    getConsoleUser(reqData: ConsoleUserReq): Observable<ResponseModel<Array<ConsoleUser>>> {
         return this.service.doGet(this.consoleGroupFunc, reqData);
     }
 

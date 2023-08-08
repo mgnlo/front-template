@@ -142,12 +142,6 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
   }
 
   search() {
-    let searchParam = this.validateForm.getRawValue();
-    let filters: { field: string, filter: any, search: string }[] = [];
-
-    Object.keys(searchParam).filter(key => CommonUtil.isNotBlank(searchParam[key])).forEach(key => {
-      filters.push({ field: key, filter: undefined, search: searchParam[key] });
-    });
   
     this.restDataSource = new CustomServerDataSource(this.http, {
       endPoint: this.customerManageService.getActivitySettingListURL,
@@ -160,7 +154,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
       totalKey: 'result.totalElements',
     }, {
       page: this.paginator.nowPage,
-      filters: filters,
+      filters: CommonUtil.getSearchFilters(this.validateForm.getRawValue()),
     });
 
     this.restDataSource.apiStatus().pipe(takeUntil(this.unsubscribe$)).subscribe(status => {

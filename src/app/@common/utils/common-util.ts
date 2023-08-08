@@ -122,4 +122,13 @@ export const CommonUtil = {
     let conditionArray = validateForm.get(formArrayName) as FormArray;
     return conditionArray.at(index) as FormGroup;
   },
+  /** 取得FormArray裡的FormGroup
+   * @param searchParam 傳入 validateForm.getRawValue()
+  */
+  getSearchFilters(searchParam: any): { key: string, value: string | boolean | number }[]{
+    return Object.keys(searchParam).filter(key => CommonUtil.isNotBlank(searchParam[key])).map(key => {
+      let value = key === 'startDate' || key === 'endDate' ? this.dateService.format(searchParam[key], this.dateFormat) : searchParam[key];
+      return { key: key, value: value };
+    });
+  },
 }; // End

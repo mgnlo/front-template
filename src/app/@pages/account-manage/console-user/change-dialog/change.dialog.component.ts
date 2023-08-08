@@ -11,10 +11,9 @@ import { catchError, tap } from 'rxjs/operators';
   selector: 'ngx-change',
   templateUrl: './change.dialog.component.html',
   styleUrls: ['./change.dialog.component.scss'],
-  providers: [],
+  providers: [AccountManageService]
 })
 export class ChangeDialogComponent implements OnInit {
-
   @Input() consoleUser: string;
   @Input() consoleGroupList: string;
 
@@ -41,25 +40,32 @@ export class ChangeDialogComponent implements OnInit {
 
   save() {
     // 需要發送 6.6 電文進行更新
-    // this.accountManageService.updateConsoleUser(this.consoleUserJson.userId, this.consoleUserJson).pipe(
-    //   catchError((err) => {
-    //     this.loadingService.close();
-    //     throw new Error(err.message);
-    //   }),
-    //   tap(res => {
-    //     console.info(res)
-    //     this.loadingService.close();
-    //   })).subscribe(res => {
-    //     if (res.code === RestStatus.SUCCESS) {
-    //       // 成功後需要通知主畫面異動成功
-    //       this.ref.close(true);
-    //     }
-    //   });
-    // 成功後需要通知主畫面異動成功
-    this.ref.close(true);
+    this.consoleUserJson.consoleGroup.groupId = this.groupId;
+    this.consoleGroupListJson.filter((consoleGroup: ConsoleGroup) => {
+      if(consoleGroup.groupId == this.groupId){
+        this.consoleUserJson.consoleGroup = consoleGroup;
+      }
+    });
+    this.accountManageService.updateConsoleUser(this.consoleUserJson.userId, this.consoleUserJson).pipe(
+      catchError((err) => {
+        this.loadingService.close();
+        throw new Error(err.message);
+      }),
+      tap(res => {
+        console.info(res)
+        this.loadingService.close();
+      })).subscribe(res => {
+        if (res.code === RestStatus.SUCCESS) {
+          // 成功後需要通知主畫面異動成功
+          this.ref.close(this.consoleUserJson);
+        }
+      });
+
+    // 成功後需要通知主畫面異動成功，電文串接後底下刪除
+    this.ref.close(this.consoleUserJson);
   }
 
   close() {
-    this.ref.close(false);
+    this.ref.close(null);
   }
 }

@@ -10,6 +10,7 @@ import { AccountManageService } from '../account.manage.service';
 import { LoadingService } from '@api/services/loading.service';
 import { catchError, tap } from 'rxjs/operators';
 import { RestStatus } from '@common/enums/rest-enum';
+import { GroupScope } from '@common/enums/console-group-enum';
 
 @Component({
   selector: 'console-group-add',
@@ -26,7 +27,7 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
     enable: true,
     createTime: null,
     modificationTime: null
-  }
+  };
   consoleUser: any;
   consoleGroupScope: Array<GridInnerCheckBox> = [
     { featureName: "dashboard", read: false },
@@ -37,16 +38,7 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
     { featureName: "console-user", read: false, create: false, update: false, review: false },
     { featureName: "console-group", read: false, create: false, update: false, review: false }
   ];
-  featureNameMap = {
-    dashboard: "儀表板",
-    customer: "用戶管理 - 用戶列表",
-    activity: "用戶管理 - 客群活動名單",
-    tag: "標籤管理",
-    schedule: "排程管理",
-    "console-user": "帳號管理 - 使用者管理",
-    "console-group": "帳號管理 - 權限管理"
-  }
-
+  
   enableOption: string = "true";
   // groupName: string;
   consoleGroupAddForm: FormGroup;
@@ -62,7 +54,7 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'col-1 left',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${this.featureNameMap[cell]}</p>`;
+          return `<p class="left">${GroupScope[cell]}</p>`;
         },
         sort: false,
       },
@@ -140,19 +132,18 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
     });
   }
 
-  groupNameValidate(length: number): ValidatorFn{
+  groupNameValidate(length: number): ValidatorFn {
     return (ctl: AbstractControl): ValidationErrors | null => {
       const value = ctl.value;
 
-      if(!value){
-        return { errMsg: "此欄位為必填欄位"};
+      if (!value) {
+        return { errMsg: "此欄位為必填欄位" };
       } else if (value.leangth > length) {
-        return { errMsg: `欄位最長為${length}個字元`};
+        return { errMsg: `欄位最長為${length}個字元` };
       } else {
         return null;
       }
     }
-    
   }
 
   isError(formCtrlName: string) {
@@ -161,9 +152,9 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
     return (viewCtrl.touched || viewCtrl.dirty) && viewCtrl.errors?.errMsg;
   }
 
-  reset(){
+  reset() {
     this.enableOption = "true";
-    
+
     this.consoleGroupAddForm.reset({
       groupName: ""
     });
@@ -197,9 +188,9 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
 
       for (let scopeObj of this.consoleGroupScope) {
         let keyList = Object.keys(scopeObj);
-  
-        for(let idx = 1; idx < keyList.length; idx++){
-          if(scopeObj[keyList[idx]]){
+
+        for (let idx = 1; idx < keyList.length; idx++) {
+          if (scopeObj[keyList[idx]]) {
             this.consoleGroup.consoleGroupScope.push({
               groupId: this.consoleGroup.groupId,
               scope: `${scopeObj[keyList[0]]}.${keyList[idx]}`
@@ -207,19 +198,26 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
           }
         }
       }
+
       this.accountManageService.createConsoleGroup(this.consoleGroup).pipe(
-          catchError((err) => {
-            this.loadingService.close();
-            throw new Error(err.message);
-          }),
-          tap(res => {
-            console.info(res)
-            this.loadingService.close();
-          })).subscribe(res => {
-            if (res.code === RestStatus.SUCCESS) {
-            }
-          });
-      // 新增成功後要再發送電文重新 query 
+        catchError((err) => {
+          this.loadingService.close();
+          throw new Error(err.message);
+        }),
+        tap(res => {
+          console.info(res)
+          this.loadingService.close();
+        })).subscribe(res => {
+          if (res.code === RestStatus.SUCCESS) {
+            this.router.navigate(this.accountManageService.CONSOLE_GROUP_LIST_PATH).then((res) => {
+              if (res) {
+                window.history.replaceState({}, '', this.router.url.split("?")[0]);
+              };
+            });
+          }
+        });
+
+      // 主機串接後，底下要拿掉
       this.router.navigate(this.accountManageService.CONSOLE_GROUP_LIST_PATH).then((res) => {
         if (res) {
           window.history.replaceState({}, '', this.router.url.split("?")[0]);
