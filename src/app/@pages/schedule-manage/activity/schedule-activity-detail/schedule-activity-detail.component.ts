@@ -1,12 +1,17 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { ScheduleDetailView, ScheduleActivitySetting, ActivitySetting, Schedule_Batch_History } from '@api/models/schedule-activity.model';
+import { ActivitySetting, ScheduleActivitySetting, ScheduleDetailView, Schedule_Batch_History } from '@api/models/schedule-activity.model';
+import { DialogService } from '@api/services/dialog.service';
+import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
-import { StatusResult, Status } from '@common/enums/common-enum';
+import { Status, StatusResult } from '@common/enums/common-enum';
+import { RestStatus } from '@common/enums/rest-enum';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
+import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
 import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
+import { catchError, filter, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'schedule-activity-detail',
@@ -18,29 +23,34 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   isHistoryOpen: { [x: number]: boolean } = []; //異動歷程收合
   activitySetting: Array<ActivitySetting> = ScheduleActivitySettingMock[0].activitySetting;
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
+  scheduleId: string;
 
   @ViewChild(Ng2SmartTableComponent) ng2SmartTable: Ng2SmartTableComponent;
 
+
   constructor(
     storageService: StorageService,
-    private activatedRoute: ActivatedRoute,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private scheduleManageService: ScheduleManageService,
+    private dialogService: DialogService,
+    private loadingService: LoadingService,
   ) {
     super(storageService);
-    const state = this.router.getCurrentNavigation()?.extras?.state;
-    if (!!state) {
-      const processedData = CommonUtil.getHistoryProcessData<ScheduleActivitySetting>('scheduleReviewHistory', state as ScheduleActivitySetting); // 異動歷程處理
-      if (!!processedData) {
-        this.isHistoryOpen = processedData.isHistoryOpen;
-        this.detail = processedData.detail;
-      }
-    }else{//假資料，之後要Call API
-      const processedData = CommonUtil.getHistoryProcessData<ScheduleActivitySetting>('scheduleReviewHistory', ScheduleActivitySettingMock[0] as ScheduleActivitySetting); // 異動歷程處理
-      if (!!processedData) {
-        this.isHistoryOpen = processedData.isHistoryOpen;
-        this.detail = processedData.detail;
-      }
-    }
+    // const state = this.router.getCurrentNavigation()?.extras?.state;
+    // if (!!state) {
+    //   const processedData = CommonUtil.getHistoryProcessData<ScheduleActivitySetting>('scheduleReviewHistory', state as ScheduleActivitySetting); // 異動歷程處理
+    //   if (!!processedData) {
+    //     this.isHistoryOpen = processedData.isHistoryOpen;
+    //     this.detail = processedData.detail;
+    //   }
+    // }else{//假資料，之後要Call API
+    //   const processedData = CommonUtil.getHistoryProcessData<ScheduleActivitySetting>('scheduleReviewHistory', ScheduleActivitySettingMock[0] as ScheduleActivitySetting); // 異動歷程處理
+    //   if (!!processedData) {
+    //     this.isHistoryOpen = processedData.isHistoryOpen;
+    //     this.detail = processedData.detail;
+    //   }
+    // }
   }
 
   gridDefine = {
@@ -115,16 +125,34 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.dataSource = new LocalDataSource();
-    this.dataSource.load(this.activitySetting);
-  }
+    // this.dataSource = new LocalDataSource();
+    // this.dataSource.load(this.activitySetting);
 
-  ngAfterViewInit(): void {
-    //get session page
-    let storage = this.storageService.getSessionVal(this.sessionKey);
-    if (!!storage?.page) {
-      this.dataSource.setPage(storage.page);
-    }
+    this.scheduleId = this.activatedRoute.snapshot.params.scheduleId;
+    this.loadingService.open();
+    this.scheduleManageService.getScheduleActivitySettingRow(this.scheduleId).pipe(
+      catchError(err => {
+        this.loadingService.close();
+        this.dialogService.alertAndBackToList(false, '查無此筆資料，將為您導回名單排程', ['pages', 'schedule-manage', 'schedule-activity-list']);
+        throw new Error(err.message);
+      }),
+      filter(res => res.code === RestStatus.SUCCESS),
+      tap((res) => {
+        this.detail = JSON.parse(JSON.stringify(res.result));
+        const processedData = CommonUtil.getHistoryProcessData<ScheduleActivitySetting>('scheduleReviewHistory', res.result as ScheduleActivitySetting); // 異動歷程處理
+        if (!!processedData) {
+          this.isHistoryOpen = processedData.isHistoryOpen;
+          this.detail = processedData.detail;
+        }
+
+        if(res.result?.activitySetting){
+          this.dataSource = new LocalDataSource();
+          this.dataSource.load(res.result.activitySetting);
+        }
+
+        this.loadingService.close();
+      })
+    ).subscribe();
   }
 
   setSessionVal(){

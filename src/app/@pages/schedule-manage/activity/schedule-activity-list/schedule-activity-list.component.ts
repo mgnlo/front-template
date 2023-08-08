@@ -9,6 +9,10 @@ import { DatePipe } from '@angular/common';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { StorageService } from '@api/services/storage.service';
+import { DialogService } from '@api/services/dialog.service';
+import { LoadingService } from '@api/services/loading.service';
+import { RestStatus } from '@common/enums/rest-enum';
+import { catchError, filter, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'schedule-activity-list',
@@ -22,9 +26,11 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
 
   constructor(
     storageService: StorageService,
-    private scheduleManageService: ScheduleManageService,
-    private activatedRoute: ActivatedRoute,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private scheduleManageService: ScheduleManageService,
+    private dialogService: DialogService,
+    private loadingService: LoadingService,
   ) {
     super(storageService);
   }
@@ -87,8 +93,23 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.dataSource = new LocalDataSource();
-    this.dataSource.load(this.ScheduleActivitySetting);
+    // this.dataSource = new LocalDataSource();
+    // this.dataSource.load(this.ScheduleActivitySetting);
+
+    this.loadingService.open();
+    this.scheduleManageService.getScheduleActivitySettingList().pipe(
+      catchError(err => {
+        this.loadingService.close();
+        this.dialogService.alertAndBackToList(false, '查無資料');
+        throw new Error(err.message);
+      }),
+      filter(res => res.code === RestStatus.SUCCESS),
+      tap((res) => {
+        this.dataSource = new LocalDataSource();
+        this.dataSource.load(res.result);
+        this.loadingService.close();
+      })
+    ).subscribe();
   }
 
   ngOnDestroy(): void {

@@ -1,30 +1,34 @@
-import { Injectable } from "@angular/core"
-import { Observable } from "rxjs"
-import { ApiService } from "@api/services/api.service";
+import { Injectable } from "@angular/core";
 import { ResponseModel } from "@api/models/base.model";
-import { ScheduleSettingEditReq, ScheduleSettingListResp, ScheduleSettingRowResp } from "@api/models/schedule-activity.model";
+import { ScheduleActivitySetting, ScheduleSettingEditReq } from "@api/models/schedule-activity.model";
+import { ApiService } from "@api/services/api.service";
+import { Observable } from "rxjs";
 
 @Injectable()
 export class ScheduleManageService {
 
-  readonly scheduleFunc = 'schedule-settings/';
+  readonly scheduleFunc = 'schedule-management/';
 
   constructor(private service: ApiService) {}
 
-  getscheduleSettingList(): Observable<ResponseModel<ScheduleSettingListResp>> {
-      return this.service.doGet(this.scheduleFunc + 'scheduleSettingList');
+  getScheduleActivitySettingList(): Observable<ResponseModel<Array<ScheduleActivitySetting>>> {
+      return this.service.doGet(this.scheduleFunc);
   }
 
-  getscheduleSettingRow(scheduleId: number): Observable<ResponseModel<ScheduleSettingRowResp>> {
-      return this.service.doGet(this.scheduleFunc + 'scheduleSettingRow', {'scheduleId': scheduleId});
+  getScheduleActivitySettingRow(scheduleId: string): Observable<ResponseModel<ScheduleActivitySetting>> {
+      return this.service.doGet(this.scheduleFunc + scheduleId);
   }
 
-  scheduleSettingSave(data: ScheduleSettingEditReq): Observable<ResponseModel<any>> {
-      return this.service.doPost(this.scheduleFunc + 'scheduleSettingSave', data);
+  createScheduleSetting(data: ScheduleSettingEditReq): Observable<ResponseModel<any>> {
+      return this.service.doPost(this.scheduleFunc, data);
   }
 
-  scheduleSettingUpdate(data: ScheduleSettingEditReq): Observable<ResponseModel<any>> {
-      return this.service.doPut(this.scheduleFunc + 'scheduleSettingUpdate', data);
+  updateScheduleSetting(scheduleId: string, data: ScheduleSettingEditReq): Observable<ResponseModel<any>> {
+      return this.service.doPut(this.scheduleFunc + scheduleId, data);
+  }
+
+  deleteScheduleSetting(scheduleId: string): Observable<ResponseModel<any>> {
+      return this.service.doDelete(this.scheduleFunc + scheduleId);
   }
 
 }
