@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ActivitySetting } from '@api/models/activity-list.model';
 import { TagDetailView, TagSetting } from '@api/models/tag-manage.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
@@ -90,8 +91,8 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
         title: '起訖時間',
         type: 'html',
         class: 'col-3',
-        valuePrepareFunction: (cell: any) => {
-          return `<span class="date">${cell}</span>`;
+        valuePrepareFunction: (cell: any, row: ActivitySetting) => {
+          return row.startDate && row.endDate ? `<span class="date">${row.startDate}~${row.endDate}</span>` : '';
         },
         sort: false,
       },
@@ -128,8 +129,6 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
     //#endregion
 
     //#region 取得全部活動明細===>後續應該要改用tagId抓個別活動
-    this.loadingService.open();
-
     this.restDataSource = new CustomServerDataSource(this.http, {
       endPoint: this.customerManageService.getActivitySettingListURL,
       dataKey: 'result.content',
@@ -150,7 +149,7 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
           break;
         case 'error':
           this.loadingService.close();
-          this.dialogService.alertAndBackToList(false, '查無資料');
+          this.dialogService.alertAndBackToList(false, '標籤使用範圍查無資料');
           break;
         default:
           this.loadingService.close();

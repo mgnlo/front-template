@@ -1,15 +1,20 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Navigation, Router } from '@angular/router';
 import { ActivitySetting, TagSetting } from '@api/models/activity-list.model';
 import { TagDetailView, TagReviewHistory } from '@api/models/tag-manage.model';
 import { DialogService } from '@api/services/dialog.service';
+import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
+import { CustomServerDataSource } from '@common/custom/ng2-smart-table/custom-server-data-source';
 import { Status } from '@common/enums/common-enum';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
+import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
 import { LocalDataSource } from 'ng2-smart-table';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'tag-review-detail',
@@ -28,9 +33,16 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   isBefore: boolean = false;
   reviewStatus: string;
   reviewComment: string;
-  mockData: Array<ActivitySetting> = ActivityListMock;
+  // mockData: Array<ActivitySetting> = ActivityListMock;
 
-  constructor(storageService: StorageService, private router: Router, private dialogService: DialogService,) {
+  constructor(
+    storageService: StorageService,
+    private http: HttpClient,
+    private router: Router,
+    private dialogService: DialogService,
+    private loadingService: LoadingService,
+    private customerManageService: CustomerManageService,
+  ) {
     super(storageService);
     if (!!this.router.getCurrentNavigation()?.extras) {
       let tagReview = this.router.getCurrentNavigation().extras.state as TagReviewHistory;
@@ -50,11 +62,33 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dataSource = new LocalDataSource();
-    this.mockData = this.mockData.map(mock => {
-      return { ...mock, during: `${mock.startDate}~${mock.endDate}` } //起訖日查詢篩選要用到
-    })
-    this.dataSource.load(this.mockData);
+    this.restDataSource = new CustomServerDataSource(this.http, {
+      endPoint: this.customerManageService.getActivitySettingListURL,
+      dataKey: 'result.content',
+      pagerPageKey: 'page',
+      pagerLimitKey: 'size',
+      filterFieldKey: '#field#',
+      sortDirKey: 'dir',
+      sortFieldKey: 'sort',
+      totalKey: 'result.totalElements',
+    }, {
+      page: this.paginator.nowPage,
+    });
+
+    this.restDataSource.apiStatus().pipe(takeUntil(this.unsubscribe$)).subscribe(status => {
+      switch (status) {
+        case 'init':
+          this.loadingService.open();
+          break;
+        case 'error':
+          this.loadingService.close();
+          this.dialogService.alertAndBackToList(false, '標籤使用範圍查無資料');
+          break;
+        default:
+          this.loadingService.close();
+          break;
+      }
+    });
   }
 
   gridDefine = {
@@ -106,8 +140,8 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
         title: '起訖時間',
         type: 'html',
         class: 'col-3',
-        valuePrepareFunction: (cell: any) => {
-          return `<span class="date">${cell}</span>`;
+        valuePrepareFunction: (cell: any, row: ActivitySetting) => {
+          return row.startDate && row.endDate ? `<span class="date">${row.startDate}~${row.endDate}</span>` : '';
         },
         sort: false,
       },

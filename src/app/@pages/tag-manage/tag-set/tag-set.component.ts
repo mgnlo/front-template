@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -6,19 +7,19 @@ import { TagConditionSetting, TagDetailView, TagSetting, TagSettingEditReq } fro
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
+import { CustomServerDataSource } from '@common/custom/ng2-smart-table/custom-server-data-source';
 import { MathSymbol, Status } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
 import { TagDimension, TagSetCondition, TagSubDimension, TagType } from '@common/enums/tag-enum';
 import { CommonUtil } from '@common/utils/common-util';
+import { RegExpUtil } from '@common/utils/reg-exp-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
+import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
 import * as moment from 'moment';
-import { LocalDataSource } from 'ng2-smart-table';
-import { catchError, filter, tap } from 'rxjs/operators';
+import { catchError, filter, takeUntil, tap } from 'rxjs/operators';
 import { TagManageService } from '../tag-manage.service';
 import { TagConditionDialogComponent } from './condition-dialog/condition-dialog.component';
-import { RegExpUtil } from '@common/utils/reg-exp-util';
-import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
 
 @Component({
   selector: 'tag-set',
@@ -78,13 +79,15 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   constructor(
     storageService: StorageService,
+    private http: HttpClient,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private readonly changeDetectorRef: ChangeDetectorRef,
     private tagManageService: TagManageService,
     private customerManageService: CustomerManageService,
     private loadingService: LoadingService,
-    private dialogService: DialogService) {
+    private dialogService: DialogService,
+  ) {
     super(storageService);
     this.validateForm = new FormGroup({
       tagName: new FormControl(null, Validators.required),
@@ -156,8 +159,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
         title: '起訖時間',
         type: 'html',
         class: 'col-3',
-        valuePrepareFunction: (cell: any) => {
-          return `<span class="date">${cell}</span>`;
+        valuePrepareFunction: (cell: any, row: ActivitySetting) => {
+          return row.startDate && row.endDate ? `<span class="date">${row.startDate}~${row.endDate}</span>` : '';
         },
         sort: false,
       },
@@ -238,26 +241,33 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     //#endregion
 
     //#region 取得全部活動明細===>後續應該要改用tagId抓個別活動
-    this.loadingService.open();
+    this.restDataSource = new CustomServerDataSource(this.http, {
+      endPoint: this.customerManageService.getActivitySettingListURL,
+      dataKey: 'result.content',
+      pagerPageKey: 'page',
+      pagerLimitKey: 'size',
+      filterFieldKey: '#field#',
+      sortDirKey: 'dir',
+      sortFieldKey: 'sort',
+      totalKey: 'result.totalElements',
+    }, {
+      page: this.paginator.nowPage,
+    });
 
-    this.customerManageService.getActivitySettingList().pipe(
-      catchError(err => {
-        this.loadingService.close();
-        this.dialogService.alertAndBackToList(false, '標籤使用範圍查無資料');
-        throw new Error(err.message);
-      }),
-      filter(res => res.code === RestStatus.SUCCESS),
-      tap((res) => {
-        this.dataSource = new LocalDataSource();
-        if (Array.isArray(res.result['content'])) {
-          res.result['content'] = res.result['content'].map(row => {
-            return { ...row, during: `${row.startDate}~${row.endDate}` } //起訖日查詢篩選要用到
-          })
-        }
-        this.dataSource.load(res.result['content'] ?? Array<ActivitySetting>());
-        this.loadingService.close();
-      }),
-    ).subscribe();
+    this.restDataSource.apiStatus().pipe(takeUntil(this.unsubscribe$)).subscribe(status => {
+      switch (status) {
+        case 'init':
+          this.loadingService.open();
+          break;
+        case 'error':
+          this.loadingService.close();
+          this.dialogService.alertAndBackToList(false, '標籤使用範圍查無資料');
+          break;
+        default:
+          this.loadingService.close();
+          break;
+      }
+    });
     //#endregion
   }
 

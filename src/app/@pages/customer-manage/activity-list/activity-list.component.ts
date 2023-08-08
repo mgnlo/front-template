@@ -107,7 +107,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'col-3',
         valuePrepareFunction: (cell: any, row: ActivitySetting) => {
-          return `<span class="date">${row.startDate}~${row.endDate}</span>`;
+          return row.startDate && row.endDate ? `<span class="date">${row.startDate}~${row.endDate}</span>` : '';
         },
         sort: false,
       },
