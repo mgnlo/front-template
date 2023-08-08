@@ -9,6 +9,9 @@ import { LocalDataSource } from 'ng2-smart-table';
 import { AccountManageService } from '../account.manage.service';
 import { ConsoleGroupDetailMock } from '@common/mock-data/console-group-detail-mock';
 import { StorageService } from '@api/services/storage.service';
+import { catchError, tap } from 'rxjs/operators';
+import { LoadingService } from '@api/services/loading.service';
+import { RestStatus } from '@common/enums/rest-enum';
 
 @Component({
   selector: 'console-group-list',
@@ -19,6 +22,7 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
   constructor(
     storageService: StorageService,
     private router: Router,
+    private loadingService: LoadingService,
     private activatedRoute: ActivatedRoute,
     private accountManageService: AccountManageService,
     private dateService: NbDateService<Date>) {
@@ -44,7 +48,20 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
       });
     } else {
       // 這邊要發查電文取得 ConsoleGroupList 內容
+      this.accountManageService.getConsoleGroupList().pipe(
+          catchError((err) => {
+            this.loadingService.close();
+            throw new Error(err.message);
+          }),
+          tap(res => {
+            console.info(res)
+            this.loadingService.close();
+          })).subscribe(res => {
+            if (res.code === RestStatus.SUCCESS) {
+            }
+          });
       this.consoleGroupList = ConsoleGroupListMock;
+
       this.dataSource.load(this.consoleGroupList);
       document.querySelector("nb-layout-column").scrollTo(0, 0);
     }
@@ -121,7 +138,10 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
   template: '<button nbButton ghost status="info" size="medium" (click)="seeDetail()"><nb-icon icon="search"></nb-icon></button>'
 })
 export class ConsoleGroupButtonComponent implements OnInit {
-  constructor(private router: Router, private accountManageService: AccountManageService) { }
+  constructor(
+    private router: Router, 
+    private accountManageService: AccountManageService,
+    private loadingService: LoadingService) { }
 
   @Input() value: Array<any>;
 
@@ -133,10 +153,20 @@ export class ConsoleGroupButtonComponent implements OnInit {
     let passData: NavigationExtras = {};
 
     // 這邊要發查
-    // 電文 6.2 取得 ConsoleUserList 內容
+    // 電文 7.2 取得 ConsoleUserList 內容
+    this.accountManageService.getConsoleGroup(this.value[0].groupId).pipe(
+        catchError((err) => {
+          this.loadingService.close();
+          throw new Error(err.message);
+        }),
+        tap(res => {
+          console.info(res)
+          this.loadingService.close();
+        })).subscribe(res => {
+          if (res.code === RestStatus.SUCCESS) {
+          }
+        });
     let consoleGroupDetail = ConsoleGroupDetailMock;
-    // master 的時候不會有 Scope，需要另外查 scope 電文(2)併入到 ConsoleGroup
-    // (this.value[0] as ConsoleGroup).consoleGroupScope = ConsoleGroupScopeListMock;
 
     passData.queryParams = {
       consoleGroupDetail: JSON.stringify(consoleGroupDetail)

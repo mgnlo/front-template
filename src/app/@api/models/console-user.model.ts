@@ -10,3 +10,12 @@ export class ConsoleUser {
     lastLoginTime: string;
     consoleGroup?: ConsoleGroup;
 }
+
+export class ConsoleUserReq {
+    account?: string;
+    name?: string;
+    email?: string;
+    // 如果查詢條件為多單位，則用 ',' 作為隔離符號
+    businessUnit?: string; 
+    groupId?: string;
+}

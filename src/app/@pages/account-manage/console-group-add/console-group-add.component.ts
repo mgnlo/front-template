@@ -7,6 +7,9 @@ import { NbDateService } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource, ServerDataSource } from 'ng2-smart-table';
 import { AccountManageService } from '../account.manage.service';
+import { LoadingService } from '@api/services/loading.service';
+import { catchError, tap } from 'rxjs/operators';
+import { RestStatus } from '@common/enums/rest-enum';
 
 @Component({
   selector: 'console-group-add',
@@ -14,7 +17,16 @@ import { AccountManageService } from '../account.manage.service';
   styleUrls: ['./console-group-add.component.scss'],
 })
 export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
-  consoleGroup: ConsoleGroup;
+  consoleGroup: ConsoleGroup = {
+    consoleGroupScope: [],
+    groupId: null,
+    groupName: '',
+    description: null,
+    priority: null,
+    enable: true,
+    createTime: null,
+    modificationTime: null
+  }
   consoleUser: any;
   consoleGroupScope: Array<GridInnerCheckBox> = [
     { featureName: "dashboard", read: false },
@@ -36,7 +48,7 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
   }
 
   enableOption: string = "true";
-  groupName: string;
+  // groupName: string;
   consoleGroupAddForm: FormGroup;
 
   gridDefine = {
@@ -99,6 +111,7 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
     storageService: StorageService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private loadingService: LoadingService,
     private accountManageService: AccountManageService,
     private dateService: NbDateService<Date>) {
     super(storageService);
@@ -179,7 +192,33 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
 
   ok() {
     if (!this.consoleGroupAddForm.invalid) {
-      // 這邊要發送 6.3 電文去進行新增
+      // 這邊要發送 7.3 電文去進行新增
+      this.consoleGroup.enable = new RegExp("true").test(this.enableOption);
+
+      for (let scopeObj of this.consoleGroupScope) {
+        let keyList = Object.keys(scopeObj);
+  
+        for(let idx = 1; idx < keyList.length; idx++){
+          if(scopeObj[keyList[idx]]){
+            this.consoleGroup.consoleGroupScope.push({
+              groupId: this.consoleGroup.groupId,
+              scope: `${scopeObj[keyList[0]]}.${keyList[idx]}`
+            });
+          }
+        }
+      }
+      this.accountManageService.createConsoleGroup(this.consoleGroup).pipe(
+          catchError((err) => {
+            this.loadingService.close();
+            throw new Error(err.message);
+          }),
+          tap(res => {
+            console.info(res)
+            this.loadingService.close();
+          })).subscribe(res => {
+            if (res.code === RestStatus.SUCCESS) {
+            }
+          });
       // 新增成功後要再發送電文重新 query 
       this.router.navigate(this.accountManageService.CONSOLE_GROUP_LIST_PATH).then((res) => {
         if (res) {

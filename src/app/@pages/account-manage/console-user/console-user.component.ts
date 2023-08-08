@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, LoadChildren, NavigationExtras, Router } from '@angular/router';
 import { ConsoleGroup } from '@api/models/console-group.model';
 import { ConsoleGroupListMock } from '@common/mock-data/console-group-list-mock';
 import { ConsoleUserListMock } from '@common/mock-data/console-user-list-mock';
@@ -15,6 +15,9 @@ import { ChangeDialogComponent } from './change-dialog/change.dialog.component';
 import { DialogService } from '@api/services/dialog.service';
 import { ValidateUtil } from '@common/utils/validate-util';
 import { StorageService } from '@api/services/storage.service';
+import { catchError, tap } from 'rxjs/operators';
+import { LoadingService } from '@api/services/loading.service';
+import { RestStatus } from '@common/enums/rest-enum';
 
 @Component({
   selector: 'console-user',
@@ -32,19 +35,18 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
   mockData: any;
 
   consoleUserForm: FormGroup;
-  digitalSelect: boolean;
-  personalSelect: boolean;
-  moneySelect: boolean;
-  creditlSelect: boolean;
+  digitalFinancialSelect: boolean;
+  consumerFinanceSelect: boolean;
+  wealthManagementSelect: boolean;
+  creditCardsSelect: boolean;
   businessUnit = BusinessUnit;
 
   dataSource: LocalDataSource; //table
 
   constructor(
     storageService: StorageService,
+    private loadingService: LoadingService,
     private router: Router,
-    private formBuilder: FormBuilder,
-    private activatedRoute: ActivatedRoute,
     private accountManageService: AccountManageService,
     private dateService: NbDateService<Date>) {
     super(storageService);
@@ -166,8 +168,39 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
 
   search() {
     if (!this.consoleUserForm.invalid) {
-      // 這邊要發送 5.1 or 5.2 電文去查詢
+      let busineeUnit = ""
 
+      if(this.digitalFinancialSelect){
+        busineeUnit += "Digital_Financial";
+      }
+
+      if(this.consumerFinanceSelect){
+        busineeUnit += (busineeUnit.length > 0 ? "," : "") + "Consumer_Finance";
+      }
+
+      if(this.wealthManagementSelect){
+        busineeUnit += (busineeUnit.length > 0 ? "," : "") + "Wealth_Management";
+      }
+
+      if(this.creditCardsSelect){
+        busineeUnit += (busineeUnit.length > 0 ? "," : "") + "Credit_Cards";
+      }
+
+      // 這邊要發送 6.1 or 6.2 電文去查詢      
+      // this.accountManageService.getConsoleUser().pipe(
+      // this.accountManageService.getAllConsoleUser().pipe(
+      //   catchError((err) => {
+      //     this.loadingService.close();
+      //     throw new Error(err.message);
+      //   }),
+      //   tap(res => {
+      //     console.info(res)
+      //     this.loadingService.close();
+      //   })).subscribe(res => {
+      //     if (res.code === RestStatus.SUCCESS) {
+
+      //     }
+      //   });
     } else {
       for (const control of Object.keys(this.consoleUserForm.controls)) {
         this.consoleUserForm.controls[control].markAsTouched();
@@ -176,10 +209,10 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
   }
 
   reset() {
-    this.digitalSelect = false;
-    this.personalSelect = false;
-    this.moneySelect = false;
-    this.creditlSelect = false;
+    this.digitalFinancialSelect = false;
+    this.consumerFinanceSelect = false;
+    this.wealthManagementSelect = false;
+    this.creditCardsSelect = false;
     this.groupId = "";
 
     this.consoleUserForm.reset({
