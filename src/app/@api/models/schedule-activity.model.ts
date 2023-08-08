@@ -94,6 +94,8 @@ export class ScheduleSettingEditReq {
   endDate: string;
   scheduleSettings: string;
   ScheduleDescription: string;
+  frequencyTime: string;
+  activitySetting: Array<ActivitySetting>;
 }
 
 export interface ScheduleReviewListRes {
