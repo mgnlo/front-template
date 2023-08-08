@@ -1,17 +1,19 @@
 import { Injectable } from "@angular/core";
-import { ActivitySetting, ActivitySettingEditReq } from "@api/models/activity-list.model";
-import { ResponseModel } from "@api/models/base.model";
+import { ActivitySetting, ActivitySettingEditReq, ActivitySettingSearchReq } from "@api/models/activity-list.model";
+import { ResData, ResponseModel } from "@api/models/base.model";
 import { ApiService } from "@api/services/api.service";
+import { environment } from "environments/environment";
 import { Observable } from "rxjs";
 
 @Injectable()
 export class CustomerManageService {
 
     readonly activityFunc = 'activity-settings/';
+    readonly getActivitySettingListURL = environment.SERVER_URL + environment.API_URL + this.activityFunc;
 
     constructor(private service: ApiService) { }
 
-    getActivitySettingList(): Observable<ResponseModel<Array<ActivitySetting>>> {
+    getActivitySettingList(): Observable<ResponseModel<ResData<Array<ActivitySetting>>>> {
         return this.service.doGet(this.activityFunc);
     }
 
