@@ -3,7 +3,7 @@ import { ConsoleUser } from "@api/models/console-user.model";
 export const ConsoleUserListMock: Array<ConsoleUser> = [
     {
         userId: "U66972ba05c34190a5bfd576dad10493",
-        account: "admin",
+        account: "admin1",
         name: "Admin",
         email: "admin@webcomm.com.tw",
         businessUnit: "Credit_Cards",
@@ -22,7 +22,7 @@ export const ConsoleUserListMock: Array<ConsoleUser> = [
     },
     {
         userId: "U66972ba05c34190a5bfd576dad10493",
-        account: "admin",
+        account: "admin2",
         name: "Admin",
         email: "admin@webcomm.com.tw",
         businessUnit: "Credit_Cards",
@@ -41,7 +41,7 @@ export const ConsoleUserListMock: Array<ConsoleUser> = [
     },
     {
         userId: "U66972ba05c34190a5bfd576dad10493",
-        account: "admin",
+        account: "admin3",
         name: "Admin",
         email: "admin@webcomm.com.tw",
         businessUnit: "Credit_Cards",
@@ -60,7 +60,7 @@ export const ConsoleUserListMock: Array<ConsoleUser> = [
     },
     {
         userId: "U66972ba05c34190a5bfd576dad10493",
-        account: "admin",
+        account: "admin4",
         name: "Admin",
         email: "admin@webcomm.com.tw",
         businessUnit: "Credit_Cards",
@@ -79,7 +79,7 @@ export const ConsoleUserListMock: Array<ConsoleUser> = [
     },
     {
         userId: "U66972ba05c34190a5bfd576dad10493",
-        account: "admin",
+        account: "admin5",
         name: "Admin",
         email: "admin@webcomm.com.tw",
         businessUnit: "Credit_Cards",
@@ -98,7 +98,7 @@ export const ConsoleUserListMock: Array<ConsoleUser> = [
     },
     {
         userId: "U66972ba05c34190a5bfd576dad10493",
-        account: "admin",
+        account: "admin6",
         name: "Admin",
         email: "admin@webcomm.com.tw",
         businessUnit: "Credit_Cards",
@@ -117,7 +117,7 @@ export const ConsoleUserListMock: Array<ConsoleUser> = [
     },
     {
         userId: "U66972ba05c34190a5bfd576dad10493",
-        account: "admin",
+        account: "admin7",
         name: "Admin",
         email: "admin@webcomm.com.tw",
         businessUnit: "Credit_Cards",
@@ -136,7 +136,7 @@ export const ConsoleUserListMock: Array<ConsoleUser> = [
     },
     {
         userId: "U66972ba05c34190a5bfd576dad10493",
-        account: "admin",
+        account: "admin8",
         name: "Admin",
         email: "admin@webcomm.com.tw",
         businessUnit: "Credit_Cards",
@@ -155,7 +155,7 @@ export const ConsoleUserListMock: Array<ConsoleUser> = [
     },
     {
         userId: "U66972ba05c34190a5bfd576dad10493",
-        account: "admin",
+        account: "admin9",
         name: "Admin",
         email: "admin@webcomm.com.tw",
         businessUnit: "Credit_Cards",
@@ -174,7 +174,7 @@ export const ConsoleUserListMock: Array<ConsoleUser> = [
     },
     {
         userId: "U66972ba05c34190a5bfd576dad10493",
-        account: "admin",
+        account: "admin10",
         name: "Admin",
         email: "admin@webcomm.com.tw",
         businessUnit: "Credit_Cards",
@@ -193,7 +193,7 @@ export const ConsoleUserListMock: Array<ConsoleUser> = [
     },
     {
         userId: "U66972ba05c34190a5bfd576dad10493",
-        account: "admin",
+        account: "admin11",
         name: "Admin",
         email: "admin@webcomm.com.tw",
         businessUnit: "Credit_Cards",
@@ -212,7 +212,7 @@ export const ConsoleUserListMock: Array<ConsoleUser> = [
     },
     {
         userId: "U66972ba05c34190a5bfd576dad10493",
-        account: "admin",
+        account: "admin12",
         name: "Admin",
         email: "admin@webcomm.com.tw",
         businessUnit: "Credit_Cards",
@@ -231,7 +231,7 @@ export const ConsoleUserListMock: Array<ConsoleUser> = [
     },
     {
         userId: "U66972ba05c34190a5bfd576dad10493",
-        account: "admin",
+        account: "admin13",
         name: "Admin",
         email: "admin@webcomm.com.tw",
         businessUnit: "Credit_Cards",
@@ -250,7 +250,7 @@ export const ConsoleUserListMock: Array<ConsoleUser> = [
     },
     {
         userId: "U66972ba05c34190a5bfd576dad10493",
-        account: "admin",
+        account: "admin14",
         name: "Admin",
         email: "admin@webcomm.com.tw",
         businessUnit: "Credit_Cards",
@@ -269,7 +269,7 @@ export const ConsoleUserListMock: Array<ConsoleUser> = [
     },
     {
         userId: "U66972ba05c34190a5bfd576dad10493",
-        account: "admin",
+        account: "admin15",
         name: "Admin",
         email: "admin@webcomm.com.tw",
         businessUnit: "Credit_Cards",
@@ -288,7 +288,7 @@ export const ConsoleUserListMock: Array<ConsoleUser> = [
     },
     {
         userId: "U66972ba05c34190a5bfd576dad10493",
-        account: "admin",
+        account: "admin16",
         name: "Admin",
         email: "admin@webcomm.com.tw",
         businessUnit: "Credit_Cards",
@@ -307,7 +307,7 @@ export const ConsoleUserListMock: Array<ConsoleUser> = [
     },
     {
         userId: "U66972ba05c34190a5bfd576dad10493",
-        account: "admin",
+        account: "admin17",
         name: "Admin",
         email: "admin@webcomm.com.tw",
         businessUnit: "Credit_Cards",
@@ -326,7 +326,7 @@ export const ConsoleUserListMock: Array<ConsoleUser> = [
     },
     {
         userId: "U66972ba05c34190a5bfd576dad10493",
-        account: "admin",
+        account: "admin18",
         name: "Admin",
         email: "admin@webcomm.com.tw",
         businessUnit: "Credit_Cards",
@@ -345,7 +345,7 @@ export const ConsoleUserListMock: Array<ConsoleUser> = [
     },
     {
         userId: "U66972ba05c34190a5bfd576dad10493",
-        account: "admin",
+        account: "admin19",
         name: "Admin",
         email: "admin@webcomm.com.tw",
         businessUnit: "Credit_Cards",

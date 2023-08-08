@@ -9,6 +9,7 @@ import { LocalDataSource } from 'ng2-smart-table';
 import { AccountManageService } from '../account.manage.service';
 import { BusinessUnit } from '@common/enums/console-user-enum';
 import { StorageService } from '@api/services/storage.service';
+import { GroupScope } from '@common/enums/console-group-enum';
 
 @Component({
   selector: 'console-group-detail',
@@ -26,17 +27,8 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
     { featureName: "console-user", read: false, create: false, update: false, review: false },
     { featureName: "console-group", read: false, create: false, update: false, review: false }
   ];
-  featureNameMap = {
-    dashboard: "儀表板",
-    customer: "用戶管理 - 用戶列表",
-    activity: "用戶管理 - 客群活動名單",
-    tag: "標籤管理",
-    schedule: "排程管理",
-    "console-user": "帳號管理 - 使用者管理",
-    "console-group": "帳號管理 - 權限管理"
-  }
-  dataSource2: LocalDataSource;
 
+  dataSource2: LocalDataSource;
   gridDefine2 = {
     pager: {
       display: true,
@@ -48,7 +40,7 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
         type: 'html',
         class: 'col-1 left',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${this.featureNameMap[cell]}</p>`;
+          return `<p class="left">${GroupScope[cell]}</p>`;
         },
         sort: false,
       },
@@ -85,7 +77,7 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
         sort: false,
       }
     },
-    hideSubHeader: false, //起訖日查詢要用到
+    hideSubHeader: false, 
     actions: {
       add: false,
       edit: false,
@@ -133,7 +125,7 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
         sort: false,
       }
     },
-    hideSubHeader: false, //起訖日查詢要用到
+    hideSubHeader: false,
     actions: {
       position: 'right',
       columnTitle: "移除",
@@ -150,13 +142,12 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
     private activatedRoute: ActivatedRoute,
     private dateService: NbDateService<Date>) {
     super(storageService);
+    this.dataSource = new LocalDataSource();
+    this.dataSource2 = new LocalDataSource();
   }
 
   ngOnInit(): void {
     let cache = this.accountManageService.getConsoleGroupDetailCache();
-
-    this.dataSource = new LocalDataSource();
-    this.dataSource2 = new LocalDataSource();
 
     if (this.activatedRoute.snapshot.queryParamMap.get("restore") && cache) {
       // 返回頁面，需要 restore 資料與狀態
@@ -164,7 +155,7 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
 
       for (let scopeObj of this.consoleGroupScope) {
         let keyList = Object.keys(scopeObj);
-  
+
         for (let idx = 1; idx < keyList.length; idx++) {
           scopeObj[keyList[idx]] =
             (this.consoleGroupDetail.consoleGroupScope.filter(item => item.scope == `${scopeObj[keyList[0]]}.${keyList[idx]}`).length > 0 ? true : false);
@@ -174,15 +165,15 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
       this.dataSource.load(this.consoleGroupDetail.consoleUser);
       this.dataSource2.load(this.consoleGroupScope);
       requestAnimationFrame(() => {
-        this.dataSource.setPage(cache.page)
+        this.dataSource.setPage(cache.page);
         requestAnimationFrame(() => {
           document.querySelector("nb-layout-column").scrollTo(0, cache.scrollPosition);
-        });        
+        });
       });
     } else {
       this.consoleGroupDetail = JSON.parse(this.activatedRoute.snapshot.queryParamMap.get("consoleGroupDetail"));
 
-      if(!this.consoleGroupDetail){
+      if (!this.consoleGroupDetail) {
         //防止瀏覽器 F5，重新導回 list
         this.router.navigate(this.accountManageService.CONSOLE_GROUP_LIST_PATH).then((res) => {
           if (res) {
@@ -193,7 +184,7 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
 
       for (let scopeObj of this.consoleGroupScope) {
         let keyList = Object.keys(scopeObj);
-  
+
         for (let idx = 1; idx < keyList.length; idx++) {
           scopeObj[keyList[idx]] =
             (this.consoleGroupDetail.consoleGroupScope.filter(item => item.scope == `${scopeObj[keyList[0]]}.${keyList[idx]}`).length > 0 ? true : false);
@@ -245,10 +236,11 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
   template: '<nb-checkbox *ngIf="bool != undefined" [checked]="bool" disabled status="basic"></nb-checkbox>'
 })
 export class ConsoleGroupDetailCheckboxComponent implements OnInit {
-
   @Input() value: boolean;
   bool: boolean;
+
   constructor() { }
+
   ngOnInit(): void {
     this.bool = this.value;
   }

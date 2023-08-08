@@ -13,6 +13,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { LoadingService } from '@api/services/loading.service';
 import { DialogService } from '@api/services/dialog.service';
 import { RestStatus } from '@common/enums/rest-enum';
+import { GroupScope } from '@common/enums/console-group-enum';
 
 @Component({
   selector: 'console-group-edit',
@@ -23,26 +24,17 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
   consoleGroupDetail: ConsoleGroup;
   // consoleUser: any;
   consoleGroupScope: Array<GridInnerCheckBox> = [
-    {featureName: "dashboard", read: false},
-    {featureName: "customer", read: false},
-    {featureName: "activity", read: false, create: false, update: false, review: false},
-    {featureName: "tag", read: false, create: false, update: false, review: false},
-    {featureName: "schedule", read: false, create: false, update: false, review: false},
-    {featureName: "console-user", read: false, create: false, update: false, review: false},
-    {featureName: "console-group", read: false, create: false, update: false, review: false}
+    { featureName: "dashboard", read: false },
+    { featureName: "customer", read: false },
+    { featureName: "activity", read: false, create: false, update: false, review: false },
+    { featureName: "tag", read: false, create: false, update: false, review: false },
+    { featureName: "schedule", read: false, create: false, update: false, review: false },
+    { featureName: "console-user", read: false, create: false, update: false, review: false },
+    { featureName: "console-group", read: false, create: false, update: false, review: false }
   ];
-  featureNameMap = {
-    dashboard: "儀表板",
-    customer: "用戶管理 - 用戶列表",
-    activity: "用戶管理 - 客群活動名單",
-    tag: "標籤管理",
-    schedule: "排程管理",
-    "console-user": "帳號管理 - 使用者管理",
-    "console-group": "帳號管理 - 權限管理"
-  }
+
   dataSource2: LocalDataSource;
   enableOption: any;
-
   gridDefine2 = {
     pager: {
       display: true,
@@ -54,7 +46,7 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'col-1 left',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${this.featureNameMap[cell]}</p>`;
+          return `<p class="left">${GroupScope[cell]}</p>`;
         },
         sort: false,
       },
@@ -64,7 +56,7 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
         class: 'col-1',
         valuePrepareFunction: (cell, row: GridInnerCheckBox) => [row, 'read'],
         renderComponent: ConsoleGroupEditCheckboxComponent,
-        sort: false,        
+        sort: false,
       },
       create: {
         title: '新增',
@@ -119,7 +111,7 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
         type: 'string',
         class: 'col-2',
         valuePrepareFunction: (cell, row: any) => cell,
-        sort: false,        
+        sort: false,
       },
       email: {
         title: '電子郵件',
@@ -162,28 +154,28 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
     private dateService: NbDateService<Date>) {
     super(storageService);
 
-    try{
+    try {
       this.consoleGroupDetail = JSON.parse(this.activatedRoute.snapshot.queryParamMap.get("consoleGroupDetail"));
       this.enableOption = "" + this.consoleGroupDetail.enable;
-  
+
       for (let scopeObj of this.consoleGroupScope) {
         let keyList = Object.keys(scopeObj);
-  
-        for(let idx = 1; idx < keyList.length; idx++){
-          scopeObj[keyList[idx]] = 
-          (this.consoleGroupDetail.consoleGroupScope.filter( item => item.scope == `${scopeObj[keyList[0]]}.${keyList[idx]}`).length > 0 ? true : false);
-        }      
+
+        for (let idx = 1; idx < keyList.length; idx++) {
+          scopeObj[keyList[idx]] =
+            (this.consoleGroupDetail.consoleGroupScope.filter(item => item.scope == `${scopeObj[keyList[0]]}.${keyList[idx]}`).length > 0 ? true : false);
+        }
       }
-    } catch(e) {
+    } catch (e) {
       //防止瀏覽器 F5，重新導回 list
       this.router.navigate(this.accountManageService.CONSOLE_GROUP_LIST_PATH).then((res) => {
         if (res) {
           window.history.replaceState({}, '', this.router.url.split("?")[0]);
         };
       });
-    }    
+    }
   }
-  
+
   ngOnInit(): void {
     this.dataSource = new LocalDataSource();
     this.dataSource2 = new LocalDataSource();
@@ -200,7 +192,7 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
     // }, 100);    
   }
 
-  cancel(){
+  cancel() {
     let passData: NavigationExtras = {};
 
     passData.queryParams = {
@@ -213,17 +205,15 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
     });
   }
 
-  ok(){
-    let passData: NavigationExtras = {};
-
+  ok() {
     this.consoleGroupDetail.consoleGroupScope = [];
     this.consoleGroupDetail.enable = new RegExp("true").test(this.enableOption);
 
     for (let scopeObj of this.dataSource2['data']) {
       let keyList = Object.keys(scopeObj);
 
-      for(let idx = 1; idx < keyList.length; idx++){
-        if(scopeObj[keyList[idx]]){
+      for (let idx = 1; idx < keyList.length; idx++) {
+        if (scopeObj[keyList[idx]]) {
           this.consoleGroupDetail.consoleGroupScope.push({
             groupId: this.consoleGroupDetail.groupId,
             scope: `${scopeObj[keyList[0]]}.${keyList[idx]}`
@@ -234,18 +224,26 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
 
     // 這邊要發送電文 7.4 更新群組設定去進行修改，request 內容同 7.2 的 response
     this.accountManageService.updateConsoleGroup(this.consoleGroupDetail.groupId, this.consoleGroupDetail).pipe(
-        catchError((err) => {
-          this.loadingService.close();
-          throw new Error(err.message);
-        }),
-        tap(res => {
-          console.info(res)
-          this.loadingService.close();
-        })).subscribe(res => {
-          if (res.code === RestStatus.SUCCESS) {
+      catchError((err) => {
+        this.loadingService.close();
+        throw new Error(err.message);
+      }),
+      tap(res => {
+        console.info(res)
+        this.loadingService.close();
+      })).subscribe(res => {
+        if (res.code === RestStatus.SUCCESS) {
           // 修改成功後是否要再發送電文重新 query 資料或者是就直接 update?  
-          }
-        });
+          this.navigateToDetailPage();
+        }
+      });
+
+    // 正式串接後底下要拿掉
+    this.navigateToDetailPage();
+  }
+
+  navigateToDetailPage() {
+    let passData: NavigationExtras = {};
 
     passData.queryParams = {
       consoleGroupDetail: JSON.stringify(this.consoleGroupDetail)
@@ -265,12 +263,12 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
 export class ConsoleGroupEditCheckboxComponent implements OnInit {
   @Input() value: Array<any>;
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit(): void {
   }
 
-  change(event: any){
+  change(event: any) {
     // 測試用
     // console.log(this.value[0][this.value[1]]);
   }
