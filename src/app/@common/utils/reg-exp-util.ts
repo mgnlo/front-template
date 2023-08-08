@@ -1,6 +1,8 @@
 export const RegExpUtil = {
   custIdSearch: /^[A-Z]{0,2}[0-9]{0,9}$/,
   int: /^[0-9]*$/,
+  /** 正負數整數*/
+  isNumeric: /^-?\d+$/,
   /** yyyy-MM-dd*/
   dateDashAD: /^\d{4}-\d{2}-\d{2}$/,
   yyyy: /^\d{4}$/,

@@ -17,12 +17,15 @@ export const TagSettingMock: Array<TagSetting> = [
     "tagDimension": "A",
     "tagSubDimension": "A",
     "scheduleSettings": "daily",
-    "uploadType": "名單上傳類型",
+    "uploadType": ".csv",
+    "fileName": "上傳檔案名稱",
     "filePath": "上傳檔案路徑/A/AAA/B\BB.config",
+    "fileData": "上傳檔案資料",
+    "version": "123-321",
     "tagConditionSetting": [
       {
         "tagId": "cccccc123456",
-        "conditionKey": "condition-key-1",
+        "conditionId": "condition-key-1",
         "groupId": 1,
         "detectionCondition": "偵測條件1",
         "conditionValue": "條件值1",
@@ -31,7 +34,7 @@ export const TagSettingMock: Array<TagSetting> = [
       },
       {
         "tagId": "cccccc123456",
-        "conditionKey": "condition-key-2",
+        "conditionId": "condition-key-2",
         "groupId": 1,
         "detectionCondition": "偵測條件2",
         "conditionValue": "條件值2",
@@ -40,7 +43,7 @@ export const TagSettingMock: Array<TagSetting> = [
       },
       {
         "tagId": "cccccc123456",
-        "conditionKey": "condition-key-3",
+        "conditionId": "condition-key-3",
         "groupId": 2,
         "detectionCondition": "偵測條件3",
         "conditionValue": "條件值3",
@@ -129,12 +132,15 @@ export const TagSettingMock: Array<TagSetting> = [
     "tagDimension": "B",
     "tagSubDimension": "B",
     "scheduleSettings": "daily",
-    "uploadType": "名單上傳類型",
+    "uploadType": ".csv",
     "filePath": "上傳檔案路徑",
+    "fileName": "檔案名稱",
+    "fileData": "上傳檔案資料",
+    "version": "123-321",
     "tagConditionSetting": [
       {
         "tagId": "cccccc123456",
-        "conditionKey": "condition-key-1",
+        "conditionId": "condition-key-1",
         "groupId": 1,
         "detectionCondition": "偵測條件1",
         "conditionValue": "條件值1",
@@ -142,7 +148,7 @@ export const TagSettingMock: Array<TagSetting> = [
       },
       {
         "tagId": "cccccc123456",
-        "conditionKey": "condition-key-2",
+        "conditionId": "condition-key-2",
         "groupId": 1,
         "detectionCondition": "偵測條件2",
         "conditionValue": "條件值2",
@@ -150,7 +156,7 @@ export const TagSettingMock: Array<TagSetting> = [
       },
       {
         "tagId": "cccccc123456",
-        "conditionKey": "condition-key-3",
+        "conditionId": "condition-key-3",
         "groupId": 2,
         "detectionCondition": "偵測條件3",
         "conditionValue": "條件值3",

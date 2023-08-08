@@ -1,6 +1,6 @@
-<div class="pageTitle">
+<div class="pageTitle" *ngIf="detail">
     <h1>客群活動名單</h1>
-    <button nbButton status="info" size="tiny" class="iconBtn" (click)="edit()">
+    <button nbButton [status]="detail.status === 'reviewing' ? 'basic': 'info'" size="tiny" class="iconBtn" (click)="edit()" [disabled]="detail.status === 'reviewing'">
         <nb-icon icon="edit-outline"></nb-icon>
     </button>
 </div>
@@ -10,39 +10,39 @@
             <div class="row">
                 <div class="textGroup col-12 col-lg-4">
                     <p class="textBold">活動名稱：</p>
-                    <span>{{detail.activityName}}</span>
+                    <span>{{detail?.activityName}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p class="textBold">狀態：</p>
-                    <span>{{detail.status | enum:'status'}}</span>
+                    <span>{{detail?.status | enum:'status'}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p class="textBold">名單上限：</p>
-                    <span>{{detail.listLimit}}</span>
+                    <span>{{detail?.listLimit}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p class="textBold">名單差異過濾：</p>
-                    <span>{{detail.filterOptions | enum:'filter'}}</span>
+                    <span>{{detail?.filterOptions | enum:'filter'}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p class="textBold">起迄時間：</p>
-                    <span>{{detail.startDate}}~{{detail.endDate}}</span>
+                    <span>{{detail?.startDate}}~{{detail?.endDate}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p class="textBold">描述說明：</p>
-                    <span>{{detail.activityDescription}}</span>
+                    <span>{{detail?.activityDescription}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p class="textBold">異動時間：</p>
-                    <span>{{detail.modificationTime | date:dateFormat}}</span>
+                    <span>{{detail?.modificationTime | date:dateFormat}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p class="textBold">排成設定：</p>
-                    <span>{{detail.scheduleSettings | enum:'schedule'}}</span>
+                    <span>{{detail?.scheduleSettings | enum:'schedule'}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p class="textBold">排成更新時間：</p>
-                    <span>{{detail.batchUpdateTime}}</span>
+                    <span>{{detail?.batchUpdateTime}}</span>
                 </div>
             </div>
             <ng-container *ngFor="let tag of detail.tagGroupView | keyvalue">

@@ -19,7 +19,6 @@ export class ActivityDetailComponent extends BaseComponent implements OnInit {
 
   navigation: Navigation;
   detail: ActivityDetail;
-  editData: ActivitySetting;
   isConditionOpen: { [x: number]: boolean } = {}; //活動名單條件收合
   isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
   activityId: string;
@@ -49,29 +48,18 @@ export class ActivityDetailComponent extends BaseComponent implements OnInit {
         this.detail = JSON.parse(JSON.stringify(res.result));
         this.detail.tagGroupView = CommonUtil.groupBy(res.result.activityListCondition, 'tagGroup');
         Object.keys(this.detail.tagGroupView).forEach(key => this.isConditionOpen[key] = true);
-
-        if (res.result.activityReviewHistory.length > 0) {
-          this.detail.historyGroupView = {};
-          res.result.activityReviewHistory.forEach(history => {
-            if (!this.detail.historyGroupView || !this.detail.historyGroupView[history.groupId]) {
-              this.isHistoryOpen[history.groupId] = true;
-              this.detail.historyGroupView[history.groupId] = {
-                type: history.type,
-                flows: [{ time: history.time, title: history.title, detail: history.detail }]
-              };
-            } else {
-              this.detail.historyGroupView[history.groupId].flows.push({ time: history.time, title: history.title, detail: history.detail });
-            }
-          });
+        const processedData = CommonUtil.getHistoryProcessData<ActivitySetting>('activityReviewHistory', res.result as ActivitySetting);
+        if (!!processedData) {
+          this.isHistoryOpen = processedData.isHistoryOpen;
+          this.detail = processedData.detail;
         }
-
         this.loadingService.close();
       }),
     ).subscribe()
   }
 
   edit() {
-    this.router.navigate(['pages', 'customer-manage', 'activity-set', this.activityId], { state: this.editData });
+    this.router.navigate(['pages', 'customer-manage', 'activity-set', this.activityId]);
   }
 
   cancel() {

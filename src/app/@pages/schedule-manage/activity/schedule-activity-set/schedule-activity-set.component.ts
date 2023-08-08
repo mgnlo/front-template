@@ -12,8 +12,12 @@ import { DeleteButtonComponent } from '@component/table/detail-button/delete-but
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
 import { PreviewDialogComponent } from './preview-dialog/preview.dialog/preview-dialog.component';
-import { ScheduleActivitySetting, ActivitySetting as ScheduleActivitySettingModel, } from '@api/models/schedule-activity.model';
+import { ScheduleActivitySetting, ActivitySetting as ScheduleActivitySettingModel, ScheduleSettingEditReq, } from '@api/models/schedule-activity.model';
 import { CommonUtil } from '@common/utils/common-util';
+import { LoadingService } from '@api/services/loading.service';
+import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
+import { RestStatus } from '@common/enums/rest-enum';
+import { catchError, filter, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'schedule-activity-set',
@@ -51,11 +55,17 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   ScheduleActivitySetting: Array<ScheduleActivitySetting> = ScheduleActivitySettingMock;
   ScheduleActivitySettingModel: Array<ScheduleActivitySettingModel>;
 
-  constructor(private router: Router,
+  scheduleId: string;
+
+  constructor(
     storageService: StorageService,
+    private router: Router,
     private activatedRoute: ActivatedRoute,
     private dialogService: DialogService,
-    private readonly changeDetectorRef: ChangeDetectorRef) {
+    private scheduleManageService: ScheduleManageService,
+    private loadingService: LoadingService,
+    private readonly changeDetectorRef: ChangeDetectorRef
+  ) {
     super(storageService);
 
     this.validateForm = new FormGroup({
@@ -69,35 +79,35 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
     this.params = this.activatedRoute.snapshot.params;
     const changeRouteName = this.params['changeRoute'] ?? "";
-    this.actionName = this.getActionName(changeRouteName);
+    this.actionName = CommonUtil.getActionName(changeRouteName);
 
-    const state = this.router.getCurrentNavigation()?.extras?.state;
-    if (!!state) {
-      //日期塞資料
-      const frequencyTime = state?.frequencyTime;
-      const frequencyTimeArray = frequencyTime.split(/[:：]/);
-      if (frequencyTimeArray.length > 0 && state.executionFrequency) {
-        if (state.executionFrequency?.toLowerCase() === 'daily') {
-          this.validateForm.controls['hour'].setValue(frequencyTimeArray[0]);
-          this.validateForm.controls['minute'].setValue(frequencyTimeArray[1]);
-        }
-        else {
-          this.validateForm.controls['daily'].setValue(frequencyTimeArray[0]);
-          this.validateForm.controls['hour'].setValue(frequencyTimeArray[1]);
-          this.validateForm.controls['minute'].setValue(frequencyTimeArray[2]);
-        }
-      }
-      //塞資料
-      Object.keys(state).forEach(key => {
-        if (!!this.validateForm.controls[key]) {
-          switch (key) {
-            default:
-              this.validateForm.controls[key].setValue(state[key]?.toLowerCase());
-              break;
-          }
-        }
-      })
-    }
+    // const state = this.router.getCurrentNavigation()?.extras?.state;
+    // if (!!state) {
+    //   //日期塞資料
+    //   const frequencyTime = state?.frequencyTime;
+    //   const frequencyTimeArray = frequencyTime.split(/[:：]/);
+    //   if (frequencyTimeArray.length > 0 && state.executionFrequency) {
+    //     if (state.executionFrequency?.toLowerCase() === 'daily') {
+    //       this.validateForm.controls['hour'].setValue(frequencyTimeArray[0]);
+    //       this.validateForm.controls['minute'].setValue(frequencyTimeArray[1]);
+    //     }
+    //     else {
+    //       this.validateForm.controls['daily'].setValue(frequencyTimeArray[0]);
+    //       this.validateForm.controls['hour'].setValue(frequencyTimeArray[1]);
+    //       this.validateForm.controls['minute'].setValue(frequencyTimeArray[2]);
+    //     }
+    //   }
+    //   //塞資料
+    //   Object.keys(state).forEach(key => {
+    //     if (!!this.validateForm.controls[key]) {
+    //       switch (key) {
+    //         default:
+    //           this.validateForm.controls[key].setValue(state[key]?.toLowerCase());
+    //           break;
+    //       }
+    //     }
+    //   })
+    // }
 
   }
 
@@ -181,40 +191,38 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     this.validateForm.patchValue({ 'hour': '', 'minute': '' });
     switch (key) {
       case 'daily':
-        if (this.validateForm.contains('daily')) {
-          this.removeField('daily');
-        }
+        this.removeFieldIfExists('daily');
         break;
       case 'weekly':
       case 'monthly':
-        if (!this.validateForm.contains('daily')) {
-          this.addField('daily', null, Validators.required);
-        }
+        this.addFieldIfNotExists('daily', null, Validators.required);
         break;
     }
   }
   //#endregion
 
   //#region 基本欄位檢核(新增/刪除)
-  addField(fieldName: string, formState: any, fileFormatValidator: any) {
-    this.validateForm.addControl(fieldName, new FormControl(formState, fileFormatValidator));
+  addFieldIfNotExists(fieldName: string, defaultValue: any, validationRules?: any) {
+    if (!this.validateForm.contains(fieldName)) {
+      this.validateForm.addControl(fieldName, new FormControl(defaultValue, validationRules));
+    }
   }
 
-  removeField(fieldName: string) {
-    this.validateForm.removeControl(fieldName);
+  removeFieldIfExists(fieldName: string) {
+    if (this.validateForm.contains(fieldName)) {
+      this.validateForm.removeControl(fieldName);
+    }
   }
   //#endregion
 
   //#region 刪除按鈕
   onDeleteConfirm(row: { activityId: string; }): void {
-    //if (window.confirm('確定要刪除這筆資料嗎？')) {
     const index = this.ScheduleActivitySettingModel.findIndex(item => item.activityId === row.activityId);
     if (index !== -1) {
       this.ScheduleActivitySettingModel.splice(index, 1);
       this.refreshFilterActivityList();
       this.dataSource.load(this.ScheduleActivitySettingModel);
     }
-    //}
   }
   //#endregion
 
@@ -258,10 +266,51 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   //#endregion
 
   ngOnInit(): void {
+    this.scheduleId = this.activatedRoute.snapshot.params.scheduleId;
     this.dataSource = new LocalDataSource();
-    this.ScheduleActivitySettingModel = this.ScheduleActivitySetting?.find(f => f.scheduleId === this.params['scheduleId'])?.activitySetting as Array<ScheduleActivitySettingModel> ?? new Array<ScheduleActivitySettingModel>();
+    this.ScheduleActivitySettingModel = this.ScheduleActivitySetting?.find(f => f.scheduleId === this.scheduleId)?.activitySetting as Array<ScheduleActivitySettingModel> ?? new Array<ScheduleActivitySettingModel>();
     this.refreshFilterActivityList();
     this.dataSource.load(this.ScheduleActivitySettingModel);
+
+    if (!!this.scheduleId) {
+      this.loadingService.open();
+      this.scheduleManageService.getScheduleActivitySettingRow(this.scheduleId).pipe(
+        catchError(err => {
+          this.loadingService.close();
+          this.dialogService.alertAndBackToList(false, '查無此筆資料，將為您導回名單排程', ['pages', 'schedule-manage', 'schedule-activity-list']);
+          throw new Error(err.message);
+        }),
+        filter(res => res.code === RestStatus.SUCCESS),
+        tap((res) => {
+          const frequencyTime = res.result?.frequencyTime;
+          const frequencyTimeArray = frequencyTime.split(/[:：]/);
+          if (frequencyTimeArray.length > 0 && res.result.executionFrequency) {
+            let executionFrequency = res.result.executionFrequency?.toLowerCase();
+            this.changeFrequencyType(executionFrequency);
+            if (res.result.executionFrequency?.toLowerCase() === 'daily') {
+              this.validateForm.get('hour').setValue(frequencyTimeArray[0]);
+              this.validateForm.get('minute').setValue(frequencyTimeArray[1]);
+            }
+            else {
+              this.validateForm.get('daily').setValue(frequencyTimeArray[0]);
+              this.validateForm.get('hour').setValue(frequencyTimeArray[1]);
+              this.validateForm.get('minute').setValue(frequencyTimeArray[2]);
+            }
+          }
+          //塞資料
+          Object.keys(res.result).forEach(key => {
+            if (!!this.validateForm.controls[key]) {
+              switch (key) {
+                default:
+                  this.validateForm.controls[key].setValue(res.result[key]?.toLowerCase());
+                  break;
+              }
+            }
+          })
+          this.loadingService.close();
+        })
+      ).subscribe();
+    }
   }
 
   ngAfterViewChecked(): void {
@@ -269,11 +318,60 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   }
 
   cancel() {
+    if ((this.params['changeRoute'] ?? "") === 'edit') {
+      this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-detail', this.params['scheduleId']]);
+      return
+    }
     this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-list']);
   }
 
   submit() {
+    let valid = this.validateForm.valid;
+    let reqData: ScheduleSettingEditReq = this.getRequestData();
+    if (valid && !this.scheduleId) {
+      this.loadingService.open();
+      this.scheduleManageService.createScheduleSetting(reqData).pipe(
+        catchError((err) => {
+          this.loadingService.close();
+          this.dialogService.alertAndBackToList(false, '新增失敗', ['pages', 'schedule-manage', 'schedule-activity-list']);
+          throw new Error(err.message);
+        }),
+        tap(res => {
+          console.info(res)
+          this.loadingService.close();
+        })).subscribe(res => {
+          if (res.code === RestStatus.SUCCESS) {
+            this.dialogService.alertAndBackToList(true, '新增成功', ['pages', 'schedule-manage', 'schedule-activity-list'])
+          }
+        });
+    } else if (valid && this.scheduleId) {
+      this.loadingService.open();
+      this.scheduleManageService.updateScheduleSetting(this.scheduleId, reqData).pipe(
+        catchError((err) => {
+          this.loadingService.close();
+          this.dialogService.alertAndBackToList(false, '編輯失敗', ['pages', 'schedule-manage', 'schedule-activity-list']);
+          throw new Error(err.message);
+        }),
+        tap(res => {
+          console.info(res)
+          this.loadingService.close();
+        })).subscribe(res => {
+          if (res.code === RestStatus.SUCCESS) {
+            this.dialogService.alertAndBackToList(true, '編輯成功', ['pages', 'schedule-manage', 'schedule-activity-list'])
+          }
+        });
+    }
+  }
 
+  getRequestData(): ScheduleSettingEditReq {
+    let reqData: ScheduleSettingEditReq = this.validateForm.getRawValue();
+    let daily: string = this.validateForm.get('daily')?.value;
+    let hour: string = this.validateForm.get('hour')?.value;
+    let minute: string = this.validateForm.get('minute')?.value;
+    let executionFrequency = this.validateForm.get('executionFrequency').value;
+    reqData.frequencyTime = executionFrequency === 'daily' ? hour + ':' + minute : daily + ':' + hour + ':' + minute;
+    reqData.activitySetting = JSON.parse(JSON.stringify(this.ScheduleActivitySettingModel));
+    return reqData;
   }
 
 }
