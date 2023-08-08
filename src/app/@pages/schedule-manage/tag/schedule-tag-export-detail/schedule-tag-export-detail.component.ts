@@ -97,14 +97,6 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
     this.dataSource.load(this.detail.scheduleBatchHistory);
   }
 
-  ngAfterViewInit(): void {
-    //get session page
-    let storage = this.storageService.getSessionVal(this.sessionKey);
-    if (!!storage?.page) {
-      this.dataSource.setPage(storage.page);
-    }
-  }
-
   ngOnDestroy(): void {
     let sessionData = { page: this.paginator.nowPage };
     this.storageService.putSessionVal(this.sessionKey, sessionData);

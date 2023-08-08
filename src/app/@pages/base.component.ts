@@ -41,7 +41,7 @@ export class BaseComponent implements OnDestroy {
     if (!!this.dataSource) {
       this.dataSource.onChanged().pipe(takeUntil(this.unsubscribe$), filter((val, i) => i === 0)).subscribe((event) => {
         //get session page
-        if(event.action === 'refresh'){
+        if (event.action === 'refresh') {
           let storage = this.storageService.getSessionVal(this.sessionKey);
           if (!!storage?.page) {
             this.dataSource.setPage(storage.page, true);
@@ -58,14 +58,16 @@ export class BaseComponent implements OnDestroy {
     }
   }
 
-  getActionName(changeRouteName: string): string {
-    switch (changeRouteName) {
-      case 'edit':
-        return '編輯';
-      case 'copy':
-        return '複製';
-      default:
-        return '新增';
+  //檢查檢核
+  findInvalidControls() {
+    const invalid = [];
+    const controls = this.validateForm.controls;
+    for (const name in controls) {
+      if (controls[name].invalid) {
+        invalid.push(name);
+      }
     }
+    return invalid;
   }
+
 }
