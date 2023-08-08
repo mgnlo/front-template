@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { LoadingService } from '@api/services/loading.service';
+import { CommonUtil } from '@common/utils/common-util';
 import { ServerDataSource } from 'ng2-smart-table';
 import { ServerSourceConf } from 'ng2-smart-table/lib/lib/data-source/server/server-source.conf';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -11,19 +11,19 @@ export class CustomServerDataSource extends ServerDataSource {
   private initConf: ServerSourceInitConfig;
   private apiStatusSubject: BehaviorSubject<'init' | 'loading' | 'finish' | 'error'> = new BehaviorSubject('init');
 
-  constructor(protected http: HttpClient, conf: ServerSourceConf | {} = {}, initConf?: ServerSourceInitConfig, loadingService?: LoadingService) {
+  constructor(protected http: HttpClient, conf: ServerSourceConf | {} = {}, initConf?: ServerSourceInitConfig) {
     super(http, conf);
     this.initConf = initConf;
   }
 
   protected requestElements(): Observable<any> {
 
-    const httpParams = this.createRequesParams();
+    let httpParams = this.createRequesParams();
 
     if (this.initConf) {
       if (!!this.initConf.filters && this.initConf.filters.length > 0) {
-        const andOperator = this.initConf.andOperator ? this.initConf.andOperator : true;
-        this.setFilter(this.initConf.filters, andOperator, false);
+        this.initConf.filters.filter(filter => CommonUtil.isNotBlank(filter.value.toString()))
+          .forEach(filter => { httpParams = httpParams.append(filter.key, filter.value) });
       }
 
       if (!!this.initConf.sort) {

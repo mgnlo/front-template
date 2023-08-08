@@ -3,6 +3,6 @@ export class ServerSourceInitConfig {
   page?: number;
   perPage?: number;
   sort?: { field: string, direction: string, compare: any }[];
-  filters?: { field: string, filter: any, search: string }[];
+  filters?: { key: string, value: string | number | boolean }[];
   andOperator?: boolean;
 }
