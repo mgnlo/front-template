@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -5,16 +6,15 @@ import { ActivitySetting } from '@api/models/activity-list.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
+import { CustomServerDataSource } from '@common/custom/ng2-smart-table/custom-server-data-source';
 import { Status } from '@common/enums/common-enum';
-import { RestStatus } from '@common/enums/rest-enum';
+import { CommonUtil } from '@common/utils/common-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { CheckboxIconComponent } from '@component/table/checkbox-icon/checkbox-icon.component';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { NbDateService } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
-import * as moment from 'moment';
-import { LocalDataSource } from 'ng2-smart-table';
-import { catchError, filter, tap } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { CustomerManageService } from '../customer-manage.service';
 
 @Component({
@@ -26,6 +26,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
 
   constructor(
     storageService: StorageService,
+    private http: HttpClient,
     private router: Router,
     private dateService: NbDateService<Date>,
     private activatedRoute: ActivatedRoute,
@@ -47,27 +48,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
   statusList: Array<{ key: string; val: string }> = Object.entries(Status).map(([k, v]) => ({ key: k, val: v }));
 
   ngOnInit(): void {
-    this.loadingService.open();
-    this.customerManageService.getActivitySettingList().pipe(
-      catchError(err => {
-        this.loadingService.close();
-        this.dialogService.alertAndBackToList(false, '查無資料');
-        throw new Error(err.message);
-      }),
-      filter(res => res.code === RestStatus.SUCCESS),
-      tap((res) => {
-        res.result = res.result.map(row => {
-          return { ...row, during: `${row.startDate}~${row.endDate}` } //起訖日查詢篩選要用到
-        })
-        this.dataSource = new LocalDataSource();
-        this.dataSource.load(res.result);
-        //get session filter
-        this.storageService.getSessionFilter(this.sessionKey, this.validateForm).subscribe((res) => {
-          if (res === true) { this.search(); }
-        });
-        this.loadingService.close();
-      })
-    ).subscribe();
+    this.search();
   }
 
   ngOnDestroy(): void {
@@ -125,37 +106,10 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
         title: '起訖時間',
         type: 'html',
         class: 'col-3',
-        valuePrepareFunction: (cell: any) => {
-          return `<span class="date">${cell}</span>`;
+        valuePrepareFunction: (cell: any, row: ActivitySetting) => {
+          return `<span class="date">${row.startDate}~${row.endDate}</span>`;
         },
         sort: false,
-        filterFunction: (cell?: string, search?: string[]) => {
-          let cellSDate = cell.split('~')[0];
-          let cellEDate = cell.split('~')[1];
-          let sDate = search[0];
-          let eDate = search[1];
-          let isSDate = sDate !== null;
-          let isEDate = eDate !== null;
-          if (
-            (!isSDate && !isEDate) ||
-            ((isSDate && isEDate) && (
-              moment(cellSDate).isBetween(sDate, eDate, undefined, '[]') ||
-              moment(cellEDate).isBetween(sDate, eDate, undefined, '[]') ||
-              moment(sDate).isBetween(cellSDate, cellEDate, undefined, '[]') ||
-              moment(eDate).isBetween(cellSDate, cellEDate, undefined, '[]')
-            )) ||
-            ((isSDate && !isEDate) && (
-              moment(sDate).isBetween(cellSDate, cellEDate, undefined, '[]')
-            )) ||
-            ((!isSDate && isEDate) && (
-              moment(eDate).isBetween(cellSDate, cellEDate, undefined, '[]')
-            ))
-          ) {
-            return true
-          } else {
-            return false
-          }
-        }
       },
       action: {
         title: '查看',
@@ -183,22 +137,45 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
   }
 
   reset() {
-    this.dataSource.reset();
     this.validateForm.reset({ activityName: '', status: '', startDate: null, endDate: null });
+    this.search();
   }
 
   search() {
-    this.dataSource.reset();
-    let filter = this.validateForm.getRawValue();
-    //search during
-    let sDate = filter.startDate !== null ? this.dateService.format(filter.startDate, this.dateFormat) : null;
-    let eDate = filter.endDate !== null ? this.dateService.format(filter.endDate, this.dateFormat) : null;
-    if (!!sDate || !!eDate) {
-      this.dataSource.addFilter({ field: 'during', filter: undefined, search: [sDate, eDate] });
-    }
-    //search other
-    for (const [k, v] of Object.entries(filter).filter(([key, val]) => !key.includes('Date') && !!val)) {
-      this.dataSource.addFilter({ field: k, filter: undefined, search: v });
-    }
+    let searchParam = this.validateForm.getRawValue();
+    let filters: { field: string, filter: any, search: string }[] = [];
+
+    Object.keys(searchParam).filter(key => CommonUtil.isNotBlank(searchParam[key])).forEach(key => {
+      filters.push({ field: key, filter: undefined, search: searchParam[key] });
+    });
+  
+    this.restDataSource = new CustomServerDataSource(this.http, {
+      endPoint: this.customerManageService.getActivitySettingListURL,
+      dataKey: 'result.content',
+      pagerPageKey: 'page',
+      pagerLimitKey: 'size',
+      filterFieldKey: '#field#',
+      sortDirKey: 'dir',
+      sortFieldKey: 'sort',
+      totalKey: 'result.totalElements',
+    }, {
+      page: this.paginator.nowPage,
+      filters: filters,
+    });
+
+    this.restDataSource.apiStatus().pipe(takeUntil(this.unsubscribe$)).subscribe(status => {
+      switch (status) {
+        case 'init':
+          this.loadingService.open();
+          break;
+        case 'error':
+          this.loadingService.close();
+          this.dialogService.alertAndBackToList(false, '查無資料');
+          break;
+        default:
+          this.loadingService.close();
+          break;
+      }
+    });
   }
 }

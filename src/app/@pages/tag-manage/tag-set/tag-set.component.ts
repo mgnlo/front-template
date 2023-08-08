@@ -9,7 +9,6 @@ import { StorageService } from '@api/services/storage.service';
 import { MathSymbol, Status } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
 import { TagDimension, TagSetCondition, TagSubDimension, TagType } from '@common/enums/tag-enum';
-import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
@@ -19,6 +18,7 @@ import { catchError, filter, tap } from 'rxjs/operators';
 import { TagManageService } from '../tag-manage.service';
 import { TagConditionDialogComponent } from './condition-dialog/condition-dialog.component';
 import { RegExpUtil } from '@common/utils/reg-exp-util';
+import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
 
 @Component({
   selector: 'tag-set',
@@ -37,8 +37,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   changeRouteName: string;
   actionName: string;// 新增/編輯/複製
-
-  mockData: Array<ActivitySetting> = ActivityListMock;
 
   maxSizeInMB: number = 5;//檔案大小
   filePlaceholderName: string = '請上傳檔案';
@@ -84,6 +82,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private readonly changeDetectorRef: ChangeDetectorRef,
     private tagManageService: TagManageService,
+    private customerManageService: CustomerManageService,
     private loadingService: LoadingService,
     private dialogService: DialogService) {
     super(storageService);
@@ -172,12 +171,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.dataSource = new LocalDataSource();
-    this.mockData = this.mockData.map(mock => {
-      return { ...mock, during: `${mock.startDate}~${mock.endDate}` } //起訖日區間
-    })
-    this.dataSource.load(this.mockData);
-
     //#region 載入編輯資料
     const tagId = this.params['tagId'];
     if (!!tagId) {
@@ -242,6 +235,29 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     const formData = this.validateForm.getRawValue();
     this.changeTagType(formData.tagType);
     this.changeConditionSettingMethod(formData.conditionSettingMethod);
+    //#endregion
+
+    //#region 取得全部活動明細===>後續應該要改用tagId抓個別活動
+    this.loadingService.open();
+
+    this.customerManageService.getActivitySettingList().pipe(
+      catchError(err => {
+        this.loadingService.close();
+        this.dialogService.alertAndBackToList(false, '標籤使用範圍查無資料');
+        throw new Error(err.message);
+      }),
+      filter(res => res.code === RestStatus.SUCCESS),
+      tap((res) => {
+        this.dataSource = new LocalDataSource();
+        if (Array.isArray(res.result['content'])) {
+          res.result['content'] = res.result['content'].map(row => {
+            return { ...row, during: `${row.startDate}~${row.endDate}` } //起訖日查詢篩選要用到
+          })
+        }
+        this.dataSource.load(res.result['content'] ?? Array<ActivitySetting>());
+        this.loadingService.close();
+      }),
+    ).subscribe();
     //#endregion
   }
 

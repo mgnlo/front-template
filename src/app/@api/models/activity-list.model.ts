@@ -139,6 +139,16 @@ export interface HistoryGroupView {
     detail: string;
   }[]
 }
+
+export class ActivitySettingSearchReq {
+  activityName?: string;
+  status?: string;
+  startDate?: string;
+  endDate?: string;
+  page?: number;
+  size?: number;
+}
+
 export class ActivitySettingEditReq {
   activityName: string;
   status: string;

@@ -4,7 +4,7 @@ import { ScheduleManageService } from '../../schedule-manage.service';
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
 import { ScheduleActivitySetting } from '@api/models/schedule-activity.model';
-import { Status } from '@common/enums/common-enum';
+import { Frequency, Status } from '@common/enums/common-enum';
 import { DatePipe } from '@angular/common';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
@@ -54,6 +54,9 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
         title: '執行頻率',
         type: 'html',
         class: 'col-2',
+        valuePrepareFunction: (cell: string) => {
+          return Frequency[cell.toLowerCase()];
+        },
         sort: false,
       },
       modificationTime: {

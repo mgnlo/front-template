@@ -1,17 +1,17 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActivitySetting } from '@api/models/activity-list.model';
 import { TagDetailView, TagSetting } from '@api/models/tag-manage.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
+import { CustomServerDataSource } from '@common/custom/ng2-smart-table/custom-server-data-source';
 import { Status } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
-import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
-import { LocalDataSource } from 'ng2-smart-table';
-import { catchError, filter, tap } from 'rxjs/operators';
+import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
+import { catchError, filter, takeUntil, tap } from 'rxjs/operators';
 import { TagManageService } from '../tag-manage.service';
 
 @Component({
@@ -22,7 +22,6 @@ import { TagManageService } from '../tag-manage.service';
 export class TagDetailComponent extends BaseComponent implements OnInit {
   detail: TagDetailView;
   checkData: TagSetting;
-  mockData: Array<ActivitySetting> = ActivityListMock;
 
   isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
   tagId: string;
@@ -31,9 +30,11 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
 
   constructor(
     storageService: StorageService,
+    private http: HttpClient,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private tagManageService: TagManageService,
+    private customerManageService: CustomerManageService,
     private dialogService: DialogService,
     private loadingService: LoadingService,
   ) {
@@ -105,6 +106,7 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.tagId = this.activatedRoute.snapshot.params.tagId;
+    //#region 取得標籤明細
     this.loadingService.open();
     this.tagManageService.getTagSettingRow(this.tagId).pipe(
       catchError(err => {
@@ -123,11 +125,39 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
         this.loadingService.close();
       }),
     ).subscribe();
-    this.dataSource = new LocalDataSource();
-    this.mockData = this.mockData.map(mock => {
-      return { ...mock, during: `${mock.startDate}~${mock.endDate}` } //起訖日區間
-    })
-    this.dataSource.load(this.mockData);
+    //#endregion
+
+    //#region 取得全部活動明細===>後續應該要改用tagId抓個別活動
+    this.loadingService.open();
+
+    this.restDataSource = new CustomServerDataSource(this.http, {
+      endPoint: this.customerManageService.getActivitySettingListURL,
+      dataKey: 'result.content',
+      pagerPageKey: 'page',
+      pagerLimitKey: 'size',
+      filterFieldKey: '#field#',
+      sortDirKey: 'dir',
+      sortFieldKey: 'sort',
+      totalKey: 'result.totalElements',
+    }, {
+      page: this.paginator.nowPage,
+    });
+
+    this.restDataSource.apiStatus().pipe(takeUntil(this.unsubscribe$)).subscribe(status => {
+      switch (status) {
+        case 'init':
+          this.loadingService.open();
+          break;
+        case 'error':
+          this.loadingService.close();
+          this.dialogService.alertAndBackToList(false, '查無資料');
+          break;
+        default:
+          this.loadingService.close();
+          break;
+      }
+    });
+    //#endregion
   }
 
   edit() {

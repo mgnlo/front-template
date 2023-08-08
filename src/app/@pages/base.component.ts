@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { StorageService } from '@api/services/storage.service';
+import { CustomServerDataSource } from '@common/custom/ng2-smart-table/custom-server-data-source';
 import { Paginator } from '@component/table/paginator/paginator.component';
 import { LocalDataSource } from 'ng2-smart-table';
 // import { OAuth2BaseComponent, OAuth2Service } from '@module/oauth2';
@@ -13,6 +14,7 @@ export class BaseComponent implements OnDestroy {
   unsubscribe$ = new Subject();
   readonly dateFormat = 'yyyy-MM-dd';
   dataSource: LocalDataSource; //table
+  restDataSource: CustomServerDataSource; //rest API table
   paginator: Paginator = { totalCount: 0, nowPage: 1, perPage: 10, totalPage: 1, rowStart: 0, rowEnd: 0 };  //table筆數顯示
   validateForm: FormGroup;     // 共用表單名稱
   isSubmit: boolean = false;   // 確認是否送出表單 -> 初始化時須設定為false
@@ -38,18 +40,19 @@ export class BaseComponent implements OnDestroy {
   }
 
   updatePageInfo() {
-    if (!!this.dataSource) {
-      this.dataSource.onChanged().pipe(takeUntil(this.unsubscribe$), filter((val, i) => i === 0)).subscribe((event) => {
+    let source = (!!this.dataSource) ? this.dataSource : this.restDataSource;
+    if (!!source) {
+      source.onChanged().pipe(takeUntil(this.unsubscribe$), filter((val, i) => i === 0)).subscribe((event) => {
         //get session page
         if (event.action === 'refresh') {
           let storage = this.storageService.getSessionVal(this.sessionKey);
           if (!!storage?.page) {
-            this.dataSource.setPage(storage.page, true);
+            source.setPage(storage.page, true);
           }
         }
-        this.paginator.totalCount = this.dataSource.count();
-        let page = this.dataSource.getPaging().page;
-        let perPage = this.dataSource.getPaging().perPage;
+        this.paginator.totalCount = source.count();
+        let page = source.getPaging().page;
+        let perPage = source.getPaging().perPage;
         this.paginator.nowPage = page;
         this.paginator.totalPage = Math.ceil(this.paginator.totalCount / perPage);
         this.paginator.rowStart = (page - 1) * perPage + 1;
