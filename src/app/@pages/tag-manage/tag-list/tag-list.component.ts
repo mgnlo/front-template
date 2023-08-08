@@ -46,14 +46,6 @@ export class TagListComponent extends BaseComponent implements OnInit {
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
   ngOnInit(): void {
-    // mock data
-    // this.dataSource = new LocalDataSource();
-    // this.dataSource.load(this.mockData);
-    // //get session filter
-    // this.storageService.getSessionFilter(this.sessionKey, this.validateForm).subscribe((res) => {
-    //   if (res === true) { this.search(); }
-    // });
-
     this.loadingService.open();
     this.tagManageService.getTagSettingList().pipe(
       catchError(err => {

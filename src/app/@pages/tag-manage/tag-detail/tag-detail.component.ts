@@ -38,24 +38,6 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
     private loadingService: LoadingService,
   ) {
     super(storageService);
-    // const currentNavigation = this.router.getCurrentNavigation();
-    // if (!!currentNavigation?.extras) {
-    //   const state = currentNavigation.extras.state;
-    //   const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistory', state as TagSetting); // 異動歷程處理
-    //   if (!!processedData) {
-    //     this.isHistoryOpen = processedData.isHistoryOpen;
-    //     this.detail = processedData.detail;
-    //   }
-    //   else{
-    //     //之後可能加導頁pop-up提醒
-    //     this.router.navigate(['pages', 'tag-manage', 'tag-list']);
-    //   }
-    // }
-    //取得檔案名稱
-    // if(!!this.detail.filePath){
-    //   this.fileName = this.detail.filePath.split('/').pop();
-    // }
-
   }
 
   gridDefine = {
@@ -132,16 +114,10 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
       }),
       filter(res => res.code === RestStatus.SUCCESS),
       tap((res) => {
-
         const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistory', res.result as TagSetting); // 異動歷程處理
         if (!!processedData) {
           this.isHistoryOpen = processedData.isHistoryOpen;
           this.detail = processedData.detail;
-        }
-
-        //取得檔案名稱
-        if (!!this.detail.filePath) {
-          this.fileName = this.detail.filePath.split('/').pop();
         }
 
         this.loadingService.close();
@@ -155,12 +131,10 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
   }
 
   edit() {
-    // this.router.navigate(['pages', 'tag-manage', 'tag-set', 'edit', this.detail.tagId], { state: this.detail });
     this.router.navigate(['pages', 'tag-manage', 'tag-set', 'edit', this.detail.tagId]);
   }
 
   copy() {
-    // this.router.navigate(['pages', 'tag-manage', 'tag-set', 'copy', this.detail.tagId], { state: this.detail });
     this.router.navigate(['pages', 'tag-manage', 'tag-set', 'copy', this.detail.tagId]);
   }
 
