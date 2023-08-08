@@ -239,9 +239,9 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     //#endregion
 
     //#region 設定欄位
-    const getRawValue = this.validateForm.getRawValue();
-    this.changeTagType(getRawValue.tagType);
-    this.changeConditionSettingMethod(getRawValue.conditionSettingMethod);
+    const formData = this.validateForm.getRawValue();
+    this.changeTagType(formData.tagType);
+    this.changeConditionSettingMethod(formData.conditionSettingMethod);
     //#endregion
   }
 
@@ -429,8 +429,9 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     const tagId = this.params['tagId'];
     const reqData: TagSettingEditReq = this.getRequestData();
 
-    if (!valid) {
-      this.dialogService.alertAndBackToList(false, `${this.actionName}驗證失敗`, ['pages', 'tag-manage', 'tag-set', tagId]);
+    if (!valid || !reqData) {
+      const route = tagId ? [this.changeRouteName, tagId] : [];
+      this.dialogService.alertAndBackToList(false, `${this.actionName}驗證失敗`, ['pages', 'tag-manage', 'tag-set', ...route]);
       return
     }
 
@@ -468,39 +469,40 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   //#region 組送出資料
   getRequestData(): TagSettingEditReq {
     const tagId = this.params['tagId'];
-    const getRawValue = this.validateForm.getRawValue();
+    const formData = this.validateForm.getRawValue();
+
+    //throw new Error('(tagId || formData) is bad');
+    if (!tagId || !formData) return undefined
 
     let reqData = new TagSettingEditReq({
       tagId: tagId,
-      tagName: getRawValue.tagName,
-      status: getRawValue.status,
-      tagType: getRawValue.tagType,
-      uploadType: getRawValue.uploadType,
-      fileName: getRawValue.fileName,
-      filePath: getRawValue.filePath,
-      fileData: getRawValue.fileData,
-      conditionSettingMethod: getRawValue.conditionSettingMethod, //條件設定方式
-      startDate: moment(getRawValue.startDate).format('YYYY-MM-DD'),
-      endDate: moment(getRawValue.endDate).format('YYYY-MM-DD'),
-      tagDimension: getRawValue.tagDimension,
-      tagSubDimension: getRawValue.tagSubDimension,
-      tagDescription: getRawValue.TagDescription,
-      conditionSettingQuery: getRawValue.TagName, //條件設定語法
+      tagName: formData.tagName,
+      status: formData.status,
+      tagType: formData.tagType,
+      uploadType: formData.uploadType,
+      fileName: formData.fileName,
+      filePath: formData.filePath,
+      fileData: formData.fileData,
+      conditionSettingMethod: formData.conditionSettingMethod, //條件設定方式
+      startDate: formData.startDate ? moment(formData.startDate).format(this.dateFormat) : null,
+      endDate: formData.endDate ? moment(formData.endDate).format(this.dateFormat) : null,
+      tagDimension: formData.tagDimension,
+      tagSubDimension: formData.tagSubDimension,
+      tagDescription: formData.TagDescription,
+      conditionSettingQuery: formData.TagName, //條件設定語法
     });
 
-    if (!!getRawValue?.tagConditionSetting) {
-      const tagConditionSettingArray = [...getRawValue.tagConditionSetting];
-      reqData.tagConditionSetting = new Array<TagConditionSetting>();
-      tagConditionSettingArray.forEach(f => {
-        let id = f['id'];
-        reqData.tagConditionSetting.push(new TagConditionSetting({
+    if (Array.isArray(formData.tagConditionSetting)) {
+      reqData.tagConditionSetting = formData.tagConditionSetting.map((m) => {
+        const id = m['id'];
+        return new TagConditionSetting({
           tagId: tagId,
-          conditionValue: getRawValue?.conditionValue,
-          detectionCondition: f['detectionCondition_' + id],
-          thresholdValue: f['thresholdValue_' + id],
-          joinValue: f['joinValue_' + id]
-        }))
-      })
+          conditionValue: formData.conditionValue,
+          detectionCondition: m['detectionCondition_' + id],
+          thresholdValue: m['thresholdValue_' + id],
+          joinValue: m['joinValue_' + id],
+        });
+      });
     }
 
     return reqData;
