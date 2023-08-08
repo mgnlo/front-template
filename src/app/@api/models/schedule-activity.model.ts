@@ -51,6 +51,18 @@ export class ScheduleReviewhistory {
   title: string;
   detail: string;
   type: string;
+
+  reviewStatus?: string;
+  reviewer?: string;
+  reviewComment?: string;
+  modificationTime?: string;
+  batchUpdateTime?: string;
+  reviewTime?: string;
+  jobName?: string;
+  executionFrequency?: string;
+  frequencyTime?: string;
+  filePath?: string;
+  //scheduleSettings?: string;
 }
 
 

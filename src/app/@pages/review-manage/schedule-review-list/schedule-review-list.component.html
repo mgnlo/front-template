@@ -1,0 +1,18 @@
+<div class="pageTitle">
+  <h1>名單排程審核</h1>
+</div>
+<div class="pageContent">
+  <nb-card>
+      <nb-card-header>
+          <h2>審核列表</h2>
+      </nb-card-header>
+      <nb-card-body>
+          <div class="noteText">
+              <nb-icon icon="info-outline"></nb-icon>
+              <p>本日已審查之項目將留存於列表內，並標註為「同意」案件;每日00:00批次更新列表內容，欲查看「同意」案件請移至「該標籤」查詢相關歷程。</p>
+          </div>
+          <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
+          <paginator [source]="dataSource" [paginator]="paginator"></paginator>
+      </nb-card-body>
+  </nb-card>
+</div>

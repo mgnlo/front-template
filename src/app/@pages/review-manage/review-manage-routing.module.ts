@@ -5,16 +5,20 @@ import { ActivityReviewListComponent } from "./activity-review-list/activity-rev
 import { ReviewManageComponent } from "./review-manage.component";
 import { TagReviewDetailComponent } from "./tag-review-detail/tag-review-detail.component";
 import { TagReviewListComponent } from "./tag-review-list/tag-review-list.component";
+import { ScheduleReviewListComponent } from "./schedule-review-list/schedule-review-list.component";
+import { ScheduleReviewDetailComponent } from "./schedule-review-detail/schedule-review-detail.component";
 
 const routes: Routes = [
     {
-        path: "", component: ReviewManageComponent, 
+        path: "", component: ReviewManageComponent,
         children: [
             { path: '', redirectTo: 'tag-review', pathMatch: 'full'},
             { path: 'tag-review-list', component: TagReviewListComponent, data: { keepSession: true, keepFrom: ['tag-review-detail/'] }},
             { path: 'tag-review-detail/:historyId', component: TagReviewDetailComponent, data: { keepSession: true }},
             { path: 'activity-review-list', component: ActivityReviewListComponent, data: { keepSession: true, keepFrom: ['activity-review-detail/'] }},
             { path: 'activity-review-detail/:historyId', component: ActivityReviewDetailComponent, data: { keepSession: true }},
+            { path: 'schedule-review-list', component: ScheduleReviewListComponent, data: { keepSession: true, keepFrom: ['schedule-review-detail/'] }},
+            { path: 'schedule-review-detail/:historyId', component: ScheduleReviewDetailComponent, data: { keepSession: true }},
         ]
     }
 ]
@@ -30,5 +34,7 @@ export const routedComponents = [
   TagReviewListComponent,
   TagReviewDetailComponent,
   ActivityReviewListComponent,
-  ActivityReviewDetailComponent
+  ActivityReviewDetailComponent,
+  ScheduleReviewListComponent,
+  ScheduleReviewDetailComponent,
 ];

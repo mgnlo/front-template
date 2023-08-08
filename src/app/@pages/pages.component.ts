@@ -78,7 +78,7 @@ export class PagesComponent implements OnInit {
             link: "/pages/review-manage/activity-review-list",
           },
           {
-            title: "排程審核",
+            title: "名單排程審核",
             link: "/pages/review-manage/schedule-review-list",
           },
         ]
