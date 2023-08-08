@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActivitySetting } from '@api/models/activity-list.model';
 import { TagDetailView, TagSetting } from '@api/models/tag-manage.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
 import { Status } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
-import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
 import { catchError, filter, tap } from 'rxjs/operators';
 import { TagManageService } from '../tag-manage.service';
+import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
+import { ActivitySetting } from '@api/models/activity-list.model';
 
 @Component({
   selector: 'tag-detail',
@@ -22,7 +22,6 @@ import { TagManageService } from '../tag-manage.service';
 export class TagDetailComponent extends BaseComponent implements OnInit {
   detail: TagDetailView;
   checkData: TagSetting;
-  mockData: Array<ActivitySetting> = ActivityListMock;
 
   isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
   tagId: string;
@@ -34,6 +33,7 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private tagManageService: TagManageService,
+    private customerManageService: CustomerManageService,
     private dialogService: DialogService,
     private loadingService: LoadingService,
   ) {
@@ -105,6 +105,7 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.tagId = this.activatedRoute.snapshot.params.tagId;
+    //#region 取得標籤明細
     this.loadingService.open();
     this.tagManageService.getTagSettingRow(this.tagId).pipe(
       catchError(err => {
@@ -123,11 +124,30 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
         this.loadingService.close();
       }),
     ).subscribe();
-    this.dataSource = new LocalDataSource();
-    this.mockData = this.mockData.map(mock => {
-      return { ...mock, during: `${mock.startDate}~${mock.endDate}` } //起訖日區間
-    })
-    this.dataSource.load(this.mockData);
+    //#endregion
+
+    //#region 取得全部活動明細===>後續應該要改用tagId抓個別活動
+    this.loadingService.open();
+
+    this.customerManageService.getActivitySettingList().pipe(
+      catchError(err => {
+        this.loadingService.close();
+        this.dialogService.alertAndBackToList(false, '標籤使用範圍查無資料');
+        throw new Error(err.message);
+      }),
+      filter(res => res.code === RestStatus.SUCCESS),
+      tap((res) => {
+        this.dataSource = new LocalDataSource();
+        if (Array.isArray(res.result['content'])) {
+          res.result['content'] = res.result['content'].map(row => {
+            return { ...row, during: `${row.startDate}~${row.endDate}` } //起訖日查詢篩選要用到
+          })
+        }
+        this.dataSource.load(res.result['content'] ?? Array<ActivitySetting>());
+        this.loadingService.close();
+      }),
+    ).subscribe();
+    //#endregion
   }
 
   edit() {
