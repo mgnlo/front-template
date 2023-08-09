@@ -3,20 +3,15 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TagSetting } from '@api/models/tag-manage.model';
-import { DialogService } from '@api/services/dialog.service';
-import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
 import { Status } from '@common/enums/common-enum';
-import { RestStatus } from '@common/enums/rest-enum';
 import { TagType } from '@common/enums/tag-enum';
 import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { BaseComponent } from '@pages/base.component';
-import * as moment from 'moment';
-import { LocalDataSource } from 'ng2-smart-table';
-import { catchError, filter, tap } from 'rxjs/operators';
 import { TagManageService } from '../tag-manage.service';
+import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 
 @Component({
   selector: 'tag-list',
@@ -24,13 +19,18 @@ import { TagManageService } from '../tag-manage.service';
   styleUrls: ['./tag-list.component.scss']
 })
 export class TagListComponent extends BaseComponent implements OnInit {
+  statusList: Array<{ key: string; val: string }> = Object.entries(Status).map(([k, v]) => ({ key: k, val: v }))
+  mockData: Array<TagSetting> = TagSettingMock;
+  sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
+
+  TagType: TagType
+
   constructor(
     storageService: StorageService,
     private router: Router,
     private tagManageService: TagManageService,
     private activatedRoute: ActivatedRoute,
-    private loadingService: LoadingService,
-    private dialogService: DialogService,
+    private tableService: Ng2SmartTableService,
   ) {
     super(storageService);
     this.validateForm = new FormGroup({
@@ -40,38 +40,6 @@ export class TagListComponent extends BaseComponent implements OnInit {
       endDate: new FormControl(null, ValidatorsUtil.dateFmt),
     }, [ValidatorsUtil.dateRange]);
   }
-
-  statusList: Array<{ key: string; val: string }> = Object.entries(Status).map(([k, v]) => ({ key: k, val: v }))
-  mockData: Array<TagSetting> = TagSettingMock;
-  sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
-
-  ngOnInit(): void {
-    this.loadingService.open();
-    this.tagManageService.getTagSettingList().pipe(
-      catchError(err => {
-        this.loadingService.close();
-        this.dialogService.alertAndBackToList(false, '查無資料');
-        throw new Error(err.message);
-      }),
-      filter(res => res.code === RestStatus.SUCCESS),
-      tap((res) => {
-        this.dataSource = new LocalDataSource();
-        this.dataSource.load(res.result);
-        //get session filter
-        this.storageService.getSessionFilter(this.sessionKey, this.validateForm).subscribe((res) => {
-          if (res === true) { this.search(); }
-        });
-        this.loadingService.close();
-      })
-    ).subscribe();
-  }
-
-  ngOnDestroy(): void {
-    let sessionData = { page: this.paginator.nowPage, filter: this.validateForm.getRawValue() };
-    this.storageService.putSessionVal(this.sessionKey, sessionData);
-  }
-
-  TagType: TagType
 
   gridDefine = {
     pager: {
@@ -141,29 +109,6 @@ export class TagListComponent extends BaseComponent implements OnInit {
           const datepipe: DatePipe = new DatePipe('en-US');
           return `<p class="date">${datepipe.transform(cell, this.dateFormat)}</p>`;
         },
-        // filterFunction: (cell?: string, search?: string[]) => {
-        //   let date = cell;
-        //   let sDate = search[0];
-        //   let eDate = search[1];
-        //   let isSDate = sDate !== null;
-        //   let isEDate = eDate !== null;
-        //   if(
-        //     (!isSDate && !isEDate) ||
-        //     ((isSDate && isEDate) && (
-        //       moment(date).isBetween(sDate, eDate, undefined, '[]')
-        //     )) ||
-        //     ((isSDate && !isEDate) && (
-        //       moment(sDate).isSameOrBefore(date)
-        //     )) ||
-        //     ((!isSDate && isEDate) && (
-        //       moment(eDate).isSameOrAfter(date)
-        //     ))
-        //   ){
-        //     return true
-        //   }  else {
-        //     return false
-        //   }
-        // }
       },
       status: {
         title: '狀態',
@@ -191,37 +136,27 @@ export class TagListComponent extends BaseComponent implements OnInit {
       delete: false,
     },
   };
+  ngOnInit(): void {
+    this.search();
+  }
 
-  reset() {
-    this.validateForm.reset({ tagName: '', status: '', startDate: null, endDate: null, });
-    this.dataSource.reset();
-    console.info(this.validateForm.controls)
+  ngOnDestroy(): void {
+    let sessionData = { page: this.paginator.nowPage, filter: this.validateForm.getRawValue() };
+    this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
 
   search() {
-    this.dataSource.reset();
-    const getForm = this.validateForm.getRawValue();
-    const startDate = getForm.startDate;
-    const endDate = getForm.endDate;
-
-    //search date
-    const addDateFilter = (field: string, value: Date | null, filterFn: (value: string, searchValue: string[]) => boolean) => {
-      const formatDate = value !== null ? moment(value) : null;
-      if (formatDate) {
-        this.dataSource.addFilter({
-          field,
-          filter: filterFn,
-          search: [formatDate],
-        });
-      }
-    };
-    addDateFilter('startDate', startDate, (value, searchValue) => new Date(value) >= new Date(searchValue[0]));
-    addDateFilter('endDate', endDate, (value, searchValue) => new Date(value) <= new Date(searchValue[0]));
-
-    //search other
-    for (const [k, v] of Object.entries(getForm).filter(([key, val]) => !key.includes('Date') && !!val)) {
-      this.dataSource.addFilter({ field: k, filter: undefined, search: v });
+    let searchInfo: SearchInfo = {
+      apiUrl: this.tagManageService.tagFunc,
+      nowPage: this.paginator.nowPage,
+      filters: this.validateForm.getRawValue()
     }
+    this.restDataSource = this.tableService.searchData(searchInfo);
+  }
+
+  reset() {
+    this.validateForm.reset({ tagName: '', status: '', startDate: null, endDate: null, });
+    this.search();
   }
 
   add() {
