@@ -129,7 +129,7 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
     //#endregion
 
     //#region 取得全部活動明細===>後續應該要改用tagId抓個別活動
-    this.restDataSource = new CommonServerDataSource(this.http, new CommonConf({endPoint: this.customerManageService.activityFunc}), {
+    this.restDataSource = new CommonServerDataSource(this.http, new CommonConf({ endPoint: this.customerManageService.activityFunc }), {
       page: this.paginator.nowPage,
     });
 

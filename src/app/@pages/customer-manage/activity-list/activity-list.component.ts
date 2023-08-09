@@ -140,7 +140,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
   }
 
   search() {
-    this.restDataSource = new CommonServerDataSource(this.http, new CommonConf({endPoint: this.customerManageService.activityFunc}), {
+    this.restDataSource = new CommonServerDataSource(this.http, new CommonConf({ endPoint: this.customerManageService.activityFunc }), {
       page: this.paginator.nowPage,
       filters: CommonUtil.getSearchFilters(this.validateForm.getRawValue()),
     });

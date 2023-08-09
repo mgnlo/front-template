@@ -60,7 +60,7 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.restDataSource = new CommonServerDataSource(this.http, new CommonConf({endPoint: this.customerManageService.activityFunc}), {
+    this.restDataSource = new CommonServerDataSource(this.http, new CommonConf({ endPoint: this.customerManageService.activityFunc }), {
       page: this.paginator.nowPage,
     });
 
