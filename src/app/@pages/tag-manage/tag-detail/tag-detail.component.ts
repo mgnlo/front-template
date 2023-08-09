@@ -6,7 +6,7 @@ import { TagDetailView, TagSetting } from '@api/models/tag-manage.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
-import { CommonServerDataSource } from '@common/ng2-smart-table/common-server-data-source';
+import { CommonConf, CommonServerDataSource } from '@common/ng2-smart-table/common-server-data-source';
 import { Status } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
 import { CommonUtil } from '@common/utils/common-util';
@@ -129,16 +129,7 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
     //#endregion
 
     //#region 取得全部活動明細===>後續應該要改用tagId抓個別活動
-    this.restDataSource = new CommonServerDataSource(this.http, {
-      endPoint: this.customerManageService.getActivitySettingListURL,
-      dataKey: 'result.content',
-      pagerPageKey: 'page',
-      pagerLimitKey: 'size',
-      filterFieldKey: '#field#',
-      sortDirKey: 'dir',
-      sortFieldKey: 'sort',
-      totalKey: 'result.totalElements',
-    }, {
+    this.restDataSource = new CommonServerDataSource(this.http, new CommonConf({endPoint: this.customerManageService.activityFunc}), {
       page: this.paginator.nowPage,
     });
 

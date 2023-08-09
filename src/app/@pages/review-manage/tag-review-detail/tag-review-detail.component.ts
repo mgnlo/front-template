@@ -8,7 +8,7 @@ import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
 import { Status } from '@common/enums/common-enum';
 import { TagSettingMock } from '@common/mock-data/tag-list-mock';
-import { CommonServerDataSource } from '@common/ng2-smart-table/common-server-data-source';
+import { CommonConf, CommonServerDataSource } from '@common/ng2-smart-table/common-server-data-source';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
 import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
@@ -60,16 +60,7 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.restDataSource = new CommonServerDataSource(this.http, {
-      endPoint: this.customerManageService.getActivitySettingListURL,
-      dataKey: 'result.content',
-      pagerPageKey: 'page',
-      pagerLimitKey: 'size',
-      filterFieldKey: '#field#',
-      sortDirKey: 'dir',
-      sortFieldKey: 'sort',
-      totalKey: 'result.totalElements',
-    }, {
+    this.restDataSource = new CommonServerDataSource(this.http, new CommonConf({endPoint: this.customerManageService.activityFunc}), {
       page: this.paginator.nowPage,
     });
 

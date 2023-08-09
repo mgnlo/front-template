@@ -127,7 +127,7 @@ export const CommonUtil = {
   */
   getSearchFilters(searchParam: any): { key: string, value: string | boolean | number }[]{
     return Object.keys(searchParam).filter(key => CommonUtil.isNotBlank(searchParam[key])).map(key => {
-      let value = key === 'startDate' || key === 'endDate' ? this.dateService.format(searchParam[key], this.dateFormat) : searchParam[key];
+      let value = key === 'startDate' || key === 'endDate' ? moment(searchParam[key]).format('YYYY-MM-DD') : searchParam[key];
       return { key: key, value: value };
     });
   },

@@ -1,9 +1,43 @@
 import { HttpClient } from '@angular/common/http';
 import { CommonUtil } from '@common/utils/common-util';
+import { environment } from 'environments/environment';
 import { ServerDataSource } from 'ng2-smart-table';
-import { ServerSourceConf } from 'ng2-smart-table/lib/lib/data-source/server/server-source.conf';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+
+export class CommonConf {
+
+  protected static readonly SORT_FIELD_KEY = 'sort';
+  protected static readonly SORT_DIR_KEY = 'dir';
+  protected static readonly PAGER_PAGE_KEY = 'page';
+  protected static readonly PAGER_LIMIT_KEY = 'size';
+  protected static readonly FILTER_FIELD_KEY = '#field#';
+  protected static readonly TOTAL_KEY = 'result.totalElements';
+  protected static readonly DATA_KEY = 'result.content';
+
+  endPoint: string;
+  sortFieldKey: string;
+  sortDirKey: string;
+  pagerPageKey: string;
+  pagerLimitKey: string;
+  filterFieldKey: string;
+  totalKey: string;
+  dataKey: string;
+
+  constructor(
+    { endPoint = '', sortFieldKey = '', sortDirKey = '',
+      pagerPageKey = '', pagerLimitKey = '', filterFieldKey = '', totalKey = '', dataKey = '' } = {}) {
+
+    this.endPoint = endPoint ? endPoint : '';
+    this.sortFieldKey = sortFieldKey ? sortFieldKey : CommonConf.SORT_FIELD_KEY;
+    this.sortDirKey = sortDirKey ? sortDirKey : CommonConf.SORT_DIR_KEY;
+    this.pagerPageKey = pagerPageKey ? pagerPageKey : CommonConf.PAGER_PAGE_KEY;
+    this.pagerLimitKey = pagerLimitKey ? pagerLimitKey : CommonConf.PAGER_LIMIT_KEY;
+    this.filterFieldKey = filterFieldKey ? filterFieldKey : CommonConf.FILTER_FIELD_KEY;
+    this.totalKey = totalKey ? totalKey : CommonConf.TOTAL_KEY;
+    this.dataKey = dataKey ? dataKey : CommonConf.DATA_KEY;
+  }
+}
 
 export class ServerSourceInitConfig {
   page?: number;
@@ -16,15 +50,16 @@ export class ServerSourceInitConfig {
 export class CommonServerDataSource extends ServerDataSource {
 
   private initConf: ServerSourceInitConfig;
+  private prefixUrl = environment.SERVER_URL + environment.API_URL;
   private apiStatusSubject: BehaviorSubject<'init' | 'loading' | 'finish' | 'error'> = new BehaviorSubject('init');
 
-  constructor(protected http: HttpClient, conf: ServerSourceConf | {} = {}, initConf?: ServerSourceInitConfig) {
+  constructor(protected http: HttpClient, conf: CommonConf | {} = {}, initConf?: ServerSourceInitConfig) {
     super(http, conf);
     this.initConf = initConf;
   }
 
   protected requestElements(): Observable<any> {
-
+    const resultUrl = this.prefixUrl + this.conf.endPoint;
     let httpParams = this.createRequesParams();
 
     if (this.initConf) {
@@ -42,7 +77,7 @@ export class CommonServerDataSource extends ServerDataSource {
       this.apiStatusSubject.next('loading');
     }
 
-    return this.http.get(this.conf.endPoint, { params: httpParams, observe: 'response' })
+    return this.http.get(resultUrl, { params: httpParams, observe: 'response' })
       .pipe(
         catchError(err => {
           this.apiStatusSubject.next('error');

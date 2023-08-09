@@ -6,13 +6,12 @@ import { ActivitySetting } from '@api/models/activity-list.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
-import { CommonServerDataSource } from '@common/ng2-smart-table/common-server-data-source';
 import { Status } from '@common/enums/common-enum';
+import { CommonConf, CommonServerDataSource } from '@common/ng2-smart-table/common-server-data-source';
 import { CommonUtil } from '@common/utils/common-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { CheckboxIconComponent } from '@component/table/checkbox-icon/checkbox-icon.component';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
-import { NbDateService } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
 import { takeUntil } from 'rxjs/operators';
 import { CustomerManageService } from '../customer-manage.service';
@@ -28,7 +27,6 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
     storageService: StorageService,
     private http: HttpClient,
     private router: Router,
-    private dateService: NbDateService<Date>,
     private activatedRoute: ActivatedRoute,
     private customerManageService: CustomerManageService,
     private dialogService: DialogService,
@@ -142,16 +140,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
   }
 
   search() {
-    this.restDataSource = new CommonServerDataSource(this.http, {
-      endPoint: this.customerManageService.getActivitySettingListURL,
-      dataKey: 'result.content',
-      pagerPageKey: 'page',
-      pagerLimitKey: 'size',
-      filterFieldKey: '#field#',
-      sortDirKey: 'dir',
-      sortFieldKey: 'sort',
-      totalKey: 'result.totalElements',
-    }, {
+    this.restDataSource = new CommonServerDataSource(this.http, new CommonConf({endPoint: this.customerManageService.activityFunc}), {
       page: this.paginator.nowPage,
       filters: CommonUtil.getSearchFilters(this.validateForm.getRawValue()),
     });
