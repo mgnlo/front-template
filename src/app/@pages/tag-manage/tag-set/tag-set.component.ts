@@ -1,9 +1,8 @@
-import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting } from '@api/models/activity-list.model';
-import { TagConditionSetting, TagDetailView, TagSetting, TagSettingEditReq } from '@api/models/tag-manage.model';
+import { TagConditionChartLine, TagConditionSetting, TagDetailView, TagSetting, TagSettingEditReq } from '@api/models/tag-manage.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
@@ -20,6 +19,7 @@ import { catchError, filter, takeUntil, tap } from 'rxjs/operators';
 import { TagManageService } from '../tag-manage.service';
 import { TagConditionDialogComponent } from './condition-dialog/condition-dialog.component';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
+import { TagConditionChartLineMock } from '@common/mock-data/tag-condition-chart-line-mock';
 
 @Component({
   selector: 'tag-set',
@@ -79,7 +79,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   constructor(
     storageService: StorageService,
-    private http: HttpClient,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private readonly changeDetectorRef: ChangeDetectorRef,
@@ -420,9 +419,11 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   //#region 條件分佈級距彈出視窗
   conditionDialog() {
+    //這裡要改 call API
+    const conditionDialogData = TagConditionChartLineMock as TagConditionChartLine;
     this.dialogService.open(TagConditionDialogComponent, {
       title: '條件分佈級距',
-      dataList: this.validateForm,
+      data: conditionDialogData,
     });
   }
   //#endregion
