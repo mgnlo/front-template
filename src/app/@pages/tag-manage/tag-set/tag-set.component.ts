@@ -7,7 +7,7 @@ import { TagConditionSetting, TagDetailView, TagSetting, TagSettingEditReq } fro
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
-import { CustomServerDataSource } from '@common/custom/ng2-smart-table/custom-server-data-source';
+import { CommonServerDataSource } from '@common/ng2-smart-table/common-server-data-source';
 import { MathSymbol, Status } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
 import { TagDimension, TagSetCondition, TagSubDimension, TagType } from '@common/enums/tag-enum';
@@ -241,7 +241,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     //#endregion
 
     //#region 取得全部活動明細===>後續應該要改用tagId抓個別活動
-    this.restDataSource = new CustomServerDataSource(this.http, {
+    this.restDataSource = new CommonServerDataSource(this.http, {
       endPoint: this.customerManageService.getActivitySettingListURL,
       dataKey: 'result.content',
       pagerPageKey: 'page',

@@ -6,14 +6,12 @@ import { TagDetailView, TagReviewHistory } from '@api/models/tag-manage.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
-import { CustomServerDataSource } from '@common/custom/ng2-smart-table/custom-server-data-source';
 import { Status } from '@common/enums/common-enum';
-import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { TagSettingMock } from '@common/mock-data/tag-list-mock';
+import { CommonServerDataSource } from '@common/ng2-smart-table/common-server-data-source';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
 import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
-import { LocalDataSource } from 'ng2-smart-table';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -62,7 +60,7 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.restDataSource = new CustomServerDataSource(this.http, {
+    this.restDataSource = new CommonServerDataSource(this.http, {
       endPoint: this.customerManageService.getActivitySettingListURL,
       dataKey: 'result.content',
       pagerPageKey: 'page',

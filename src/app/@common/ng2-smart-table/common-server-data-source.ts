@@ -4,9 +4,16 @@ import { ServerDataSource } from 'ng2-smart-table';
 import { ServerSourceConf } from 'ng2-smart-table/lib/lib/data-source/server/server-source.conf';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { ServerSourceInitConfig } from './custom-server-data-source-config';
 
-export class CustomServerDataSource extends ServerDataSource {
+export class ServerSourceInitConfig {
+  page?: number;
+  perPage?: number;
+  sort?: { field: string, direction: string, compare: any }[];
+  filters?: { key: string, value: string | number | boolean }[];
+  andOperator?: boolean;
+}
+
+export class CommonServerDataSource extends ServerDataSource {
 
   private initConf: ServerSourceInitConfig;
   private apiStatusSubject: BehaviorSubject<'init' | 'loading' | 'finish' | 'error'> = new BehaviorSubject('init');

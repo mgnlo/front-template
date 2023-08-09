@@ -2,12 +2,14 @@ import { Injectable } from "@angular/core";
 import { ResponseModel } from "@api/models/base.model";
 import { TagSetting, TagSettingEditReq } from "@api/models/tag-manage.model";
 import { ApiService } from "@api/services/api.service";
+import { environment } from "environments/environment";
 import { Observable } from "rxjs";
 
 @Injectable()
 export class TagManageService {
 
   readonly tagFunc = 'tag-settings/';
+  readonly getTagSettingListURL = environment.SERVER_URL + environment.API_URL + this.tagFunc;
 
   constructor(private service: ApiService) {}
 

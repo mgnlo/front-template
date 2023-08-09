@@ -6,7 +6,7 @@ import { ActivitySetting } from '@api/models/activity-list.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
-import { CustomServerDataSource } from '@common/custom/ng2-smart-table/custom-server-data-source';
+import { CommonServerDataSource } from '@common/ng2-smart-table/common-server-data-source';
 import { Status } from '@common/enums/common-enum';
 import { CommonUtil } from '@common/utils/common-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
@@ -142,8 +142,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
   }
 
   search() {
-  
-    this.restDataSource = new CustomServerDataSource(this.http, {
+    this.restDataSource = new CommonServerDataSource(this.http, {
       endPoint: this.customerManageService.getActivitySettingListURL,
       dataKey: 'result.content',
       pagerPageKey: 'page',
