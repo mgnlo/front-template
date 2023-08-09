@@ -1,19 +1,14 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting } from '@api/models/activity-list.model';
-import { DialogService } from '@api/services/dialog.service';
-import { LoadingService } from '@api/services/loading.service';
+import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { Status } from '@common/enums/common-enum';
-import { CommonConf, CommonServerDataSource } from '@common/ng2-smart-table/common-server-data-source';
-import { CommonUtil } from '@common/utils/common-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { CheckboxIconComponent } from '@component/table/checkbox-icon/checkbox-icon.component';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { BaseComponent } from '@pages/base.component';
-import { takeUntil } from 'rxjs/operators';
 import { CustomerManageService } from '../customer-manage.service';
 
 @Component({
@@ -25,12 +20,11 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
 
   constructor(
     storageService: StorageService,
-    private http: HttpClient,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private customerManageService: CustomerManageService,
-    private dialogService: DialogService,
-    private loadingService: LoadingService,) {
+    private tableService: Ng2SmartTableService,
+  ) {
     super(storageService);
     // 篩選條件
     this.validateForm = new FormGroup({
@@ -140,24 +134,11 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
   }
 
   search() {
-    this.restDataSource = new CommonServerDataSource(this.http, new CommonConf({ endPoint: this.customerManageService.activityFunc }), {
-      page: this.paginator.nowPage,
-      filters: CommonUtil.getSearchFilters(this.validateForm.getRawValue()),
-    });
-
-    this.restDataSource.apiStatus().pipe(takeUntil(this.unsubscribe$)).subscribe(status => {
-      switch (status) {
-        case 'init':
-          this.loadingService.open();
-          break;
-        case 'error':
-          this.loadingService.close();
-          this.dialogService.alertAndBackToList(false, '查無資料');
-          break;
-        default:
-          this.loadingService.close();
-          break;
-      }
-    });
+    let searchInfo: SearchInfo = {
+      apiUrl: this.customerManageService.activityFunc,
+      nowPage: this.paginator.nowPage,
+      filters: this.validateForm.getRawValue()
+    }
+    this.restDataSource = this.tableService.searchData(searchInfo);
   }
 }

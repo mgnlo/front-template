@@ -125,7 +125,7 @@ export const CommonUtil = {
   /** 取得FormArray裡的FormGroup
    * @param searchParam 傳入 validateForm.getRawValue()
   */
-  getSearchFilters(searchParam: any): { key: string, value: string | boolean | number }[]{
+  getSearchFilters(searchParam: {[key: string]: any}[]): { key: string, value: string | boolean | number }[]{
     return Object.keys(searchParam).filter(key => CommonUtil.isNotBlank(searchParam[key])).map(key => {
       let value = key === 'startDate' || key === 'endDate' ? moment(searchParam[key]).format('YYYY-MM-DD') : searchParam[key];
       return { key: key, value: value };

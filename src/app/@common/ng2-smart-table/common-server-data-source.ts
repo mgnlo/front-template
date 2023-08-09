@@ -42,7 +42,7 @@ export class CommonConf {
 export class ServerSourceInitConfig {
   page?: number;
   perPage?: number;
-  sort?: { field: string, direction: string, compare: any }[];
+  sorts?: { field: string, direction: 'asc' | 'desc', compare?: Function }[];
   filters?: { key: string, value: string | number | boolean }[];
   andOperator?: boolean;
 }
@@ -68,8 +68,8 @@ export class CommonServerDataSource extends ServerDataSource {
           .forEach(filter => { httpParams = httpParams.append(filter.key, filter.value) });
       }
 
-      if (!!this.initConf.sort) {
-        this.setSort(this.initConf.sort, false);
+      if (!!this.initConf.sorts) {
+        this.setSort(this.initConf.sorts, false);
       }
 
       this.initConf = undefined;

@@ -1,18 +1,15 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Navigation, Router } from '@angular/router';
 import { ActivitySetting, TagSetting } from '@api/models/activity-list.model';
 import { TagDetailView, TagReviewHistory } from '@api/models/tag-manage.model';
 import { DialogService } from '@api/services/dialog.service';
-import { LoadingService } from '@api/services/loading.service';
+import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { Status } from '@common/enums/common-enum';
 import { TagSettingMock } from '@common/mock-data/tag-list-mock';
-import { CommonConf, CommonServerDataSource } from '@common/ng2-smart-table/common-server-data-source';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
 import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'tag-review-detail',
@@ -35,10 +32,9 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
 
   constructor(
     storageService: StorageService,
-    private http: HttpClient,
     private router: Router,
     private dialogService: DialogService,
-    private loadingService: LoadingService,
+    private tableService: Ng2SmartTableService,
     private customerManageService: CustomerManageService,
   ) {
     super(storageService);
@@ -60,24 +56,12 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.restDataSource = new CommonServerDataSource(this.http, new CommonConf({ endPoint: this.customerManageService.activityFunc }), {
-      page: this.paginator.nowPage,
-    });
-
-    this.restDataSource.apiStatus().pipe(takeUntil(this.unsubscribe$)).subscribe(status => {
-      switch (status) {
-        case 'init':
-          this.loadingService.open();
-          break;
-        case 'error':
-          this.loadingService.close();
-          this.dialogService.alertAndBackToList(false, '標籤使用範圍查無資料');
-          break;
-        default:
-          this.loadingService.close();
-          break;
-      }
-    });
+    let searchInfo: SearchInfo = {
+      apiUrl: this.customerManageService.activityFunc,
+      nowPage: this.paginator.nowPage,
+      errMsg: '標籤使用範圍查無資料'
+    }
+    this.restDataSource = this.tableService.searchData(searchInfo);
   }
 
   gridDefine = {

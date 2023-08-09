@@ -20,6 +20,7 @@ import * as moment from 'moment';
 import { catchError, filter, takeUntil, tap } from 'rxjs/operators';
 import { TagManageService } from '../tag-manage.service';
 import { TagConditionDialogComponent } from './condition-dialog/condition-dialog.component';
+import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 
 @Component({
   selector: 'tag-set',
@@ -87,6 +88,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     private customerManageService: CustomerManageService,
     private loadingService: LoadingService,
     private dialogService: DialogService,
+    private tableService: Ng2SmartTableService,
   ) {
     super(storageService);
     this.validateForm = new FormGroup({
@@ -241,24 +243,13 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     //#endregion
 
     //#region 取得全部活動明細===>後續應該要改用tagId抓個別活動
-    this.restDataSource = new CommonServerDataSource(this.http, new CommonConf({endPoint: this.customerManageService.activityFunc}), {
-      page: this.paginator.nowPage,
-    });
-
-    this.restDataSource.apiStatus().pipe(takeUntil(this.unsubscribe$)).subscribe(status => {
-      switch (status) {
-        case 'init':
-          this.loadingService.open();
-          break;
-        case 'error':
-          this.loadingService.close();
-          this.dialogService.alertAndBackToList(false, '標籤使用範圍查無資料');
-          break;
-        default:
-          this.loadingService.close();
-          break;
-      }
-    });
+    let searchInfo: SearchInfo = {
+      apiUrl: this.customerManageService.activityFunc,
+      nowPage: this.paginator.nowPage,
+      filters: this.validateForm.getRawValue(),
+      errMsg: '標籤使用範圍查無資料'
+    }
+    this.restDataSource = this.tableService.searchData(searchInfo);
     //#endregion
   }
 
