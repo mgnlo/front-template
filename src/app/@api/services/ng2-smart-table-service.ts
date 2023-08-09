@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CommonConf, CommonServerDataSource, ServerSourceInitConfig } from '@common/ng2-smart-table/common-server-data-source';
 import { CommonUtil } from '@common/utils/common-util';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { DialogService } from './dialog.service';
 import { LoadingService } from './loading.service';
 
@@ -29,6 +31,7 @@ export class Ng2SmartTableService {
   */
   searchData(searchInfo: SearchInfo): CommonServerDataSource {
 
+    let unsubscribe$ = new Subject();
     let conf = new CommonConf({ endPoint: searchInfo.apiUrl });
     let initConf = new ServerSourceInitConfig();
 
@@ -46,7 +49,7 @@ export class Ng2SmartTableService {
 
     let restDataSource = new CommonServerDataSource(this.http, conf, initConf);
 
-    restDataSource.apiStatus().subscribe(status => {
+    restDataSource.apiStatus().pipe(takeUntil(unsubscribe$)).subscribe(status => {
       switch (status) {
         case 'error':
           this.loadingService.close();
