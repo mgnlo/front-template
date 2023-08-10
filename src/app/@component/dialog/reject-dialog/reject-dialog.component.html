@@ -20,6 +20,6 @@
   </nb-card-body>
   <nb-card-footer>
     <button nbButton status="basic" size="medium" (click)="cancel()">取消</button>
-    <button nbButton status="info" size="medium" (click)="submit()" [disabled]="form.touched && form.get('reason').invalid">送出</button>
+    <button nbButton status="info" size="medium" (click)="submit()" [disabled]="form.invalid">送出</button>
   </nb-card-footer>
 </nb-card>
