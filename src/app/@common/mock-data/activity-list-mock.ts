@@ -823,7 +823,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
     ]
   },
   {
-    activityId: "abcdefg123463",
+    activityId: "2498e0bf-2289-4fd9-a037-04a6888a9399",
     activityName: "新商品快閃體驗活動",
     activityDescription: "-",
     department: "信用卡暨支付處",
@@ -938,9 +938,124 @@ export const ActivityListMock: Array<ActivitySetting> = [
     ]
   },
   {
-    activityId: "abcdefg123464",
-    activityName: "商品EDM雙週發送",
-    activityDescription: "雙週發送公司每期商品資訊",
+    activityId: "2498e0bf-2289-4fd9-a037-04a6888a9399",
+    activityName: "測試建立活動",
+    activityDescription: "暫時的",
+    department: "信用卡暨支付處",
+    owner: "胡XX",
+    filterOptions: "false",
+    listLimit: 530,
+    status: "enabled",
+    startDate: "2024-03-20",
+    endDate: "2024-03-20",
+    createTime: "2023-07-03 15:30:00",
+    modificationTime: "2023-07-03 15:30:00",
+    scheduleSettings: "daily",
+    batchUpdateTime: "2023-07-03 12:00:00",
+    activityListCondition: [
+      {
+        activityId: "abcdefg123463",
+        conditionId: "1",
+        version: "uuid-zzzz",
+        tagGroup: 1,
+        tagName: "近一個月_基金_定期定額手續費-高",
+        tagKey: "tag-123"
+      },
+      {
+        activityId: "abcdefg123463",
+        conditionId: "2",
+        version: "uuid-zzzz",
+        tagGroup: 1,
+        tagName: "近三個月_基金_手續費-低",
+        tagKey: "tag-456"
+      },
+      {
+        activityId: "abcdefg123463",
+        conditionId: "3",
+        version: "uuid-zzzz",
+        tagGroup: 2,
+        tagName: "近一個月_換匯_交易金額-高",
+        tagKey: "tag-789"
+      }
+    ],
+    version: "uuuid-zzzz",
+    activityReviewHistory: [
+      {
+        historyId: "h123456",
+        version: "uuid-zzzz",
+        referenceId: "abcdefg123463",
+        groupId: 1,
+        time: "2023-07-01 09:00:00",
+        title: "建立條件送審",
+        detail: "送程主管",
+        type: "建立活動"
+      },
+      {
+        historyId: "h123457",
+        version: "uuid-zzzz",
+        referenceId: "abcdefg123463",
+        groupId: 1,
+        time: "2023-07-01 09:00:00",
+        title: "審核",
+        detail: "不同意",
+        type: "建立活動"
+      },
+      {
+        historyId: "h123458",
+        version: "uuid-zzzz",
+        referenceId: "abcdefg123463",
+        groupId: 1,
+        time: "2023-07-01 09:00:00",
+        title: "審核",
+        detail: "同意",
+        type: "建立活動"
+      },
+      {
+        historyId: "h123459",
+        version: "uuid-zzzz",
+        referenceId: "abcdefg123463",
+        groupId: 2,
+        time: "2023-07-01 09:00:00",
+        title: "修改",
+        detail: "上線人數",
+        type: "修改活動"
+      },
+      {
+        historyId: "h123460",
+        version: "uuid-zzzz",
+        referenceId: "abcdefg123463",
+        groupId: 2,
+        time: "2023-07-01 09:00:00",
+        title: "審核",
+        detail: "同意",
+        type: "修改活動"
+      },
+      {
+        historyId: "h123461",
+        version: "uuid-zzzz",
+        referenceId: "abcdefg123463",
+        groupId: 3,
+        time: "2023-07-01 09:00:00",
+        title: "修改",
+        detail: "排程設定",
+        type: "修改活動"
+      },
+      {
+        historyId: "h123462",
+        version: "uuid-zzzz",
+        referenceId: "abcdefg123463",
+        groupId: 3,
+        time: "2023-07-01 09:00:00",
+        title: "審核",
+        detail: "同意",
+        type: "修改活動"
+      }
+    ]
+  },
+  {
+    activityId: "90b010ba-bd4b-480a-a0c7-3a35096f2ed8",
+    activityName: "LINE TECHPULSE 2023",
+    activityDescription: "LINE TECHPULSE 2023",
     department: "信用卡暨支付處",
     owner: "林XX",
     filterOptions: "false",
@@ -1053,7 +1168,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
     ]
   },
   {
-    activityId: "abcdefg123465",
+    activityId: "3bf4ef45-5e06-4c39-a097-7bce6e6f8a3f",
     activityName: "中秋節感恩活動",
     activityDescription: "-",
     department: "信用卡暨支付處",
@@ -1168,8 +1283,8 @@ export const ActivityListMock: Array<ActivitySetting> = [
     ]
   },
   {
-    activityId: "abcdefg123466",
-    activityName: "中秋節感恩活動",
+    activityId: "9f633587-bf0f-4fb8-93d6-458c61a64cac",
+    activityName: "測試建立活動",
     activityDescription: "-",
     department: "數位金融處",
     owner: "負責人",
@@ -1282,4 +1397,235 @@ export const ActivityListMock: Array<ActivitySetting> = [
       }
     ]
   },
+  {
+    activityId: "480ab715-ac6b-4c30-9daf-8e2a0a6ace8c",
+    activityName: "2023 AWS re:invent",
+    activityDescription: "-",
+    department: "數位金融處",
+    owner: "負責人",
+    filterOptions: "false",
+    listLimit: 320,
+    status: "reviewing",
+    startDate: "2023-09-20",
+    endDate: "2023-09-29",
+    createTime: "2023-07-03 15:30:00",
+    modificationTime: "2023-07-03 15:30:00",
+    scheduleSettings: "daily",
+    batchUpdateTime: "2023-07-03 12:00:00",
+    activityListCondition: [
+      {
+        activityId: "abcdefg123466",
+        conditionId: "1",
+        version: "uuid-zzzz",
+        tagGroup: 1,
+        tagName: "近一個月_基金_定期定額手續費-高",
+        tagKey: "tag-123"
+      },
+      {
+        activityId: "abcdefg123466",
+        conditionId: "2",
+        version: "uuid-zzzz",
+        tagGroup: 1,
+        tagName: "近三個月_基金_手續費-低",
+        tagKey: "tag-456"
+      },
+      {
+        activityId: "abcdefg123466",
+        conditionId: "3",
+        version: "uuid-zzzz",
+        tagGroup: 2,
+        tagName: "近一個月_換匯_交易金額-高",
+        tagKey: "tag-789"
+      }
+    ],
+    version: "uuuid-zzzz",
+    activityReviewHistory: [
+      {
+        historyId: "h123456",
+        version: "uuid-zzzz",
+        referenceId: "abcdefg123466",
+        groupId: 1,
+        time: "2023-07-01 09:00:00",
+        title: "建立條件送審",
+        detail: "送程主管",
+        type: "建立活動"
+      },
+      {
+        historyId: "h123457",
+        version: "uuid-zzzz",
+        referenceId: "abcdefg123466",
+        groupId: 1,
+        time: "2023-07-01 09:00:00",
+        title: "審核",
+        detail: "不同意",
+        type: "建立活動"
+      },
+      {
+        historyId: "h123458",
+        version: "uuid-zzzz",
+        referenceId: "abcdefg123466",
+        groupId: 1,
+        time: "2023-07-01 09:00:00",
+        title: "審核",
+        detail: "同意",
+        type: "建立活動"
+      },
+      {
+        historyId: "h123459",
+        version: "uuid-zzzz",
+        referenceId: "abcdefg123466",
+        groupId: 2,
+        time: "2023-07-01 09:00:00",
+        title: "修改",
+        detail: "上線人數",
+        type: "修改活動"
+      },
+      {
+        historyId: "h123460",
+        version: "uuid-zzzz",
+        referenceId: "abcdefg123466",
+        groupId: 2,
+        time: "2023-07-01 09:00:00",
+        title: "審核",
+        detail: "同意",
+        type: "修改活動"
+      },
+      {
+        historyId: "h123461",
+        version: "uuid-zzzz",
+        referenceId: "abcdefg123466",
+        groupId: 3,
+        time: "2023-07-01 09:00:00",
+        title: "修改",
+        detail: "排程設定",
+        type: "修改活動"
+      },
+      {
+        historyId: "h123462",
+        version: "uuid-zzzz",
+        referenceId: "abcdefg123466",
+        groupId: 3,
+        time: "2023-07-01 09:00:00",
+        title: "審核",
+        detail: "同意",
+        type: "修改活動"
+      }
+    ]
+  },
+  {
+    activityId: "90b010ba-bd4b-480a-a0c7-3a35096f2ed8",
+    activityName: "商品EDM雙週發送",
+    activityDescription: "-",
+    department: "數位金融處",
+    owner: "負責人",
+    filterOptions: "false",
+    listLimit: 320,
+    status: "reviewing",
+    startDate: "2023-09-20",
+    endDate: "2023-09-29",
+    createTime: "2023-07-03 15:30:00",
+    modificationTime: "2023-07-03 15:30:00",
+    scheduleSettings: "daily",
+    batchUpdateTime: "2023-07-03 12:00:00",
+    activityListCondition: [
+      {
+        activityId: "abcdefg123466",
+        conditionId: "1",
+        version: "uuid-zzzz",
+        tagGroup: 1,
+        tagName: "近一個月_基金_定期定額手續費-高",
+        tagKey: "tag-123"
+      },
+      {
+        activityId: "abcdefg123466",
+        conditionId: "2",
+        version: "uuid-zzzz",
+        tagGroup: 1,
+        tagName: "近三個月_基金_手續費-低",
+        tagKey: "tag-456"
+      },
+      {
+        activityId: "abcdefg123466",
+        conditionId: "3",
+        version: "uuid-zzzz",
+        tagGroup: 2,
+        tagName: "近一個月_換匯_交易金額-高",
+        tagKey: "tag-789"
+      }
+    ],
+    version: "uuuid-zzzz",
+    activityReviewHistory: [
+      {
+        historyId: "h123456",
+        version: "uuid-zzzz",
+        referenceId: "abcdefg123466",
+        groupId: 1,
+        time: "2023-07-01 09:00:00",
+        title: "建立條件送審",
+        detail: "送程主管",
+        type: "建立活動"
+      },
+      {
+        historyId: "h123457",
+        version: "uuid-zzzz",
+        referenceId: "abcdefg123466",
+        groupId: 1,
+        time: "2023-07-01 09:00:00",
+        title: "審核",
+        detail: "不同意",
+        type: "建立活動"
+      },
+      {
+        historyId: "h123458",
+        version: "uuid-zzzz",
+        referenceId: "abcdefg123466",
+        groupId: 1,
+        time: "2023-07-01 09:00:00",
+        title: "審核",
+        detail: "同意",
+        type: "建立活動"
+      },
+      {
+        historyId: "h123459",
+        version: "uuid-zzzz",
+        referenceId: "abcdefg123466",
+        groupId: 2,
+        time: "2023-07-01 09:00:00",
+        title: "修改",
+        detail: "上線人數",
+        type: "修改活動"
+      },
+      {
+        historyId: "h123460",
+        version: "uuid-zzzz",
+        referenceId: "abcdefg123466",
+        groupId: 2,
+        time: "2023-07-01 09:00:00",
+        title: "審核",
+        detail: "同意",
+        type: "修改活動"
+      },
+      {
+        historyId: "h123461",
+        version: "uuid-zzzz",
+        referenceId: "abcdefg123466",
+        groupId: 3,
+        time: "2023-07-01 09:00:00",
+        title: "修改",
+        detail: "排程設定",
+        type: "修改活動"
+      },
+      {
+        historyId: "h123462",
+        version: "uuid-zzzz",
+        referenceId: "abcdefg123466",
+        groupId: 3,
+        time: "2023-07-01 09:00:00",
+        title: "審核",
+        detail: "同意",
+        type: "修改活動"
+      }
+    ]
+  }
+    
 ]
