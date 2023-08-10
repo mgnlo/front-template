@@ -21,13 +21,14 @@ export interface SearchInfo {
 export class Ng2SmartTableService {
 
   constructor(
-    public http: HttpClient,
-    public loadingService: LoadingService,
-    public dialogService: DialogService,
+    private http: HttpClient,
+    private loadingService: LoadingService,
+    private dialogService: DialogService,
   ) { }
 
   /**
-   * use this to get data with page and filter
+   * @param searchInfo 搜尋所需的參數
+   * @return CommonServerDataSource
   */
   searchData(searchInfo: SearchInfo): CommonServerDataSource {
 

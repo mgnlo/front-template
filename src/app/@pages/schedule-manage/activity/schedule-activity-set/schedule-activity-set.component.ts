@@ -3,21 +3,21 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting } from '@api/models/activity-list.model';
-import { StorageService } from '@api/services/storage.service';
+import { ActivitySetting as ScheduleActivitySettingModel, ScheduleActivitySetting, ScheduleSettingEditReq } from '@api/models/schedule-activity.model';
 import { DialogService } from '@api/services/dialog.service';
+import { LoadingService } from '@api/services/loading.service';
+import { StorageService } from '@api/services/storage.service';
 import { Frequency, Status, StatusResult } from '@common/enums/common-enum';
+import { RestStatus } from '@common/enums/rest-enum';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
+import { CommonUtil } from '@common/utils/common-util';
 import { DeleteButtonComponent } from '@component/table/detail-button/delete-button.component';
 import { BaseComponent } from '@pages/base.component';
-import { LocalDataSource } from 'ng2-smart-table';
-import { PreviewDialogComponent } from './preview-dialog/preview.dialog/preview-dialog.component';
-import { ScheduleActivitySetting, ActivitySetting as ScheduleActivitySettingModel, ScheduleSettingEditReq, } from '@api/models/schedule-activity.model';
-import { CommonUtil } from '@common/utils/common-util';
-import { LoadingService } from '@api/services/loading.service';
 import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
-import { RestStatus } from '@common/enums/rest-enum';
+import { LocalDataSource } from 'ng2-smart-table';
 import { catchError, filter, tap } from 'rxjs/operators';
+import { PreviewDialogComponent } from './preview-dialog/preview.dialog/preview-dialog.component';
 
 @Component({
   selector: 'schedule-activity-set',
@@ -64,7 +64,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     private dialogService: DialogService,
     private scheduleManageService: ScheduleManageService,
     private loadingService: LoadingService,
-    private readonly changeDetectorRef: ChangeDetectorRef
+    private readonly changeDetectorRef: ChangeDetectorRef,
   ) {
     super(storageService);
 
@@ -240,9 +240,9 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.scheduleId = this.activatedRoute.snapshot.params.scheduleId;
     this.dataSource = new LocalDataSource();
-    // this.scheduleActivitySettingModel = this.ScheduleActivitySetting?.find(f => f.scheduleId === this.scheduleId)?.activitySetting as Array<ScheduleActivitySettingModel> ?? new Array<ScheduleActivitySettingModel>();
-    // this.refreshFilterActivityList();
-    // this.dataSource.load(this.scheduleActivitySettingModel);
+    this.scheduleActivitySettingModel = this.ScheduleActivitySetting?.find(f => f.scheduleId === this.scheduleId)?.activitySetting as Array<ScheduleActivitySettingModel> ?? new Array<ScheduleActivitySettingModel>();
+    this.refreshFilterActivityList();
+    this.dataSource.load(this.scheduleActivitySettingModel);
 
     if (!!this.scheduleId) {
       this.loadingService.open();
