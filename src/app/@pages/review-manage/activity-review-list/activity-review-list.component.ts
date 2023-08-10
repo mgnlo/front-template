@@ -76,7 +76,7 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
         type: 'html',
         class: 'left',
         sort: false,
-        width: '25%',
+        width: '20%',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
@@ -95,37 +95,19 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
         width: '5%'
       },
       modificationTime: {
-        title: '異動時間',
-        type: 'html',
-        width: '5%',
+        title: '名單有效起訖日',
+        type: 'string',
+        width: '30%',
         sort: false,
-        valuePrepareFunction: (cell: string) => {
-          const datepipe: DatePipe = new DatePipe('en-US')
-          return `<p class="date">${datepipe.transform(cell, this.dateFormat)}</p>`;
-        },
-        filterFunction: (cell?: string, search?: string[]) => {
-          let date = cell;
-          let sDate = search[0];
-          let eDate = search[1];
-          let isSDate = sDate !== null;
-          let isEDate = eDate !== null;
-          if (
-            (!isSDate && !isEDate) ||
-            ((isSDate && isEDate) && (
-              moment(date).isBetween(sDate, eDate, undefined, '[]')
-            )) ||
-            ((isSDate && !isEDate) && (
-              moment(sDate).isSameOrBefore(date)
-            )) ||
-            ((!isSDate && isEDate) && (
-              moment(eDate).isSameOrAfter(date)
-            ))
-          ) {
-            return true
-          } else {
-            return false
-          }
+        valuePrepareFunction: (cell: string, row: ActivityReviewHistory) => {
+          return row.startDate + '~' + row.endDate;
         }
+      },
+      type:{
+        title: '異動類型',
+        type: 'string',
+        width: '10%',
+        sort: false
       },
       reviewStatus: {
         title: '狀態',

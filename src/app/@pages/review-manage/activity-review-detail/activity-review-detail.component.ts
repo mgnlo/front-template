@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Navigation, Router } from '@angular/router';
-import { ActivityDetail, ActivityReviewHistory, ActivitySetting, HistoryGroupView, TagGroupView } from '@api/models/activity-list.model';
+import { ActivityDetail, ActivityReviewHistory, ActivitySetting, TagGroupView } from '@api/models/activity-list.model';
 import { DialogService } from '@api/services/dialog.service';
 import { StorageService } from '@api/services/storage.service';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';

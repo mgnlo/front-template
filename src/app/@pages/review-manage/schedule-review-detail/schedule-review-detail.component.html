@@ -1,6 +1,9 @@
 <div class="pageTitle">
   <h1>名單排程審核</h1>
-  <button nbButton size="small" status="primary" (click)="changeBeforeAfter()">查看異動{{beforeAfterTitle}}內容</button><!-- tiny -->
+  <ng-container *ngIf="reviewStatus === 'reviewing'">
+    <button nbButton status="primary" size="small" (click)="viewToggle()" *ngIf="!isBefore">查看異動前內容</button>
+    <button nbButton status="primary" size="small" (click)="viewToggle()" *ngIf="isBefore">返回本次異動內容</button>
+  </ng-container>
 </div>
 <div class="pageContent">
   <nb-card>
@@ -16,7 +19,7 @@
         </div>
         <div class="textGroup col-12 col-lg-4">
             <p class="textBold" [ngClass]="changeClass('executionFrequency') | enum: 'reviewCompareClass'">執行頻率：</p>
-            <span>{{detail?.executionFrequency | enum:'frequency'+' '+detail?.frequencyTime}}</span>
+            <span>{{detail?.executionFrequency | enum:'frequency'}} {{detail?.frequencyTime}}</span>
         </div>
       </div>
       <div class="row justify-content-between">
@@ -48,12 +51,12 @@
       </div>
     </nb-card-body>
   </nb-card>
-  <!-- <div class="row" *ngIf="reviewStatus!=='reviewing'">
+  <div class="row" *ngIf="reviewStatus!=='reviewing'">
       <div class="btnGroup">
           <button nbButton status="basic" size="medium" (click)="cancel()">返回</button>
       </div>
-  </div> -->
-  <div class="row"><!-- *ngIf="reviewStatus==='reviewing'" -->
+  </div>
+  <div class="row" *ngIf="reviewStatus==='reviewing'">
     <div class="btnGroup">
         <button nbButton status="basic" size="medium" (click)="cancel()">返回</button>
         <button nbButton status="danger" size="medium" (click)="reject()">不同意</button>

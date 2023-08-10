@@ -39,13 +39,13 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     super(storageService);
     // const state = this.router.getCurrentNavigation()?.extras?.state;
     // if (!!state) {
-    //   const processedData = CommonUtil.getHistoryProcessData<ScheduleActivitySetting>('scheduleReviewHistory', state as ScheduleActivitySetting); // 異動歷程處理
+    //   const processedData = CommonUtil.getHistoryProcessData<ScheduleActivitySetting>('ScheduleReviewHistory', state as ScheduleActivitySetting); // 異動歷程處理
     //   if (!!processedData) {
     //     this.isHistoryOpen = processedData.isHistoryOpen;
     //     this.detail = processedData.detail;
     //   }
     // }else{//假資料，之後要Call API
-    //   const processedData = CommonUtil.getHistoryProcessData<ScheduleActivitySetting>('scheduleReviewHistory', ScheduleActivitySettingMock[0] as ScheduleActivitySetting); // 異動歷程處理
+    //   const processedData = CommonUtil.getHistoryProcessData<ScheduleActivitySetting>('ScheduleReviewHistory', ScheduleActivitySettingMock[0] as ScheduleActivitySetting); // 異動歷程處理
     //   if (!!processedData) {
     //     this.isHistoryOpen = processedData.isHistoryOpen;
     //     this.detail = processedData.detail;
@@ -138,7 +138,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
       }),
       filter(res => res.code === RestStatus.SUCCESS),
       tap((res) => {
-        const processedData = CommonUtil.getHistoryProcessData<ScheduleActivitySetting>('scheduleReviewHistory', res.result as ScheduleActivitySetting); // 異動歷程處理
+        const processedData = CommonUtil.getHistoryProcessData<ScheduleActivitySetting>('ScheduleReviewHistory', res.result as ScheduleActivitySetting); // 異動歷程處理
         if (!!processedData) {
           this.isHistoryOpen = processedData.isHistoryOpen;
           this.detail = processedData.detail;

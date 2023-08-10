@@ -9,7 +9,7 @@ export interface ScheduleActivitySetting {
   modificationTime: string;
   status: string;
   activitySetting: Array<ActivitySetting>;
-  scheduleReviewHistory: Array<ScheduleReviewhistory>;
+  scheduleReviewHistory: Array<ScheduleReviewHistory>;
 }
 
 export class ActivitySetting {
@@ -42,31 +42,27 @@ export class Schedule_Batch_History {
   batchResult: string;
 }
 
-export class ScheduleReviewhistory {
-  historyId: string;
-  version: string;
-  referenceId: string;
-  groupId: number;
-  time: string;
-  title: string;
-  detail: string;
-  type: string;
-
-  reviewStatus?: string;
-  reviewer?: string;
-  reviewComment?: string;
-  modificationTime?: string;
-  batchUpdateTime?: string;
-  reviewTime?: string;
-  jobName?: string;
-  executionFrequency?: string;
-  frequencyTime?: string;
-  filePath?: string;
-  //scheduleSettings?: string;
+export interface ScheduleReviewHistory {
+  historyId: string
+  version: string
+  referenceId: string
+  groupId: number
+  time: string
+  title: string
+  detail: string
+  type: string
+  reviewStatus?: string
+  reviewer?: string
+  reviewComment?: string
+  reviewTime?: string
+  jobName?: string
+  executionFrequency?: string
+  frequencyTime?: string
+  filePath?: string
+  creationTime?: string
+  modificationTime?: string
+  status?: string
 }
-
-
-
 
 //for HTML diaplay ViewModel
 export interface ScheduleDetailView {

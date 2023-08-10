@@ -28,7 +28,6 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   isBefore: boolean = false;
   reviewStatus: string;
   reviewComment: string;
-  // mockData: Array<ActivitySetting> = ActivityListMock;
 
   constructor(
     storageService: StorageService,
@@ -50,7 +49,8 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
       const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistory', list as TagSetting);
       if (!!processedData) {
         this.isHistoryOpen = processedData.isHistoryOpen;
-        this.detail = processedData.detail;
+        this.oldDetail.historyGroupView = processedData.detail.historyGroupView;
+        this.newDetail.historyGroupView = processedData.detail.historyGroupView;
       }
     }
   }

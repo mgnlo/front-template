@@ -1,5 +1,67 @@
-import { ScheduleReviewhistory } from "@api/models/schedule-activity.model";
+import { ScheduleReviewHistory } from "@api/models/schedule-activity.model";
 
-export const ScheduleReviewhistoryMock: Array<ScheduleReviewhistory> = [
-
+export const ScheduleReviewHistoryMock: Array<ScheduleReviewHistory> = [
+  {
+     "historyId": "h123456",
+     "version": "uuid-zzzz",
+     "referenceId": "uuid-1",
+     "groupId":1,
+     "time":"2023-07-18 10:30:00",
+     "title":"建立排程管理送審",
+     "detail":"送程主管",
+     "type":"建立活動",
+     "reviewStatus":"reviewing",
+     "reviewer":"John Doe",
+     "reviewComment":"排程管理通過",
+     "reviewTime":"2023-07-03 15:30:00",
+     "jobName":"Job Name",
+     "executionFrequency":"daily",
+     "frequencyTime":"00:00",
+     "filePath":"C://",
+     "creationTime":"2023-07-20 10:00:00",
+     "modificationTime":"2023-07-20 12:30:00",
+     "status":"disabled"
+  },
+  {
+    "historyId": "h123457",
+    "version": "uuid-zzzz",
+    "referenceId": "uuid-1",
+    "groupId":2,
+    "time":"2023-07-01 10:30:00",
+    "title":"編輯排程管理送審",
+    "detail":"送程主管",
+    "type":"編輯活動",
+    "reviewStatus":"approved",
+    "reviewer":"老王",
+    "reviewComment":"排程編輯管理通過",
+    "reviewTime":"2023-07-03 15:30:00",
+    "jobName":"Job",
+    "executionFrequency":"monthly",
+    "frequencyTime":"13:30:00",
+    "filePath":"/file/path/",
+    "creationTime":"2023-07-20 10:00:00",
+    "modificationTime":"2023-07-20 12:30:00",
+    "status":"enabled"
+ },
+ {
+   "historyId": "h123458",
+   "version": "uuid-zzzz",
+   "referenceId": "uuid-1",
+   "groupId":1,
+   "time":"2023-07-01 10:30:00",
+   "title":"編輯排程管理送審",
+   "detail":"送程主管",
+   "type":"編輯活動",
+   "reviewStatus":"rejected",
+   "reviewer":"Christina",
+   "reviewComment":"排程編輯管理通過",
+   "reviewTime":"2023-07-03 15:30:00",
+   "jobName":"每週EDM排程",
+   "executionFrequency":"weekly",
+   "frequencyTime":"10:00",
+   "filePath":"/file/path/",
+   "creationTime":"2023-07-20 10:00:00",
+   "modificationTime":"2023-07-20 12:30:00",
+   "status":"enabled"
+},
 ]

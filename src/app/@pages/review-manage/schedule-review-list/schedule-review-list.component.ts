@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ScheduleReviewhistory } from '@api/models/schedule-activity.model';
+import { ScheduleReviewHistory } from '@api/models/schedule-activity.model';
 import { StorageService } from '@api/services/storage.service';
 import { Frequency } from '@common/enums/common-enum';
 import { ReviewClass, ReviewStatus } from '@common/enums/review-enum';
-import { ScheduleReviewhistoryMock } from '@common/mock-data/schedule-review-mock';
+import { ScheduleReviewHistoryMock } from '@common/mock-data/schedule-review-mock';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { BaseComponent } from '@pages/base.component';
+import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({
   selector: 'app-schedule-review-list',
@@ -14,7 +15,7 @@ import { BaseComponent } from '@pages/base.component';
 })
 export class ScheduleReviewListComponent extends BaseComponent implements OnInit {
 
-  mockData: Array<ScheduleReviewhistory> = ScheduleReviewhistoryMock;
+  mockData: Array<ScheduleReviewHistory> = ScheduleReviewHistoryMock;
 
   constructor(
     storageService: StorageService,
@@ -33,26 +34,26 @@ export class ScheduleReviewListComponent extends BaseComponent implements OnInit
         type: 'html',
         class: 'left',
         sort: false,
-        width: '25%',
+        width: '30%',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
       },
-      status: {
+      frequency: {
         title: '執行頻率',
-        type: 'string',
-        width: '25%',
-        class: 'alignCenter',
-        valuePrepareFunction: (cell: string) => {
-          return Frequency[cell];
+        type: 'html',
+        width: '20%',
+        class: 'left',
+        valuePrepareFunction: (cell: string, row: ScheduleReviewHistory) => {
+          return `<p class="left">${Frequency[row.executionFrequency]} ${row.frequencyTime}</p>`;
         },
         sort: false,
       },
-      reviewComment: {
-        title: '異動內容',
+      type:{
+        title: '異動類型',
         type: 'string',
         sort: false,
-        width: '25%'
+        width: '10%',
       },
       reviewer: {
         title: '變更人員',
@@ -63,7 +64,7 @@ export class ScheduleReviewListComponent extends BaseComponent implements OnInit
       reviewStatus: {
         title: '狀態',
         type: 'html',
-        width: '10%',
+        width: '5%',
         valuePrepareFunction: (cell: string) => {
           return `<span class="${ReviewClass[cell]}">${ReviewStatus[cell]}</span>`;
         },
@@ -73,7 +74,7 @@ export class ScheduleReviewListComponent extends BaseComponent implements OnInit
         title: '查看',
         type: 'custom',
         width: '5%',
-        valuePrepareFunction: (cell, row: ScheduleReviewhistory) => row,
+        valuePrepareFunction: (cell, row: ScheduleReviewHistory) => row,
         renderComponent: DetailButtonComponent,
         sort: false,
       },
@@ -87,6 +88,8 @@ export class ScheduleReviewListComponent extends BaseComponent implements OnInit
   };
 
   ngOnInit(): void {
+    this.dataSource = new LocalDataSource();
+    this.dataSource.load(this.mockData);
   }
 
 }
