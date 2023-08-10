@@ -24,6 +24,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   activitySetting: Array<ActivitySetting> = ScheduleActivitySettingMock[0].activitySetting;
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
   scheduleId: string;
+  selectedRows: any;
 
   @ViewChild(Ng2SmartTableComponent) ng2SmartTable: Ng2SmartTableComponent;
 
@@ -175,8 +176,12 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     this.ng2SmartTable.initGrid();
   }
 
-  submitRefresh() {
+  onUserRowSelect(event) {
+    this.selectedRows = event.selected;
+  }
 
+  submitRefresh() {
+    console.info('selectedRows', this.selectedRows)
   }
 
   edit() {

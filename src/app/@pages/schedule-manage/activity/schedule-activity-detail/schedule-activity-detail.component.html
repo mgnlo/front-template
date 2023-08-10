@@ -40,7 +40,7 @@
           <button nbButton status="basic" size="medium" (click)="cancelRefresh()">取消</button>
           <button nbButton status="primary" size="medium" (click)="submitRefresh()">確定</button>
         </div>
-        <ng2-smart-table #ng2SmartTable [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
+        <ng2-smart-table #ng2SmartTable [settings]="gridDefine" [source]="dataSource" (userRowSelect)="onUserRowSelect($event)"></ng2-smart-table>
         <paginator [source]="dataSource" [paginator]="paginator"></paginator>
       </div>
     </nb-card-body>

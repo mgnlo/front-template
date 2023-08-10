@@ -15,6 +15,7 @@ import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
 })
 export class ScheduleTagDetailComponent extends BaseComponent implements OnInit {
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
+  selectedRows: any;
 
   //預設拉取資料
   scheduleTagListSetting: Array<ScheduleTagSetting> = ScheduleTagSettingMock;//Call API
@@ -146,7 +147,7 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
     }
   }
 
-  setSessionVal(){
+  setSessionVal() {
     let sessionData = { page: this.paginator.nowPage };
     this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
@@ -167,8 +168,12 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
     this.ng2SmartTable.initGrid();
   }
 
-  submitRefresh() {
+  onUserRowSelect(event) {
+    this.selectedRows = event.selected;
+  }
 
+  submitRefresh() {
+    console.info('selectedRows', this.selectedRows)
   }
 
 }
