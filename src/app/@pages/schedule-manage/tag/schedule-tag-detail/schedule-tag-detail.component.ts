@@ -156,16 +156,21 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
     this.setSessionVal();
   }
 
-  refresh() {
+  setGridDefineInit() {
     this.setSessionVal();
-    this.gridDefine.selectMode = 'multi';
+    this.ng2SmartTable.isAllSelected = false;
+    this.selectedRows = undefined;
     this.ng2SmartTable.initGrid();
   }
 
+  refresh() {
+    this.gridDefine.selectMode = 'multi';
+    this.setGridDefineInit()
+  }
+
   cancelRefresh() {
-    this.setSessionVal();
     this.gridDefine.selectMode = 'single';
-    this.ng2SmartTable.initGrid();
+    this.setGridDefineInit()
   }
 
   onUserRowSelect(event) {
