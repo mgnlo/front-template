@@ -138,7 +138,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
       }),
       filter(res => res.code === RestStatus.SUCCESS),
       tap((res) => {
-        const processedData = CommonUtil.getHistoryProcessData<ScheduleActivitySetting>('ScheduleReviewHistory', res.result as ScheduleActivitySetting); // 異動歷程處理
+        const processedData = CommonUtil.getHistoryProcessData<ScheduleActivitySetting>('scheduleReviewHistory', res.result as ScheduleActivitySetting); // 異動歷程處理
         if (!!processedData) {
           this.isHistoryOpen = processedData.isHistoryOpen;
           this.detail = processedData.detail;

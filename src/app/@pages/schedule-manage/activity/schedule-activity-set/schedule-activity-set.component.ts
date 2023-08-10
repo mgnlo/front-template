@@ -53,7 +53,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   //預設名單列表
   ScheduleActivitySetting: Array<ScheduleActivitySetting> = ScheduleActivitySettingMock;
-  ScheduleActivitySettingModel: Array<ScheduleActivitySettingModel>;
+  scheduleActivitySettingModel: Array<ScheduleActivitySettingModel>;
 
   scheduleId: string;
 
@@ -80,34 +80,6 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     this.params = this.activatedRoute.snapshot.params;
     const changeRouteName = this.params['changeRoute'] ?? "";
     this.actionName = CommonUtil.getActionName(changeRouteName);
-
-    // const state = this.router.getCurrentNavigation()?.extras?.state;
-    // if (!!state) {
-    //   //日期塞資料
-    //   const frequencyTime = state?.frequencyTime;
-    //   const frequencyTimeArray = frequencyTime.split(/[:：]/);
-    //   if (frequencyTimeArray.length > 0 && state.executionFrequency) {
-    //     if (state.executionFrequency?.toLowerCase() === 'daily') {
-    //       this.validateForm.controls['hour'].setValue(frequencyTimeArray[0]);
-    //       this.validateForm.controls['minute'].setValue(frequencyTimeArray[1]);
-    //     }
-    //     else {
-    //       this.validateForm.controls['daily'].setValue(frequencyTimeArray[0]);
-    //       this.validateForm.controls['hour'].setValue(frequencyTimeArray[1]);
-    //       this.validateForm.controls['minute'].setValue(frequencyTimeArray[2]);
-    //     }
-    //   }
-    //   //塞資料
-    //   Object.keys(state).forEach(key => {
-    //     if (!!this.validateForm.controls[key]) {
-    //       switch (key) {
-    //         default:
-    //           this.validateForm.controls[key].setValue(state[key]?.toLowerCase());
-    //           break;
-    //       }
-    //     }
-    //   })
-    // }
 
   }
 
@@ -217,11 +189,11 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   //#region 刪除按鈕
   onDeleteConfirm(row: { activityId: string; }): void {
-    const index = this.ScheduleActivitySettingModel.findIndex(item => item.activityId === row.activityId);
+    const index = this.scheduleActivitySettingModel.findIndex(item => item.activityId === row.activityId);
     if (index !== -1) {
-      this.ScheduleActivitySettingModel.splice(index, 1);
+      this.scheduleActivitySettingModel.splice(index, 1);
       this.refreshFilterActivityList();
-      this.dataSource.load(this.ScheduleActivitySettingModel);
+      this.dataSource.load(this.scheduleActivitySettingModel);
     }
   }
   //#endregion
@@ -236,7 +208,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       }).onClose.subscribe((selectedData: { key: string; val: string }) => {
         if (!!selectedData) {
           const findData = this.activityListSetting.find(f => f.activityId === selectedData.key);
-          this.ScheduleActivitySettingModel.push(new ScheduleActivitySettingModel({
+          this.scheduleActivitySettingModel.push(new ScheduleActivitySettingModel({
             activityId: findData?.activityId,
             version: findData?.version,
             activityName: findData?.activityName,
@@ -252,7 +224,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
             batchUpdateTime: findData?.batchUpdateTime,
           }))
           this.refreshFilterActivityList();
-          this.dataSource.load(this.ScheduleActivitySettingModel);
+          this.dataSource.load(this.scheduleActivitySettingModel);
         }
       });;
     }
@@ -260,7 +232,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   refreshFilterActivityList() {
     this.filterActivityList = this.activityList.filter(item =>
-      !this.ScheduleActivitySettingModel.some(setting => setting.activityId === item.key)
+      !this.scheduleActivitySettingModel.some(setting => setting.activityId === item.key)
     );
   }
   //#endregion
@@ -268,9 +240,9 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.scheduleId = this.activatedRoute.snapshot.params.scheduleId;
     this.dataSource = new LocalDataSource();
-    this.ScheduleActivitySettingModel = this.ScheduleActivitySetting?.find(f => f.scheduleId === this.scheduleId)?.activitySetting as Array<ScheduleActivitySettingModel> ?? new Array<ScheduleActivitySettingModel>();
-    this.refreshFilterActivityList();
-    this.dataSource.load(this.ScheduleActivitySettingModel);
+    // this.scheduleActivitySettingModel = this.ScheduleActivitySetting?.find(f => f.scheduleId === this.scheduleId)?.activitySetting as Array<ScheduleActivitySettingModel> ?? new Array<ScheduleActivitySettingModel>();
+    // this.refreshFilterActivityList();
+    // this.dataSource.load(this.scheduleActivitySettingModel);
 
     if (!!this.scheduleId) {
       this.loadingService.open();
@@ -300,11 +272,12 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
           //塞資料
           Object.keys(res.result).forEach(key => {
             if (!!this.validateForm.controls[key]) {
-              switch (key) {
-                default:
-                  this.validateForm.controls[key].setValue(res.result[key]?.toLowerCase());
-                  break;
-              }
+              this.validateForm.controls[key].setValue(res.result[key]?.toLowerCase());
+            } else if(key === 'activitySetting'){
+              this.dataSource = new LocalDataSource();
+              this.scheduleActivitySettingModel = res.result[key];
+              this.refreshFilterActivityList();
+              this.dataSource.load(this.scheduleActivitySettingModel);
             }
           })
           this.loadingService.close();
@@ -333,7 +306,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       this.scheduleManageService.createScheduleSetting(reqData).pipe(
         catchError((err) => {
           this.loadingService.close();
-          this.dialogService.alertAndBackToList(false, '新增失敗', ['pages', 'schedule-manage', 'schedule-activity-list']);
+          this.dialogService.alertAndBackToList(false, err.message, ['pages', 'schedule-manage', 'schedule-activity-list']);
           throw new Error(err.message);
         }),
         tap(res => {
@@ -349,7 +322,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       this.scheduleManageService.updateScheduleSetting(this.scheduleId, reqData).pipe(
         catchError((err) => {
           this.loadingService.close();
-          this.dialogService.alertAndBackToList(false, '編輯失敗', ['pages', 'schedule-manage', 'schedule-activity-list']);
+          this.dialogService.alertAndBackToList(false, err.message, ['pages', 'schedule-manage', 'schedule-activity-list']);
           throw new Error(err.message);
         }),
         tap(res => {
@@ -370,7 +343,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     let minute: string = this.validateForm.get('minute')?.value;
     let executionFrequency = this.validateForm.get('executionFrequency').value;
     reqData.frequencyTime = executionFrequency === 'daily' ? hour + ':' + minute : daily + ':' + hour + ':' + minute;
-    reqData.activitySetting = JSON.parse(JSON.stringify(this.ScheduleActivitySettingModel));
+    reqData.activityIds = this.scheduleActivitySettingModel.map(activitySetting => activitySetting.activityId);
     return reqData;
   }
 
