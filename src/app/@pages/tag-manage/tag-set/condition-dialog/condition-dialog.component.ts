@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component, Input } from '@angular/core';
+import { TagConditionChartLine } from '@api/models/tag-manage.model';
 import { NbDialogRef } from '@nebular/theme';
 import { DetailDialogComponent } from '@pages/customer-manage/customer-list/detail-dialog/detail.dialog.component';
 
@@ -8,20 +8,14 @@ import { DetailDialogComponent } from '@pages/customer-manage/customer-list/deta
   templateUrl: './condition-dialog.component.html',
   styleUrls: ['./condition-dialog.component.scss']
 })
-export class TagConditionDialogComponent implements OnInit {
+export class TagConditionDialogComponent {
 
   @Input() title: string;
-  @Input() dataList: FormGroup;
+  @Input() data: TagConditionChartLine;
 
-  //datas: CustomerList;
   constructor(
     protected ref: NbDialogRef<DetailDialogComponent>,
-    ) {}
-
-  ngOnInit() {
-    // this.datas = JSON.parse(JSON.stringify(this.dataList));
-     //console.info(this.dataList);
-  }
+  ) { }
 
   close() {
     this.ref.close();

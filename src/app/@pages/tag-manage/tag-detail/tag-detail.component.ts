@@ -134,6 +134,7 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
     let searchInfo: SearchInfo = {
       apiUrl: this.customerManageService.activityFunc,
       nowPage: this.paginator.nowPage,
+      //filters: this.validateForm.getRawValue(),
       errMsg: '標籤使用範圍查無資料'
     }
     this.restDataSource = this.tableService.searchData(searchInfo);

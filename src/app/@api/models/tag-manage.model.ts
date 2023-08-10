@@ -129,6 +129,20 @@ export class TagSettingEditReq {
 }
 //#endregion
 
+//#region 條件級距線圖表
+export interface TagConditionChartLine {
+  conditionValue: string;
+  conditionName: string;
+  conditionDistribution: Array<Conditiondistribution>
+}
+
+export class Conditiondistribution {
+  distributionKey: string;
+  distributionValue: number;
+  sort: string;
+}
+//#endregion
+
 //#region 活動標籤顯示
 export interface TagReviewListResp {
   data: Array<TagReviewHistory>;

@@ -1,5 +1,7 @@
 
-import { AfterViewInit, Component, Input, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { TagConditionChartLine } from '@api/models/tag-manage.model';
+import { RegExpUtil } from '@common/utils/reg-exp-util';
 import { NbThemeService } from '@nebular/theme';
 
 @Component({
@@ -7,26 +9,57 @@ import { NbThemeService } from '@nebular/theme';
   templateUrl: './condition-chart-line.component.html',
   styleUrls: ['./condition-chart-line.component.scss']
 })
-export class ConditionChartLineComponent implements AfterViewInit, OnDestroy {
-
-  @Input() dataList: any = {
-    'lineColor': ['#29A7E6'],
-    'legendData': ['人數'],
-    'seriesData': [
-      {
-        name: '人數',
-        type: 'line',
-        smooth: true,
-        data: [14, 40, 8, 36, 3, 49, 20000000, 256],
-      },
-    ]
-  };
-  xAxisData = ['60萬', '80萬', '100萬', '120萬', '140萬', '160萬', '180萬'];
+export class ConditionChartLineComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Input() data: TagConditionChartLine;
+  seriesData = new Array;
+  xAxisData = new Array;
 
   options: any = {};
   themeSubscription: any;
 
   constructor(private theme: NbThemeService) {
+  }
+
+  // 排序
+  sortConditionDistribution(array: any[], keyExtractor: (item: any) => string, sortExtractor: (item: any) => string): any[] {
+    return array.sort((a, b) => {
+      const sortA = parseInt(sortExtractor(a).replace(RegExpUtil.removeChinese, ""));
+      const sortB = parseInt(sortExtractor(b).replace(RegExpUtil.removeChinese, ""));
+      if (sortA < 0 && sortB < 0) {
+        return sortB - sortA;
+      } else {
+        return sortA - sortB;
+      }
+    });
+  }
+
+  getMapKeyByValue(key: string, arr: any[]): number[] {
+    return arr.map((m) => m[key]);
+  }
+
+  ngOnInit(): void {
+    const distributionKeySort = this.sortConditionDistribution(
+      this.data.conditionDistribution,
+      (item) => item.distributionKey,
+      (item) => item.distributionKey
+    );
+    const xAxisData = this.getMapKeyByValue('distributionKey',distributionKeySort);
+
+    const conditionDistributionSort = this.sortConditionDistribution(
+      this.data.conditionDistribution,
+      (item) => item.sort,
+      (item) => item.sort
+    );
+    const seriesData = this.getMapKeyByValue('distributionValue',conditionDistributionSort);
+
+    this.seriesData.push({
+      name: this.data.conditionValue,
+      type: 'line',
+      smooth: true,
+      data: seriesData,
+    });
+
+    this.xAxisData = xAxisData;
   }
 
   ngAfterViewInit() {
@@ -36,14 +69,14 @@ export class ConditionChartLineComponent implements AfterViewInit, OnDestroy {
 
       this.options = {
         backgroundColor: echarts.bg,
-        color: this.dataList.lineColor,
+        color: '#29A7E6',
         tooltip: {
           trigger: 'item',
           formatter: '{a} <br/>{b} : {c}',
         },
         legend: {
           left: 'left',
-          data: this.dataList.legendData,
+          data: this.data?.conditionValue,
           textStyle: {
             color: echarts.textColor,
           },
@@ -98,7 +131,7 @@ export class ConditionChartLineComponent implements AfterViewInit, OnDestroy {
           bottom: '3%',
           containLabel: true,
         },
-        series: this.dataList.seriesData
+        series: this.seriesData
       };
     });
   }
