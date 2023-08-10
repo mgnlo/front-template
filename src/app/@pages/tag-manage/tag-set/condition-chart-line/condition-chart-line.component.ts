@@ -133,6 +133,7 @@ export class ConditionChartLineComponent implements OnInit, AfterViewInit, OnDes
           right: '4%',
           bottom: '3%',
           containLabel: true,
+          height:'90%'
         },
         series: this.seriesData
       };
