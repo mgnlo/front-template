@@ -109,7 +109,7 @@ export class ScheduleSettingEditReq {
   scheduleSettings: string;
   ScheduleDescription: string;
   frequencyTime: string;
-  activitySetting: Array<ActivitySetting>;
+  activityIds: Array<string>;
 }
 
 export interface ScheduleReviewListRes {

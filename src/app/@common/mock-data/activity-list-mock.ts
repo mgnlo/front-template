@@ -117,7 +117,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
     ]
   },
   {
-    activityId: "abcdefg123457",
+    activityId: "a0a0dfc2-7975-4e80-8067-ea267f548337",
     activityName: "快閃活動",
     activityDescription: "-",
     department: "信用卡暨支付處",
@@ -232,7 +232,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
     ]
   },
   {
-    activityId: "abcdefg123458",
+    activityId: "ef9d5fe8-a247-4d79-b9df-946d9ee43678",
     activityName: "每日EDM活動發送",
     activityDescription: "-",
     department: "數位金融處",
@@ -347,7 +347,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
     ]
   },
   {
-    activityId: "abcdefg123459",
+    activityId: "dbfcea5f-8949-4c4e-9964-eebbe316b4f7",
     activityName: "父親節活動",
     activityDescription: "-",
     department: "信用卡暨支付處",
@@ -462,7 +462,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
     ]
   },
   {
-    activityId: "abcdefg123460",
+    activityId: "9d24e344-c57b-42cc-bf20-6d62bf857e7f",
     activityName: "情人節活動",
     activityDescription: "-",
     department: "信用卡暨支付處",
@@ -577,7 +577,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
     ]
   },
   {
-    activityId: "abcdefg123461",
+    activityId: "b28e431c-8730-43a2-b500-ea41f8f1934c",
     activityName: "春節慶祝活動",
     activityDescription: "-",
     department: "數位金融處",
@@ -708,7 +708,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
     ]
   },
   {
-    activityId: "abcdefg123462",
+    activityId: "f32510d7-225b-4c07-82a6-1292a7ec55c7",
     activityName: "七夕情人節活動",
     activityDescription: "-",
     department: "數位金融處",
