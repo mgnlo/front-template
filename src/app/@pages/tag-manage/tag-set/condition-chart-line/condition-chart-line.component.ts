@@ -13,6 +13,7 @@ export class ConditionChartLineComponent implements OnInit, AfterViewInit, OnDes
   @Input() data: TagConditionChartLine;
   seriesData = new Array;
   xAxisData = new Array;
+  yAxisData = new Array;
 
   options: any = {};
   themeSubscription: any;
@@ -43,29 +44,28 @@ export class ConditionChartLineComponent implements OnInit, AfterViewInit, OnDes
       (item) => item.distributionKey,
       (item) => item.distributionKey
     );
-    const xAxisData = this.getMapKeyByValue('distributionKey',distributionKeySort);
+    this.xAxisData = this.getMapKeyByValue('distributionKey', distributionKeySort);
 
     const conditionDistributionSort = this.sortConditionDistribution(
       this.data.conditionDistribution,
       (item) => item.sort,
       (item) => item.sort
     );
-    const seriesData = this.getMapKeyByValue('distributionValue',conditionDistributionSort);
-
+    this.yAxisData = this.getMapKeyByValue('distributionValue', conditionDistributionSort)
     this.seriesData.push({
       name: this.data.conditionValue,
       type: 'line',
       smooth: true,
-      data: seriesData,
+      data: this.yAxisData,
     });
-
-    this.xAxisData = xAxisData;
   }
 
   ngAfterViewInit() {
     this.themeSubscription = this.theme.getJsTheme().subscribe(config => {
 
       const echarts: any = config.variables.echarts;
+      let yAxisMaxVal = Math.max(...this.yAxisData.filter(item => typeof item === 'number'));
+      let yAxisMinVal = Math.min(...this.yAxisData.filter(item => typeof item === 'number'));
 
       this.options = {
         backgroundColor: echarts.bg,
@@ -102,7 +102,7 @@ export class ConditionChartLineComponent implements OnInit, AfterViewInit, OnDes
         ],
         yAxis: [
           {
-            type: 'log',
+            type: 'value',
             axisLine: {
               lineStyle: {
                 color: echarts.axisLineColor,
@@ -123,6 +123,9 @@ export class ConditionChartLineComponent implements OnInit, AfterViewInit, OnDes
                 color: echarts.textColor,
               },
             },
+            min: yAxisMinVal,
+            max: yAxisMaxVal,
+            splitNumber: 10,
           },
         ],
         grid: {
