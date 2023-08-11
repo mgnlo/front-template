@@ -17,6 +17,8 @@ export class ActivitySetting {
   version: string;
   activityName: string;
   activityDescription: string;
+  department: string;
+  owner: string;
   filterOptions: string;
   listLimit: number;
   status: string;
@@ -26,7 +28,7 @@ export class ActivitySetting {
   modificationTime: string;
   scheduleSettings: string;
   batchUpdateTime: string;
-  schedule_batch_history: Array<Schedule_Batch_History>;
+  schedule_batch_history?: Array<Schedule_Batch_History>;
 
   constructor(data: Partial<ActivitySetting>) {
     Object.assign(this, data);
@@ -62,6 +64,8 @@ export interface ScheduleReviewHistory {
   creationTime?: string
   modificationTime?: string
   status?: string
+  newActivitySetting?: Array<ActivitySetting>
+  lastActivitySetting?: Array<ActivitySetting>
 }
 
 //for HTML diaplay ViewModel
@@ -76,10 +80,6 @@ export interface ScheduleDetailView {
   status: string;
   filePath?: string;
   historyGroupView: { [x: number]: HistoryGroupView };
-
-  //
-  //這裡要添加名單列表(本次新增/刪除/無異動)
-  //
 }
 
 //for HTML diaplay ViewModel

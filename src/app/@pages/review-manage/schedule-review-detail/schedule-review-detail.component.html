@@ -36,17 +36,17 @@
         <p>名單列表</p>
       </div>
       <div class="tagBlock">
-        <div class="tagItem">
+        <div class="tagItem" *ngIf="activitySettingView.add.length > 0">
             <nb-tag status="danger" appearance="filled" text="本次新增"></nb-tag>
-            <p class="tagContent">本次新增</p>
+            <p class="tagContent">{{activitySettingView.add.toString()| replace: ',' : '、'}}</p>
         </div>
-        <div class="tagItem">
+        <div class="tagItem" *ngIf="activitySettingView.remove.length > 0">
           <nb-tag status="info" appearance="filled" text="本次刪除"></nb-tag>
-          <p class="tagContent">本次刪除</p>
+          <p class="tagContent">{{activitySettingView.remove.toString()| replace: ',' : '、'}}</p>
         </div>
-        <div class="tagItem">
+        <div class="tagItem" *ngIf="activitySettingView.same.length > 0">
           <nb-tag status="basic" appearance="filled" text="無異動"></nb-tag>
-          <p class="tagContent">無異動</p>
+          <p class="tagContent">{{activitySettingView.same.toString()| replace: ',' : '、'}}</p>
         </div>
       </div>
     </nb-card-body>
