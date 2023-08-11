@@ -6,7 +6,6 @@ import { TagSetting } from '@api/models/tag-manage.model';
 import { StorageService } from '@api/services/storage.service';
 import { Status } from '@common/enums/common-enum';
 import { TagType } from '@common/enums/tag-enum';
-import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { BaseComponent } from '@pages/base.component';
@@ -20,7 +19,6 @@ import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-
 })
 export class TagListComponent extends BaseComponent implements OnInit {
   statusList: Array<{ key: string; val: string }> = Object.entries(Status).map(([k, v]) => ({ key: k, val: v }))
-  mockData: Array<TagSetting> = TagSettingMock;
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
   TagType: TagType
@@ -149,7 +147,8 @@ export class TagListComponent extends BaseComponent implements OnInit {
     let searchInfo: SearchInfo = {
       apiUrl: this.tagManageService.tagFunc,
       nowPage: this.paginator.nowPage,
-      filters: this.validateForm.getRawValue()
+      filters: this.validateForm.getRawValue(),
+      errMsg:'標籤列表查無資料',
     }
     this.restDataSource = this.tableService.searchData(searchInfo);
   }

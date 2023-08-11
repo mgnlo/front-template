@@ -8,14 +8,14 @@ import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
 import { MathSymbol, Status } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
-import { TagDimension, TagSetCondition, TagSubDimension, TagType } from '@common/enums/tag-enum';
+import { TagDimension, TagJoinValue, TagSetCondition, TagSubDimension, TagType } from '@common/enums/tag-enum';
 import { CommonUtil } from '@common/utils/common-util';
 import { RegExpUtil } from '@common/utils/reg-exp-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
 import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
 import * as moment from 'moment';
-import { catchError, filter, takeUntil, tap } from 'rxjs/operators';
+import { catchError, filter, tap } from 'rxjs/operators';
 import { TagManageService } from '../tag-manage.service';
 import { TagConditionDialogComponent } from './condition-dialog/condition-dialog.component';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
@@ -41,6 +41,9 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   maxSizeInMB: number = 5;//檔案大小
   filePlaceholderName: string = '請上傳檔案';
+  fileName: string;
+  fileData: string;
+  uploadType: string;
   //#region 檔案白名單
   passFileArrayStr: string = '.csv,,,,'
   passFileArray: Array<string> = ['csv']
@@ -74,8 +77,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   //預設檔案存放地方
   condition_valueList: Array<{ key: string; val: string }> = [{ key: 'condition_A', val: '近三個月_基金_申購金額' }, { key: 'condition_B', val: '假資料B' }, { key: 'condition_C', val: '假資料C' }];
 
-  //集合方式
-  joinValueList: Array<{ key: string; val: string }> = [{ key: 'and', val: 'and' }, { key: 'or', val: 'or' }];
+  //預設集合方式
+  joinValueList:Array<{ key: string; val: string }> = Object.entries(TagJoinValue).map(([k, v]) => ({ key: k, val: v }))
 
   constructor(
     storageService: StorageService,
@@ -357,7 +360,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   }
   //#endregion
 
-  //#region 檔案上傳驗證
+  //#region 檔案上傳(轉Base64)並驗證
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     const fileValidatorResult = this.fileValidator(file);
@@ -366,9 +369,21 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       this.validateForm?.get('fileName')?.setErrors(fileValidatorResult);
       this.filePlaceholderName = '請上傳檔案';
       return
-    } else {
-      this.validateForm?.get('fileName')?.setErrors(null);
     }
+
+    CommonUtil.convertFileToBase64(file)
+      .then(base64String => {
+        this.fileName = this.getFileNameWithoutExtension(file.name);
+        this.fileData = base64String;
+        this.uploadType = file.type;
+      })
+      .catch(error => {
+        this.validateForm?.get('fileName')?.setErrors({ uploadFileMsg: error });
+        return
+      });
+
+    this.validateForm?.get('fileName')?.setErrors(null);
+
   }
 
   fileValidator(file: File): { [key: string]: any } | null {
@@ -390,6 +405,17 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
     // 驗證通過，返回null表示驗證成功
     return null;
+  }
+  //#endregion
+
+  //#region 抓檔案名稱並無副檔名
+  getFileNameWithoutExtension(fileName: string): string {
+    const lastDotIndex = fileName.lastIndexOf('.');
+    if (lastDotIndex !== -1) {
+      return fileName.substring(0, lastDotIndex);
+    } else {
+      return fileName;
+    }
   }
   //#endregion
 
@@ -479,39 +505,40 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     const tagId = this.params['tagId'];
     const formData = this.validateForm.getRawValue();
 
-    //throw new Error('(tagId || formData) is bad');
-    if (!tagId || !formData) return undefined
+    if (!formData) return undefined
 
     let reqData = new TagSettingEditReq({
       tagId: tagId,
       tagName: formData.tagName,
       status: formData.status,
       tagType: formData.tagType,
-      uploadType: formData.uploadType,
-      fileName: formData.fileName,
-      filePath: formData.filePath,
-      fileData: formData.fileData,
+      uploadType: (formData.tagType === 'document') ? this.uploadType : null,
+      fileName: (formData.tagType === 'document') ? this.fileName : null,
+      //filePath: formData.filePath,
+      fileData: (formData.tagType === 'document') ? this.fileData : null,
       conditionSettingMethod: formData.conditionSettingMethod, //條件設定方式
-      startDate: formData.startDate ? moment(formData.startDate).format(this.dateFormat) : null,
-      endDate: formData.endDate ? moment(formData.endDate).format(this.dateFormat) : null,
+      startDate: formData.startDate ? moment(formData.startDate).format('YYYY-MM-DD') : null,
+      endDate: formData.endDate ? moment(formData.endDate).format('YYYY-MM-DD') : null,
       tagDimension: formData.tagDimension,
       tagSubDimension: formData.tagSubDimension,
       tagDescription: formData.TagDescription,
-      conditionSettingQuery: formData.TagName, //條件設定語法
+      conditionSettingQuery:
+        (formData.tagType === 'normal' && formData.conditionSettingMethod === 'normal') ?
+          formData.conditionSettingQuery : null, //條件設定語法
+      tagConditionSetting:
+        (formData.tagType === 'normal' && formData.conditionSettingMethod === 'field' && Array.isArray(formData.tagConditionSetting)) ?
+          formData.tagConditionSetting.map((m) => {
+            const id = m['id'];
+            return new TagConditionSetting({
+              tagId: tagId,
+              groupId: 1,//因只有一個，固定為1
+              conditionValue: formData.conditionValue,
+              detectionCondition: m['detectionCondition_' + id],
+              thresholdValue: m['thresholdValue_' + id],
+              joinValue: m['joinValue_' + id],
+            });
+          }) : null,
     });
-
-    if (Array.isArray(formData.tagConditionSetting)) {
-      reqData.tagConditionSetting = formData.tagConditionSetting.map((m) => {
-        const id = m['id'];
-        return new TagConditionSetting({
-          tagId: tagId,
-          conditionValue: formData.conditionValue,
-          detectionCondition: m['detectionCondition_' + id],
-          thresholdValue: m['thresholdValue_' + id],
-          joinValue: m['joinValue_' + id],
-        });
-      });
-    }
 
     return reqData;
   }
