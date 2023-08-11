@@ -43,6 +43,12 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
     this.search();
   }
 
+  ngAfterViewInit() {
+    const page = this.storageService.getSessionVal(this.sessionKey)?.page;
+    this.restDataSource.setPage(page ? page : this.paginator.nowPage)
+    this.restDataSource.load(this.restDataSource.getPaging());
+  }
+
   ngOnDestroy(): void {
     let sessionData = { page: this.paginator.nowPage, filter: this.validateForm.getRawValue() };
     this.storageService.putSessionVal(this.sessionKey, sessionData);
@@ -134,11 +140,12 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
   }
 
   search() {
+    const page = this.storageService.getSessionVal(this.sessionKey)?.page;
     let searchInfo: SearchInfo = {
       apiUrl: this.customerManageService.activityFunc,
-      nowPage: this.paginator.nowPage,
+      nowPage: page ? page : this.paginator.nowPage,
       filters: this.validateForm.getRawValue(),
-      errMsg:'活動列表查無資料',
+      errMsg: '活動列表查無資料',
     }
     this.restDataSource = this.tableService.searchData(searchInfo);
   }

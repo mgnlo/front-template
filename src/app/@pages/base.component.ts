@@ -30,7 +30,7 @@ export class BaseComponent implements OnDestroy {
   }
 
   ngDoCheck() {
-    this.updatePageInfo();
+    //this.updatePageInfo();
   }
 
   getInvalidControls() {
