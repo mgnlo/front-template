@@ -2,9 +2,11 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { StorageService } from '@api/services/storage.service';
 import { LoadingService } from '../@api/services/loading.service';
 import { EnumPipe } from './pipes/enum.pipe';
+import { ReplacePipe } from './pipes/replace.pipe';
 
 const PIPES = [
-  EnumPipe
+  EnumPipe,
+  ReplacePipe
 ]
 @NgModule({
   declarations: [...PIPES],

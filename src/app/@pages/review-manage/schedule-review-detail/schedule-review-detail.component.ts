@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ScheduleActivitySetting, ScheduleDetailView, ScheduleReviewHistory } from '@api/models/schedule-activity.model';
 import { DialogService } from '@api/services/dialog.service';
 import { StorageService } from '@api/services/storage.service';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
+import { ScheduleReviewHistoryMock } from '@common/mock-data/schedule-review-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
 
@@ -22,33 +23,53 @@ export class ScheduleReviewDetailComponent extends BaseComponent implements OnIn
   isBefore: boolean = false;
   reviewStatus: string;
   reviewComment: string;
+  historyId: string;
+  activitySettingView = { add: [], remove: [], same: [] }; //名單列表差異
 
   constructor(
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private dialogService: DialogService,
     storageService: StorageService,
   ) {
     super(storageService);
-    if (!!this.router.getCurrentNavigation()?.extras) {
-      let scheduleReview = this.router.getCurrentNavigation().extras.state as ScheduleReviewHistory;
-      let list = ScheduleActivitySettingMock.filter(row => row.scheduleId === scheduleReview.referenceId)[0];
-      this.newDetail = JSON.parse(JSON.stringify(scheduleReview));
-      this.oldDetail = JSON.parse(JSON.stringify(list));
-      this.detail = this.newDetail;
-      this.reviewStatus = scheduleReview.reviewStatus;
-      this.reviewComment = scheduleReview.reviewComment;
-      this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
-      const processedData = CommonUtil.getHistoryProcessData<ScheduleActivitySetting>('scheduleReviewHistory', list as ScheduleActivitySetting);
-      if (!!processedData) {
-        this.isHistoryOpen = processedData.isHistoryOpen;
-        this.oldDetail.historyGroupView = processedData.detail.historyGroupView;
-        this.newDetail.historyGroupView = processedData.detail.historyGroupView;
-      }
-      console.info(this.detail)
-    }
   }
 
   ngOnInit(): void {
+    this.historyId = this.activatedRoute.snapshot.params.historyId;
+    let scheduleReview = ScheduleReviewHistoryMock.filter(row => row.historyId === this.historyId)[0];
+    let list = ScheduleActivitySettingMock.filter(row => row.scheduleId === scheduleReview.referenceId)[0];
+    this.newDetail = JSON.parse(JSON.stringify(scheduleReview));
+    this.oldDetail = JSON.parse(JSON.stringify(list));
+    this.detail = this.newDetail;
+    this.reviewStatus = scheduleReview.reviewStatus;
+    this.reviewComment = scheduleReview.reviewComment;
+    this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
+
+    let newActivityList = scheduleReview.newActivitySetting.map(activity => { return { key: activity.activityId, value: activity.activityName } })
+    let oldActivityList = scheduleReview.lastActivitySetting.map(activity => { return { key: activity.activityId, value: activity.activityName } })
+    let allActivityList = newActivityList.concat(oldActivityList.filter(oldActivity => !newActivityList.find(newActivity => newActivity.key == oldActivity.key)));
+    allActivityList.forEach(activity => {
+      let activityId = activity.key;
+      let oldActivityIds = oldActivityList.map(oldActivity => oldActivity.key);
+      let newActivityIds = newActivityList.map(newActivity => newActivity.key);
+      if (oldActivityIds.includes(activityId) && newActivityIds.includes(activityId)) {
+        this.activitySettingView.same.push(activity.value);
+      } else if (oldActivityIds.includes(activityId) && !newActivityIds.includes(activityId)) {
+        this.activitySettingView.remove.push(activity.value);
+      } else if (!oldActivityIds.includes(activityId) && newActivityIds.includes(activityId)) {
+        this.activitySettingView.add.push(activity.value);
+      }
+    });
+
+    // console.info(this.activitySettingView)
+    const processedData = CommonUtil.getHistoryProcessData<ScheduleActivitySetting>('scheduleReviewHistory', list as ScheduleActivitySetting);
+    if (!!processedData) {
+      this.isHistoryOpen = processedData.isHistoryOpen;
+      this.oldDetail.historyGroupView = processedData.detail.historyGroupView;
+      this.newDetail.historyGroupView = processedData.detail.historyGroupView;
+    }
+    // console.info(this.detail)
   }
 
   changeClass(key1: string, key2?: string) {
