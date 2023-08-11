@@ -147,7 +147,8 @@ export class TagListComponent extends BaseComponent implements OnInit {
     let searchInfo: SearchInfo = {
       apiUrl: this.tagManageService.tagFunc,
       nowPage: this.paginator.nowPage,
-      filters: this.validateForm.getRawValue()
+      filters: this.validateForm.getRawValue(),
+      errMsg:'標籤列表查無資料',
     }
     this.restDataSource = this.tableService.searchData(searchInfo);
   }

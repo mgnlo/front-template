@@ -137,7 +137,8 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
     let searchInfo: SearchInfo = {
       apiUrl: this.customerManageService.activityFunc,
       nowPage: this.paginator.nowPage,
-      filters: this.validateForm.getRawValue()
+      filters: this.validateForm.getRawValue(),
+      errMsg:'活動列表查無資料',
     }
     this.restDataSource = this.tableService.searchData(searchInfo);
   }
