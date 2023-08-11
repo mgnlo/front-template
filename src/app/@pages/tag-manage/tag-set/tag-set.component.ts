@@ -35,6 +35,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   detail: TagDetailView;
   params: any = [];//路由參數
+  tagId: string;
 
   changeRouteName: string;
   actionName: string;// 新增/編輯/複製
@@ -78,7 +79,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   condition_valueList: Array<{ key: string; val: string }> = [{ key: 'condition_A', val: '近三個月_基金_申購金額' }, { key: 'condition_B', val: '假資料B' }, { key: 'condition_C', val: '假資料C' }];
 
   //預設集合方式
-  joinValueList:Array<{ key: string; val: string }> = Object.entries(TagJoinValue).map(([k, v]) => ({ key: k, val: v }))
+  joinValueList: Array<{ key: string; val: string }> = Object.entries(TagJoinValue).map(([k, v]) => ({ key: k, val: v }))
 
   constructor(
     storageService: StorageService,
@@ -109,6 +110,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     }, [ValidatorsUtil.dateRange]);
 
     this.params = this.activatedRoute.snapshot.params;
+    this.tagId = this.params['tagId'];
     this.changeRouteName = this.params['changeRoute']?.toLocaleLowerCase() ?? "";
     this.actionName = CommonUtil.getActionName(this.changeRouteName);
   }
@@ -178,10 +180,9 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     //#region 載入編輯資料
-    const tagId = this.params['tagId'];
-    if (!!tagId) {
+    if (!!this.tagId) {
       this.loadingService.open();
-      this.tagManageService.getTagSettingRow(tagId).pipe(
+      this.tagManageService.getTagSettingRow(this.tagId).pipe(
         catchError(err => {
           this.loadingService.close();
           this.dialogService.alertAndBackToList(false, '查無該筆資料，將為您導回標籤列表', ['pages', 'tag-manage', 'tag-list']);
@@ -460,31 +461,30 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   submit() {
     const valid = this.validateForm.valid;
-    const tagId = this.params['tagId'];
     const reqData: TagSettingEditReq = this.getRequestData();
 
     if (!valid || !reqData) {
-      const route = tagId ? [this.changeRouteName, tagId] : [];
+      const route = this.tagId ? [this.changeRouteName, this.tagId] : [];
       this.dialogService.alertAndBackToList(false, `${this.actionName}驗證失敗`, ['pages', 'tag-manage', 'tag-set', ...route]);
       return
     }
 
-    // 調用新增或編輯
-    this.saveTagSetting(tagId, reqData);
+    // 調用(新增or複製)或編輯
+    this.saveTagSetting(reqData);
   }
 
-  //#region 新增或編輯
-  saveTagSetting(tagId: string | null, reqData: any) {
+  //#region (新增or複製)或編輯
+  saveTagSetting(reqData: any) {
     this.loadingService.open();
 
-    const requestObservable = tagId
-      ? this.tagManageService.updateTagSetting(tagId, reqData)
+    const requestObservable = (this.tagId && this.changeRouteName === 'edit')
+      ? this.tagManageService.updateTagSetting(this.tagId, reqData)
       : this.tagManageService.createTagSetting(reqData);
 
     requestObservable.pipe(
       catchError((err) => {
         this.loadingService.close();
-        const route = tagId ? [this.changeRouteName, tagId] : [];
+        const route = this.tagId ? [this.changeRouteName, this.tagId] : [];
         this.dialogService.alertAndBackToList(false, `${this.actionName}失敗`, ['pages', 'tag-manage', 'tag-set', ...route]);
         throw new Error(err.message);
       }),
@@ -502,13 +502,12 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   //#region 組送出資料
   getRequestData(): TagSettingEditReq {
-    const tagId = this.params['tagId'];
     const formData = this.validateForm.getRawValue();
 
     if (!formData) return undefined
 
     let reqData = new TagSettingEditReq({
-      tagId: tagId,
+      tagId: this.tagId,
       tagName: formData.tagName,
       status: formData.status,
       tagType: formData.tagType,
@@ -530,7 +529,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
           formData.tagConditionSetting.map((m) => {
             const id = m['id'];
             return new TagConditionSetting({
-              tagId: tagId,
+              tagId: this.tagId,
               groupId: 1,//因只有一個，固定為1
               conditionValue: formData.conditionValue,
               detectionCondition: m['detectionCondition_' + id],

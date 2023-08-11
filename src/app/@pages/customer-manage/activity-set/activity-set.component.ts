@@ -25,6 +25,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
   filterList: Array<{ key: string; val: string }> = Object.entries(Filter).map(([k, v]) => ({ key: k, val: v }));
   scheduleList: Array<{ key: string; val: string }> = Object.entries(Schedule).map(([k, v]) => ({ key: k, val: v }));
   activityId: string;
+  actionName: string;// 新增/編輯/複製
 
   constructor(
     storageService: StorageService,
@@ -83,9 +84,10 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     return this.validateForm.get('activityListCondition') as FormArray
   }
 
-  err: boolean = false;
   ngOnInit(): void {
     this.activityId = this.activatedRoute.snapshot.params?.activityId;
+    this.actionName = CommonUtil.getActionName(CommonUtil.isNotBlank(this.activityId) ? 'edit' : null);
+
     if (!!this.activityId) {
       this.loadingService.open();
       this.customerManageService.getActivitySettingRow(this.activityId).pipe(
