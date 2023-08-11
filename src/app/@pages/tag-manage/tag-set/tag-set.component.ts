@@ -480,7 +480,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     const formData = this.validateForm.getRawValue();
 
     //throw new Error('(tagId || formData) is bad');
-    if (!tagId || !formData) return undefined
+    if (!formData) return undefined
 
     let reqData = new TagSettingEditReq({
       tagId: tagId,
@@ -492,8 +492,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       filePath: formData.filePath,
       fileData: formData.fileData,
       conditionSettingMethod: formData.conditionSettingMethod, //條件設定方式
-      startDate: formData.startDate ? moment(formData.startDate).format(this.dateFormat) : null,
-      endDate: formData.endDate ? moment(formData.endDate).format(this.dateFormat) : null,
+      startDate: formData.startDate ? moment(formData.startDate).format('YYYY-MM-DD') : null,
+      endDate: formData.endDate ? moment(formData.endDate).format('YYYY-MM-DD') : null,
       tagDimension: formData.tagDimension,
       tagSubDimension: formData.tagSubDimension,
       tagDescription: formData.TagDescription,
