@@ -522,21 +522,23 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       tagDimension: formData.tagDimension,
       tagSubDimension: formData.tagSubDimension,
       tagDescription: formData.TagDescription,
-      conditionSettingQuery: formData.conditionSettingQuery, //條件設定語法
+      conditionSettingQuery:
+        (formData.tagType === 'normal' && formData.conditionSettingMethod === 'normal') ?
+          formData.conditionSettingQuery : null, //條件設定語法
+          tagConditionSetting:
+        (formData.tagType === 'normal' && formData.conditionSettingMethod === 'field' && Array.isArray(formData.tagConditionSetting)) ?
+          formData.tagConditionSetting.map((m) => {
+            const id = m['id'];
+            return new TagConditionSetting({
+              tagId: tagId,
+              groupId:1,//因只有一個，固定為1
+              conditionValue: formData.conditionValue,
+              detectionCondition: m['detectionCondition_' + id],
+              thresholdValue: m['thresholdValue_' + id],
+              joinValue: m['joinValue_' + id],
+            });
+          }) : null,
     });
-
-    if (Array.isArray(formData.tagConditionSetting)) {
-      reqData.tagConditionSetting = formData.tagConditionSetting.map((m) => {
-        const id = m['id'];
-        return new TagConditionSetting({
-          tagId: tagId,
-          conditionValue: formData.conditionValue,
-          detectionCondition: m['detectionCondition_' + id],
-          thresholdValue: m['thresholdValue_' + id],
-          joinValue: m['joinValue_' + id],
-        });
-      });
-    }
 
     return reqData;
   }
