@@ -149,40 +149,44 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
   submit() {
     let valid = this.validateForm.valid;
     let reqData: ActivitySettingEditReq = this.getRequestData();
-    if (valid && !this.activityId) {
-      this.loadingService.open();
-      this.customerManageService.createActivitySetting(reqData).pipe(
-        catchError((err) => {
-          this.loadingService.close();
-          this.dialogService.alertAndBackToList(false, '新增失敗', ['pages', 'customer-manage', 'activity-list']);
-          throw new Error(err.message);
-        }),
-        tap(res => {
-          console.info(res)
-          this.loadingService.close();
-        })).subscribe(res => {
-          if (res.code === RestStatus.SUCCESS) {
-            this.dialogService.alertAndBackToList(true, '新增成功', ['pages', 'customer-manage', 'activity-list'])
-          }
-        });
-    } else if (valid && this.activityId) {
-      this.loadingService.open();
-      this.customerManageService.updateActivitySetting(this.activityId, reqData).pipe(
-        catchError((err) => {
-          this.loadingService.close();
-          this.dialogService.alertAndBackToList(false, '編輯失敗', ['pages', 'customer-manage', 'activity-list']);
-          throw new Error(err.message);
-        }),
-        tap(res => {
-          console.info(res)
-          this.loadingService.close();
-        })).subscribe(res => {
-          if (res.code === RestStatus.SUCCESS) {
-            this.dialogService.alertAndBackToList(true, '編輯成功', ['pages', 'customer-manage', 'activity-list'])
-          }
-        });
+
+    if (!valid || !reqData) {
+      const route = this.activityId ? [this.activityId] : [];
+      this.dialogService.alertAndBackToList(false, `${this.actionName}驗證失敗`, ['pages', 'customer-manage', 'customer-set', ...route]);
+      return
     }
+
+    // 調用(新增or複製)或編輯
+    this.saveActivitySetting(reqData);
+
   }
+
+  //#region (新增or複製)或編輯
+  saveActivitySetting(reqData: any) {
+    this.loadingService.open();
+
+    const requestObservable = this.activityId
+      ? this.customerManageService.updateActivitySetting(this.activityId, reqData)
+      : this.customerManageService.createActivitySetting(reqData);
+
+    requestObservable.pipe(
+      catchError((err) => {
+        this.loadingService.close();
+        const route = this.activityId ? [this.activityId] : [];
+        this.dialogService.alertAndBackToList(false, `${this.actionName}失敗`, ['pages', 'customer-manage', 'activity-set', ...route]);
+        throw new Error(err.message);
+      }),
+      tap(res => {
+        console.info(res);
+        this.loadingService.close();
+      })
+    ).subscribe(res => {
+      if (res.code === RestStatus.SUCCESS) {
+        this.dialogService.alertAndBackToList(true, `${this.actionName}成功`, ['pages', 'customer-manage', 'activity-list']);
+      }
+    });
+  }
+  //#endregion
 
   getRequestData(): ActivitySettingEditReq {
     let reqData: ActivitySettingEditReq = this.validateForm.getRawValue();
