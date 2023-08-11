@@ -41,6 +41,9 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   maxSizeInMB: number = 5;//檔案大小
   filePlaceholderName: string = '請上傳檔案';
+  fileName: string;
+  fileData: string;
+  uploadType: string;
   //#region 檔案白名單
   passFileArrayStr: string = '.csv,,,,'
   passFileArray: Array<string> = ['csv']
@@ -357,7 +360,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   }
   //#endregion
 
-  //#region 檔案上傳驗證
+  //#region 檔案上傳(轉Base64)並驗證
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     const fileValidatorResult = this.fileValidator(file);
@@ -366,9 +369,21 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       this.validateForm?.get('fileName')?.setErrors(fileValidatorResult);
       this.filePlaceholderName = '請上傳檔案';
       return
-    } else {
-      this.validateForm?.get('fileName')?.setErrors(null);
     }
+
+    CommonUtil.convertFileToBase64(file)
+      .then(base64String => {
+        this.fileName = this.getFileNameWithoutExtension(file.name);
+        this.fileData = base64String;
+        this.uploadType = file.type;
+      })
+      .catch(error => {
+        this.validateForm?.get('fileName')?.setErrors({ uploadFileMsg: error });
+        return
+      });
+
+    this.validateForm?.get('fileName')?.setErrors(null);
+
   }
 
   fileValidator(file: File): { [key: string]: any } | null {
@@ -390,6 +405,17 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
     // 驗證通過，返回null表示驗證成功
     return null;
+  }
+  //#endregion
+
+  //#region 抓檔案名稱並無副檔名
+  getFileNameWithoutExtension(fileName: string): string {
+    const lastDotIndex = fileName.lastIndexOf('.');
+    if (lastDotIndex !== -1) {
+      return fileName.substring(0, lastDotIndex);
+    } else {
+      return fileName;
+    }
   }
   //#endregion
 
@@ -479,7 +505,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     const tagId = this.params['tagId'];
     const formData = this.validateForm.getRawValue();
 
-    //throw new Error('(tagId || formData) is bad');
     if (!formData) return undefined
 
     let reqData = new TagSettingEditReq({
@@ -487,10 +512,10 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       tagName: formData.tagName,
       status: formData.status,
       tagType: formData.tagType,
-      uploadType: formData.uploadType,
-      fileName: formData.fileName,
-      filePath: formData.filePath,
-      fileData: formData.fileData,
+      uploadType: (formData.tagType === 'document') ? this.uploadType : null,
+      fileName: (formData.tagType === 'document') ? this.fileName : null,
+      //filePath: formData.filePath,
+      fileData: (formData.tagType === 'document') ? this.fileData : null,
       conditionSettingMethod: formData.conditionSettingMethod, //條件設定方式
       startDate: formData.startDate ? moment(formData.startDate).format('YYYY-MM-DD') : null,
       endDate: formData.endDate ? moment(formData.endDate).format('YYYY-MM-DD') : null,

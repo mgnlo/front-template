@@ -3,6 +3,28 @@ import * as moment from 'moment';
 import { Moment } from 'moment';
 
 export const CommonUtil = {
+  /** 檔案轉Base64*/
+  convertFileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      //reject(new Error('轉換為Base64時發生錯誤'));
+      const reader = new FileReader();
+
+      reader.onload = (event) => {
+        const base64String = event.target?.result?.toString()?.split(',')[1];
+        if (base64String) {
+          resolve(base64String);
+        } else {
+          reject(new Error('轉換為Base64時發生錯誤'));
+        }
+      };
+
+      reader.onerror = (error) => {
+        reject(error);
+      };
+
+      reader.readAsDataURL(file);
+    });
+  },
   /** 取得路由中文 */
   getActionName(changeRouteName: string): string {
     switch (changeRouteName) {
