@@ -36,11 +36,15 @@
                         </li>
                         <li>欄位寬度100px時，可容納4個字元，超過會換行；欄位寬度200px時，可容納10個字元，超過會換行...以此類推。</li>
                     </ul>
-                    <p class="color_skyBlue">
-                        寬度使用時機<br>
-                        固定欄位寬度：在大版畫面時不會占到太多的空間，多用於長度較一致的欄位(ex:姓名、狀態)<br>
-                        設定最小寬度：可確保欄位不會過於縮小，而導致文字無法正確顯示，多用於不適合換行的欄位(ex:電話)
-                    </p>
+                    <div class="noteText">
+                        <div>
+                            <p>寬度使用時機</p>
+                            <ul>
+                                <li>固定欄位寬度：在大版畫面時不會占到太多的空間，多用於長度較一致的欄位(ex:姓名、狀態)</li>
+                                <li>設定最小寬度：可確保欄位不會過於縮小，而導致文字無法正確顯示，多用於不適合換行的欄位(ex:電話)</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 區塊內小標題 -->
@@ -52,6 +56,7 @@
                 <div class="textBlock">
                     <p class="text_bold color_blue">篩選</p>
                     <p>可視需求使用，此功能適用於文字欄位，標籤、按鈕、顯示狀態欄位較不適用。</p>
+                    <p class="text_bold color_red">注意：下拉式選單的樣式為瀏覽器原生樣式，無法變更；若無法接受，可使用下方客製表格03(缺點：功能、資料需自行編寫串接)。</p>
                     <p class="text_bold color_blue">新增欄位</p>
                     <p>此案不使用smart-table新增功能。</p>
                     <p class="text_bold color_blue">編輯欄位</p>
@@ -59,6 +64,8 @@
                     <p class="text_bold color_blue">刪除欄位</p>
                     <p>可視需求使用，點選後，會直接將此筆資料移除。</p>
                     <p class="color_red">注意：此動作不會有警告訊息！</p>
+                    <p class="text_bold color_blue">分頁</p>
+                    <p>可視需求使用，預設為10筆資料(可設定)，若不使用分頁功能，表格則會一直往下延伸。</p>
                 </div>
 
                 <!-- 區塊內小標題 -->
@@ -69,11 +76,12 @@
                 <!-- 純文字 -->
                 <div class="textBlock">
                     <ul>
-                        <li>表格內按鈕使用無底色按鈕。</li>
+                        <li>按鈕為無底色按鈕。</li>
                         <li>顏色使用規範同「基本元件 - 按鈕」之說明。</li>
                         <li>六種顏色：主題藍(primary)、藍(info)、綠(success)、紅(danger)、橘(warning)、灰(basic)</li>
                     </ul>
                 </div>
+
             </nb-accordion-item-body>
         </nb-accordion-item>
     </nb-accordion>
@@ -110,6 +118,12 @@
             <!-- 區塊內小標題 -->
             <div class="subTitle">
                 <p>卡片區塊內小標題 - 表格三</p>
+            </div>
+
+            <!-- 警告訊息 -->
+            <div class="noteText alert">
+                <nb-icon icon="info-outline"></nb-icon>
+                <p>表格中的checkbox欄位必須在第一欄！</p>
             </div>
 
             <!-- 基本表格 -->
@@ -289,6 +303,107 @@
                 </table>
             </div>
 
+            <!-- 區塊內小標題 -->
+            <div class="subTitle">
+                <p>卡片區塊內小標題 - 客製表格03</p>
+            </div>
+
+            <!-- 客製表格03 -->
+            <div class="tableContainer">
+                <table class="expandTable">
+                    <thead>
+                        <tr>
+                            <th>一般輸入欄位</th>
+                            <th>一般輸入欄位</th>
+                            <th>下拉式選單</th>
+                        </tr>
+                        <tr class="filters">
+                            <th>
+                                <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" />
+                            </th>
+                            <th>
+                                <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" />
+                            </th>
+                            <th>
+                                <nb-select fullWidth placeholder="請選擇">
+                                    <nb-option value="item1">item1</nb-option>
+                                    <nb-option value="item2">item2</nb-option>
+                                </nb-select>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>內容文字</td>
+                            <td>內容文字</td>
+                            <td>內容文字</td>
+                        </tr>
+                        <tr>
+                            <td>內容文字</td>
+                            <td>內容文字</td>
+                            <td>內容文字</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 區塊內小標題 -->
+            <div class="subTitle">
+                <p>卡片區塊內小標題 - 表格頁籤</p>
+            </div>
+
+            <!-- 表格頁籤 -->
+            <div class="tablePager">
+                <!-- TODO:最多顯示4頁 -->
+                <ul class="pagination">
+                    <!-- 如果在第一頁需要加 disable -->
+                    <li class="pageItem disable">
+                        <a>
+                            <span>«</span>
+                        </a>
+                    </li>
+                    <!-- 如果在第一頁需要加 disable -->
+                    <li class="pageItem disable">
+                        <a>
+                            <span><</span>
+                        </a>
+                    </li>
+                    <!-- 當前頁面加 active -->
+                    <li class="pageItem active">
+                        <a>
+                            <span>1</span>
+                        </a>
+                    </li>
+                    <li class="pageItem">
+                        <a>
+                            <span>2</span>
+                        </a>
+                    </li>
+                    <li class="pageItem">
+                        <a>
+                            <span>3</span>
+                        </a>
+                    </li>
+                    <li class="pageItem">
+                        <a>
+                            <span>4</span>
+                        </a>
+                    </li>
+                    <!-- 如果在最後一頁需要加 disable -->
+                    <li class="pageItem">
+                        <a>
+                            <span>></span>
+                        </a>
+                    </li>
+                    <!-- 如果在最後一頁需要加 disable -->
+                    <li class="pageItem">
+                        <a>
+                            <span>»</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </nb-card-body>
+
     </nb-card>
 </div>

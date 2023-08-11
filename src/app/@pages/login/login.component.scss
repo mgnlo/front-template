@@ -2,10 +2,9 @@ nb-layout-column {
     height: 100% !important;
     max-width: 1440px;
     margin: 0 auto;
-    background: url('~assets/images/img_loginBg.png') no-repeat right -2rem center / 920px #E4E9EB;
+    background: url('~assets/images/img_loginBg.png') no-repeat right bottom / 920px #E4E9EB;
     padding: 0 !important;
 }
-
 nb-card {
     height: 100%;
     border-radius: 0;
@@ -26,7 +25,6 @@ nb-card {
             margin-bottom: 2.5rem;
         }
     }
-   
 }
 .auth-block {
     width: 100%;
@@ -41,21 +39,36 @@ nb-card {
     margin: 1.5rem 0 0;
 }
 @media all and (max-width: 1280px) {
-    nb-layout-column { background: url('~assets/images/img_loginBg.png') no-repeat right center / 60% #E4E9EB; }
+    nb-layout-column { background: url('~assets/images/img_loginBg.png') no-repeat right bottom / calc(100vw - 450px) #E4E9EB; }
     nb-card { margin: 0 auto 0 0; }
 }
 @media all and (max-width: 1024px) {
-    nb-layout-column { background: url('~assets/images/img_loginBg.png') no-repeat center top / 600px #E4E9EB; }
+    nb-layout-column {
+        overflow-y: auto !important;
+        background: url('~assets/images/img_loginBg_sm.png') no-repeat center top / 100vw #E4E9EB;
+        padding-right: 0;
+    }
     nb-card {
+        position: relative;
         height: 100%;
         display: flex;
         padding: 2rem;
+        &:before {
+            content: '';
+            position: absolute;
+            width: calc(100vw + 4rem);
+            height: calc(100vh - 40vw);
+            top: 40vw;
+            bottom: 0;
+            left: -2rem;
+            background: url('~assets/images/img_loginBg_repeat.png') center top / contain;
+        }
         nb-card-body {
             width: 100%;
             justify-content: center;
             height: fit-content;
             background: rgba(#FFFFFF, 0.85);
-            margin: 40% 0 0;
+            margin: 40vw 0 0;
             padding: 3rem;
             .auth-block {
                 height: fit-content;
@@ -63,8 +76,4 @@ nb-card {
             }
         }
     }
-    
-}
-@media all and (max-width: 600px) {
-    nb-layout-column { background: url('~assets/images/img_loginBg.png') no-repeat center top -2rem / 100% #E4E9EB; }
 }

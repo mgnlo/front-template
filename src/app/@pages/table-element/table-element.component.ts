@@ -294,7 +294,7 @@ export class TableElementComponent implements OnInit {
     },
 
     // 篩選功能
-    // hideSubHeader: true,
+    hideSubHeader: false,
 
     // 欄位
     columns: {
@@ -303,7 +303,7 @@ export class TableElementComponent implements OnInit {
             title: '欄位標題',
         },
         column02: {
-            title: '欄位文字置中',
+            title: '欄位標題',
             type: 'html',
             class: 'textAlign_Center',
             valuePrepareFunction: (cell: string, row: any) => {
@@ -312,8 +312,30 @@ export class TableElementComponent implements OnInit {
             }
         },
         column03: {
-          title: '欄位標題',
-      },
+          title: '下拉欄位',
+          editor: {
+            type: 'list',
+            config: {
+              selectText: '請選擇',
+              list: [
+                { value: 'Option 1', title: 'Option 1' },
+                { value: 'Option 2', title: 'Option 2' },
+                { value: 'Option 3', title: 'Option 3' },
+              ],
+            },
+          },
+          filter: {
+            type: 'list',
+            config: {
+              selectText: '請選擇',
+              list: [
+                { value: 'Option 1', title: 'Option 1' },
+                { value: 'Option 2', title: 'Option 2' },
+                { value: 'Option 3', title: 'Option 3' },
+              ],
+            },
+          },
+        },
     },
     noDataMessage: '查無資料',
   };
@@ -321,88 +343,94 @@ export class TableElementComponent implements OnInit {
     {
         column01: '內容文字',
         column02: '內容文字',
-        column03: '內容文字',
+        column03: 'Option 1',
     },
     {
         column01: '內容文字',
         column02: '內容文字',
-        column03: '內容文字',
+        column03: 'Option 1',
     },
     {
         column01: '內容文字',
         column02: '內容文字',
-        column03: '內容文字',
+        column03: 'Option 1',
+    },
+    {
+        column01: '內容文字',
+        column02: '內容文字',
+        column03: 'Option 1',
     },
     {
       column01: '內容文字',
       column02: '內容文字',
-      column03: '內容文字',
+      column03: 'Option 1',
     },
     {
       column01: '內容文字',
       column02: '內容文字',
-      column03: '內容文字',
+      column03: 'Option 1',
     },
     {
       column01: '內容文字',
       column02: '內容文字',
-      column03: '內容文字',
+      column03: 'Option 1',
     },
     {
       column01: '內容文字',
       column02: '內容文字',
-      column03: '內容文字',
+      column03: 'Option 1',
     },
     {
       column01: '內容文字',
       column02: '內容文字',
-      column03: '內容文字',
+      column03: 'Option 1',
     },
     {
       column01: '內容文字',
       column02: '內容文字',
-      column03: '內容文字',
+      column03: 'Option 1',
     },
     {
       column01: '內容文字',
       column02: '內容文字',
-      column03: '內容文字',
+      column03: 'Option 1',
     },
     {
       column01: '內容文字',
       column02: '內容文字',
-      column03: '內容文字',
+      column03: 'Option 1',
     },
     {
       column01: '內容文字',
       column02: '內容文字',
-      column03: '內容文字',
+      column03: 'Option 1',
     },
     {
       column01: '內容文字',
       column02: '內容文字',
-      column03: '內容文字',
+      column03: 'Option 1',
     },
     {
       column01: '內容文字',
       column02: '內容文字',
-      column03: '內容文字',
+      column03: 'Option 1',
     },
     {
       column01: '內容文字',
       column02: '內容文字',
-      column03: '內容文字',
+      column03: 'Option 1',
     },
     {
       column01: '內容文字',
       column02: '內容文字',
-      column03: '內容文字',
+      column03: 'Option 1',
     },
     {
       column01: '內容文字',
       column02: '內容文字',
-      column03: '內容文字',
+      column03: 'Option 1',
     },
+    
   ];
   basicTable3 = {
     // 操作欄位

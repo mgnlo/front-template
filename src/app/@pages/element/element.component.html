@@ -20,6 +20,17 @@
         <p>提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息提示訊息</p>
     </div>
 
+    <!-- 提示訊息 -->
+    <div class="noteText">
+        <div>
+            <p>說明：</p>
+            <ul>
+                <li>說明內容說明內容說明內容</li>
+                <li>說明內容說明內容說明內容說明內容說明內容</li>
+            </ul>
+        </div>
+    </div>
+
     <!-- 警告訊息 -->
     <div class="noteText alert">
         <nb-icon icon="info-outline"></nb-icon>
@@ -37,7 +48,7 @@
             <!-- 文字區塊 -->
             <div class="textBlock">
                 <ul>
-                    <li>兩種樣式：純底色(filled)、外框(outline)</li>
+                    <li>兩種樣式：純底色(filled)、線框(outline)</li>
                     <li>六種顏色：主題藍(primary)、藍(info)、綠(success)、紅(danger)、橘(warning)、灰(basic)</li>
                 </ul>
             </div>
@@ -232,9 +243,12 @@
         <nb-card-body>
             <!-- 文字區塊 -->
             <div class="textBlock">
-                <ul>
+                <ul class="mb-0">
                     <li>六種顏色：主題藍(primary)、藍(info)、綠(success)、紅(danger)、橘(warning)、灰(basic)</li>
+                    <li>按鈕尺寸：極小(tiny)、小(small)、中(medium)</li>
                     <li>負向語意(灰)：取消、上一步、關閉 &harr; 正向語意(藍)：下一頁、確定、送出</li>
+                    <li>本案僅使用純底色按鈕，不可使用線框按鈕、漸層按鈕。</li>
+                    <li>Icon 使用 <a href="https://akveo.github.io/eva-icons/">Eva Icons</a>，有<span class="text_bold">「實心(filled)」</span>與<span class="text_bold">「線條(outline)」</span>兩種風格，可依照需求選擇使用。</li>
                 </ul>
             </div>
 

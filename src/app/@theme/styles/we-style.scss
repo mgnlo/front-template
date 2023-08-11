@@ -65,7 +65,6 @@ $scrollbar: #BBC1C5;
         transition: all 0.3s;
         &.active nb-icon {
             color: nb-theme(color-primary-500);
-            transform: rotate(270deg);
         }
         &:hover nb-icon { color: #FFFFFF; }
     }
@@ -134,7 +133,6 @@ $scrollbar: #BBC1C5;
             }
         }
     }
-    .expand-state { transform: rotate(180deg); }
 }
 @media all and (max-width: 575px) {
     .nb-theme-default nb-sidebar {
@@ -778,8 +776,15 @@ ul {
     li {
         font-size: $f13;
         font-weight: bold;
+        &:not(:nth-last-of-type(1)) {
+            margin-bottom: 0.125rem;
+        }
     }
     ul { margin-bottom: 0; }
+    div p:not(:nth-last-child(1)) {
+        margin-top: 0;
+        margin-bottom: 0.25rem;
+    }
     &.alert {
         background: rgba($color: nb-theme(color-danger-500), $alpha: 0.1);
         nb-icon,p,li { color: nb-theme(color-danger-500); }
@@ -892,6 +897,21 @@ ul {
                 margin-right: 0 !important;
             }
             span { white-space: nowrap; }
+            .multiItem {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                align-self: flex-start;
+                [nbInput], nb-select { flex: 1; }
+                .note { 
+                    width: 100%;
+                    margin-top: 0.5rem;
+                }
+                &~span {
+                    align-self: flex-start;
+                    margin-top: 0.625rem;
+                }
+            }
             &.tel {
                 input:nth-child(1){ width: 7rem; }
                 nb-select { min-width: 7rem; }
@@ -1362,6 +1382,18 @@ ul {
 table {
     position: relative;
     width: 100%;
+    th, td {
+        position: relative;
+        vertical-align: middle;
+        font-size: $f14;
+        font-weight: normal;
+        color: #121A23;
+        border: 1px solid #DBDEE1;
+        padding: 0.875rem 1.25rem;
+        &.center {
+            text-align: center;
+        }
+    }
     th {
         &.w100 { width: 100px;}
         &.w150 { width: 150px;}
@@ -1382,18 +1414,6 @@ table {
         &.min_w450 { min-width: 450px; }
         &.min_w500 { min-width: 500px; }
     }
-    th, td {
-        position: relative;
-        vertical-align: middle;
-        font-size: $f14;
-        font-weight: normal;
-        color: #121A23;
-        border: 1px solid #DBDEE1;
-        padding: 0.875rem 1.25rem;
-        &.center {
-            text-align: center;
-        }
-    }
     td {
         word-break: break-all;
         .btnCol {
@@ -1413,7 +1433,14 @@ table {
             display: flex !important;
             padding: 0 !important;
         }
-    } 
+    }
+    // 篩選
+    tr.filters th {
+        padding: 6px 8px !important;
+        [nbInput], nb-select {
+            height: calc(1.5em + 0.75rem + 2px);
+        }
+    }
     // 展開收合表格
     &.expandTable {
         th {
@@ -1479,6 +1506,67 @@ table {
             }
             &.collapsed { 
                 display: none !important;
+            }
+        }
+    }
+    // 表格頁籤
+    .tablePager {
+        display: flex;
+        justify-content: space-between;
+        ul.pagination {
+            width: auto;
+            display: flex;
+            border: #DBDEE1 solid 1px;
+            border-radius: 0.25rem;
+            margin: 1.25rem 0 1.25rem auto;
+            padding: 0;
+            .pageItem {
+                overflow: hidden;
+                display: inline;
+                margin-bottom: 0;
+                a {
+                    display: block;
+                    cursor: pointer;
+                    font-size: 0.875rem;
+                    text-decoration: none;
+                    line-height: 1rem;
+                    border: none;
+                    background-color: transparent;
+                    color: #2A6191;
+                    padding: 0.75rem 1.25rem;
+                    span {
+                        font-size: inherit;
+                        line-height: inherit;
+                        color: inherit;
+                    }
+                }
+                &:not(:nth-last-of-type(1)) { border-right: 1px solid #DBDEE1; }
+                &:nth-child(1) {
+                    border-top-left-radius: 0.25rem;
+                    border-bottom-left-radius: 0.25rem;
+                }
+                &:nth-last-child(1) {
+                    border-top-right-radius: 0.25rem;
+                    border-bottom-right-radius: 0.25rem;
+                }
+                &.disable {
+                    a {
+                        cursor: auto;
+                        pointer-events: none;
+                        background: transparent;
+                        color: rgba(143, 155, 179, 0.48);
+                    }
+                }
+                &.active {
+                    background-color: #2A6191;
+                    color: #ffffff;
+                    a {
+                        cursor: auto;
+                        pointer-events: none;
+                        background-color: #2A6191;
+                        color: #ffffff;
+                    }
+                }
             }
         }
     }
@@ -1606,4 +1694,3 @@ table {
         }
     }
 }
-

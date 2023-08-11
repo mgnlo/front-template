@@ -21,7 +21,8 @@ export class Element2Component implements OnInit {
   minutes: { value: string;}[] = [];
   filteredOptions$: Observable<string[]>;
   tags: Set<string> = new Set();
-  selectedValue: string = "date";
+  selectedValue: string;
+  selectedValue2: string;
 
   @ViewChild('autoInput') txnInput: { nativeElement: { value: string; }; };
 
@@ -33,7 +34,7 @@ export class Element2Component implements OnInit {
   }
 
   constructor() {
-    for (let i = 0; i <= 31; i++) {
+    for (let i = 1; i <= 31; i++) {
       const value = (i < 10 ? '0' : '') + i;
       this.dates.push({ value: value });
     }
@@ -46,7 +47,7 @@ export class Element2Component implements OnInit {
       this.minutes.push({ value: value });
     }
   }
-  
+
   private filter(value: string): string[] {
     const filterValue = value.toLowerCase();
     return this.options.filter(optionValue => optionValue.toLowerCase().includes(filterValue));
@@ -81,5 +82,8 @@ export class Element2Component implements OnInit {
   }
   onRadioChange(value: string) {
     this.selectedValue = value;
+  }
+  onRadioChange2(value: string) {
+    this.selectedValue2 = value;
   }
 }

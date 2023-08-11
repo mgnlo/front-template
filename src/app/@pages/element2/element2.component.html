@@ -1167,7 +1167,7 @@
                         <div class="fieldGroup col-12 col-lg-6">
                             <label>電話欄位A</label>
                             <div class="multi tel">
-                                <input nbInput type="text" />
+                                <input nbInput type="text" placeholder="請輸入" />
                                 <span>-</span>
                                 <input nbInput fullWidth type="text" placeholder="請輸入" />
                             </div>
@@ -1182,7 +1182,7 @@
                         <div class="fieldGroup col-12 col-lg-6">
                             <label>電話欄位B</label>
                             <div class="multi tel">
-                                <nb-select>
+                                <nb-select placeholder="+886">
                                     <nb-option value="item1">+886</nb-option>
                                     <nb-option value="item2">009</nb-option>
                                 </nb-select>
@@ -1203,7 +1203,7 @@
                         <div class="fieldGroup col-12 col-lg-6">
                             <label>電話欄位C</label>
                             <div class="multi tel">
-                                <nb-select>
+                                <nb-select placeholder="+886">
                                     <nb-option value="item1">+886</nb-option>
                                     <nb-option value="item2">009</nb-option>
                                 </nb-select>
@@ -1295,45 +1295,145 @@
 
                     <!-- 特殊組合 -->
                     <div class="row">
-                        <!-- radio選項 + 輸入欄位 -->
+                        <!-- 排程：欄位獨立錯誤訊息 -->
                         <div class="fieldGroup col-12 col-md-6">
-                            <label>radio選項 + 下拉</label>
+                            <label>排程設定-欄位獨立錯誤訊息</label>
                             <div>
                                 <nb-radio-group status="info">
-                                    <nb-radio value="date" checked (click)="onRadioChange('date')">每日</nb-radio>
+                                    <nb-radio value="date" (click)="onRadioChange('date')">每日</nb-radio>
                                     <nb-radio value="week" (click)="onRadioChange('week')">每週</nb-radio>
                                     <nb-radio value="month" (click)="onRadioChange('month')">每月</nb-radio>
                                 </nb-radio-group>
                             </div>
-                            <div class="multi">
-                                <ng-container *ngIf="selectedValue === 'month'">
-                                    <nb-select fullWidth placeholder="請選擇">
-                                        <nb-option *ngFor="let item of dates" [value]="item.value">{{ item.value }}</nb-option>
-                                    </nb-select>
-                                    <span>日</span>
-                                </ng-container>
-                                <ng-container *ngIf="selectedValue === 'week'">
-                                    <nb-select fullWidth placeholder="請選擇">
-                                        <nb-option *ngFor="let item of weeks" [value]="item">{{ item }}</nb-option>
-                                    </nb-select>
-                                </ng-container>
-                                <ng-container>
-                                    <nb-select fullWidth placeholder="請選擇">
-                                        <nb-option *ngFor="let item of hours" [value]="item.value">{{ item.value }}</nb-option>
-                                    </nb-select>
-                                    <span>：</span>
-                                    <nb-select fullWidth placeholder="請選擇">
-                                        <nb-option *ngFor="let item of minutes" [value]="item.value">{{ item.value }}</nb-option>
-                                    </nb-select>
-                                </ng-container>
-                            </div>
                             <!-- 欄位錯誤訊息 -->
-                            <div class="note errorText">
+                            <div class="note errorText" *ngIf="selectedValue !== 'date' && selectedValue !== 'week' && selectedValue !== 'month'">
                                 <nb-icon icon="alert-triangle"></nb-icon>
                                 <p>欄位錯誤訊息</p>
                             </div>
+                            <div class="multi">
+                                <ng-container *ngIf="selectedValue === 'month'">
+                                    <div class="multiItem">
+                                        <nb-select fullWidth placeholder="日">
+                                            <nb-option *ngFor="let item of dates" [value]="item.value">{{ item.value }}</nb-option>
+                                        </nb-select>
+                                        <!-- 欄位錯誤訊息 -->
+                                        <div class="note errorText">
+                                            <nb-icon icon="alert-triangle"></nb-icon>
+                                            <p>欄位錯誤訊息</p>
+                                        </div>
+                                    </div>
+                                    <span>日</span>
+                                </ng-container>
+                                <ng-container *ngIf="selectedValue === 'week'">
+                                    <div class="multiItem">
+                                        <nb-select fullWidth placeholder="星期">
+                                            <nb-option *ngFor="let item of weeks" [value]="item">{{ item }}</nb-option>
+                                        </nb-select>
+                                        <!-- 欄位錯誤訊息 -->
+                                        <div class="note errorText">
+                                            <nb-icon icon="alert-triangle"></nb-icon>
+                                            <p>欄位錯誤訊息</p>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngIf="selectedValue === 'date' || selectedValue === 'week' || selectedValue === 'month'">
+                                    <div class="multiItem">
+                                        <nb-select fullWidth placeholder="時">
+                                            <nb-option *ngFor="let item of hours" [value]="item.value">{{ item.value }}</nb-option>
+                                        </nb-select>
+                                        <!-- 欄位錯誤訊息 -->
+                                        <div class="note errorText">
+                                            <nb-icon icon="alert-triangle"></nb-icon>
+                                            <p>欄位錯誤訊息</p>
+                                        </div>
+                                    </div>
+                                    <span>：</span>
+                                    <div class="multiItem">
+                                        <nb-select fullWidth placeholder="分">
+                                            <nb-option *ngFor="let item of minutes" [value]="item.value">{{ item.value }}</nb-option>
+                                        </nb-select>
+                                        <!-- 欄位錯誤訊息 -->
+                                        <div class="note errorText">
+                                            <nb-icon icon="alert-triangle"></nb-icon>
+                                            <p>欄位錯誤訊息</p>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
                         </div>
 
+                        <!-- 錯誤樣式 -->
+                        <!-- 錯誤：error ＋ status="danger" -->
+                        <!-- 排程：欄位獨立錯誤訊息 -->
+                        <div class="fieldGroup error col-12 col-md-6">
+                            <label>排程設定-欄位獨立錯誤訊息</label>
+                            <div>
+                                <nb-radio-group status="danger">
+                                    <nb-radio value="date" (click)="onRadioChange2('date')">每日</nb-radio>
+                                    <nb-radio value="week" (click)="onRadioChange2('week')">每週</nb-radio>
+                                    <nb-radio value="month" (click)="onRadioChange2('month')">每月</nb-radio>
+                                </nb-radio-group>
+                            </div>
+                            <!-- 欄位錯誤訊息 -->
+                            <div class="note errorText" *ngIf="selectedValue2 !== 'date' && selectedValue2 !== 'week' && selectedValue2 !== 'month'">
+                                <nb-icon icon="alert-triangle"></nb-icon>
+                                <p>欄位錯誤訊息</p>
+                            </div>
+                            <div class="multi">
+                                <ng-container *ngIf="selectedValue2 === 'month'">
+                                    <div class="multiItem">
+                                        <nb-select fullWidth status="danger" placeholder="日">
+                                            <nb-option *ngFor="let item of dates" [value]="item.value">{{ item.value }}</nb-option>
+                                        </nb-select>
+                                        <!-- 欄位錯誤訊息 -->
+                                        <div class="note errorText">
+                                            <nb-icon icon="alert-triangle"></nb-icon>
+                                            <p>欄位錯誤訊息</p>
+                                        </div>
+                                    </div>
+                                    <span>日</span>
+                                </ng-container>
+                                <ng-container *ngIf="selectedValue2 === 'week'">
+                                    <div class="multiItem">
+                                        <nb-select fullWidth status="danger" placeholder="星期">
+                                            <nb-option *ngFor="let item of weeks" [value]="item">{{ item }}</nb-option>
+                                        </nb-select>
+                                        <!-- 欄位錯誤訊息 -->
+                                        <div class="note errorText">
+                                            <nb-icon icon="alert-triangle"></nb-icon>
+                                            <p>欄位錯誤訊息</p>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngIf="selectedValue2 === 'date' || selectedValue2 === 'week' || selectedValue2 === 'month'">
+                                    <div class="multiItem">
+                                        <nb-select fullWidth status="danger" placeholder="時">
+                                            <nb-option *ngFor="let item of hours" [value]="item.value">{{ item.value }}</nb-option>
+                                        </nb-select>
+                                        <!-- 欄位錯誤訊息 -->
+                                        <div class="note errorText">
+                                            <nb-icon icon="alert-triangle"></nb-icon>
+                                            <p>欄位錯誤訊息</p>
+                                        </div>
+                                    </div>
+                                    <span>：</span>
+                                    <div class="multiItem">
+                                        <nb-select fullWidth status="danger" placeholder="分">
+                                            <nb-option *ngFor="let item of minutes" [value]="item.value">{{ item.value }}</nb-option>
+                                        </nb-select>
+                                        <!-- 欄位錯誤訊息 -->
+                                        <div class="note errorText">
+                                            <nb-icon icon="alert-triangle"></nb-icon>
+                                            <p>欄位錯誤訊息</p>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 特殊組合 -->
+                    <div class="row">
                         <!-- AutoComplete + 標籤 -->
                         <div class="fieldGroup col-12 col-lg-6">
                             <label>自動完成輸入 + 標籤</label>
