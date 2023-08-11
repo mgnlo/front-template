@@ -47,8 +47,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   filePathList: Array<{ key: string; val: string }> = [{ key: 'path_A', val: 'A://' }, { key: 'path_B', val: 'B:/' }, { key: 'path_C', val: 'C:\\' }, { key: '/file/path/', val: '/file/path/' }];
 
   //預設pup-up活動名單
-  activityListSetting: Array<ActivitySetting> = ActivityListMock;//Call API
-  activityList: Array<{ key: string; val: string }> = this.activityListSetting.map(m => ({ key: m.activityId, val: m.activityName }))
+  activityList: Array<{ key: string; val: string }> = new Array;
   filterActivityList: Array<{ key: string; val: string }> = new Array;
 
   //預設名單列表
@@ -112,7 +111,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         type: 'string',
         class: 'col-2 alignCenter',
         valuePrepareFunction: (cell: string) => {
-          return Status[cell.toLowerCase()];
+          return Status[cell?.toLowerCase()];
         },
         sort: false,
       },
@@ -200,36 +199,58 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   //#region 新增
   add() {
-    this.refreshFilterActivityList();
-    if (this.filterActivityList.length > 0) {
-      this.dialogService.open(PreviewDialogComponent, {
-        title: '設定名單內容',
-        dataList: this.filterActivityList,
-      }).onClose.subscribe((selectedData: { key: string; val: string }) => {
-        if (!!selectedData) {
-          const findData = this.activityListSetting.find(f => f.activityId === selectedData.key);
-          this.scheduleActivitySettingModel.push(new ScheduleActivitySettingModel({
-            activityId: findData?.activityId,
-            version: findData?.version,
-            activityName: findData?.activityName,
-            activityDescription: findData?.activityDescription,
-            filterOptions: findData?.filterOptions,
-            listLimit: findData?.listLimit,
-            status: findData?.status,
-            startDate: findData?.startDate,
-            endDate: findData?.endDate,
-            createTime: findData?.createTime,
-            modificationTime: findData?.modificationTime,
-            scheduleSettings: findData?.scheduleSettings,
-            batchUpdateTime: findData?.batchUpdateTime,
-          }))
+    this.loadingService.open();
+    this.scheduleManageService.getScheduleActivityOptions()
+      .pipe(
+        catchError((err) => {
+          this.loadingService.close();
+          const route = this.scheduleId ? ['edit', this.scheduleId] : [];
+          this.dialogService.alertAndBackToList(false, `查詢名單列表${this.actionName}失敗`, ['pages', 'schedule-manage', 'schedule-activity-set', ...route]);
+          throw new Error(err.message);
+        }),
+        tap(res => {
+          console.info(res);
+          this.loadingService.close();
+        })
+      ).subscribe(res => {
+        if (res.code === RestStatus.SUCCESS) {
+          const activityListSetting = res.result;
+          this.activityList = activityListSetting.map(m => ({ key: m.activityId, val: m.activityName }));
+
           this.refreshFilterActivityList();
-          this.dataSource.load(this.scheduleActivitySettingModel);
+
+          if (this.filterActivityList.length > 0) {
+            this.dialogService.open(PreviewDialogComponent, {
+              title: '設定名單內容',
+              dataList: this.filterActivityList,
+            }).onClose.subscribe((selectedData: { key: string; val: string }) => {
+              if (!!selectedData) {
+                const findData = activityListSetting.find(f => f.activityId === selectedData.key);
+                this.scheduleActivitySettingModel.push(new ScheduleActivitySettingModel({
+                  activityId: findData?.activityId,
+                  version: findData?.version,
+                  activityName: findData?.activityName,
+                  activityDescription: findData?.activityDescription,
+                  filterOptions: findData?.filterOptions,
+                  listLimit: findData?.listLimit,
+                  status: findData?.status,
+                  startDate: findData?.startDate,
+                  endDate: findData?.endDate,
+                  createTime: findData?.createTime,
+                  modificationTime: findData?.modificationTime,
+                  scheduleSettings: findData?.scheduleSettings,
+                  batchUpdateTime: findData?.batchUpdateTime,
+                }))
+                this.refreshFilterActivityList();
+                this.dataSource.load(this.scheduleActivitySettingModel);
+              }
+            });;
+          }
         }
-      });;
-    }
+      });
   }
 
+  //塞選不重複資料
   refreshFilterActivityList() {
     this.filterActivityList = this.activityList.filter(item =>
       !this.scheduleActivitySettingModel.some(setting => setting.activityId === item.key)
@@ -238,7 +259,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   //#endregion
 
   ngOnInit(): void {
-    this.scheduleId = this.activatedRoute.snapshot.params.scheduleId;
+    this.scheduleId = this.activatedRoute.snapshot.params?.scheduleId;
     this.dataSource = new LocalDataSource();
     this.scheduleActivitySettingModel = this.ScheduleActivitySetting?.find(f => f.scheduleId === this.scheduleId)?.activitySetting as Array<ScheduleActivitySettingModel> ?? new Array<ScheduleActivitySettingModel>();
     this.refreshFilterActivityList();
@@ -273,7 +294,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
           Object.keys(res.result).forEach(key => {
             if (!!this.validateForm.controls[key]) {
               this.validateForm.controls[key].setValue(res.result[key]?.toLowerCase());
-            } else if(key === 'activitySetting'){
+            } else if (key === 'activitySetting') {
               this.dataSource = new LocalDataSource();
               this.scheduleActivitySettingModel = res.result[key];
               this.refreshFilterActivityList();

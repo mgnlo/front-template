@@ -49,7 +49,7 @@
     </nb-card-header>
     <nb-card-body>
         <div class="rightBox">
-          <button nbButton status="primary" size="medium" (click)="add()" [disabled]="this.filterActivityList.length === 0">新增</button>
+          <button nbButton status="primary" size="medium" (click)="add()">新增</button>
         </div>
         <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
         <paginator [source]="dataSource" [paginator]="paginator"></paginator>
