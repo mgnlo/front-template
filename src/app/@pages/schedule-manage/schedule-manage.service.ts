@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ResponseModel } from "@api/models/base.model";
-import { ScheduleActivitySetting, ScheduleSettingEditReq } from "@api/models/schedule-activity.model";
+import { ActivitySetting, ScheduleActivitySetting, ScheduleSettingEditReq } from "@api/models/schedule-activity.model";
 import { ApiService } from "@api/services/api.service";
 import { Observable } from "rxjs";
 
@@ -17,6 +17,11 @@ export class ScheduleManageService {
 
   getScheduleActivitySettingRow(scheduleId: string): Observable<ResponseModel<ScheduleActivitySetting>> {
       return this.service.doGet(this.scheduleFunc + scheduleId);
+  }
+
+  /** 可選的活動下拉選單 API*/
+  getScheduleActivityOptions(): Observable<ResponseModel<Array<ActivitySetting>>> {
+      return this.service.doGet(this.scheduleFunc + 'options');
   }
 
   createScheduleSetting(data: ScheduleSettingEditReq): Observable<ResponseModel<any>> {
