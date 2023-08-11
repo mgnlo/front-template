@@ -361,6 +361,5 @@ export const ConsoleUserListMock: Array<ConsoleUser> = [
             modificationTime: "2023-07-03 15:30:00",
             consoleGroupScope: null
         }
-    }
-    
+    }    
 ]

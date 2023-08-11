@@ -18,6 +18,7 @@ import { StorageService } from '@api/services/storage.service';
 import { catchError, tap } from 'rxjs/operators';
 import { LoadingService } from '@api/services/loading.service';
 import { RestStatus } from '@common/enums/rest-enum';
+import { LoginService } from '@api/services/login.service';
 
 @Component({
   selector: 'console-user',
@@ -125,6 +126,7 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
     private loadingService: LoadingService,
     private router: Router,
     private accountManageService: AccountManageService,
+    private loginService: LoginService,
     private dateService: NbDateService<Date>) {
     super(storageService);
 
@@ -136,6 +138,10 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
         updateOn: 'blur'
       }),
     });
+
+    if(!this.loginService.checkMenuScope("console-user.update")) {
+      delete this.gridDefine.columns.action;
+    }
   }
 
   maxLengthValidate(length: number): ValidatorFn {

@@ -14,6 +14,7 @@ import { LoadingService } from '@api/services/loading.service';
 import { DialogService } from '@api/services/dialog.service';
 import { RestStatus } from '@common/enums/rest-enum';
 import { GroupScope } from '@common/enums/console-group-enum';
+import { LoginService } from '@api/services/login.service';
 
 @Component({
   selector: 'console-group-edit',
@@ -23,22 +24,14 @@ import { GroupScope } from '@common/enums/console-group-enum';
 export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
   consoleGroupDetail: ConsoleGroup;
   // consoleUser: any;
-  consoleGroupScope: Array<GridInnerCheckBox> = [
-    { featureName: "dashboard", read: false },
-    { featureName: "customer", read: false },
-    { featureName: "activity", read: false, create: false, update: false, review: false },
-    { featureName: "tag", read: false, create: false, update: false, review: false },
-    { featureName: "schedule", read: false, create: false, update: false, review: false },
-    { featureName: "console-user", read: false, create: false, update: false, review: false },
-    { featureName: "console-group", read: false, create: false, update: false, review: false }
-  ];
+  consoleGroupScope: Array<GridInnerCheckBox> = this.accountManageService.createDefaultScopeGridInnerCheckBoxs();
 
   dataSource2: LocalDataSource;
   enableOption: any;
   gridDefine2 = {
     pager: {
       display: true,
-      perPage: 10,
+      perPage: 12,
     },
     columns: {
       featureName: {
@@ -74,11 +67,11 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
         renderComponent: ConsoleGroupEditCheckboxComponent,
         sort: false,
       },
-      review: {
-        title: '審核',
+      delete: {
+        title: '刪除',
         type: 'custom',
         class: 'col-1',
-        valuePrepareFunction: (cell, row: GridInnerCheckBox) => [row, 'review'],
+        valuePrepareFunction: (cell, row: GridInnerCheckBox) => [row, 'delete'],
         renderComponent: ConsoleGroupEditCheckboxComponent,
         sort: false,
       }

@@ -12,6 +12,7 @@ import { StorageService } from '@api/services/storage.service';
 import { catchError, tap } from 'rxjs/operators';
 import { LoadingService } from '@api/services/loading.service';
 import { RestStatus } from '@common/enums/rest-enum';
+import { LoginService } from '@api/services/login.service';
 
 @Component({
   selector: 'console-group-list',
@@ -67,14 +68,18 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
     }
   };
 
+  hasConsoleGroupCreate: boolean;
+
   constructor(
     storageService: StorageService,
     private router: Router,
+    private loginService: LoginService,
     private loadingService: LoadingService,
     private activatedRoute: ActivatedRoute,
     private accountManageService: AccountManageService) {
     super(storageService);
     this.dataSource = new LocalDataSource();
+    this.hasConsoleGroupCreate = this.loginService.checkMenuScope("console-group.create");
   }
 
   ngOnInit(): void {
@@ -146,6 +151,7 @@ export class ConsoleGroupButtonComponent implements OnInit {
 
   constructor(
     private router: Router,
+    public loginService: LoginService,
     private accountManageService: AccountManageService,
     private loadingService: LoadingService) {
 

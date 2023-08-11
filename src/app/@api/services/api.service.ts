@@ -7,11 +7,17 @@ import { tap, timeout } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { ApiLogicError } from './../error/api-logic-error';
 import { LoadingService } from './loading.service';
+import { LoginService } from './login.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
+  _jwtToken: string = null
+
+  public set jwtToken(jwt: string) {
+    this._jwtToken = jwt;
+  }
 
   private httpOptions = {
     headers: {
@@ -36,6 +42,10 @@ export class ApiService {
     let observable: Observable<ResponseModel<T>>;
     const resultUrl = this.prefixUrl + url;
     // const requestModel = { requestObj };
+        
+    if(this._jwtToken) {
+      this.httpOptions.headers["Authorization"] = `Bearer ${this._jwtToken}`;
+    }
 
     switch (method) {
       case 'post':

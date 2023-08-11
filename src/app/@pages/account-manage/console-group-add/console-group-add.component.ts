@@ -29,15 +29,7 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
     modificationTime: null
   };
   consoleUser: any;
-  consoleGroupScope: Array<GridInnerCheckBox> = [
-    { featureName: "dashboard", read: false },
-    { featureName: "customer", read: false },
-    { featureName: "activity", read: false, create: false, update: false, review: false },
-    { featureName: "tag", read: false, create: false, update: false, review: false },
-    { featureName: "schedule", read: false, create: false, update: false, review: false },
-    { featureName: "console-user", read: false, create: false, update: false, review: false },
-    { featureName: "console-group", read: false, create: false, update: false, review: false }
-  ];
+  consoleGroupScope: Array<GridInnerCheckBox> = this.accountManageService.createDefaultScopeGridInnerCheckBoxs();
   
   enableOption: string = "true";
   // groupName: string;
@@ -46,7 +38,7 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
   gridDefine = {
     pager: {
       display: true,
-      perPage: 10,
+      perPage: 12,
     },
     columns: {
       featureName: {
@@ -82,11 +74,11 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
         renderComponent: ConsoleGroupAddCheckboxComponent,
         sort: false,
       },
-      review: {
-        title: '審核',
+      delete: {
+        title: '刪除',
         type: 'custom',
         class: 'col-1',
-        valuePrepareFunction: (cell, row: GridInnerCheckBox) => [row, 'review'],
+        valuePrepareFunction: (cell, row: GridInnerCheckBox) => [row, 'delete'],
         renderComponent: ConsoleGroupAddCheckboxComponent,
         sort: false,
       }

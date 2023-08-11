@@ -1,9 +1,9 @@
 <div class="pageTitle">
     <h1>權限管理</h1>
-    <button nbButton status="info" size="tiny" class="iconBtn" (click)="edit()">
+    <button *ngIf="hasConsoleGroupUpdate" nbButton status="info" size="tiny" class="iconBtn" (click)="edit()">
         <nb-icon icon="edit-outline"></nb-icon>
     </button>
-    <button nbButton status="success" size="tiny" class="iconBtn" (click)="copy()">
+    <button *ngIf="hasConsoleGroupCreate" nbButton status="success" size="tiny" class="iconBtn" (click)="copy()">
         <nb-icon icon="copy-outline"></nb-icon>
     </button>
 </div>

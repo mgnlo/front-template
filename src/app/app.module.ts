@@ -20,6 +20,7 @@ import {
 import { HttpClientModule } from '@angular/common/http';
 import { NbDateFnsDateModule } from '@nebular/date-fns';
 import { ApiModule } from '@api/api.module';
+import { SSOLoginComponent } from './sso-login/sso-login.component';
 
 const NG_MODULES = [BrowserModule, BrowserAnimationsModule, HttpClientModule];
 
@@ -36,7 +37,7 @@ const NB_MODULES = [
 ];
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, SSOLoginComponent],
   imports: [
     AppRoutingModule,
     ApiModule,
