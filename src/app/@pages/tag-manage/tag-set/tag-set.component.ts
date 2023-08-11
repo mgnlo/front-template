@@ -497,7 +497,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       tagDimension: formData.tagDimension,
       tagSubDimension: formData.tagSubDimension,
       tagDescription: formData.TagDescription,
-      conditionSettingQuery: formData.TagName, //條件設定語法
+      conditionSettingQuery: formData.conditionSettingQuery, //條件設定語法
     });
 
     if (Array.isArray(formData.tagConditionSetting)) {
