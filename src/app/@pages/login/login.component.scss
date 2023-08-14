@@ -1,0 +1,79 @@
+nb-layout-column {
+    height: 100% !important;
+    max-width: 1440px;
+    margin: 0 auto;
+    background: url('~assets/images/img_loginBg.png') no-repeat right bottom / 920px #E4E9EB;
+    padding: 0 !important;
+}
+nb-card {
+    height: 100%;
+    border-radius: 0;
+    border: 0;
+    background: transparent;
+    margin: 0 auto 0 70px;
+    nb-card-body {
+        height: 100%;
+        width: 450px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background: #FFFFFF;
+        box-shadow: 6px 0 20px rgba(#000000, 0.16);
+        padding: 1rem 4rem;
+        .logo {
+            height: 45px;
+            margin-bottom: 2.5rem;
+        }
+    }
+}
+.auth-block {
+    width: 100%;
+    .title, .sub-title { text-align: center; }
+    .form-control-group { margin-bottom: 2rem; }
+}
+.fieldGroup {
+    padding-left: 0;
+    padding-right: 0;
+}
+.loginBtn {
+    margin: 1.5rem 0 0;
+}
+@media all and (max-width: 1280px) {
+    nb-layout-column { background: url('~assets/images/img_loginBg.png') no-repeat right bottom / calc(100vw - 450px) #E4E9EB; }
+    nb-card { margin: 0 auto 0 0; }
+}
+@media all and (max-width: 1024px) {
+    nb-layout-column {
+        overflow-y: auto !important;
+        background: url('~assets/images/img_loginBg_sm.png') no-repeat center top / 100vw #E4E9EB;
+        padding-right: 0;
+    }
+    nb-card {
+        position: relative;
+        height: 100%;
+        display: flex;
+        padding: 2rem;
+        &:before {
+            content: '';
+            position: absolute;
+            width: calc(100vw + 4rem);
+            height: calc(100vh - 40vw);
+            top: 40vw;
+            bottom: 0;
+            left: -2rem;
+            background: url('~assets/images/img_loginBg_repeat.png') center top / contain;
+        }
+        nb-card-body {
+            width: 100%;
+            justify-content: center;
+            height: fit-content;
+            background: rgba(#FFFFFF, 0.85);
+            margin: 40vw 0 0;
+            padding: 3rem;
+            .auth-block {
+                height: fit-content;
+                margin: 0 auto;
+            }
+        }
+    }
+}

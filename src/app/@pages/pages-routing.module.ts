@@ -23,6 +23,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'table',
+        loadChildren: () =>
+          import('@pages/table-element/table-element.module').then(
+            (m) => m.TablePageModule
+          ),
+      },
+      {
         path: 'dashboard',
         loadChildren: () =>
           import('@pages/dashboard/dashboard.module').then(
