@@ -38,20 +38,6 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     private loadingService: LoadingService,
   ) {
     super(storageService);
-    // const state = this.router.getCurrentNavigation()?.extras?.state;
-    // if (!!state) {
-    //   const processedData = CommonUtil.getHistoryProcessData<ScheduleActivitySetting>('ScheduleReviewHistory', state as ScheduleActivitySetting); // 異動歷程處理
-    //   if (!!processedData) {
-    //     this.isHistoryOpen = processedData.isHistoryOpen;
-    //     this.detail = processedData.detail;
-    //   }
-    // }else{//假資料，之後要Call API
-    //   const processedData = CommonUtil.getHistoryProcessData<ScheduleActivitySetting>('ScheduleReviewHistory', ScheduleActivitySettingMock[0] as ScheduleActivitySetting); // 異動歷程處理
-    //   if (!!processedData) {
-    //     this.isHistoryOpen = processedData.isHistoryOpen;
-    //     this.detail = processedData.detail;
-    //   }
-    // }
   }
 
   gridDefine = {
@@ -126,12 +112,9 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    // this.dataSource = new LocalDataSource();
-    // this.dataSource.load(this.activitySetting);
-
     this.scheduleId = this.activatedRoute.snapshot.params.scheduleId;
     this.loadingService.open();
-    this.scheduleManageService.getScheduleActivitySettingRow(this.scheduleId).pipe(
+    this.scheduleManageService.getScheduleActivitySettingDetail(this.scheduleId).pipe(
       catchError(err => {
         this.loadingService.close();
         this.dialogService.alertAndBackToList(false, '查無此筆資料，將為您導回名單排程', ['pages', 'schedule-manage', 'schedule-activity-list']);
@@ -150,6 +133,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
           this.dataSource.load(res.result.activitySetting);
         }
 
+        console.info('res', res)
         this.loadingService.close();
       })
     ).subscribe();

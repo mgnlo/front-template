@@ -7,7 +7,6 @@ import { ScheduleActivitySetting } from '@api/models/schedule-activity.model';
 import { Frequency, Status } from '@common/enums/common-enum';
 import { DatePipe } from '@angular/common';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
-import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { StorageService } from '@api/services/storage.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
@@ -21,7 +20,6 @@ import { catchError, filter, tap } from 'rxjs/operators';
 })
 export class ScheduleListComponent extends BaseComponent implements OnInit {
 
-  ScheduleActivitySetting: Array<ScheduleActivitySetting> = ScheduleActivitySettingMock;
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
   constructor(
@@ -96,9 +94,6 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    // this.dataSource = new LocalDataSource();
-    // this.dataSource.load(this.ScheduleActivitySetting);
-
     this.loadingService.open();
     this.scheduleManageService.getScheduleActivitySettingList().pipe(
       catchError(err => {
