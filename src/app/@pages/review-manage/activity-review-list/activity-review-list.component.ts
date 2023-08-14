@@ -1,17 +1,16 @@
-import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ActivityReviewHistory } from '@api/models/activity-list.model';
 import { StorageService } from '@api/services/storage.service';
-import { ReviewClass, ReviewStatus } from '@common/enums/review-enum';
+import { ColumnClass } from '@common/enums/common-enum';
+import { ReviewStatus } from '@common/enums/review-enum';
 import { ActivityReviewListMock } from '@common/mock-data/activity-review-mock';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { CheckboxIconComponent } from '@component/table/checkbox-icon/checkbox-icon.component';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { NbDateService } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
-import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({
@@ -76,7 +75,7 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
         type: 'html',
         class: 'left',
         sort: false,
-        width: '20%',
+        width: '25%',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
@@ -97,7 +96,7 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
       modificationTime: {
         title: '名單有效起訖日',
         type: 'string',
-        width: '30%',
+        width: '20%',
         sort: false,
         valuePrepareFunction: (cell: string, row: ActivityReviewHistory) => {
           return row.startDate + '~' + row.endDate;
@@ -112,9 +111,9 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
       reviewStatus: {
         title: '狀態',
         type: 'html',
-        width: '5%',
+        width: '10%',
         valuePrepareFunction: (cell: string) => {
-          return `<span class="${ReviewClass[cell]}">${ReviewStatus[cell]}</span>`;
+          return `<span class="${ColumnClass[cell]}">${ReviewStatus[cell]}</span>`;
         },
         sort: false,
       },
@@ -127,7 +126,7 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
         sort: false,
       },
     },
-    hideSubHeader: false, //起訖日查詢要用到
+    hideSubHeader: true,
     actions: {
       add: false,
       edit: false,

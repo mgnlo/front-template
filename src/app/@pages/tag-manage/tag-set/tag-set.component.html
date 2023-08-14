@@ -80,7 +80,7 @@
             </div>
           </div>
           <!-- 灰底區塊 -->
-          <div class="grayCard" *ngFor="let condition of conditions.controls | keyvalue; let i=index; let first = first; let last = last" formArrayName="tagConditionSetting">
+          <div class="colorArea" *ngFor="let condition of conditions.controls | keyvalue; let i=index; let first = first; let last = last" formArrayName="tagConditionSetting">
             <div class="row" formGroupName="{{i}}">
                 <dropdown class="col-6 col-lg-4" title="條件值" [form]="getFormGroupInFormArray('tagConditionSetting', i)" ctlName="detectionCondition_{{getConditionId(i)}}" [selectList]="{options: mathSymbolList, key: 'key', val: 'val'}"></dropdown>
                 <basic-input class="col-6 col-lg-4" title="門檻值" type="number" [form]="getFormGroupInFormArray('tagConditionSetting', i)" ctlName="thresholdValue_{{getConditionId(i)}}"></basic-input>
@@ -112,11 +112,11 @@
                     <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg?.value as history;">
                         <div class="mainItem">
                             <h4 (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">{{history.type}}</h4>
-                            <button nbButton status="control" size="tiny" class="iconBtn" (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">
-                                <nb-icon icon="chevron-down-outline"></nb-icon>
+                            <button nbButton ghost status="primary" size="tiny" class="iconBtn" (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">
+                                <nb-icon icon="arrow-ios-forward"></nb-icon>
                             </button>
                         </div>
-                        <div class="subItem" [ngClass]="isHistoryOpen[hg.key] ? '' : 'displayNone'" *ngFor="let flow of history.flows">
+                        <div class="subItem" [ngClass]="isHistoryOpen[hg.key] ? '' : 'dis_none'" *ngFor="let flow of history.flows">
                             <div>
                                 <p>{{flow.time | date:dateFormat}}</p>
                                 <p>{{flow.time | date:'hh:mm:ss'}}</p>

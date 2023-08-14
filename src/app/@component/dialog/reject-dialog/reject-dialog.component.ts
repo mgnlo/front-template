@@ -16,6 +16,7 @@ export class RejectDialogOption {
 })
 export class RejectDialogComponent implements OnInit {
 
+  @Input() dialogSize: string;
   @Input() option: RejectDialogOption;
   
   form = new FormGroup({

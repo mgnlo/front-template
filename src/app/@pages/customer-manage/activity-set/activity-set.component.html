@@ -41,7 +41,7 @@
                         <nb-icon icon="plus-outline"></nb-icon>
                     </button>
                 </div>
-                <div class="grayCard" [formGroupName]="i" *ngFor="let con of condition.value | keyvalue; let first2 = first; let last2 = last">
+                <div class="colorArea" [formGroupName]="i" *ngFor="let con of condition.value | keyvalue; let first2 = first; let last2 = last">
                     <div class="fieldGroup">
                         <div class="mb_0">
                             <nb-select fullWidth placeholder="請選擇" [formControlName]="''+con.key">

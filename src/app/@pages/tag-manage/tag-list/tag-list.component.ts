@@ -1,8 +1,8 @@
-import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TagSetting } from '@api/models/tag-manage.model';
+import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { Status } from '@common/enums/common-enum';
 import { TagType } from '@common/enums/tag-enum';
@@ -10,7 +10,6 @@ import { ValidatorsUtil } from '@common/utils/validators-util';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { TagManageService } from '../tag-manage.service';
-import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 
 @Component({
   selector: 'tag-list',
@@ -49,7 +48,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
         title: '標籤名稱',
         type: 'html',
         class: 'left',
-        width: '20%',
+        width: '10%',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
@@ -73,46 +72,32 @@ export class TagListComponent extends BaseComponent implements OnInit {
       owner: {
         title: '負責人',
         type: 'string',
-        width: '3%',
+        width: '10%',
         sort: false,
       },
       tagDescription: {
         title: '說明',
         type: 'html',
         class: 'left',
-        width: '39%',
+        width: '24%',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
         sort: false,
       },
-      startDate: {
-        title: '起始時間',
-        type: 'html',
+      during: {
+        title: '標籤有效起迄日',
+        type: 'string',
         sort: false,
-        hide: true
-      },
-      endDate: {
-        title: '結束時間',
-        type: 'html',
-        sort: false,
-        hide: true
-      },
-      modificationTime: {
-        title: '異動時間',
-        type: 'html',
-        width: '10%',
-        sort: false,
-        valuePrepareFunction: (cell: string) => {
-          const datepipe: DatePipe = new DatePipe('en-US');
-          return `<p class="date">${datepipe.transform(cell, this.dateFormat)}</p>`;
+        width: '20%',
+        valuePrepareFunction: (cell, row: TagSetting) => {
+          return row.startDate + "~" + row.endDate;
         },
       },
       status: {
         title: '狀態',
         type: 'string',
-        width: '5%',
-        class: 'alignCenter',
+        width: '10%',
         valuePrepareFunction: (cell: string) => {
           return Status[cell];
         },
@@ -149,7 +134,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
       apiUrl: this.tagManageService.tagFunc,
       nowPage: page ? page : this.paginator.nowPage,
       filters: this.validateForm.getRawValue(),
-      errMsg:'標籤列表查無資料',
+      errMsg: '標籤列表查無資料',
     }
     this.restDataSource = this.tableService.searchData(searchInfo);
   }

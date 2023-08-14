@@ -294,7 +294,7 @@ export class TableElementComponent implements OnInit {
     },
 
     // 篩選功能
-    hideSubHeader: false,
+    hideSubHeader: true,
 
     // 欄位
     columns: {

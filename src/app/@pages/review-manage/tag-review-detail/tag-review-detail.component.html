@@ -16,47 +16,47 @@
         <nb-card-body>
             <div class="row">
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold" [ngClass]="changeClass('tagName') | enum: 'reviewCompareClass'">標籤名稱：</p>
+                    <p class="text_bold" [ngClass]="changeClass('tagName') | enum: 'reviewCompareClass'">標籤名稱：</p>
                     <span>{{detail?.tagName}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold" [ngClass]="changeClass('status') | enum: 'reviewCompareClass'">狀態：</p>
+                    <p class="text_bold" [ngClass]="changeClass('status') | enum: 'reviewCompareClass'">狀態：</p>
                     <span>{{detail?.status | enum:'status'}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold" [ngClass]="changeClass('tagType') | enum: 'reviewCompareClass'">類型：</p>
+                    <p class="text_bold" [ngClass]="changeClass('tagType') | enum: 'reviewCompareClass'">類型：</p>
                     <span>{{detail?.tagType | enum:'tagType'}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold" [ngClass]="changeClass('department') | enum: 'reviewCompareClass'">所屬單位：</p>
+                    <p class="text_bold" [ngClass]="changeClass('department') | enum: 'reviewCompareClass'">所屬單位：</p>
                     <span>{{detail?.department}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold" [ngClass]="changeClass('owner') | enum: 'reviewCompareClass'">負責人：</p>
+                    <p class="text_bold" [ngClass]="changeClass('owner') | enum: 'reviewCompareClass'">負責人：</p>
                     <span>{{detail?.owner}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold" [ngClass]="changeClass('startDate','endDate') | enum: 'reviewCompareClass'">起迄時間：</p>
+                    <p class="text_bold" [ngClass]="changeClass('startDate','endDate') | enum: 'reviewCompareClass'">起迄時間：</p>
                     <span>{{detail?.startDate}}~{{detail?.endDate}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold" [ngClass]="changeClass('tagDimension') | enum: 'reviewCompareClass'">標籤屬性：</p>
+                    <p class="text_bold" [ngClass]="changeClass('tagDimension') | enum: 'reviewCompareClass'">標籤屬性：</p>
                     <span>{{detail?.tagDimension}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold" [ngClass]="changeClass('tagSubDimension') | enum: 'reviewCompareClass'">標籤子構面：</p>
+                    <p class="text_bold" [ngClass]="changeClass('tagSubDimension') | enum: 'reviewCompareClass'">標籤子構面：</p>
                     <span>{{detail?.tagSubDimension}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold" [ngClass]="changeClass('modificationTime') | enum: 'reviewCompareClass'">異動時間：</p>
+                    <p class="text_bold" [ngClass]="changeClass('modificationTime') | enum: 'reviewCompareClass'">異動時間：</p>
                     <span>{{detail?.modificationTime | date:dateFormat}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="textBold" [ngClass]="changeClass('tagDescription') | enum: 'reviewCompareClass'">說明：</p>
+                    <p class="text_bold" [ngClass]="changeClass('tagDescription') | enum: 'reviewCompareClass'">說明：</p>
                     <span>{{detail?.tagDescription}}</span>
                 </div>
                 <div class="textGroup code col-12">
-                    <p class="textBold" [ngClass]="changeClass('conditionSettingQuery') | enum: 'reviewCompareClass'">條件設定：</p>
+                    <p class="text_bold" [ngClass]="changeClass('conditionSettingQuery') | enum: 'reviewCompareClass'">條件設定：</p>
                     <pre>{{detail?.conditionSettingQuery}}</pre>
                 </div>
             </div>
@@ -83,11 +83,11 @@
                             <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
                                 <div class="mainItem">
                                     <h4 (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">{{history.type}}</h4>
-                                    <button nbButton status="control" size="tiny" class="iconBtn" (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">
-                                        <nb-icon icon="chevron-down-outline"></nb-icon>
+                                    <button nbButton ghost status="primary" size="tiny" class="iconBtn" (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">
+                                        <nb-icon icon="arrow-ios-forward"></nb-icon>
                                     </button>
                                 </div>
-                                <div class="subItem" [ngClass]="isHistoryOpen[hg.key] ? '' : 'displayNone'" *ngFor="let flow of history.flows">
+                                <div class="subItem" [ngClass]="isHistoryOpen[hg.key] ? '' : 'dis_none'" *ngFor="let flow of history.flows">
                                     <div>
                                         <p>{{flow.time | date:dateFormat}}</p>
                                         <p>{{flow.time | date:'hh:mm:ss'}}</p>

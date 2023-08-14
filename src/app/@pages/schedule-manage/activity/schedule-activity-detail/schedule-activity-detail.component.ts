@@ -4,7 +4,7 @@ import { ActivitySetting, ScheduleActivitySetting, ScheduleDetailView, Schedule_
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
-import { Status, StatusResult } from '@common/enums/common-enum';
+import { ColumnClass, Status, StatusResult } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
@@ -71,7 +71,6 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         title: '狀態',
         type: 'string',
         width: '5%',
-        class: 'alignCenter',
         valuePrepareFunction: (cell: string) => {
           return Status[cell];
         },
@@ -90,7 +89,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         valuePrepareFunction: (cell: string) => {
           const cellLow = cell?.toLowerCase();
           if (CommonUtil.isBlank(cellLow)) return cellLow
-          return cellLow === 'true' ? StatusResult[cellLow] : `<p class="colorRed textBold">${StatusResult[cellLow]}</p>`;
+          return `<p class="${ColumnClass[cellLow]}">${StatusResult[cellLow]}</p>`;
         },
         sort: false,
       },

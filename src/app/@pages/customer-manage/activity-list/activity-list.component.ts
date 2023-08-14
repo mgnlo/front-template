@@ -57,7 +57,8 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
       activityName: {
         title: '活動名稱',
         type: 'html',
-        class: 'col-2 left',
+        class: 'left',
+        width: '20%',
         sort: false,
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
@@ -66,7 +67,8 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
       activityDescription: {
         title: '活動說明',
         type: 'html',
-        class: 'col-3 left',
+        class: 'left',
+        width: '30%',
         sort: false,
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
@@ -75,20 +77,20 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
       filterOptions: {
         title: '差異過濾',
         type: 'custom',
-        class: 'col-1',
+        width: '5%',
         sort: false,
         renderComponent: CheckboxIconComponent,
       },
       listLimit: {
         title: '名單上限',
         type: 'string',
-        class: 'col-1',
+        width: '10%',
         sort: false,
       },
       status: {
         title: '狀態',
         type: 'string',
-        class: 'col-1',
+        width: '10%',
         valuePrepareFunction: (cell: string) => {
           return Status[cell];
         },
@@ -97,7 +99,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
       during: {
         title: '起訖時間',
         type: 'html',
-        class: 'col-3',
+        width: '10%',
         valuePrepareFunction: (cell: any, row: ActivitySetting) => {
           return row.startDate && row.endDate ? `<span class="date">${row.startDate}~${row.endDate}</span>` : '';
         },
@@ -106,13 +108,13 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
       action: {
         title: '查看',
         type: 'custom',
-        class: 'col-1',
+        width: '5%',
         valuePrepareFunction: (cell, row: ActivitySetting) => row,
         renderComponent: DetailButtonComponent,
         sort: false,
       },
     },
-    hideSubHeader: false, //起訖日查詢要用到
+    hideSubHeader: true,
     actions: {
       add: false,
       edit: false,

@@ -83,7 +83,7 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
         sort: false,
       }
     },
-    hideSubHeader: false, //起訖日查詢要用到
+    hideSubHeader: true,
     actions: {
       add: false,
       edit: false,
@@ -130,7 +130,7 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
         sort: false,
       }
     },
-    hideSubHeader: false, //起訖日查詢要用到
+    hideSubHeader: true,
     actions: {
       position: 'right',
       columnTitle: "移除",

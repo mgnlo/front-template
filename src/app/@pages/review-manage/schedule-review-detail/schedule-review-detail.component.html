@@ -10,25 +10,25 @@
     <nb-card-body>
       <div class="row">
         <div class="textGroup col-12 col-lg-4">
-            <p class="textBold" [ngClass]="changeClass('jobName') | enum: 'reviewCompareClass'">作業名稱：</p>
+            <p class="text_bold" [ngClass]="changeClass('jobName') | enum: 'reviewCompareClass'">作業名稱：</p>
             <span>{{detail?.jobName}}</span>
         </div>
         <div class="textGroup col-12 col-lg-4">
-            <p class="textBold" [ngClass]="changeClass('status') | enum: 'reviewCompareClass'">狀態：</p>
+            <p class="text_bold" [ngClass]="changeClass('status') | enum: 'reviewCompareClass'">狀態：</p>
             <span>{{detail?.status | enum:'status'}}</span>
         </div>
         <div class="textGroup col-12 col-lg-4">
-            <p class="textBold" [ngClass]="changeClass('executionFrequency') | enum: 'reviewCompareClass'">執行頻率：</p>
+            <p class="text_bold" [ngClass]="changeClass('executionFrequency') | enum: 'reviewCompareClass'">執行頻率：</p>
             <span>{{detail?.executionFrequency | enum:'frequency'}} {{detail?.frequencyTime}}</span>
         </div>
       </div>
       <div class="row justify-content-between">
         <div class="textGroup col-12 col-lg-4">
-            <p class="textBold" [ngClass]="changeClass('filePath') | enum: 'reviewCompareClass'">檔案存放位置：</p>
+            <p class="text_bold" [ngClass]="changeClass('filePath') | enum: 'reviewCompareClass'">檔案存放位置：</p>
             <span>{{detail?.filePath}}</span>
         </div>
         <div class="textGroup col-12 col-lg-4">
-            <p class="textBold" [ngClass]="changeClass('modificationTime') | enum: 'reviewCompareClass'">異動時間：</p>
+            <p class="text_bold" [ngClass]="changeClass('modificationTime') | enum: 'reviewCompareClass'">異動時間：</p>
             <span>{{detail?.modificationTime | date:dateFormat}}</span>
         </div>
       </div>
@@ -73,11 +73,11 @@
               <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
                   <div class="mainItem">
                       <h4 (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">{{history.type}}</h4>
-                      <button nbButton status="control" size="tiny" class="iconBtn" (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">
-                          <nb-icon icon="chevron-down-outline"></nb-icon>
+                      <button nbButton ghost status="primary" size="tiny" class="iconBtn" (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">
+                          <nb-icon icon="arrow-ios-forward"></nb-icon>
                       </button>
                   </div>
-                  <div class="subItem" [ngClass]="isHistoryOpen[hg.key] ? '' : 'displayNone'" *ngFor="let flow of history.flows">
+                  <div class="subItem" [ngClass]="isHistoryOpen[hg.key] ? '' : 'dis_none'" *ngFor="let flow of history.flows">
                       <div>
                           <p>{{flow.time | date:dateFormat}}</p>
                           <p>{{flow.time | date:'hh:mm:ss'}}</p>

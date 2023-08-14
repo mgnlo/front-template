@@ -2,7 +2,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ScheduleBatchHistory, ScheduleTagSetting, ScheduleTagSettingView } from '@api/models/schedule-tag.model';
 import { StorageService } from '@api/services/storage.service';
-import { Status, StatusResult } from '@common/enums/common-enum';
+import { ColumnClass, Status, StatusResult } from '@common/enums/common-enum';
 import { ScheduleTagSettingMock } from '@common/mock-data/schedule-tag-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
@@ -61,7 +61,6 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
         title: '狀態',
         type: 'string',
         width: '10%',
-        class: 'alignCenter',
         valuePrepareFunction: (cell: string) => {
           return Status[cell];
         },
@@ -80,7 +79,7 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
         valuePrepareFunction: (cell: string) => {
           const cellLow = cell?.toLowerCase();
           if (CommonUtil.isBlank(cellLow)) return cellLow
-          return (cellLow === 'true' || cellLow === 'success') ? StatusResult[cellLow] : `<p class="colorRed textBold">${StatusResult[cellLow]}</p>`;
+          return `<p class="${ColumnClass[cellLow]}">${StatusResult[cellLow]}</p>`;
         },
         sort: false,
       },

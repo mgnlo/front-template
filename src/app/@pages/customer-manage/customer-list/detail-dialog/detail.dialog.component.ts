@@ -5,7 +5,7 @@ import { NbDialogRef } from '@nebular/theme';
 @Component({
   selector: 'ngx-detail',
   templateUrl: './detail.dialog.component.html',
-  styleUrls: ['./detail.dialog.component.scss'],
+  styleUrls: [],
   providers: [],
 })
 export class DetailDialogComponent implements OnInit {
