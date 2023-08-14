@@ -62,7 +62,7 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
           const lableName = '批次排程'
           const cellLow = cell?.toLowerCase();
           if (CommonUtil.isBlank(cellLow)) return cellLow
-          return `<p class="left ${ColumnClass[""+(cellLow === 'success')]}">${lableName}${StatusResult[cellLow]}</p>`;
+          return `<p class="left ${ColumnClass[cellLow]}">${lableName}${StatusResult[cellLow]}</p>`;
         },
         sort: false,
       },

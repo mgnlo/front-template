@@ -1,12 +1,12 @@
 <div class="pageTitle">
-  <h1>排程管理</h1>
+  <h1>排程紀錄</h1>
 </div>
 <div class="pageContent">
   <nb-card>
     <nb-card-body>
         <div class="row">
             <div class="textGroup col-12 col-lg-4">
-                <p class="text_bold">作業名稱：</p>
+                <p class="text_bold">活動名稱：</p>
                 <span>{{activitySetting.activityName}}</span>
             </div>
             <div class="textGroup col-12 col-lg-4">
@@ -14,19 +14,39 @@
                 <span>{{activitySetting.status?.toLowerCase() | enum:'status'}}</span>
             </div>
             <div class="textGroup col-12 col-lg-4">
-                <p class="text_bold">執行頻率：</p>
-                <span>{{activitySetting.scheduleSettings?.toLowerCase() | enum:'frequency'}}</span>
+                <p class="text_bold">名單上限：</p>
+                <span>{{activitySetting.listLimit}}</span>
+            </div>
+            <div class="textGroup col-12 col-lg-4">
+                <p class="text_bold">名單差異過濾：</p>
+                <span>{{activitySetting.filterOptions | enum:'filter'}}</span>
+            </div>
+            <div class="textGroup col-12 col-lg-4">
+                <p class="text_bold">起訖時間：</p>
+                <span>{{activitySetting.startDate}}~{{activitySetting.endDate}}</span>
+            </div>
+            <div class="textGroup col-12 col-lg-4">
+                <p class="text_bold">描述說明：</p>
+                <span>{{activitySetting.activityDescription}}</span>
             </div>
             <div class="textGroup col-12 col-lg-4">
                 <p class="text_bold">異動時間：</p>
                 <span>{{activitySetting.modificationTime | date:dateFormat}}</span>
+            </div>
+            <div class="textGroup col-12 col-lg-4">
+                <p class="text_bold">排程設定：</p>
+                <span>{{activitySetting.scheduleSettings?.toLowerCase() | enum:'frequency'}}</span>
+            </div>
+            <div class="textGroup col-12 col-lg-4">
+                <p class="text_bold">批次更新時間：</p>
+                <span>{{activitySetting.batchUpdateTime}}</span>
             </div>
         </div>
     </nb-card-body>
   </nb-card>
   <nb-card>
     <nb-card-header>
-        <h2>名單紀錄</h2>
+        <h2>排程紀錄</h2>
     </nb-card-header>
     <nb-card-body>
         <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>

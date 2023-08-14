@@ -1,22 +1,22 @@
-<nb-card class="list-card" nbSpinnerStatus="info" nbSpinnerSize="giant" size="large">
-    <nb-card-header class="text-h-center">
-      <p>預覽名單</p>
-    </nb-card-header>
-    <nb-card-body>
-      <div class="row">
-        <basic-input class="col-6" title="名單上限" [form]="validateForm" ctlName="listLimit"></basic-input>
+<nb-card class="dialogCard statusDialog large">
+  <nb-card-header>
+    <h2>預覽名單</h2>
+  </nb-card-header>
+  <nb-card-body>
+    <div class="row">
+      <basic-input class="col-4 col-lg-4" title="名單上限" [form]="validateForm" ctlName="listLimit"></basic-input>
+      <dropdown class="col-4 col-lg-4" title="資料排序方式" [form]="validateForm" ctlName="orderBy"
+        [selectList]="{options: orderByList | keyvalue, key: 'key', val: 'value'}"></dropdown>
+      <radio class="col-4 col-lg-4" title="排序順序" [form]="validateForm" ctlName="sortType"
+        (valueChange)="changeSort($event)"
+        [selectList]="{options: sortList | keyvalue, key: 'key', val: 'value'}"></radio>
+    </div>
+    <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
+    <paginator [source]="dataSource" [paginator]="paginator"></paginator>
+  </nb-card-body>
+  <nb-card-footer>
+      <div class="btnGroup">
+        <button nbButton status="basic" size="medium" (click)="close()">關閉</button>
       </div>
-      <div class="row">
-        <dropdown class="col-6" title="資料排序方式" [form]="validateForm" ctlName="orderBy"
-          [selectList]="{options: orderByList | keyvalue, key: 'key', val: 'value'}"></dropdown>
-        <radio class="col-6" title="排序順序" [form]="validateForm" ctlName="sortType"
-          (valueChange)="changeSort($event)"
-          [selectList]="{options: sortList | keyvalue, key: 'key', val: 'value'}"></radio>
-      </div>
-      <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
-      <paginator [source]="dataSource" [paginator]="paginator"></paginator>
-    </nb-card-body>
-    <nb-card-footer>
-      <button nbButton status="basic" size="medium" (click)="close()">關閉</button>
-    </nb-card-footer>
+  </nb-card-footer>
 </nb-card>

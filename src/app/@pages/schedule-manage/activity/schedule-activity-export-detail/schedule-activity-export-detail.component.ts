@@ -76,7 +76,7 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
           const lableName = '批次排程'
           const cellLow = cell?.toLowerCase();
           if (CommonUtil.isBlank(cellLow)) return cellLow
-          return cellLow === 'success' ? `<p class="left">${lableName}${StatusResult[cellLow]}</p>` : `<p class="left ${ColumnClass[cell]}">${lableName}${StatusResult[cellLow]}</p>`;
+          return `<p class="left ${ColumnClass[cellLow]}">${lableName}${StatusResult[cellLow]}</p>`;
         },
         sort: false,
       },

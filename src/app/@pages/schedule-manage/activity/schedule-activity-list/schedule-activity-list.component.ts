@@ -1,19 +1,15 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ScheduleManageService } from '../../schedule-manage.service';
-import { BaseComponent } from '@pages/base.component';
-import { LocalDataSource } from 'ng2-smart-table';
 import { ScheduleActivitySetting } from '@api/models/schedule-activity.model';
-import { Frequency, Status } from '@common/enums/common-enum';
-import { DatePipe } from '@angular/common';
-import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
-import { StorageService } from '@api/services/storage.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
-import { RestStatus } from '@common/enums/rest-enum';
-import { catchError, filter, tap } from 'rxjs/operators';
-import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
+import { StorageService } from '@api/services/storage.service';
+import { Frequency, Status } from '@common/enums/common-enum';
+import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
+import { BaseComponent } from '@pages/base.component';
+import { ScheduleManageService } from '../../schedule-manage.service';
 
 @Component({
   selector: 'schedule-activity-list',
@@ -52,10 +48,19 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
         },
         sort: false
       },
+      activityCount: {
+        title: '名單數量',
+        type: 'string',
+        width: '15%',
+        valuePrepareFunction: (cell: string,  row: ScheduleActivitySetting) => {
+          return row.activitySetting.length;
+        },
+        sort: false
+      },
       executionFrequency: {
         title: '執行頻率',
         type: 'html',
-        width: '30%',
+        width: '25%',
         valuePrepareFunction: (cell: string, row: ScheduleActivitySetting) => {
           return Frequency[cell.toLowerCase()]+" "+row.frequencyTime;
         },
@@ -64,7 +69,7 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
       modificationTime: {
         title: '異動時間',
         type: 'html',
-        width: '25%',
+        width: '15%',
         valuePrepareFunction: (cell: string) => {
           const datepipe: DatePipe = new DatePipe('en-US');
           return `<p class="date">${datepipe.transform(cell, this.dateFormat)}</p>`;
@@ -74,7 +79,7 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
       status: {
         title: '狀態',
         type: 'string',
-        width: '15%',
+        width: '10%',
         valuePrepareFunction: (cell: string) => {
           return Status[cell.toLowerCase()];
         },

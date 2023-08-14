@@ -10,7 +10,6 @@ import { LocalDataSource } from 'ng2-smart-table';
   selector: 'ngx-preview',
   templateUrl: './preview.dialog.component.html',
   styleUrls: ['./preview.dialog.component.scss'],
-  providers: [],
 })
 export class PreviewDialogComponent extends BaseComponent implements OnInit {
 

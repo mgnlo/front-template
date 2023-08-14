@@ -1,6 +1,9 @@
-nb-card {
-  width: 600px!important;
-}
-::ng-deep ng2-smart-table table tr td {
-  padding: 1rem 1.25rem!important;
+.dialogCard {
+  &.statusDialog {
+    ::ng-deep nb-icon {
+      width: 1em!important;
+      height: 1em!important;
+      margin: 0!important;
+    }
+  }
 }
