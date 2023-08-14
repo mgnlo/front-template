@@ -99,7 +99,7 @@ export class ScheduleSettingListResp {
 export class ScheduleSettingRowResp {
   data: [];
 }
-export class ScheduleSettingEditReq {
+export class ScheduleActivitySettingEditReq {
   ScheduleName: string;
   status: string;
   listLimit: number;

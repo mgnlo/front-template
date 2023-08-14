@@ -35,9 +35,11 @@ export class BaseComponent implements OnDestroy {
 
   ngAfterViewInit() {
     //#region 取得頁面暫存，重新載入
-    const page = this?.storageService?.getSessionVal(this?.sessionKey)?.page;
-    this?.restDataSource?.setPage(page ? page : this?.paginator?.nowPage)
-    this?.restDataSource?.load(this?.restDataSource?.getPaging());
+    if(!!this?.restDataSource){
+      const page = this?.storageService?.getSessionVal(this?.sessionKey)?.page;
+      this?.restDataSource?.setPage(page ? page : this?.paginator?.nowPage)
+      this?.restDataSource?.load(this?.restDataSource?.getPaging());
+    }
     //#endregion
   }
 

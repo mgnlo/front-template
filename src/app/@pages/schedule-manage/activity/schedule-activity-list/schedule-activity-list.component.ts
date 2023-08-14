@@ -7,12 +7,13 @@ import { ScheduleActivitySetting } from '@api/models/schedule-activity.model';
 import { Frequency, Status } from '@common/enums/common-enum';
 import { DatePipe } from '@angular/common';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
-import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { StorageService } from '@api/services/storage.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { RestStatus } from '@common/enums/rest-enum';
 import { catchError, filter, tap } from 'rxjs/operators';
+import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
+import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 
 @Component({
   selector: 'schedule-activity-list',
@@ -21,7 +22,6 @@ import { catchError, filter, tap } from 'rxjs/operators';
 })
 export class ScheduleListComponent extends BaseComponent implements OnInit {
 
-  ScheduleActivitySetting: Array<ScheduleActivitySetting> = ScheduleActivitySettingMock;
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
   constructor(
@@ -31,6 +31,7 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
     private scheduleManageService: ScheduleManageService,
     private dialogService: DialogService,
     private loadingService: LoadingService,
+    private tableService: Ng2SmartTableService,
   ) {
     super(storageService);
   }
@@ -96,23 +97,14 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    // this.dataSource = new LocalDataSource();
-    // this.dataSource.load(this.ScheduleActivitySetting);
-
-    this.loadingService.open();
-    this.scheduleManageService.getScheduleActivitySettingList().pipe(
-      catchError(err => {
-        this.loadingService.close();
-        this.dialogService.alertAndBackToList(false, '查無資料');
-        throw new Error(err.message);
-      }),
-      filter(res => res.code === RestStatus.SUCCESS),
-      tap((res) => {
-        this.dataSource = new LocalDataSource();
-        this.dataSource.load(res.result);
-        this.loadingService.close();
-      })
-    ).subscribe();
+    const page = this.storageService.getSessionVal(this.sessionKey)?.page;
+    let searchInfo: SearchInfo = {
+      apiUrl: this.scheduleManageService.scheduleFunc,
+      nowPage: page ? page : this.paginator.nowPage,
+      //filters: this.validateForm.getRawValue(),
+      errMsg: '排程列表查無資料',
+    }
+    this.restDataSource = this.tableService.searchData(searchInfo);
   }
 
   ngOnDestroy(): void {

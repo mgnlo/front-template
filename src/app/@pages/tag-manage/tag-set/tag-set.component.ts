@@ -233,12 +233,17 @@ export class TagAddComponent extends BaseComponent implements OnInit {
           this.loadingService.close();
         })
       ).subscribe(res => {
-        //console.info(res.result);
+        console.info(res.result);
+        //#region 設定欄位
+        const formData = this.validateForm.getRawValue();
+        this.changeTagType(formData.tagType);
+        this.changeConditionSettingMethod(formData.conditionSettingMethod);
+        //#endregion
       });
 
-      //#region 取得全部活動明細===>後續應該要改用tagId抓個別活動
+      //#region 搜尋客群名單 BY TagId
       let searchInfo: SearchInfo = {
-        apiUrl: this.customerManageService.activityFunc,
+        apiUrl: `${this.tagManageService.tagFunc}${this.tagId}/activity-setting`,
         nowPage: this.paginator.nowPage,
         //filters: this.validateForm.getRawValue(),
         errMsg: '標籤使用範圍查無資料'
@@ -247,12 +252,13 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       //#endregion
     }
     //#endregion
-
+    else{//新增
     //#region 設定欄位
     const formData = this.validateForm.getRawValue();
     this.changeTagType(formData.tagType);
     this.changeConditionSettingMethod(formData.conditionSettingMethod);
     //#endregion
+    }
   }
 
   ngAfterViewChecked(): void {

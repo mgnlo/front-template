@@ -129,9 +129,9 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
     ).subscribe();
     //#endregion
 
-    //#region 取得全部活動明細===>後續應該要改用tagId抓個別活動
+    //#region 搜尋客群名單 BY TagId
     let searchInfo: SearchInfo = {
-      apiUrl: this.customerManageService.activityFunc,
+      apiUrl: `${this.tagManageService.tagFunc}${this.tagId}/activity-setting`,
       nowPage: this.paginator.nowPage,
       //filters: this.validateForm.getRawValue(),
       errMsg: '標籤使用範圍查無資料'

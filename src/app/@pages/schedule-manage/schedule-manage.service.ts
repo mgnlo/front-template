@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ResponseModel } from "@api/models/base.model";
-import { ActivitySetting, ScheduleActivitySetting, ScheduleSettingEditReq } from "@api/models/schedule-activity.model";
+import { ActivitySetting, ScheduleActivitySetting, ScheduleActivitySettingEditReq } from "@api/models/schedule-activity.model";
 import { ApiService } from "@api/services/api.service";
 import { Observable } from "rxjs";
 
@@ -15,8 +15,12 @@ export class ScheduleManageService {
     return this.service.doGet(this.scheduleFunc);
   }
 
-  getScheduleActivitySettingRow(scheduleId: string): Observable<ResponseModel<ScheduleActivitySetting>> {
+  getScheduleActivitySettingDetail(scheduleId: string): Observable<ResponseModel<ScheduleActivitySetting>> {
     return this.service.doGet(this.scheduleFunc + scheduleId);
+  }
+
+  getScheduleActivitySettingExportDetail(scheduleId: string, activityId: string): Observable<ResponseModel<ActivitySetting>> {
+    return this.service.doGet(`${this.scheduleFunc}${scheduleId}/${activityId}`);
   }
 
   /** 可選的活動下拉選單 API*/
@@ -24,15 +28,15 @@ export class ScheduleManageService {
     return this.service.doGet(this.scheduleFunc + 'options');
   }
 
-  createScheduleSetting(data: ScheduleSettingEditReq): Observable<ResponseModel<any>> {
+  createScheduleActivitySetting(data: ScheduleActivitySettingEditReq): Observable<ResponseModel<any>> {
     return this.service.doPost(this.scheduleFunc, data);
   }
 
-  updateScheduleSetting(scheduleId: string, data: ScheduleSettingEditReq): Observable<ResponseModel<any>> {
+  updateScheduleActivitySetting(scheduleId: string, data: ScheduleActivitySettingEditReq): Observable<ResponseModel<any>> {
     return this.service.doPut(this.scheduleFunc + scheduleId, data);
   }
 
-  deleteScheduleSetting(scheduleId: string): Observable<ResponseModel<any>> {
+  deleteScheduleActivitySetting(scheduleId: string): Observable<ResponseModel<any>> {
     return this.service.doDelete(this.scheduleFunc + scheduleId);
   }
 

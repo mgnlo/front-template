@@ -2,14 +2,12 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActivitySetting } from '@api/models/activity-list.model';
-import { ActivitySetting as ScheduleActivitySettingModel, ScheduleActivitySetting, ScheduleSettingEditReq } from '@api/models/schedule-activity.model';
+import { ActivitySetting as ScheduleActivitySettingModel, ScheduleActivitySetting, ScheduleActivitySettingEditReq } from '@api/models/schedule-activity.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
 import { Frequency, Status, StatusResult } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
-import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { DeleteButtonComponent } from '@component/table/detail-button/delete-button.component';
@@ -267,7 +265,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
     if (!!this.scheduleId) {
       this.loadingService.open();
-      this.scheduleManageService.getScheduleActivitySettingRow(this.scheduleId).pipe(
+      this.scheduleManageService.getScheduleActivitySettingDetail(this.scheduleId).pipe(
         catchError(err => {
           this.loadingService.close();
           this.dialogService.alertAndBackToList(false, '查無此筆資料，將為您導回名單排程', ['pages', 'schedule-manage', 'schedule-activity-list']);
@@ -321,10 +319,10 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   submit() {
     let valid = this.validateForm.valid;
-    let reqData: ScheduleSettingEditReq = this.getRequestData();
+    let reqData: ScheduleActivitySettingEditReq = this.getRequestData();
     if (valid && !this.scheduleId) {
       this.loadingService.open();
-      this.scheduleManageService.createScheduleSetting(reqData).pipe(
+      this.scheduleManageService.createScheduleActivitySetting(reqData).pipe(
         catchError((err) => {
           this.loadingService.close();
           this.dialogService.alertAndBackToList(false, err.message, ['pages', 'schedule-manage', 'schedule-activity-list']);
@@ -340,7 +338,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         });
     } else if (valid && this.scheduleId) {
       this.loadingService.open();
-      this.scheduleManageService.updateScheduleSetting(this.scheduleId, reqData).pipe(
+      this.scheduleManageService.updateScheduleActivitySetting(this.scheduleId, reqData).pipe(
         catchError((err) => {
           this.loadingService.close();
           this.dialogService.alertAndBackToList(false, err.message, ['pages', 'schedule-manage', 'schedule-activity-list']);
@@ -357,8 +355,8 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     }
   }
 
-  getRequestData(): ScheduleSettingEditReq {
-    let reqData: ScheduleSettingEditReq = this.validateForm.getRawValue();
+  getRequestData(): ScheduleActivitySettingEditReq {
+    let reqData: ScheduleActivitySettingEditReq = this.validateForm.getRawValue();
     let daily: string = this.validateForm.get('daily')?.value;
     let hour: string = this.validateForm.get('hour')?.value;
     let minute: string = this.validateForm.get('minute')?.value;
