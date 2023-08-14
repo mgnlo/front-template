@@ -19,7 +19,7 @@ export class ScheduleManageService {
     return this.service.doGet(this.scheduleFunc + scheduleId);
   }
 
-  getScheduleActivitySettingExportDetail(scheduleId: string, activityId: string): Observable<ResponseModel<ScheduleActivitySetting>> {
+  getScheduleActivitySettingExportDetail(scheduleId: string, activityId: string): Observable<ResponseModel<ActivitySetting>> {
     return this.service.doGet(`${this.scheduleFunc}${scheduleId}/${activityId}`);
   }
 
