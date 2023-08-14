@@ -1,9 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ResponseModel } from '@api/models/base.model';
 import { RestStatus } from '@common/enums/rest-enum';
-import { Observable } from 'rxjs';
-import { tap, timeout } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap, timeout } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { ApiLogicError } from './../error/api-logic-error';
 import { LoadingService } from './loading.service';
@@ -64,6 +64,15 @@ export class ApiService {
 
     return observable.pipe(
       timeout(30000),
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = 'An error occurred';
+
+        if (error.status === 403) {
+          // JWT 失效主機發送 403 錯誤，這邊需要導頁回兆豐登入頁，待補          
+        }
+
+        return throwError(errorMessage);
+      }),
       tap(res => {
         if (res && res.code !== RestStatus.SUCCESS) {
           throw new ApiLogicError(res.message, res.code);
