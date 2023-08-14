@@ -1,0 +1,49 @@
+<nb-layout>
+    <nb-layout-column>
+        <nb-card>
+            <nb-card-body>
+                <div class="auth-block">
+                    <img class="logo" src="assets/images/logo.png" />
+                    
+                    <!-- 一般輸入欄位結構 -->
+                    <!-- 必填：essential -->
+                    <!-- 錯誤：error ＋ status="danger" -->
+                    <div class="fieldGroup essential error">
+                        <label>username</label>
+                        <div>
+                            <input nbInput fullWidth status="danger" type="text" placeholder="請輸入帳號" />
+                        </div>
+                        <div class="note errorText">
+                            <nb-icon icon="alert-triangle"></nb-icon>
+                            <p>帳號為必填欄位</p>
+                        </div>
+                    </div>
+
+                    <!-- 密碼欄位 -->
+                    <!-- 必填：essential -->
+                    <!-- 錯誤：error ＋ status="danger" -->
+                    <div class="fieldGroup essential password">
+                        <label>password</label>
+                        <div>
+                            <input nbInput fullWidth status="basic" [type]="getInputType()" placeholder="請輸入密碼" />
+                            <button nbSuffix nbButton ghost (click)="this.showPassword = !this.showPassword;">
+                                <nb-icon [icon]="showPassword ? 'eye-outline' : 'eye-off-2-outline'" pack="eva"
+                                    [attr.aria-label]="showPassword ? 'hide password' : 'show password'">
+                                </nb-icon>
+                            </button>
+                        </div>
+                        <!-- 欄位提示文字 -->
+                        <div class="note errorText">
+                            <nb-icon icon="alert-circle"></nb-icon>
+                            <p>密碼為必填欄位</p>
+                        </div>
+                    </div>
+
+                    <button nbButton fullWidth status="primary" size="large" type="button" class="loginBtn"
+                        routerLink="/pages">登 入</button>
+
+                </div>
+            </nb-card-body>
+        </nb-card>
+    </nb-layout-column>
+</nb-layout>

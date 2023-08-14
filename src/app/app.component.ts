@@ -7,4 +7,16 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Console-Frontend';
+  loading = false;
+
+  ngOnInit() {
+    this.toggleLoadingAnimation();
+  }
+
+  toggleLoadingAnimation() {
+    this.loading = true;
+    // 2秒後消失
+    setTimeout(() => this.loading = false, 2000);
+  }
+  
 }

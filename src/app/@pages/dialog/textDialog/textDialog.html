@@ -1,0 +1,13 @@
+<nb-card class="dialogCard {{dialogSize}}">
+    <nb-card-header>
+        <h2>{{title}}</h2>
+    </nb-card-header>
+    <nb-card-body>
+        <p>{{content}}</p>
+    </nb-card-body>
+    <nb-card-footer>
+        <div class="btnGroup">
+            <button nbButton status="info" (click)="closeDialog()">{{btnName}}</button>
+        </div>
+    </nb-card-footer>
+</nb-card>

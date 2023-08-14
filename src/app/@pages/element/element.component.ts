@@ -1,16 +1,10 @@
-import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core"
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { Component, HostBinding, OnInit, ViewChild } from "@angular/core"
 import { HttpClient } from '@angular/common/http';
 import { DemoFilePickerAdapter } from './demo-file-picker.adapter';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { NbDialogService, NbThemeService } from "@nebular/theme";
-
-export interface SparklineChartDataItem<V = number, L = string> {
-  id: string | number;
-  x: L;
-  y: V;
-}
+import { NbDialogService, NbGlobalPhysicalPosition, NbIconConfig, NbToastrConfig, NbToastrService } from "@nebular/theme";
+import { TextDialogComponent } from "@pages/dialog/textDialog/textDialog";
+import { ConfirmDialogComponent } from "@pages/dialog/confirmDialog/confirmDialog";
+import { StatusDialogComponent } from "@pages/dialog/statusDialog/statusDialog";
 
 @Component({
   selector: "app-page-element",
@@ -20,75 +14,96 @@ export interface SparklineChartDataItem<V = number, L = string> {
 export class ElementComponent implements OnInit {
 
   isOpen = true;
-  isOpen2 = true;
-  selectedItem = "0";
+  isOpen2 = false;
+  isShowSubItem = false;
+  isShowListItem = false;
+  isShowListItem2 = false;
+  showPassword = false;
+  selected = '1';
+  selectedItem = '0';
+  toggleBtnStatus:string = "info"
+  adapter = new DemoFilePickerAdapter(this.http);
   mongoDB = "{variables: {$elemMatch: {key:’產品持有數’, value: {$gte: 3}}}}";
-  
-
-  public data: SparklineChartDataItem[] = [
-    {
-      id: 1,
-      x: '1 Minute Ago',
-      y: 25
-    },
-    {
-      id: 2,
-      x: '5 Minute Ago',
-      y: 20
-    },
-    {
-      id: 3,
-      x: '10 Minute Ago',
-      y: 35
-    },
-    {
-      id: 4,
-      x: '15 Minute Ago',
-      y: 17
-    },
-    {
-      id: 5,
-      x: '20 Minute Ago',
-      y: 17
-    },
-    {
-      id: 6,
-      x: '25 Minute Ago',
-      y: 22
-    },
-  ];
-
 
   @ViewChild('autoInput') txnInput: { nativeElement: { value: string; }; };
-  options: string[];
-  filteredOptions$: Observable<string[]>;
-  
 
-  public ngOnInit(): void {
-    this.options = ['Option 1', 'Option 2', 'Option 3'];
-    this.filteredOptions$ = of(this.options);
-  }
+  public ngOnInit(): void {}
+  constructor(private dialogService: NbDialogService, private toastrService: NbToastrService, private http: HttpClient) { }
 
-  adapter = new DemoFilePickerAdapter(this.http);
-  constructor(private http: HttpClient, private dialogService: NbDialogService) {}
+  private index: number = 0;
+  @HostBinding('class')
   
-  // 密碼欄位設定
-  showPassword = false;
+  classes = 'example-items-rows';
+  positions = NbGlobalPhysicalPosition;
+
   getInputType() {
     if (this.showPassword) {
       return 'text';
     }
     return 'password';
   }
-  toggleShowPassword() {
-    this.showPassword = !this.showPassword;
+  showToast(position:any, status:any, toastTitle:any, iconName:any) {
+    const iconConfig: NbIconConfig = { icon: iconName, pack: 'eva' };
+    this.index += 1;
+    const config: Partial<NbToastrConfig> = { position, status, icon: iconConfig };
+    
+    this.toastrService.show(`訊息文字訊息文字訊息文字訊息文字`, toastTitle + `${this.index}`, config);
   }
-  // 下拉是選單自動帶入值
-  selected = '1';
-
-  open(dialog: TemplateRef<any>) {
-    this.dialogService.open(dialog, { context: 'this is some additional data passed to dialog' });
+  openTextSmallDialog() {
+    this.dialogService.open(TextDialogComponent, {
+      context: {
+        dialogSize: 'small',
+        title: 'Dialog標題',
+        content: '文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容',
+        btnName: '關 閉',
+      }
+    });
   }
-
+  openTextMeduimDialog() {
+    this.dialogService.open(TextDialogComponent, {
+      context: {
+        dialogSize: 'meduim',
+        title: 'Dialog標題',
+        content: '文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容',
+        btnName: '關 閉',
+      }
+    });
+  }
+  openTextLargeDialog() {
+    this.dialogService.open(TextDialogComponent, {
+      context: {
+        dialogSize: 'large',
+        title: 'Dialog標題',
+        content: '文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容',
+        btnName: '確認',
+      }
+    });
+  }
+  openConfirmDialog() {
+    this.dialogService.open(ConfirmDialogComponent, {
+      context: {
+        dialogSize: 'small',
+        title: 'Dialog標題',
+        content: '文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容',
+        subBtnName: '取 消',
+        mainBtnName: '確 認',
+      }
+    });
+  }
+  openSuccessDialog() {
+    this.dialogService.open(StatusDialogComponent, {
+      context: {
+        isSuccess: true,
+        title: '執行成功',
+      }
+    });
+  }
+  openFailDialog() {
+    this.dialogService.open(StatusDialogComponent, {
+      context: {
+        isSuccess: false,
+        title: '執行失敗',
+      }
+    });
+  }
 }
-
