@@ -17,7 +17,6 @@ import { LoginComponent } from '@pages/login/login.component';
 const NG_MODULES = [BrowserModule, BrowserAnimationsModule, HttpClientModule];
 
 const NB_MODULES = [
-  NbThemeModule.forRoot({ name: 'default' }),
   NbMenuModule.forRoot(),
   NbToastrModule.forRoot({
     position: NbGlobalPhysicalPosition.BOTTOM_RIGHT,
