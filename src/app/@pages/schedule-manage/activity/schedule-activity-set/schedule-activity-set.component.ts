@@ -6,7 +6,7 @@ import { ActivitySetting as ScheduleActivitySettingModel, ScheduleActivitySettin
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
-import { Frequency, Status, StatusResult } from '@common/enums/common-enum';
+import { ColumnClass, Frequency, Status, StatusResult } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
@@ -107,7 +107,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       status: {
         title: '狀態',
         type: 'string',
-        class: 'col-2 alignCenter',
+        class: 'col-2',
         valuePrepareFunction: (cell: string) => {
           return Status[cell?.toLowerCase()];
         },
@@ -126,11 +126,11 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       filterOptions: {
         title: '更新結果',
         type: 'html',
-        class: 'col-1 alignCenter',
+        class: 'col-1',
         valuePrepareFunction: (cell: string) => {
           const cellLow = cell?.toLowerCase();
           if (CommonUtil.isBlank(cellLow)) return cellLow
-          return cellLow === 'true' ? StatusResult[cellLow] : `<p class="colorRed textBold">${StatusResult[cellLow]}</p>`;
+          return `<p class="${ColumnClass[cellLow]}">${StatusResult[cellLow]}</p>`;
         },
         sort: false,
       },

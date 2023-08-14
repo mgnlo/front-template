@@ -1,17 +1,16 @@
-import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ActivityReviewHistory } from '@api/models/activity-list.model';
 import { StorageService } from '@api/services/storage.service';
-import { ReviewClass, ReviewStatus } from '@common/enums/review-enum';
+import { ColumnClass } from '@common/enums/common-enum';
+import { ReviewStatus } from '@common/enums/review-enum';
 import { ActivityReviewListMock } from '@common/mock-data/activity-review-mock';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { CheckboxIconComponent } from '@component/table/checkbox-icon/checkbox-icon.component';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { NbDateService } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
-import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({
@@ -114,7 +113,7 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
         type: 'html',
         width: '10%',
         valuePrepareFunction: (cell: string) => {
-          return `<span class="${ReviewClass[cell]}">${ReviewStatus[cell]}</span>`;
+          return `<span class="${ColumnClass[cell]}">${ReviewStatus[cell]}</span>`;
         },
         sort: false,
       },

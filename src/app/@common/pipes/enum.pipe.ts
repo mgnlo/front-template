@@ -1,8 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Gender } from '@common/enums/activity-list-enum';
 import { TagDimension, TagType, TagSubDimension, TagSetCondition } from '@common/enums/tag-enum';
-import { Filter, Frequency, Schedule, Status } from '@common/enums/common-enum';
-import { BgClass, ReviewClass, ReviewCompareClass, ReviewStatus } from '@common/enums/review-enum';
+import { BgClass, ColumnClass, Filter, Frequency, ReviewCompareClass, Schedule, Status } from '@common/enums/common-enum';
+import { ReviewStatus } from '@common/enums/review-enum';
 
 export const ENUMS = {
   'gender': Gender,
@@ -10,7 +10,7 @@ export const ENUMS = {
   'schedule': Schedule,
   'filter': Filter,
   'reviewStatus': ReviewStatus,
-  'reviewClass': ReviewClass,
+  'columnClass': ColumnClass,
   'reviewCompareClass': ReviewCompareClass,
   'tagType': TagType,
   'tagSetCondition': TagSetCondition,

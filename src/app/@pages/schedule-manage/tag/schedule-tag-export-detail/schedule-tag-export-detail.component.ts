@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ScheduleTagSetting } from '@api/models/schedule-tag.model';
 import { StorageService } from '@api/services/storage.service';
-import { StatusResult } from '@common/enums/common-enum';
+import { ColumnClass, StatusResult } from '@common/enums/common-enum';
 import { ScheduleTagSettingMock } from '@common/mock-data/schedule-tag-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
@@ -62,7 +62,7 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
           const lableName = '批次排程'
           const cellLow = cell?.toLowerCase();
           if (CommonUtil.isBlank(cellLow)) return cellLow
-          return cellLow === 'success' ? `<p class="left">${lableName}${StatusResult[cellLow]}</p>` : `<p class="left colorRed textBold">${lableName}${StatusResult[cellLow]}</p>`;
+          return `<p class="left ${ColumnClass[""+(cellLow === 'success')]}">${lableName}${StatusResult[cellLow]}</p>`;
         },
         sort: false,
       },

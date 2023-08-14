@@ -1,18 +1,17 @@
-import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TagReviewHistory, TagSetting } from '@api/models/tag-manage.model';
 import { StorageService } from '@api/services/storage.service';
+import { ColumnClass } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
-import { ReviewClass, ReviewStatus } from '@common/enums/review-enum';
+import { ReviewStatus } from '@common/enums/review-enum';
 import { TagType } from '@common/enums/tag-enum';
 import { TagReviewListMock } from '@common/mock-data/tag-review-mock';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { NbDateService } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
-import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
 import { ReviewManageService } from '../review-manage.service';
 
@@ -126,7 +125,7 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
         type: 'html',
         width: '9%',
         valuePrepareFunction: (cell: string) => {
-          return `<span class="${ReviewClass[cell]}">${ReviewStatus[cell]}</span>`;
+          return `<span class="${ColumnClass[cell]}">${ReviewStatus[cell]}</span>`;
         },
         sort: false,
       },

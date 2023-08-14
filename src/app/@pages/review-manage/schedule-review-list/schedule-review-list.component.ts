@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ScheduleReviewHistory } from '@api/models/schedule-activity.model';
 import { StorageService } from '@api/services/storage.service';
-import { Frequency } from '@common/enums/common-enum';
-import { ReviewClass, ReviewStatus } from '@common/enums/review-enum';
+import { ColumnClass, Frequency } from '@common/enums/common-enum';
+import { ReviewStatus } from '@common/enums/review-enum';
 import { ScheduleReviewHistoryMock } from '@common/mock-data/schedule-review-mock';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { BaseComponent } from '@pages/base.component';
@@ -66,7 +66,7 @@ export class ScheduleReviewListComponent extends BaseComponent implements OnInit
         type: 'html',
         width: '10%',
         valuePrepareFunction: (cell: string) => {
-          return `<span class="${ReviewClass[cell]}">${ReviewStatus[cell]}</span>`;
+          return `<span class="${ColumnClass[cell]}">${ReviewStatus[cell]}</span>`;
         },
         sort: false,
       },

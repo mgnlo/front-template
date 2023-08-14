@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting, ScheduleActivitySetting, Schedule_Batch_History } from '@api/models/schedule-activity.model';
 import { StorageService } from '@api/services/storage.service';
-import { StatusResult } from '@common/enums/common-enum';
+import { ColumnClass, StatusResult } from '@common/enums/common-enum';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
@@ -76,7 +76,7 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
           const lableName = '批次排程'
           const cellLow = cell?.toLowerCase();
           if (CommonUtil.isBlank(cellLow)) return cellLow
-          return cellLow === 'success' ? `<p class="left">${lableName}${StatusResult[cellLow]}</p>` : `<p class="left colorRed textBold">${lableName}${StatusResult[cellLow]}</p>`;
+          return cellLow === 'success' ? `<p class="left">${lableName}${StatusResult[cellLow]}</p>` : `<p class="left ${ColumnClass[cell]}">${lableName}${StatusResult[cellLow]}</p>`;
         },
         sort: false,
       },

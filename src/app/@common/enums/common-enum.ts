@@ -44,3 +44,26 @@ export enum MathSymbol {
   $lt = '小於',// <
   $lte = '小於等於',// <=
 }
+
+export enum ColumnClass {
+  reviewing = '',
+  true = '',
+  success = '',
+  approved = 'color_green text_bold',
+  rejected = 'color_red text_bold',
+  false = 'color_red text_bold',
+  fail = 'color_red text_bold',
+}
+
+//搭配isSame判斷使用
+export enum ReviewCompareClass {
+  true = '',
+  false = 'color_red',
+  null = 'color_skyBlue'
+}
+
+export enum BgClass {
+  true = '',
+  false = 'redBG',
+  null = 'blueBG'
+}
