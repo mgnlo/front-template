@@ -147,11 +147,15 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     this.setSessionVal();
   }
 
+
   setGridDefineInit() {
     this.setSessionVal();
     this.ng2SmartTable.isAllSelected = false;
     this.selectedRows = undefined;
     this.ng2SmartTable.initGrid();
+    console.log('this.ng2SmartTable.grid', this.ng2SmartTable.grid)
+    console.log('this.ng2SmartTable.grid.getRows()', this.ng2SmartTable.grid.getRows())
+
   }
 
   refresh() {

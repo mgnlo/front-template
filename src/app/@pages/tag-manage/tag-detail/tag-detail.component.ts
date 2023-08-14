@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting } from '@api/models/activity-list.model';
@@ -31,7 +30,6 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
 
   constructor(
     storageService: StorageService,
-    private http: HttpClient,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private tagManageService: TagManageService,

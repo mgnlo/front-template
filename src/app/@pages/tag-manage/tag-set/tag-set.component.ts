@@ -252,12 +252,12 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       //#endregion
     }
     //#endregion
-    else{//新增
-    //#region 設定欄位
-    const formData = this.validateForm.getRawValue();
-    this.changeTagType(formData.tagType);
-    this.changeConditionSettingMethod(formData.conditionSettingMethod);
-    //#endregion
+    else {//新增
+      //#region 設定欄位
+      const formData = this.validateForm.getRawValue();
+      this.changeTagType(formData.tagType);
+      this.changeConditionSettingMethod(formData.conditionSettingMethod);
+      //#endregion
     }
   }
 
@@ -281,9 +281,11 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       case 'normal':
         this.addFieldIfNotExists('conditionSettingMethod', 'normal', Validators.required);
         this.addFieldIfNotExists('conditionSettingQuery', null, Validators.required);
+        this.validateForm?.patchValue({ 'tagType': 'normal' });
         break;
       case 'document':
         this.addFieldIfNotExists('fileName', null, Validators.required);
+        this.validateForm?.patchValue({ 'tagType': 'document' });
         break;
     }
   }
@@ -298,6 +300,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     switch (key?.toLocaleLowerCase()) {
       case 'normal':
         this.addFieldIfNotExists('conditionSettingQuery', null, Validators.required);
+        this.validateForm?.patchValue({ 'conditionSettingMethod': 'normal' });
         break;
       case 'field':
         if (!this.validateForm.contains('tagConditionSetting')) {
@@ -311,6 +314,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
             ['thresholdValue_' + 0]: new FormControl(null, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
           }));
         }
+        this.validateForm?.patchValue({ 'conditionSettingMethod': 'field' });
         break;
     }
 
