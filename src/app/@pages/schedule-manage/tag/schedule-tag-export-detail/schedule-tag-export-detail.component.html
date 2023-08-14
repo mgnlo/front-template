@@ -6,29 +6,29 @@
     <nb-card-body>
         <div class="row">
           <div class="textGroup col-12 col-lg-4">
-              <p class="textBold">標籤名稱：</p>
+              <p class="text_bold">標籤名稱：</p>
               <span>{{detail?.tagName}}</span>
           </div>
           <div class="textGroup col-12 col-lg-4">
-              <p class="textBold">狀態：</p>
+              <p class="text_bold">狀態：</p>
               <span>{{detail?.status?.toLowerCase() | enum:'status'}}</span>
           </div>
           <div class="textGroup col-12 col-lg-4">
-            <p class="textBold">類型：</p>
+            <p class="text_bold">類型：</p>
             <span>{{detail?.tagType?.toLowerCase() | enum:'tagType'}}</span>
           </div>
         </div>
         <div class="row">
           <div class="textGroup col-12 col-lg-4">
-            <p class="textBold">所屬單位：</p>
+            <p class="text_bold">所屬單位：</p>
             <span>{{detail?.department}}</span>
           </div>
           <div class="textGroup col-12 col-lg-4">
-            <p class="textBold">負責人：</p>
+            <p class="text_bold">負責人：</p>
             <span>{{detail?.owner}}</span>
           </div>
           <div class="textGroup col-12 col-lg-4">
-            <p class="textBold">起訖時間：</p>
+            <p class="text_bold">起訖時間：</p>
             <span>{{detail?.startDate | date:dateFormat}}</span>
             <span>~</span>
             <span>{{detail?.endDate | date:dateFormat}}</span>
@@ -36,27 +36,27 @@
         </div>
         <div class="row">
           <div class="textGroup col-12 col-lg-4">
-            <p class="textBold">標籤構面：</p>
+            <p class="text_bold">標籤構面：</p>
             <span>{{detail?.tagDimension}}</span>
           </div>
           <div class="textGroup col-12 col-lg-4">
-            <p class="textBold">標籤子構面：</p>
+            <p class="text_bold">標籤子構面：</p>
             <span>{{detail?.tagSubdimension}}</span>
           </div>
           <div class="textGroup col-12 col-lg-4">
-            <p class="textBold">異動時間：</p>
+            <p class="text_bold">異動時間：</p>
             <span>{{detail?.modificationTime | date:dateFormat}}</span>
           </div>
         </div>
         <div class="row">
           <div class="textGroup col-12 col-lg-12">
-            <p class="textBold">說明：</p>
+            <p class="text_bold">說明：</p>
             <span>{{detail?.tagDescription}}</span>
           </div>
         </div>
         <div class="row">
           <div class="textGroup code col-12">
-              <p class="textBold">條件設定：</p>
+              <p class="text_bold">條件設定：</p>
               <pre>{{detail?.conditionSettingQuery}}</pre>
           </div>
         </div>

@@ -6,19 +6,19 @@
     <nb-card-body>
         <div class="row">
             <div class="textGroup col-12 col-lg-4">
-                <p class="textBold">作業名稱：</p>
+                <p class="text_bold">作業名稱：</p>
                 <span>{{activitySetting.activityName}}</span>
             </div>
             <div class="textGroup col-12 col-lg-4">
-                <p class="textBold">狀態：</p>
+                <p class="text_bold">狀態：</p>
                 <span>{{activitySetting.status?.toLowerCase() | enum:'status'}}</span>
             </div>
             <div class="textGroup col-12 col-lg-4">
-                <p class="textBold">執行頻率：</p>
+                <p class="text_bold">執行頻率：</p>
                 <span>{{activitySetting.scheduleSettings?.toLowerCase() | enum:'frequency'}}</span>
             </div>
             <div class="textGroup col-12 col-lg-4">
-                <p class="textBold">異動時間：</p>
+                <p class="text_bold">異動時間：</p>
                 <span>{{activitySetting.modificationTime | date:dateFormat}}</span>
             </div>
         </div>

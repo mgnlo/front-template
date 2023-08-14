@@ -77,7 +77,7 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
         sort: false,
       }
     },
-    hideSubHeader: false, 
+    hideSubHeader: true, 
     actions: {
       add: false,
       edit: false,
@@ -125,7 +125,7 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
         sort: false,
       }
     },
-    hideSubHeader: false,
+    hideSubHeader: true,
     actions: {
       position: 'right',
       columnTitle: "移除",
