@@ -74,7 +74,7 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
       tagName: {
         title: '標籤名稱',
         type: 'html',
-        width: '30%',
+        width: '20%',
         class: 'left',
         sort: false,
         valuePrepareFunction: (cell: string) => {
@@ -93,7 +93,7 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
       department: {
         title: '所屬單位',
         type: 'string',
-        width: '10%',
+        width: '15%',
         sort: false,
       },
       owner: {
@@ -105,7 +105,7 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
       tagDescription: {
         title: '說明',
         type: 'html',
-        width: '25%',
+        width: '20%',
         class: 'left',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
@@ -113,42 +113,18 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
         sort: false,
       },
       modificationTime: {
-        title: '異動時間',
-        type: 'html',
-        width: '10%',
+        title: '標籤有效起訖日',
+        type: 'string',
+        width: '20%',
         sort: false,
-        valuePrepareFunction: (cell: string) => {
-          const datepipe: DatePipe = new DatePipe('en-US')
-          return `<p class="date">${datepipe.transform(cell , this.dateFormat)}</p>`;
-        },
-        filterFunction: (cell?: string, search?: string[]) => {
-          let date = cell;
-          let sDate = search[0];
-          let eDate = search[1];
-          let isSDate = sDate !== null;
-          let isEDate = eDate !== null;
-          if(
-            (!isSDate && !isEDate) ||
-            ((isSDate && isEDate) && (
-              moment(date).isBetween(sDate, eDate, undefined, '[]')
-            )) ||
-            ((isSDate && !isEDate) && (
-              moment(sDate).isSameOrBefore(date)
-            )) ||
-            ((!isSDate && isEDate) && (
-              moment(eDate).isSameOrAfter(date)
-            ))
-          ){
-            return true
-          }  else {
-            return false
-          }
+        valuePrepareFunction: (cell: string, row: TagSetting) => {
+          return row.startDate + '~' + row.endDate;
         }
       },
       reviewStatus: {
         title: '狀態',
         type: 'html',
-        width: '5%',
+        width: '9%',
         valuePrepareFunction: (cell: string) => {
           return `<span class="${ReviewClass[cell]}">${ReviewStatus[cell]}</span>`;
         },
@@ -157,7 +133,7 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
       action: {
         title: '查看',
         type: 'custom',
-        width: '5%',
+        width: '1%',
         valuePrepareFunction: (cell, row: TagSetting) => row,
         renderComponent: DetailButtonComponent,
         sort: false,

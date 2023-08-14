@@ -43,32 +43,32 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
       customerId: {
         title: '用戶編號',
         type: 'string',
-        class: 'col-1',
+        width: '15%',
         sort: false
       },
       userName: {
         title: '姓名',
         type: 'string',
-        class: 'col-1',
+        width: '10%',
         sort: false,
       },
       mobile: {
         title: '手機號碼',
         type: 'string',
-        class: 'col-1',
+        width: '15%',
         sort: false,
       },
       userTag: {
         title: `用戶標籤 (更新時間: ${this.updateTime})`,
         type: 'custom',
-        class: 'col-8',
+        width: '55%',
         renderComponent: CustomerListTagComponent,
         sort: false,
       },
       action: {
         title: '查看',
         type: 'custom',
-        class: 'col-1',
+        width: '5%',
         renderComponent: CustomerListButtonComponent,
         sort: false,
       },

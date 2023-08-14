@@ -6,15 +6,15 @@ export enum ReviewStatus {
 
 export enum ReviewClass {
   reviewing = '',
-  approved = 'colorGreen textBold',
-  rejected = 'colorRed textBold'
+  approved = 'color_green text_bold',
+  rejected = 'color_red text_bold'
 }
 
 //搭配isSame判斷使用
 export enum ReviewCompareClass {
   true = '',
-  false = 'colorRed',
-  null = 'colorSkyBlue'
+  false = 'color_red',
+  null = 'color_skyBlue'
 }
 
 export enum BgClass {

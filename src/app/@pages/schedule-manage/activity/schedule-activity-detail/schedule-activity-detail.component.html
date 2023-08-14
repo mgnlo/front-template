@@ -55,8 +55,8 @@
                   <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
                       <div class="mainItem">
                           <h4 (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">{{history.type}}</h4>
-                          <button nbButton status="control" size="tiny" class="iconBtn" (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">
-                              <nb-icon icon="chevron-down-outline"></nb-icon>
+                          <button nbButton ghost status="control" size="tiny" class="iconBtn" (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">
+                              <nb-icon icon="arrow-ios-forward"></nb-icon>
                           </button>
                       </div>
                       <div class="subItem" [ngClass]="isHistoryOpen[hg.key] ? '' : 'displayNone'" *ngFor="let flow of history.flows">

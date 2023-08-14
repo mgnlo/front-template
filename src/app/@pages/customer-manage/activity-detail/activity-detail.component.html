@@ -48,13 +48,13 @@
             <ng-container *ngFor="let tag of detail.tagGroupView | keyvalue">
                 <div class="subTitle">
                     <p>活動名單條件{{tag.key}}</p>
-                    <button nbButton status="basic" size="tiny" class="iconBtn btnSwitch"
+                    <button nbButton ghost status="basic" size="tiny" class="iconBtn btnSwitch"
                         [ngClass]="isConditionOpen[tag.key] ? 'btnClick' : ''" (click)="isConditionOpen[tag.key] = !isConditionOpen[tag.key]">
-                        <nb-icon icon="arrow-ios-forward-outline"></nb-icon>
+                        <nb-icon icon="arrow-ios-forward"></nb-icon>
                     </button>
                 </div>
                 <div [ngClass]="isConditionOpen[tag.key] ? '' : 'displayNone'">
-                    <div class="grayCard">
+                    <div class="colorArea">
                         <div class="row">
                             <div class="textGroup col-12 col-lg-12" *ngFor="let condition of tag.value">
                                 <p class="textBold">偵測條件：</p>
@@ -77,8 +77,11 @@
                     <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
                         <div class="mainItem">
                             <h4 (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">{{history.type}}</h4>
-                            <button nbButton status="control" size="tiny" class="iconBtn" (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">
-                                <nb-icon icon="chevron-down-outline"></nb-icon>
+                            <button nbButton ghost status="control" size="tiny" class="iconBtn" (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">
+                                <nb-icon icon="arrow-ios-forward"></nb-icon>
+                            </button>
+                            <button nbButton ghost status="primary" size="tiny" class="iconBtn">
+                                <nb-icon icon="arrow-ios-forward"></nb-icon>
                             </button>
                         </div>
                         <div class="subItem" [ngClass]="isHistoryOpen[hg.key] ? '' : 'displayNone'" *ngFor="let flow of history.flows">

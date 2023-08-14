@@ -26,6 +26,7 @@ export class DialogService {
 
     this.dialogService.open(RejectDialogComponent, {
       context: {
+        dialogSize: 'medium',
         option: option,
       },
       closeOnBackdropClick: false,

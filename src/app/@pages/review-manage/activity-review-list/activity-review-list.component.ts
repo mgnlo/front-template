@@ -76,7 +76,7 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
         type: 'html',
         class: 'left',
         sort: false,
-        width: '20%',
+        width: '25%',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
@@ -97,7 +97,7 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
       modificationTime: {
         title: '名單有效起訖日',
         type: 'string',
-        width: '30%',
+        width: '20%',
         sort: false,
         valuePrepareFunction: (cell: string, row: ActivityReviewHistory) => {
           return row.startDate + '~' + row.endDate;
@@ -112,7 +112,7 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
       reviewStatus: {
         title: '狀態',
         type: 'html',
-        width: '5%',
+        width: '10%',
         valuePrepareFunction: (cell: string) => {
           return `<span class="${ReviewClass[cell]}">${ReviewStatus[cell]}</span>`;
         },

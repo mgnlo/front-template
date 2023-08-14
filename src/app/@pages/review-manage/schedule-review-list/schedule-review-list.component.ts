@@ -34,7 +34,7 @@ export class ScheduleReviewListComponent extends BaseComponent implements OnInit
         type: 'html',
         class: 'left',
         sort: false,
-        width: '30%',
+        width: '25%',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
@@ -42,7 +42,7 @@ export class ScheduleReviewListComponent extends BaseComponent implements OnInit
       frequency: {
         title: '執行頻率',
         type: 'html',
-        width: '20%',
+        width: '30%',
         class: 'left',
         valuePrepareFunction: (cell: string, row: ScheduleReviewHistory) => {
           return `<p class="left">${Frequency[row.executionFrequency]} ${row.frequencyTime}</p>`;
@@ -53,18 +53,18 @@ export class ScheduleReviewListComponent extends BaseComponent implements OnInit
         title: '異動類型',
         type: 'string',
         sort: false,
-        width: '10%',
+        width: '15%',
       },
       reviewer: {
         title: '變更人員',
         type: 'string',
         sort: false,
-        width: '10%'
+        width: '15%'
       },
       reviewStatus: {
         title: '狀態',
         type: 'html',
-        width: '5%',
+        width: '10%',
         valuePrepareFunction: (cell: string) => {
           return `<span class="${ReviewClass[cell]}">${ReviewStatus[cell]}</span>`;
         },
