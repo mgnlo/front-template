@@ -234,6 +234,11 @@ export class TagAddComponent extends BaseComponent implements OnInit {
         })
       ).subscribe(res => {
         console.info(res.result);
+        //#region 設定欄位
+        const formData = this.validateForm.getRawValue();
+        this.changeTagType(formData.tagType);
+        this.changeConditionSettingMethod(formData.conditionSettingMethod);
+        //#endregion
       });
 
       //#region 搜尋客群名單 BY TagId
@@ -247,12 +252,13 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       //#endregion
     }
     //#endregion
-
+    else{//新增
     //#region 設定欄位
     const formData = this.validateForm.getRawValue();
     this.changeTagType(formData.tagType);
     this.changeConditionSettingMethod(formData.conditionSettingMethod);
     //#endregion
+    }
   }
 
   ngAfterViewChecked(): void {
