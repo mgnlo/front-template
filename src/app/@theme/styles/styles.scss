@@ -13,6 +13,6 @@
     @include nb-overrides();
 }
 
-@import './table';
 @import 'basic';
 @import 'we-style';
+@import './table';

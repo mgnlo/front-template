@@ -60,7 +60,7 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
       status: {
         title: '狀態',
         type: 'string',
-        width: '5%',
+        width: '10%',
         class: 'alignCenter',
         valuePrepareFunction: (cell: string) => {
           return Status[cell];
@@ -70,7 +70,7 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
       batchTime: {
         title: '批次更新時間',
         type: 'string',
-        width: '20%',
+        width: '25%',
         sort: false,
       },
       batchResult: {
@@ -87,7 +87,7 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
       action: {
         title: '查看',
         type: 'custom',
-        width: '1%',
+        width: '5%',
         valuePrepareFunction: (cell, row: ScheduleTagSetting) => row,
         renderComponent: ScheduleTagButtonComponent,
         sort: false,
