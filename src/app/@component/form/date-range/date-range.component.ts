@@ -1,21 +1,24 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, Input } from '@angular/core';
+import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
 import { RegExpUtil } from '@common/utils/reg-exp-util';
-import * as moment from 'moment';
 
 @Component({
   selector: 'date-range',
   templateUrl: './date-range.component.html',
   styleUrls: []
 })
-export class DateRangeComponent implements OnInit {
+export class DateRangeComponent{
 
   readonly dateFormat = 'yyyy-MM-dd';
   @Input() form: FormGroup;
 
-  constructor() { }
-
-  ngOnInit(): void {
+  getRequired(ctlName: string){
+    let ctl = this.form.get(ctlName) as FormControl;
+    if(ctl?.validator) {
+      return ctl.validator({} as AbstractControl)?.required !== undefined ? true : false;
+    } else {
+      return false;
+    }
   }
 
   //format date

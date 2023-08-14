@@ -3,7 +3,7 @@ import { NavigationExtras, Router } from '@angular/router';
 
 @Component({
   selector: 'detail-button',
-  template: '<button nbButton ghost status="info" size="medium" (click)="search()"><nb-icon icon="search"></nb-icon></button>'
+  template: '<div class="btnCol"><button nbButton ghost status="info" size="large" (click)="search()"><nb-icon icon="search"></nb-icon></button></div>'
 })
 export class DetailButtonComponent<T> implements OnInit {
 

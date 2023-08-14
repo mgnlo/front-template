@@ -42,8 +42,8 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
       status: new FormControl('disabled', Validators.required),
       listLimit: new FormControl(null, ValidatorsUtil.number),
       filterOptions: new FormControl(false),
-      startDate: new FormControl(new Date(), ValidatorsUtil.dateFmt),
-      endDate: new FormControl(moment(new Date()).add(3, 'months').toDate(), ValidatorsUtil.dateFmt),
+      startDate: new FormControl(new Date(), [Validators.required, ValidatorsUtil.dateFmt]),
+      endDate: new FormControl(moment(new Date()).add(3, 'months').toDate(), [Validators.required, ValidatorsUtil.dateFmt]),
       scheduleSettings: new FormControl(null, Validators.required),
       activityDescription: new FormControl(null),
       activityListCondition: new FormArray([
