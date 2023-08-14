@@ -144,9 +144,10 @@ export class TagListComponent extends BaseComponent implements OnInit {
   }
 
   search() {
+    const page = this.storageService.getSessionVal(this.sessionKey)?.page;
     let searchInfo: SearchInfo = {
       apiUrl: this.tagManageService.tagFunc,
-      nowPage: this.paginator.nowPage,
+      nowPage: page ? page : this.paginator.nowPage,
       filters: this.validateForm.getRawValue(),
       errMsg:'標籤列表查無資料',
     }

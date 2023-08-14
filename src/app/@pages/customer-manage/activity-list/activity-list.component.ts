@@ -43,12 +43,6 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
     this.search();
   }
 
-  ngAfterViewInit() {
-    const page = this.storageService.getSessionVal(this.sessionKey)?.page;
-    this.restDataSource.setPage(page ? page : this.paginator.nowPage)
-    this.restDataSource.load(this.restDataSource.getPaging());
-  }
-
   ngOnDestroy(): void {
     let sessionData = { page: this.paginator.nowPage, filter: this.validateForm.getRawValue() };
     this.storageService.putSessionVal(this.sessionKey, sessionData);
@@ -124,10 +118,6 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
       edit: false,
       delete: false,
     },
-    // rowClassFunction: (row: Row) => {
-    //   console.info(row.getData().status)
-    //   return row.getData().status === 'ing' ? 'aa' : '';
-    // },
   };
 
   add() {
