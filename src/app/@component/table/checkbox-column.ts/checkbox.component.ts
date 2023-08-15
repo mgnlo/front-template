@@ -12,11 +12,15 @@ export class CheckboxColumnComponent {
   @Input() value: any;
 
   ngOnInit() {
+    //console.info('this.value', this.value)
     const row = this.value?.row;
-    const param = this.value?.param;
-    this.isShow = row?.[param?.key] && param?.answer &&
-    param?.answer?.some(answer => answer?.toLowerCase() === row?.[param?.key]?.toLowerCase()) ? true : false;
-    this.isChecked = this.value;
+
+    const isShowParam = this.value?.isShowParam;
+    this.isShow = isShowParam?.answer && row?.[isShowParam?.key] &&
+      isShowParam?.answer?.some(answer => answer?.toLowerCase() === row?.[isShowParam?.key]?.toLowerCase()) ? true : false;
+
+    const isCheckedParam = this.value?.isCheckedParam;
+    this.isChecked = isCheckedParam?.key && row?.[isCheckedParam?.key] ? true : false;
   }
 }
 

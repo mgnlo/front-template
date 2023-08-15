@@ -168,7 +168,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
           visible: true,
           renderComponent: CheckboxColumnComponent,
           valuePrepareFunction: (value: any, row: ActivitySetting, cell: any) => {
-            return { value, row, cell, param: { key: 'status', answer: ['enabled', 'reviewing'] } };
+            return { value, row, cell, isShowParam: { key: 'status', answer: ['enabled', 'reviewing'] } };
           },
         },
       };
