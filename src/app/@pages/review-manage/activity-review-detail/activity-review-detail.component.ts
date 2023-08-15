@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Navigation, Router } from '@angular/router';
+import { ActivatedRoute, Navigation, Router } from '@angular/router';
 import { ActivityDetail, ActivityReviewHistory, ActivitySetting, TagGroupView } from '@api/models/activity-list.model';
 import { DialogService } from '@api/services/dialog.service';
 import { StorageService } from '@api/services/storage.service';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
+import { ActivityReviewListMock } from '@common/mock-data/activity-review-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
 
@@ -27,32 +28,38 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
   isBefore: boolean = false;
   reviewStatus: string;
   reviewComment: string;
+  historyId: string;
 
-  constructor(storageService: StorageService, private router: Router, private dialogService: DialogService) {
+  constructor(
+    storageService: StorageService,
+    private router: Router,
+    private dialogService: DialogService,
+    private activatedRoute: ActivatedRoute,
+  ) {
     super(storageService);
-    if (!!this.router.getCurrentNavigation()?.extras) {
-      this.newReview = this.router.getCurrentNavigation().extras.state as ActivityReviewHistory;
-      this.reviewStatus = this.newReview.reviewStatus;
-      this.reviewComment = this.newReview.reviewComment;
-      this.oldReview = ActivityListMock.filter(row => row.activityId === this.newReview.referenceId)[0];
-      this.newDetail = JSON.parse(JSON.stringify(this.newReview));
-      this.oldDetail = JSON.parse(JSON.stringify(this.oldReview));
-      this.newDetail.tagGroupView = CommonUtil.groupBy(this.newReview.activityListCondition, 'tagGroup');
-      this.oldDetail.tagGroupView = CommonUtil.groupBy(this.oldReview.activityListCondition, 'tagGroup');
-      this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
-      this.detail = this.newDetail;
-      this.compareCondition(this.detail.tagGroupView, 'old');
-      Object.keys(this.detail.tagGroupView).forEach(key => this.isConditionOpen[key] = true);
-      console.info(this.detail.tagGroupView)
-      const processedData = CommonUtil.getHistoryProcessData<ActivitySetting>('activityReviewHistory', this.oldReview as ActivitySetting);
-      if (!!processedData) {
-        this.isHistoryOpen = processedData.isHistoryOpen;
-        this.detail = processedData.detail;
-      }
-    }
   }
 
   ngOnInit(): void {
+    this.historyId = this.activatedRoute.snapshot.params.historyId;
+    this.newReview = ActivityReviewListMock.filter(review => review.historyId === this.historyId)[0];
+    this.reviewStatus = this.newReview.reviewStatus;
+    this.reviewComment = this.newReview.reviewComment;
+    this.oldReview = ActivityListMock.filter(row => row.activityId === this.newReview.referenceId)[0];
+    this.newDetail = JSON.parse(JSON.stringify(this.newReview));
+    this.oldDetail = JSON.parse(JSON.stringify(this.oldReview));
+    this.newDetail.tagGroupView = CommonUtil.groupBy(this.newReview.activityListCondition, 'tagGroup');
+    this.oldDetail.tagGroupView = CommonUtil.groupBy(this.oldReview.activityListCondition, 'tagGroup');
+    this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
+    const processedData = CommonUtil.getHistoryProcessData<ActivitySetting>('activityReviewHistory', this.oldReview as ActivitySetting);
+    if (!!processedData) {
+      this.isHistoryOpen = processedData.isHistoryOpen;
+      this.detail = processedData.detail;
+      this.newDetail.historyGroupView = this.detail.historyGroupView;
+      this.oldDetail.historyGroupView = this.detail.historyGroupView;
+      this.detail.tagGroupView = this.newDetail.tagGroupView;
+      this.compareCondition(this.detail.tagGroupView, 'old');
+      Object.keys(this.detail.tagGroupView).forEach(key => this.isConditionOpen[key] = true);
+    }
   }
 
   viewToggle() {

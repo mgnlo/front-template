@@ -17,7 +17,7 @@ export const ActivityReviewListMock: Array<ActivityReviewHistory> = [
     activityDescription: "-",
     filterOptions: "true",
     listLimit: 250,
-    status: "reviewing",
+    status: "enabled",
     startDate: "2023-07-01",
     endDate: "2023-07-01",
     modificationTime: "2023-07-03 15:30:00",
@@ -53,7 +53,7 @@ export const ActivityReviewListMock: Array<ActivityReviewHistory> = [
   {
     historyId: "h123457",
     version: "uuid-zzzz",
-    referenceId: "abcdefg123457",
+    referenceId: "ef9d5fe8-a247-4d79-b9df-946d9ee43678",
     groupId: 1,
     time: "2023-07-01 09:00:00",
     title: "審核",
@@ -102,7 +102,7 @@ export const ActivityReviewListMock: Array<ActivityReviewHistory> = [
   {
     historyId: "h123459",
     version: "uuid-zzzz",
-    referenceId: "abcdefg123458",
+    referenceId: "dbfcea5f-8949-4c4e-9964-eebbe316b4f7",
     groupId: 2,
     time: "2023-07-01 09:00:00",
     title: "修改",
@@ -157,7 +157,7 @@ export const ActivityReviewListMock: Array<ActivityReviewHistory> = [
   {
     historyId: "h123459",
     version: "uuid-zzzz",
-    referenceId: "abcdefg123456",
+    referenceId: "9d24e344-c57b-42cc-bf20-6d62bf857e7f",
     groupId: 2,
     time: "2023-07-01 09:00:00",
     title: "修改",
@@ -196,7 +196,7 @@ export const ActivityReviewListMock: Array<ActivityReviewHistory> = [
   {
     historyId: "h123460",
     version: "uuid-zzzz",
-    referenceId: "abcdefg123456",
+    referenceId: "b28e431c-8730-43a2-b500-ea41f8f1934c",
     groupId: 2,
     time: "2023-07-01 09:00:00",
     title: "審核",
@@ -242,7 +242,7 @@ export const ActivityReviewListMock: Array<ActivityReviewHistory> = [
   },
   {
     historyId: "h123460",
-    version: "uuid-zzzz",
+    version: "3bf4ef45-5e06-4c39-a097-7bce6e6f8a3f",
     referenceId: "abcdefg123456",
     groupId: 2,
     time: "2023-07-01 09:00:00",
@@ -290,7 +290,7 @@ export const ActivityReviewListMock: Array<ActivityReviewHistory> = [
   {
    historyId: "h123456",
    version: "uuid-zzzz",
-   referenceId: "abcdefg123457",
+   referenceId: "a0a0dfc2-7975-4e80-8067-ea267f548337",
    groupId: 1,
    time: "2023-07-01 09:00:00",
    title: "建立條件送審",
@@ -303,7 +303,7 @@ export const ActivityReviewListMock: Array<ActivityReviewHistory> = [
    activityDescription: "-",
    filterOptions: "true",
    listLimit: 250,
-   status: "reviewing",
+   status: "disabled",
    startDate: "2023-07-01",
    endDate: "2023-07-01",
    modificationTime: "2023-07-03 15:30:00",
@@ -339,7 +339,7 @@ export const ActivityReviewListMock: Array<ActivityReviewHistory> = [
  {
    historyId: "h123459",
    version: "uuid-zzzz",
-   referenceId: "abcdefg123458",
+   referenceId: "dbfcea5f-8949-4c4e-9964-eebbe316b4f7",
    groupId: 2,
    time: "2023-07-01 09:00:00",
    title: "修改",
@@ -394,7 +394,7 @@ export const ActivityReviewListMock: Array<ActivityReviewHistory> = [
  {
    historyId: "h123459",
    version: "uuid-zzzz",
-   referenceId: "abcdefg123456",
+   referenceId: "90b010ba-bd4b-480a-a0c7-3a35096f2ed8",
    groupId: 2,
    time: "2023-07-01 09:00:00",
    title: "修改",
@@ -433,7 +433,7 @@ export const ActivityReviewListMock: Array<ActivityReviewHistory> = [
  {
    historyId: "h123459",
    version: "uuid-zzzz",
-   referenceId: "abcdefg123458",
+   referenceId: "dbfcea5f-8949-4c4e-9964-eebbe316b4f7",
    groupId: 2,
    time: "2023-07-01 09:00:00",
    title: "修改",
@@ -488,7 +488,7 @@ export const ActivityReviewListMock: Array<ActivityReviewHistory> = [
  {
    historyId: "h123459",
    version: "uuid-zzzz",
-   referenceId: "abcdefg123456",
+   referenceId: "90b010ba-bd4b-480a-a0c7-3a35096f2ed8",
    groupId: 2,
    time: "2023-07-01 09:00:00",
    title: "修改",

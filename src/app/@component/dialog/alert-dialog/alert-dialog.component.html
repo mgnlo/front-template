@@ -1,6 +1,9 @@
-<nb-card class="statusDialog">
+<nb-card class="dialogCard statusDialog small">
   <nb-card-body>
-    <img [src]="option.isSuccess ? 'assets/images/dialog-success.svg' : 'assets/images/dialog-fail.svg'">
-    <p>{{option.content}}</p>
+    <ng-container>
+      <nb-icon [status]="option.isSuccess ? 'success' : 'danger'"
+        [icon]="option.isSuccess ? 'checkmark-circle-outline': 'alert-triangle-outline'"></nb-icon>
+        <p>{{option.content}}</p>
+    </ng-container>
   </nb-card-body>
 </nb-card>

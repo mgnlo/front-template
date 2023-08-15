@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'checkbox-icon',
-  template: '<nb-icon *ngIf="bool" status="info" icon="checkmark-square-2"></nb-icon>'
+  template: '<nb-icon *ngIf="bool" status="primary" icon="checkmark-square-2"></nb-icon>'
 })
 export class CheckboxIconComponent implements OnInit {
 

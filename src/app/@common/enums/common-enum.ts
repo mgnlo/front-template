@@ -67,3 +67,17 @@ export enum BgClass {
   false = 'redBG',
   null = 'blueBG'
 }
+
+export enum toastIcon {
+  danger = 'alert-triangle-outline',
+  success = 'checkmark-outline',
+  info = 'paper-plane-outline',
+  primary = 'bell-outline'
+}
+
+export enum toastTitle {
+  danger = '警告',
+  success = '成功',
+  info = '訊息',
+  primary = '通知'
+}
