@@ -15,7 +15,7 @@ export class CheckboxColumnComponent {
     const row = this.value?.row;
     const param = this.value?.param;
     this.isShow = row?.[param?.key] && param?.answer &&
-    param?.answer.some(answer => answer?.toLowerCase() === row?.[param?.key]?.toLowerCase()) ? true : false;
+    param?.answer?.some(answer => answer?.toLowerCase() === row?.[param?.key]?.toLowerCase()) ? true : false;
     this.isChecked = this.value;
   }
 }
