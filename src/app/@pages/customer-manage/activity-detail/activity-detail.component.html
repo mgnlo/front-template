@@ -45,15 +45,15 @@
                     <span>{{detail?.batchUpdateTime}}</span>
                 </div>
             </div>
-            <ng-container *ngFor="let tag of detail.tagGroupView | keyvalue">
+            <ng-container *ngFor="let tag of detail.tagGroupView | keyvalue;">
                 <div class="subTitle">
                     <p>活動名單條件{{tag.key}}</p>
-                    <button nbButton ghost status="basic" size="tiny" class="iconBtn btnSwitch"
+                    <button nbButton [status]="isConditionOpen[tag.key] ? 'info' : 'basic'" size="small" class="iconBtn btnSwitch"
                         [ngClass]="isConditionOpen[tag.key] ? 'btnClick' : ''" (click)="isConditionOpen[tag.key] = !isConditionOpen[tag.key]">
                         <nb-icon icon="arrow-ios-forward"></nb-icon>
                     </button>
                 </div>
-                <div [ngClass]="isConditionOpen[tag.key] ? '' : 'dis_none'">
+                <ng-container *ngIf="isConditionOpen[tag.key]">
                     <div class="colorArea">
                         <div class="row">
                             <div class="textGroup col-12 col-lg-12" *ngFor="let condition of tag.value">
@@ -62,7 +62,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </ng-container>
             </ng-container>
         </nb-card-body>
     </nb-card>

@@ -8,6 +8,7 @@ import { ColumnClass, Status, StatusResult } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
+import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/checkbox.component';
 import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
@@ -100,8 +101,13 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         title: '查看',
         type: 'custom',
         width: '1%',
-        valuePrepareFunction: (cell, row: Schedule_Batch_History) => row,
-        renderComponent: ScheduleActivityButtonComponent,
+        renderComponent: ColumnButtonComponent,
+        onComponentInitFunction: (instance: ColumnButtonComponent) => {
+          instance.emitter.subscribe((res: Schedule_Batch_History) => {
+            let passData: NavigationExtras = { state: res };
+            this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-export-detail', this.scheduleId, res.activityId], passData);
+          })
+        },
         sort: false,
       },
     },
@@ -185,28 +191,5 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
 
   cancel() {
     this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-list']);
-  }
-}
-
-
-
-@Component({
-  selector: 'schedule-activity-detail-button',
-  template: '<button nbButton ghost status="info" size="medium" (click)="search()"><nb-icon icon="search"></nb-icon></button>'
-})
-export class ScheduleActivityButtonComponent implements OnInit {
-  params: any;//路由參數
-
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
-    this.params = this.activatedRoute.snapshot.params;
-  }
-
-  @Input() value: Schedule_Batch_History;
-
-  ngOnInit() { }
-
-  search() {
-    let passData: NavigationExtras = { state: this.value };
-    this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-export-detail', this.params.scheduleId, this.value.activityId], passData);
   }
 }

@@ -1,5 +1,5 @@
 <div class="row" [formGroup]="form">
-  <div class="fieldGroup col-12 col-lg-6" [ngClass]="{'error': form.get('startDate').errors?.format || form.errors?.dateErrMsg}">
+  <div class="fieldGroup col-12 col-lg-6" [ngClass]="{'error': form.get('startDate').errors?.format || form.errors?.dateErrMsg, 'essential': getRequired('startDate')}">
     <label>起始時間</label>
     <div>
         <input nbInput fullWidth [status]="form.get('startDate').errors?.format || form.errors?.dateErrMsg ? 'danger' : 'basic'"
@@ -12,7 +12,7 @@
         <p>{{form.get('startDate').errors?.format || form.errors?.dateErrMsg}}</p>
     </div>
   </div>
-  <div class="fieldGroup col-12 col-lg-6" [ngClass]="{'error': form.get('endDate').errors?.format || form.errors?.dateErrMsg}">
+  <div class="fieldGroup col-12 col-lg-6" [ngClass]="{'error': form.get('endDate').errors?.format || form.errors?.dateErrMsg, 'essential': getRequired('endDate')}">
     <label>結束時間</label>
     <div>
         <input nbInput fullWidth [status]="form.get('endDate').errors?.format || form.errors?.dateErrMsg ? 'danger' : 'basic'"

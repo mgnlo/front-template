@@ -9,8 +9,12 @@
     <!-- 提示訊息 -->
     <div class="noteText" [ngClass]="{'alert': reviewStatus === 'rejected'}" *ngIf="reviewStatus !== 'reviewing'">
         <nb-icon icon="info-outline"></nb-icon>
-        <p>審核結果：{{reviewStatus | enum:'reviewStatus'}}</p><br/>
-        <p *ngIf="reviewStatus === 'rejected'">原因：{{reviewComment}}</p>
+        <div>
+            <ul>
+                <li>審核結果：{{reviewStatus | enum:'reviewStatus'}}</li>
+                <li *ngIf="reviewStatus === 'rejected'">原因：{{reviewComment}}</li>
+            </ul>
+        </div>
     </div>
     <nb-card>
         <nb-card-body>
@@ -54,13 +58,13 @@
             </div>
             <ng-container *ngFor="let tag of detail.tagGroupView | keyvalue; let i = index;">
                 <div class="subTitle">
-                    <p [ngClass]="getConditionClass(i) | enum: 'reviewCompareClass'">活動名單條件{{tag.key}}</p>
-                    <button nbButton ghost status="basic" size="tiny" class="iconBtn btnSwitch"
+                    <p>活動名單條件{{tag.key}}</p>
+                    <button nbButton [status]="isConditionOpen[tag.key] ? 'info' : 'basic'" size="small" class="iconBtn btnSwitch"
                         [ngClass]="isConditionOpen[tag.key] ? 'btnClick' : ''" (click)="isConditionOpen[tag.key] = !isConditionOpen[tag.key]">
                         <nb-icon icon="arrow-ios-forward"></nb-icon>
                     </button>
                 </div>
-                <div [ngClass]="isConditionOpen[tag.key] ? '' : 'dis_none'">
+                <ng-container *ngIf="isConditionOpen[tag.key]">
                     <div class="colorArea" [ngClass]="getConditionClass(i) | enum: 'bgClass'">
                         <div class="row">
                             <div class="textGroup col-12 col-lg-12" *ngFor="let condition of tag.value">
@@ -69,7 +73,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </ng-container>
             </ng-container>
         </nb-card-body>
     </nb-card>

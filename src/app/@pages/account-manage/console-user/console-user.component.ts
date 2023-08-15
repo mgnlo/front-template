@@ -108,6 +108,7 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
               this.dataSource.update(rowData, updatedRow); // Update the data source
             }
           });
+          instance.buttonIcon = 'edit-outline'
         },
         sort: false,
       },
@@ -310,7 +311,7 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
 
 @Component({
   selector: 'ngx-console-user-button',
-  template: '<button nbButton status="info" size="tiny" class="iconBtn" (click)="edit()"><nb-icon icon="edit-outline"></nb-icon></button>'
+  template: '<div class="btnCol"><button nbButton ghost status="primary" size="large" (click)="edit()"><nb-icon icon="edit-outline"></nb-icon></button></div>'
 })
 export class ConsoleUserButtonComponent implements OnInit {
   @Input() value: Array<any>;

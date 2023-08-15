@@ -5,6 +5,7 @@ import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, Status, StatusResult } from '@common/enums/common-enum';
 import { ScheduleTagSettingMock } from '@common/mock-data/schedule-tag-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
+import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/checkbox.component';
 import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
@@ -90,8 +91,13 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
         title: '查看',
         type: 'custom',
         width: '5%',
-        valuePrepareFunction: (cell, row: ScheduleTagSetting) => row,
-        renderComponent: ScheduleTagButtonComponent,
+        renderComponent: ColumnButtonComponent,
+        onComponentInitFunction: (instance: ColumnButtonComponent) => {
+          instance.emitter.subscribe((res: ScheduleBatchHistory) => {
+            let passData: NavigationExtras = { state: res };
+            this.router.navigate(['pages', 'schedule-manage', 'schedule-tag-export-detail', res.tagId], passData);
+          })
+        },
         sort: false,
       },
     },
@@ -187,24 +193,4 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
     console.info('selectedRows', this.selectedRows)
   }
 
-}
-
-
-@Component({
-  selector: 'schedule-tag-detail-button',
-  template: '<button nbButton ghost status="info" size="medium" (click)="search()"><nb-icon icon="search"></nb-icon></button>'
-})
-export class ScheduleTagButtonComponent implements OnInit {
-
-  constructor(private router: Router) {
-  }
-
-  @Input() value: ScheduleBatchHistory;
-
-  ngOnInit() { }
-
-  search() {
-    let passData: NavigationExtras = { state: this.value };
-    this.router.navigate(['pages', 'schedule-manage', 'schedule-tag-export-detail', this.value.tagId], passData);
-  }
 }

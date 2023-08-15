@@ -5,6 +5,7 @@ import { DialogService } from '@api/services/dialog.service';
 import { StorageService } from '@api/services/storage.service';
 import { CustomerListMock } from '@common/mock-data/customer-list-mock';
 import { ValidatorsUtil } from '@common/utils/validators-util';
+import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
@@ -17,7 +18,7 @@ import { DetailDialogComponent } from './detail-dialog/detail.dialog.component';
 })
 export class CustomerListComponent extends BaseComponent implements OnInit {
 
-  constructor(storageService: StorageService,) {
+  constructor(storageService: StorageService, private dialogService: DialogService) {
     super(storageService);
     // 篩選條件
     this.validateForm = new FormGroup({
@@ -69,7 +70,15 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
         title: '查看',
         type: 'custom',
         width: '5%',
-        renderComponent: CustomerListButtonComponent,
+        renderComponent: ColumnButtonComponent,
+        onComponentInitFunction: (instance: ColumnButtonComponent) => {
+          instance.emitter.subscribe((res) => {
+            this.dialogService.open(DetailDialogComponent, {
+              title: `${res['customerId']}`,
+              dataList: res,
+            });
+          })
+        },
         sort: false,
       },
     },
@@ -93,24 +102,6 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
       this.dataSource.addFilter({ field: k, filter: undefined, search: v });
       this.updateTime = moment(new Date()).format('YYYY/MM/DD');
     }
-  }
-}
-
-@Component({
-  selector: 'customer-list-button',
-  template: '<button nbButton ghost status="info" size="medium" (click)="detail()"><nb-icon icon="search"></nb-icon></button>'
-})
-export class CustomerListButtonComponent implements OnInit {
-
-  constructor(private dialogService: DialogService) { }
-  @Input() rowData: Array<string>;
-  ngOnInit() { }
-
-  detail() {
-    this.dialogService.open(DetailDialogComponent, {
-      title: `${this.rowData['customerId']}`,
-      dataList: this.rowData,
-    });
   }
 }
 

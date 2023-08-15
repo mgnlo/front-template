@@ -43,6 +43,7 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
       this.detail = this.newDetail;
       this.compareCondition(this.detail.tagGroupView, 'old');
       Object.keys(this.detail.tagGroupView).forEach(key => this.isConditionOpen[key] = true);
+      console.info(this.detail.tagGroupView)
       const processedData = CommonUtil.getHistoryProcessData<ActivitySetting>('activityReviewHistory', this.oldReview as ActivitySetting);
       if (!!processedData) {
         this.isHistoryOpen = processedData.isHistoryOpen;

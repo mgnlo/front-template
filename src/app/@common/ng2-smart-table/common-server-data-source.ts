@@ -62,7 +62,7 @@ export class CommonServerDataSource extends ServerDataSource {
     const resultUrl = this.prefixUrl + this.conf.endPoint;
     let httpParams = this.createRequesParams();
 
-    if (this.initConf) {
+    if (!!this.initConf) {
       if (!!this.initConf.filters && this.initConf.filters.length > 0) {
         this.initConf.filters.filter(filter => CommonUtil.isNotBlank(filter.value.toString()))
           .forEach(filter => { httpParams = httpParams.append(filter.key, filter.value) });

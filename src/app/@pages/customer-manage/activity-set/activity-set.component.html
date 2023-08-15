@@ -48,7 +48,7 @@
                                 <nb-option [value]="con.value" [id]="con.key">{{con.value}}</nb-option>
                                 <nb-option value="item2">item2</nb-option>
                             </nb-select>
-                            <span class="and colorGreen">and</span>
+                            <span class="and color_green">and</span>
                             <button nbButton status="danger" *ngIf="!first2 || first2 !== last2" size="tiny" class="iconBtn" (click)="and(i, 'remove', +con.key)">
                                 <nb-icon icon="trash-2-outline"></nb-icon>
                             </button>
