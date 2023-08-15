@@ -5,6 +5,7 @@ import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, StatusResult } from '@common/enums/common-enum';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
+import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
 
@@ -84,8 +85,13 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
         title: '匯出',
         type: 'custom',
         width: '1%',
-        valuePrepareFunction: (cell, row) => row,
-        renderComponent: ActivityButtonComponent,
+        renderComponent: ColumnButtonComponent,
+        onComponentInitFunction: (instance: ColumnButtonComponent) => {
+          instance.settings = { btnStatus: 'success', btnIcon: 'cloud-download-outline' }
+          instance.emitter.subscribe((res: Schedule_Batch_History) => {
+            // TODO: download
+          })
+        },
         sort: false,
       },
     },
@@ -106,22 +112,4 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
     this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-detail', this.params.scheduleId]);
   }
 
-}
-
-
-@Component({
-  selector: 'activity-detail-button',
-  template: '<button nbButton ghost status="info" size="medium" (click)="download()"><nb-icon icon="cloud-download-outline"></nb-icon></button>'
-})
-export class ActivityButtonComponent implements OnInit {
-
-  constructor(private router: Router) { }
-
-  //@Input() value: Schedule_Batch_History;
-
-  ngOnInit() { }
-
-  download() {
-
-  }
 }

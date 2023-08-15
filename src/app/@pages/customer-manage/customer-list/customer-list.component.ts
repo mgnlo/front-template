@@ -71,8 +71,7 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
         type: 'custom',
         width: '5%',
         renderComponent: ColumnButtonComponent,
-        onComponentInitFunction: (instance) => {
-          instance.settings = { buttonStatus: 'info', buttonIcon: 'search'}
+        onComponentInitFunction: (instance: ColumnButtonComponent) => {
           instance.emitter.subscribe((res) => {
             this.dialogService.open(DetailDialogComponent, {
               title: `${res['customerId']}`,

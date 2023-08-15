@@ -89,8 +89,7 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
         type: 'custom',
         width: '5%',
         renderComponent: ColumnButtonComponent,
-        onComponentInitFunction: (instance) => {
-          instance.settings = { buttonStatus: 'info', buttonIcon: 'search'}
+        onComponentInitFunction: (instance: ColumnButtonComponent) => {
           instance.emitter.subscribe((res: ScheduleBatchHistory) => {
             let passData: NavigationExtras = { state: res };
             this.router.navigate(['pages', 'schedule-manage', 'schedule-tag-export-detail', res.tagId], passData);

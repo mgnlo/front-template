@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Schedule_Batch_History } from '@api/models/schedule-activity.model';
 import { ScheduleTagSetting } from '@api/models/schedule-tag.model';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, StatusResult } from '@common/enums/common-enum';
 import { ScheduleTagSettingMock } from '@common/mock-data/schedule-tag-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
+import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
 
@@ -79,8 +81,13 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
         title: '匯出',
         type: 'custom',
         width: '1%',
-        valuePrepareFunction: (cell, row) => row,
-        renderComponent: TagButtonComponent,
+        renderComponent: ColumnButtonComponent,
+        onComponentInitFunction: (instance: ColumnButtonComponent) => {
+          instance.settings = { btnStatus: 'success', btnIcon: 'cloud-download-outline' }
+          instance.emitter.subscribe((res: Schedule_Batch_History) => {
+            // TODO: download
+          })
+        },
         sort: false,
       },
     },
@@ -106,22 +113,4 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
     this.router.navigate(['pages', 'schedule-manage', 'schedule-tag-detail']);
   }
 
-}
-
-
-@Component({
-  selector: 'tag-detail-button',
-  template: '<button nbButton ghost status="info" size="medium" (click)="download()"><nb-icon icon="cloud-download-outline"></nb-icon></button>'
-})
-export class TagButtonComponent implements OnInit {
-
-  constructor(private router: Router) { }
-
-  //@Input() value: Schedule_Batch_History;
-
-  ngOnInit() { }
-
-  download() {
-
-  }
 }

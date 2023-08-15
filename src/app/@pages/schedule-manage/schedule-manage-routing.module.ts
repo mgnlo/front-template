@@ -1,13 +1,13 @@
 import { NgModule } from "@angular/core"
 import { RouterModule, Routes } from "@angular/router"
 import { ScheduleDetailComponent } from "./activity/schedule-activity-detail/schedule-activity-detail.component"
-import { ActivityButtonComponent, ActivityExportDetailComponent } from "./activity/schedule-activity-export-detail/schedule-activity-export-detail.component"
+import { ActivityExportDetailComponent } from "./activity/schedule-activity-export-detail/schedule-activity-export-detail.component"
 import { ScheduleListComponent } from "./activity/schedule-activity-list/schedule-activity-list.component"
 import { PreviewDialogComponent } from "./activity/schedule-activity-set/preview-dialog/preview.dialog/preview-dialog.component"
 import { ScheduleAddComponent } from "./activity/schedule-activity-set/schedule-activity-set.component"
 import { ScheduleManageComponent } from "./schedule-manage.component"
 import { ScheduleTagDetailComponent } from "./tag/schedule-tag-detail/schedule-tag-detail.component"
-import { ScheduleTagExportDetailComponent, TagButtonComponent } from "./tag/schedule-tag-export-detail/schedule-tag-export-detail.component"
+import { ScheduleTagExportDetailComponent } from "./tag/schedule-tag-export-detail/schedule-tag-export-detail.component"
 
 const routes: Routes = [
   {
@@ -40,9 +40,7 @@ export const routedComponents = [
   ScheduleAddComponent,
   ScheduleDetailComponent,
   ActivityExportDetailComponent,
-  ActivityButtonComponent,
   PreviewDialogComponent,
   ScheduleTagDetailComponent,
   ScheduleTagExportDetailComponent,
-  TagButtonComponent,
 ];

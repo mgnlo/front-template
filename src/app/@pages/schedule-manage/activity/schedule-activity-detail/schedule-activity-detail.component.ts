@@ -99,8 +99,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         type: 'custom',
         width: '1%',
         renderComponent: ColumnButtonComponent,
-        onComponentInitFunction: (instance) => {
-          instance.settings = { buttonStatus: 'info', buttonIcon: 'search'}
+        onComponentInitFunction: (instance: ColumnButtonComponent) => {
           instance.emitter.subscribe((res: Schedule_Batch_History) => {
             let passData: NavigationExtras = { state: res };
             this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-export-detail', this.scheduleId, res.activityId], passData);

@@ -14,19 +14,17 @@ import { DropdownComponent } from './form/dropdown/dropdown.component';
 import { RadioComponent } from './form/radio/radio.component';
 import { CheckboxIconComponent } from './table/checkbox-icon/checkbox-icon.component';
 import { ColumnButtonComponent } from './table/column-button/column-button.component';
-import { DeleteButtonComponent } from './table/detail-button/delete-button.component';
 import { DetailButtonComponent } from './table/detail-button/detail-button.component';
 import { PaginatorComponent } from './table/paginator/paginator.component';
 
 export const COMPONENTS = [
-  ColumnButtonComponent,
   ApproveDialogComponent,
   RejectDialogComponent,
   ConfirmDialogComponent,
   AlertDialogComponent,
   PaginatorComponent,
   CheckboxIconComponent,
-  DeleteButtonComponent,
+  ColumnButtonComponent,
   DetailButtonComponent,
   BasicInputComponent,
   RadioComponent,

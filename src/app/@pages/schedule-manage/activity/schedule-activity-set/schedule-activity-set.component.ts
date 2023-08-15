@@ -10,7 +10,7 @@ import { ColumnClass, Frequency, Status, StatusResult } from '@common/enums/comm
 import { RestStatus } from '@common/enums/rest-enum';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
-import { DeleteButtonComponent } from '@component/table/detail-button/delete-button.component';
+import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
 import { LocalDataSource } from 'ng2-smart-table';
@@ -138,11 +138,12 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         title: '移除',
         class: 'col-1',
         type: 'custom',
-        renderComponent: DeleteButtonComponent,
-        onComponentInitFunction: (instance) => {
-          instance.delete.subscribe(row => {
+        renderComponent: ColumnButtonComponent,
+        onComponentInitFunction: (instance: ColumnButtonComponent) => {
+          instance.settings = { btnStatus: 'danger', btnIcon: 'trash-2-outline'}
+          instance.emitter.subscribe((row) => {
             this.onDeleteConfirm(row); // 訂閱自訂刪除按鈕組件的 delete 事件，觸發 onDeleteConfirm 方法
-          });
+          })
         },
         sort: false,
       },
