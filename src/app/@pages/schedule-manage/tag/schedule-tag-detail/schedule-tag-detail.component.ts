@@ -5,9 +5,9 @@ import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, Status, StatusResult } from '@common/enums/common-enum';
 import { ScheduleTagSettingMock } from '@common/mock-data/schedule-tag-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
+import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/checkbox.component';
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
-import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/checkbox.component';
 import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
 
 @Component({
