@@ -141,8 +141,8 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
     super(storageService);
     this.dataSource = new LocalDataSource();
     this.dataSource2 = new LocalDataSource();
-    this.hasConsoleGroupCreate = this.loginService.checkMenuScope("console-group.create");
-    this.hasConsoleGroupUpdate = this.loginService.checkMenuScope("console-group.update");
+    this.hasConsoleGroupCreate = this.loginService.checkScope("console-group.create");
+    this.hasConsoleGroupUpdate = this.loginService.checkScope("console-group.update");
   }
 
   ngOnInit(): void {

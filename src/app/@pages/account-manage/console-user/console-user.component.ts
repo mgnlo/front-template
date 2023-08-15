@@ -139,7 +139,7 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
       }),
     });
 
-    if(!this.loginService.checkMenuScope("console-user.update")) {
+    if(!this.loginService.checkScope("console-user.update")) {
       delete this.gridDefine.columns.action;
     }
   }

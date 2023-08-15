@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ConsoleGroup } from '@api/models/console-group.model';
 import { ConsoleGroupListMock } from '@common/mock-data/console-group-list-mock';
-import { NbDateService } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
@@ -79,7 +78,7 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
     private accountManageService: AccountManageService) {
     super(storageService);
     this.dataSource = new LocalDataSource();
-    this.hasConsoleGroupCreate = this.loginService.checkMenuScope("console-group.create");
+    this.hasConsoleGroupCreate = this.loginService.checkScope("console-group.create");
   }
 
   ngOnInit(): void {

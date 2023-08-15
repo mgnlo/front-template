@@ -32,7 +32,6 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
   consoleGroupScope: Array<GridInnerCheckBox> = this.accountManageService.createDefaultScopeGridInnerCheckBoxs();
   
   enableOption: string = "true";
-  // groupName: string;
   consoleGroupAddForm: FormGroup;
 
   gridDefine = {
