@@ -19,6 +19,9 @@ RUN npm run build --output-path=./dist/Console-Frontend
 # pull nginx image
 FROM nginx:1.24.0-alpine-slim
 
+RUN chgrp -R 0 /etc/nginx/ /var/cache/nginx /var/run /var/log/nginx  && \ 
+  chmod -R g+rwX /etc/nginx/ /var/cache/nginx /var/run /var/log/nginx
+
 # 從第一階段的檔案copy
 COPY --from=build-stage /usr/app/dist/Console-Frontend /usr/share/nginx/html/console-frontend
 
