@@ -9,6 +9,7 @@ import { RestStatus } from '@common/enums/rest-enum';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
+import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/checkbox.component';
 import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
 import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
 import { catchError, filter, tap } from 'rxjs/operators';
@@ -26,8 +27,9 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   scheduleId: string;
   selectedRows: any;
 
-  @ViewChild(Ng2SmartTableComponent) ng2SmartTable: Ng2SmartTableComponent;
+  isAllSelected: boolean = false;
 
+  @ViewChild(Ng2SmartTableComponent) ng2SmartTable: Ng2SmartTableComponent;
 
   constructor(
     storageService: StorageService,
@@ -45,13 +47,14 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
       display: true,
       perPage: 10,
     },
-    selectMode: 'single',
+    actions: false,
+    hideSubHeader: true,
     columns: {
       activityName: {
         title: '活動名稱',
         type: 'html',
         class: 'left',
-        width: '30%',
+        width: '25%',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
@@ -61,7 +64,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         title: '活動說明',
         type: 'html',
         class: 'left',
-        width: '30%',
+        width: '25%',
         valuePrepareFunction: (cell: string) => {
           return `<p class="left">${cell}</p>`;
         },
@@ -70,7 +73,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
       status: {
         title: '狀態',
         type: 'string',
-        width: '5%',
+        width: '10%',
         valuePrepareFunction: (cell: string) => {
           return Status[cell];
         },
@@ -102,12 +105,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         sort: false,
       },
     },
-    hideSubHeader: true,
-    actions: {
-      add: false,
-      edit: false,
-      delete: false,
-    },
+    noDataMessage: '查無資料',
   };
 
   ngOnInit(): void {
@@ -147,25 +145,30 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     this.setSessionVal();
   }
 
-
   setGridDefineInit() {
     this.setSessionVal();
-    this.ng2SmartTable.isAllSelected = false;
-    this.selectedRows = undefined;
+    if (!!this?.gridDefine?.columns?.['isChecked']) {
+      delete this.gridDefine.columns['isChecked'];
+    }
+    else {
+      const newColumn = {
+        isChecked: {
+          title: '',
+          type: 'custom',
+          width: '5%',
+          sort: false,
+          filter: false,
+          filterFunction: false,
+          visible: true,
+          renderComponent: CheckboxColumnComponent,
+          valuePrepareFunction: (value: any, row: ActivitySetting, cell: any) => {
+            return { value, row, cell, param: { key: 'status', answer: ['enabled', 'reviewing'] } };
+          },
+        },
+      };
+      this.gridDefine.columns = Object.assign(newColumn, this.gridDefine.columns);
+    }
     this.ng2SmartTable.initGrid();
-    console.log('this.ng2SmartTable.grid', this.ng2SmartTable.grid)
-    console.log('this.ng2SmartTable.grid.getRows()', this.ng2SmartTable.grid.getRows())
-
-  }
-
-  refresh() {
-    this.gridDefine.selectMode = 'multi';
-    this.setGridDefineInit();
-  }
-
-  cancelRefresh() {
-    this.gridDefine.selectMode = 'single';
-    this.setGridDefineInit();
   }
 
   onUserRowSelect(event) {

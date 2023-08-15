@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
-import { NbButtonModule, NbCardModule, NbDatepickerModule, NbIconModule, NbInputModule, NbRadioModule, NbSelectModule, NbSpinnerModule } from '@nebular/theme';
+import { NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbIconModule, NbInputModule, NbRadioModule, NbSelectModule, NbSpinnerModule } from '@nebular/theme';
 import { ApproveDialogComponent } from './dialog/approve-dialog/approve-dialog.component';
 import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
 import { RejectDialogComponent } from './dialog/reject-dialog/reject-dialog.component';
@@ -16,6 +16,7 @@ import { DropdownComponent } from './form/dropdown/dropdown.component';
 import { RadioComponent } from './form/radio/radio.component';
 import { AlertDialogComponent } from './dialog/alert-dialog/alert-dialog.component';
 import { DeleteButtonComponent } from './table/detail-button/delete-button.component';
+import { CheckboxColumnComponent } from './table/checkbox-column.ts/checkbox.component';
 
 export const COMPONENTS = [
   ApproveDialogComponent,
@@ -24,6 +25,7 @@ export const COMPONENTS = [
   AlertDialogComponent,
   PaginatorComponent,
   CheckboxIconComponent,
+  CheckboxColumnComponent,
   DeleteButtonComponent,
   DetailButtonComponent,
   BasicInputComponent,
@@ -42,6 +44,7 @@ export const NB_MODULES = [
   NbInputModule,
   NbSelectModule,
   NbRadioModule,
+  NbCheckboxModule,
   NbDatepickerModule,
   NbDateFnsDateModule.forChild({ format: 'yyyy-MM-dd' }),
 ];

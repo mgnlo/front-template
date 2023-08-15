@@ -25,8 +25,6 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private scheduleManageService: ScheduleManageService,
-    private dialogService: DialogService,
-    private loadingService: LoadingService,
     private tableService: Ng2SmartTableService,
   ) {
     super(storageService);

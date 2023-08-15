@@ -6,6 +6,7 @@ import { ColumnClass, Status, StatusResult } from '@common/enums/common-enum';
 import { ScheduleTagSettingMock } from '@common/mock-data/schedule-tag-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
+import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/checkbox.component';
 import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
 
 @Component({
@@ -16,6 +17,7 @@ import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
 export class ScheduleTagDetailComponent extends BaseComponent implements OnInit {
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
   selectedRows: any;
+  isAllSelected: boolean = false;
 
   //預設拉取資料
   scheduleTagListSetting: Array<ScheduleTagSetting> = ScheduleTagSettingMock;//Call API
@@ -35,7 +37,8 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
       display: true,
       perPage: 10,
     },
-    selectMode: 'single',
+    actions: false,
+    hideSubHeader: true,
     columns: {
       tagName: {
         title: '標籤名稱',
@@ -92,12 +95,7 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
         sort: false,
       },
     },
-    hideSubHeader: true,
-    actions: {
-      add: false,
-      edit: false,
-      delete: false,
-    },
+    noDataMessage: '查無資料',
   };
 
   ngOnInit(): void {
@@ -157,19 +155,28 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
 
   setGridDefineInit() {
     this.setSessionVal();
-    this.ng2SmartTable.isAllSelected = false;
-    this.selectedRows = undefined;
+    if (!!this?.gridDefine?.columns?.['isChecked']) {
+      delete this.gridDefine.columns['isChecked'];
+    }
+    else {
+      const newColumn = {
+        isChecked: {
+          title: '',
+          type: 'custom',
+          width: '5%',
+          sort: false,
+          filter: false,
+          filterFunction: false,
+          visible: true,
+          renderComponent: CheckboxColumnComponent,
+          valuePrepareFunction: (value: any, row: any, cell: any) => {
+            return { value, row, cell, param: { key: 'status', answer: ['enabled', 'reviewing'] } };
+          },
+        },
+      };
+      this.gridDefine.columns = Object.assign(newColumn, this.gridDefine.columns);
+    }
     this.ng2SmartTable.initGrid();
-  }
-
-  refresh() {
-    this.gridDefine.selectMode = 'multi';
-    this.setGridDefineInit()
-  }
-
-  cancelRefresh() {
-    this.gridDefine.selectMode = 'single';
-    this.setGridDefineInit()
   }
 
   onUserRowSelect(event) {
