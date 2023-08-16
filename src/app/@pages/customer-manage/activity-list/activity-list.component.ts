@@ -138,6 +138,15 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
     this.search('reset');
   }
 
+  initializeFormWithSessionData(getSessionVal: any) {
+    Object.keys(getSessionVal.filter).forEach(key => {
+      const control = this.validateForm.controls[key];
+      if (control) {
+        control.patchValue(getSessionVal.filter[key]);
+      }
+    });
+  }
+
   search(key?: string) {
     const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
 
@@ -146,11 +155,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
 
     if (key !== 'search' && !!getSessionVal) {
       page = getSessionVal.page;
-      Object.keys(getSessionVal.filter).forEach(key => {
-        if (!!this.validateForm.controls[key]) {
-          this.validateForm.controls[key].patchValue(getSessionVal.filter[key]);
-        }
-      });
+      this.initializeFormWithSessionData(getSessionVal);
     }
 
     if (key !== 'reset') this.setSessionData();
@@ -158,9 +163,12 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
     let searchInfo: SearchInfo = {
       apiUrl: this.customerManageService.activityFunc,
       nowPage: page,
-      filters: this.isSearch ? getSessionVal.filter : this.validateForm.getRawValue(),
+      filters: this.validateForm.getRawValue(),
       errMsg: '活動列表查無資料',
     }
+
+    console.info('searchInfo', searchInfo)
     this.restDataSource = this.tableService.searchData(searchInfo);
   }
+
 }
