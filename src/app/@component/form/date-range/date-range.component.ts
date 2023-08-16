@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
 import { RegExpUtil } from '@common/utils/reg-exp-util';
 
@@ -7,14 +7,21 @@ import { RegExpUtil } from '@common/utils/reg-exp-util';
   templateUrl: './date-range.component.html',
   styleUrls: []
 })
-export class DateRangeComponent{
+export class DateRangeComponent {
 
   readonly dateFormat = 'yyyy-MM-dd';
   @Input() form: FormGroup;
+  sCtl: FormControl;
+  eCtl: FormControl;
 
-  getRequired(ctlName: string){
-    let ctl = this.form.get(ctlName) as FormControl;
-    if(ctl?.validator) {
+  ngOnChanges(changes: SimpleChanges) {
+    this.sCtl = changes.form.currentValue.get('startDate') as FormControl;
+    this.eCtl = changes.form.currentValue.get('endDate') as FormControl;
+  }
+
+  getRequired(ctlName: string) {
+    let ctl = ctlName === 'startDate' ? this.sCtl : this.eCtl;
+    if (ctl?.validator) {
       return ctl.validator({} as AbstractControl)?.required !== undefined ? true : false;
     } else {
       return false;
@@ -26,6 +33,10 @@ export class DateRangeComponent{
     const element = e.target as HTMLInputElement;
     const isNumber = !isNaN(parseInt(e.key, 10));
     let v = element.value;
+    if (v === "") {
+      //欄位清空時的必填判斷
+      this.form.get(ctlName).setErrors(this.getRequired(ctlName) ? { 'required': '此欄位為必填' } : null);
+    }
     if (e.key === 'v') {
       //貼上的日期
       if (RegExpUtil.dateFmt1.test(v)) {
@@ -44,8 +55,13 @@ export class DateRangeComponent{
   }
 
   hasError(ctlName: string) {
-    let ctl = this.form.get(ctlName) as FormControl;
+    let ctl = ctlName === 'startDate' ? this.sCtl : this.eCtl;
     return (ctl.dirty || ctl.touched) && ctl?.errors;
+  }
+
+  lastError(ctlName: string) {
+    let ctl = ctlName === 'startDate' ? this.sCtl : this.eCtl;
+    return this.hasError(ctlName) ? Object.values(ctl.errors).map(err => err) : null
   }
 
 }

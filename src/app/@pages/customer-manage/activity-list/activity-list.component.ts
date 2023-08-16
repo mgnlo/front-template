@@ -39,15 +39,6 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
 
   statusList: Array<{ key: string; val: string }> = Object.entries(Status).map(([k, v]) => ({ key: k, val: v }));
 
-  ngOnInit(): void {
-    this.search();
-  }
-
-  ngOnDestroy(): void {
-    let sessionData = { page: this.paginator.nowPage, filter: this.validateForm.getRawValue() };
-    this.storageService.putSessionVal(this.sessionKey, sessionData);
-  }
-
   gridDefine = {
     pager: {
       display: true,
@@ -122,20 +113,51 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
     },
   };
 
+  ngOnInit(): void {
+    this.search();
+  }
+
+  ngOnDestroy(): void {
+    this.SetSessionData();
+  }
+
+  SetSessionData(key?: string) {
+    let filterVal = key !== 'search' ? this.validateForm.getRawValue() : this.storageService.getSessionVal(this.sessionKey).filter;
+    let sessionData = { page: this.paginator.nowPage, filter: filterVal };
+    this.storageService.putSessionVal(this.sessionKey, sessionData);
+  }
+
   add() {
     this.router.navigate(['pages', 'customer-manage', 'activity-set']);
   }
 
   reset() {
     this.validateForm.reset({ activityName: '', status: '', startDate: null, endDate: null });
+    this.SetSessionData();
     this.search();
   }
 
-  search() {
-    const page = this.storageService.getSessionVal(this.sessionKey)?.page;
+  search(key?: string) {
+    const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
+
+    let page = this.paginator.nowPage;
+
+    if (key !== 'search' && !!getSessionVal) {
+      page = getSessionVal.page
+      this.validateForm.patchValue({
+        'activityName': getSessionVal.filter.activityName,
+        'endDate': getSessionVal.filter.endDate,
+        'startDate': getSessionVal.filter.startDate,
+        'status': getSessionVal.filter.status,
+      })
+    }
+    if (key === 'search') page = 1
+
+    this.SetSessionData();
+
     let searchInfo: SearchInfo = {
       apiUrl: this.customerManageService.activityFunc,
-      nowPage: page ? page : this.paginator.nowPage,
+      nowPage: page,
       filters: this.validateForm.getRawValue(),
       errMsg: '活動列表查無資料',
     }
