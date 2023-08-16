@@ -151,6 +151,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
         'status': getSessionVal.filter.status,
       })
     }
+    if (key === 'search') page = 1
 
     this.SetSessionData();
 
