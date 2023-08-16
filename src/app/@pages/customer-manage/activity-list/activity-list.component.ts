@@ -11,6 +11,7 @@ import { CheckboxIconComponent } from '@component/table/checkbox-icon/checkbox-i
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { CustomerManageService } from '../customer-manage.service';
+import { CommonUtil } from '@common/utils/common-util';
 
 @Component({
   selector: 'activity-list',
@@ -138,15 +139,6 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
     this.search('reset');
   }
 
-  initializeFormWithSessionData(getSessionVal: any) {
-    Object.keys(getSessionVal.filter).forEach(key => {
-      const control = this.validateForm.controls[key];
-      if (control) {
-        control.patchValue(getSessionVal.filter[key]);
-      }
-    });
-  }
-
   search(key?: string) {
     const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
 
@@ -155,7 +147,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
 
     if (key !== 'search' && !!getSessionVal) {
       page = getSessionVal.page;
-      this.initializeFormWithSessionData(getSessionVal);
+      CommonUtil.initializeFormWithSessionData(this.validateForm, getSessionVal);
     }
 
     if (key !== 'reset') this.setSessionData();
