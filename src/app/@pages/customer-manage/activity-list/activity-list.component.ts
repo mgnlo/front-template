@@ -119,10 +119,10 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.SetSessionData();
+    this.setSessionData();
   }
 
-  SetSessionData() {
+  setSessionData() {
     let sessionData = { page: this.paginator.nowPage, filter: this.validateForm.getRawValue() };
     this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
@@ -133,7 +133,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
 
   reset() {
     this.validateForm.reset({ activityName: '', status: '', startDate: null, endDate: null });
-    this.SetSessionData();
+    this.setSessionData();
     this.search('reset');
   }
 
@@ -153,7 +153,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
       })
     }
 
-    this.SetSessionData();
+    if (key !== 'reset') this.setSessionData();
 
     let searchInfo: SearchInfo = {
       apiUrl: this.customerManageService.activityFunc,
