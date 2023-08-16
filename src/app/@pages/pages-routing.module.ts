@@ -9,6 +9,14 @@ const routes: Routes = [
     component: PagesComponent,
     children: [
       {
+        path: '', redirectTo: 'dashboard',
+        loadChildren: () =>
+          import('@pages/dashboard/dashboard.module').then(
+            (m) => m.DashboardModule
+          ),
+        canActivateChild: [CleanSessionGuard]
+      },
+      {
         path: 'element',
         loadChildren: () =>
           import('@pages/element/element.module').then(
@@ -35,7 +43,7 @@ const routes: Routes = [
           import('@pages/dashboard/dashboard.module').then(
             (m) => m.DashboardModule
           ),
-          canActivateChild: [CleanSessionGuard]
+        canActivateChild: [CleanSessionGuard]
       },
       {
         path: 'customer-manage',
@@ -43,7 +51,7 @@ const routes: Routes = [
           import('@pages/customer-manage/customer-manage.module').then(
             (m) => m.CustomerManageModule
           ),
-          canActivateChild: [CleanSessionGuard]
+        canActivateChild: [CleanSessionGuard]
       },
       {
         path: 'tag-manage',
@@ -51,7 +59,7 @@ const routes: Routes = [
           import('@pages/tag-manage/tag-manage.module').then(
             (m) => m.TagManageModule
           ),
-          canActivateChild: [CleanSessionGuard]
+        canActivateChild: [CleanSessionGuard]
       },
       {
         path: 'review-manage',
@@ -59,7 +67,7 @@ const routes: Routes = [
           import('@pages/review-manage/review-manage.module').then(
             (m) => m.ReviewManageModule
           ),
-          canActivateChild: [CleanSessionGuard]
+        canActivateChild: [CleanSessionGuard]
       },
       {
         path: 'account-manage',
@@ -67,7 +75,7 @@ const routes: Routes = [
           import('@pages/account-manage/account-manage.module').then(
             (m) => m.AccountManageModule
           ),
-          canActivateChild: [CleanSessionGuard]
+        canActivateChild: [CleanSessionGuard]
       },
       {
         path: 'schedule-manage',
@@ -75,7 +83,7 @@ const routes: Routes = [
           import('@pages/schedule-manage/schedule-manage.module').then(
             (m) => m.ScheduleManageModule
           ),
-          canActivateChild: [CleanSessionGuard]
+        canActivateChild: [CleanSessionGuard]
       },
       {
         path: 'charts',
@@ -92,4 +100,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class PagesRoutingModule {}
+export class PagesRoutingModule { }

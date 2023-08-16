@@ -30,7 +30,7 @@ export class PaginatorComponent implements OnInit {
         this.paginator.nowPage = page;
         this.paginator.totalPage = Math.ceil(this.paginator.totalCount/perPage);
         this.paginator.rowStart = (page - 1) * perPage + 1;
-        this.paginator.rowEnd = this.paginator.totalPage !== page ? page * perPage : (page-1) * perPage + this.paginator.totalCount % perPage;
+        this.paginator.rowEnd = this.paginator.totalPage !== page ? page * perPage : Math.max((page-1), 1) * perPage + this.paginator.totalCount % perPage;
       });
     }
   }
