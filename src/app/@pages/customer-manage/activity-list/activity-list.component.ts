@@ -1,3 +1,4 @@
+import { filter } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -144,13 +145,12 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
     let page = this.paginator.nowPage;
 
     if (key !== 'search' && !!getSessionVal) {
-      page = getSessionVal.page
-      this.validateForm.patchValue({
-        'activityName': getSessionVal.filter.activityName,
-        'endDate': getSessionVal.filter.endDate,
-        'startDate': getSessionVal.filter.startDate,
-        'status': getSessionVal.filter.status,
-      })
+      page = getSessionVal.page;
+      Object.keys(getSessionVal.filter).forEach(key => {
+        if (!!this.validateForm.controls[key]) {
+          this.validateForm.controls[key].patchValue(getSessionVal.filter[key]);
+        }
+      });
     }
 
     if (key !== 'reset') this.setSessionData();
@@ -158,7 +158,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
     let searchInfo: SearchInfo = {
       apiUrl: this.customerManageService.activityFunc,
       nowPage: page,
-      filters: this.validateForm.getRawValue(),
+      filters: this.isSearch ? getSessionVal.filter : this.validateForm.getRawValue(),
       errMsg: '活動列表查無資料',
     }
     this.restDataSource = this.tableService.searchData(searchInfo);
