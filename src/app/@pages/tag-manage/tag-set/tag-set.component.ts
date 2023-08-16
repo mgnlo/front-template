@@ -75,7 +75,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   //預設條件設定方式
   tagSetConditionList: Array<{ key: string; val: string }> = Object.entries(TagSetCondition).map(([k, v]) => ({ key: k, val: v }))
 
-  //預設檔案存放地方
+  //預設偵測條件
   condition_valueList: Array<{ key: string; val: string }> = [{ key: 'condition_A', val: '近三個月_基金_申購金額' }, { key: 'condition_B', val: '假資料B' }, { key: 'condition_C', val: '假資料C' }];
 
   //預設集合方式

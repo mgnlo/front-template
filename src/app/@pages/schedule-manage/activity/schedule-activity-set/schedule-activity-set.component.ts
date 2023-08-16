@@ -5,15 +5,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting as ScheduleActivitySettingModel, ScheduleActivitySetting, ScheduleActivitySettingEditReq } from '@api/models/schedule-activity.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
+import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, Frequency, Status, StatusResult } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
-import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
-import { LocalDataSource } from 'ng2-smart-table';
 import { catchError, filter, tap } from 'rxjs/operators';
 import { PreviewDialogComponent } from './preview-dialog/preview.dialog/preview-dialog.component';
 
@@ -41,16 +40,13 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       return this.scheduleFrequencyList.includes(v);
     }).map(([k, v]) => ({ key: k, val: v }));
 
-  //預設檔案存放地方
-  filePathList: Array<{ key: string; val: string }> = [{ key: 'path_A', val: 'A://' }, { key: 'path_B', val: 'B:/' }, { key: 'path_C', val: 'C:\\' }, { key: '/file/path/', val: '/file/path/' }];
-
   //預設pup-up活動名單
   activityList: Array<{ key: string; val: string }> = new Array;
   filterActivityList: Array<{ key: string; val: string }> = new Array;
 
   //預設名單列表
-  ScheduleActivitySetting: Array<ScheduleActivitySetting> = ScheduleActivitySettingMock;
-  scheduleActivitySettingModel: Array<ScheduleActivitySettingModel>;
+  scheduleActivitySetting: Array<ScheduleActivitySetting>;
+  scheduleActivitySettingModel: Array<ScheduleActivitySettingModel> = new Array;
 
   scheduleId: string;
 
@@ -62,6 +58,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     private scheduleManageService: ScheduleManageService,
     private loadingService: LoadingService,
     private readonly changeDetectorRef: ChangeDetectorRef,
+    private tableService: Ng2SmartTableService,
   ) {
     super(storageService);
 
@@ -140,7 +137,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         type: 'custom',
         renderComponent: ColumnButtonComponent,
         onComponentInitFunction: (instance: ColumnButtonComponent) => {
-          instance.settings = { btnStatus: 'danger', btnIcon: 'trash-2-outline'}
+          instance.settings = { btnStatus: 'danger', btnIcon: 'trash-2-outline' }
           instance.emitter.subscribe((row) => {
             this.onDeleteConfirm(row); // 訂閱自訂刪除按鈕組件的 delete 事件，觸發 onDeleteConfirm 方法
           })
@@ -259,10 +256,6 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.scheduleId = this.activatedRoute.snapshot.params?.scheduleId;
-    this.dataSource = new LocalDataSource();
-    this.scheduleActivitySettingModel = this.ScheduleActivitySetting?.find(f => f.scheduleId === this.scheduleId)?.activitySetting as Array<ScheduleActivitySettingModel> ?? new Array<ScheduleActivitySettingModel>();
-    this.refreshFilterActivityList();
-    this.dataSource.load(this.scheduleActivitySettingModel);
 
     if (!!this.scheduleId) {
       this.loadingService.open();
@@ -290,19 +283,23 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
             }
           }
           //塞資料
-          Object.keys(res.result).forEach(key => {
-            if (!!this.validateForm.controls[key]) {
-              this.validateForm.controls[key].setValue(res.result[key]?.toLowerCase());
-            } else if (key === 'activitySetting') {
-              this.dataSource = new LocalDataSource();
-              this.scheduleActivitySettingModel = res.result[key];
-              this.refreshFilterActivityList();
-              this.dataSource.load(this.scheduleActivitySettingModel);
-            }
+          Object.keys(res.result).filter(key => !!this.validateForm.controls[key]).forEach(key => {
+            this.validateForm.controls[key].setValue(res.result[key]?.toLowerCase());
           })
           this.loadingService.close();
         })
       ).subscribe();
+
+      let searchInfo: SearchInfo = {
+        apiUrl: this.scheduleManageService.scheduleFunc + this.scheduleId + '/activity-setting',
+        nowPage: this.paginator.nowPage,
+        errMsg: '名單紀錄查無資料'
+      }
+      this.restDataSource = this.tableService.searchData(searchInfo);
+      this.restDataSource.getElements().then(currentData => {
+        this.scheduleActivitySettingModel = JSON.parse(JSON.stringify(currentData));
+        this.refreshFilterActivityList();
+      })
     }
   }
 
