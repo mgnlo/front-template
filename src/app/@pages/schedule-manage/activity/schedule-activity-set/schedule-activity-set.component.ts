@@ -40,9 +40,6 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       return this.scheduleFrequencyList.includes(v);
     }).map(([k, v]) => ({ key: k, val: v }));
 
-  //預設檔案存放地方
-  filePathList: Array<{ key: string; val: string }> = [{ key: 'path_A', val: 'A://' }, { key: 'path_B', val: 'B:/' }, { key: 'path_C', val: 'C:\\' }, { key: '/file/path/', val: '/file/path/' }];
-
   //預設pup-up活動名單
   activityList: Array<{ key: string; val: string }> = new Array;
   filterActivityList: Array<{ key: string; val: string }> = new Array;

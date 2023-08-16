@@ -10,6 +10,7 @@ import { ValidatorsUtil } from '@common/utils/validators-util';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { TagManageService } from '../tag-manage.service';
+import { CommonUtil } from '@common/utils/common-util';
 
 @Component({
   selector: 'tag-list',
@@ -17,6 +18,8 @@ import { TagManageService } from '../tag-manage.service';
   styleUrls: ['./tag-list.component.scss']
 })
 export class TagListComponent extends BaseComponent implements OnInit {
+  isSearch: Boolean = false;
+
   statusList: Array<{ key: string; val: string }> = Object.entries(Status).map(([k, v]) => ({ key: k, val: v }))
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
@@ -119,20 +122,43 @@ export class TagListComponent extends BaseComponent implements OnInit {
       delete: false,
     },
   };
+
   ngOnInit(): void {
     this.search();
   }
 
   ngOnDestroy(): void {
-    let sessionData = { page: this.paginator.nowPage, filter: this.validateForm.getRawValue() };
+    this.setSessionData();
+  }
+
+  setSessionData() {
+    const filterVal = this.isSearch ? this.validateForm.getRawValue() :
+      this.storageService.getSessionVal(this.sessionKey)?.filter ?? this.validateForm.getRawValue();
+
+    const sessionData = { page: this.paginator.nowPage, filter: filterVal };
     this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
 
-  search() {
-    const page = this.storageService.getSessionVal(this.sessionKey)?.page;
+  search(key?: string) {
+    const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
+
+    this.isSearch = false;
+    if (key === 'search') this.isSearch = true;
+
+    if (['search', 'reset'].includes(key)) this.paginator.nowPage = 1;
+
+    let page = this.paginator.nowPage;
+
+    if (key !== 'search' && !!getSessionVal?.filter) {
+      page = getSessionVal.page;
+      CommonUtil.initializeFormWithSessionData(this.validateForm, getSessionVal);
+    }
+
+    if (key !== 'reset') this.setSessionData();
+
     let searchInfo: SearchInfo = {
       apiUrl: this.tagManageService.tagFunc,
-      nowPage: page ? page : this.paginator.nowPage,
+      nowPage: page,
       filters: this.validateForm.getRawValue(),
       errMsg: '標籤列表查無資料',
     }
@@ -141,7 +167,9 @@ export class TagListComponent extends BaseComponent implements OnInit {
 
   reset() {
     this.validateForm.reset({ tagName: '', status: '', startDate: null, endDate: null, });
-    this.search();
+    this.isSearch = true;
+    this.setSessionData();
+    this.search('reset');
   }
 
   add() {
