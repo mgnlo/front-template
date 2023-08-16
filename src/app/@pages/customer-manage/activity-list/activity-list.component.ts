@@ -1,3 +1,4 @@
+import { filter } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,6 +11,7 @@ import { CheckboxIconComponent } from '@component/table/checkbox-icon/checkbox-i
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { CustomerManageService } from '../customer-manage.service';
+import { CommonUtil } from '@common/utils/common-util';
 
 @Component({
   selector: 'activity-list',
@@ -17,6 +19,7 @@ import { CustomerManageService } from '../customer-manage.service';
   styleUrls: ['./activity-list.component.scss'],
 })
 export class ActivityListComponent extends BaseComponent implements OnInit {
+  isSearch: Boolean = false;
 
   constructor(
     storageService: StorageService,
@@ -118,12 +121,14 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.SetSessionData();
+    this.setSessionData();
   }
 
-  SetSessionData(key?: string) {
-    let filterVal = key !== 'search' ? this.validateForm.getRawValue() : this.storageService.getSessionVal(this.sessionKey).filter;
-    let sessionData = { page: this.paginator.nowPage, filter: filterVal };
+  setSessionData() {
+    const filterVal = this.isSearch ? this.validateForm.getRawValue() :
+      this.storageService.getSessionVal(this.sessionKey)?.filter ?? this.validateForm.getRawValue();
+
+    const sessionData = { page: this.paginator.nowPage, filter: filterVal };
     this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
 
@@ -133,27 +138,27 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
 
   reset() {
     this.validateForm.reset({ activityName: '', status: '', startDate: null, endDate: null });
-    this.SetSessionData();
-    this.search();
+    this.isSearch = true;
+    this.setSessionData();
+    this.search('reset');
   }
 
   search(key?: string) {
     const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
 
+    this.isSearch = false;
+    if (key === 'search') this.isSearch = true;
+
+    if (['search', 'reset'].includes(key)) this.paginator.nowPage = 1;
+
     let page = this.paginator.nowPage;
 
-    if (key !== 'search' && !!getSessionVal) {
-      page = getSessionVal.page
-      this.validateForm.patchValue({
-        'activityName': getSessionVal.filter.activityName,
-        'endDate': getSessionVal.filter.endDate,
-        'startDate': getSessionVal.filter.startDate,
-        'status': getSessionVal.filter.status,
-      })
+    if (key !== 'search' && !!getSessionVal?.filter) {
+      page = getSessionVal.page;
+      CommonUtil.initializeFormWithSessionData(this.validateForm, getSessionVal);
     }
-    if (key === 'search') page = 1
 
-    this.SetSessionData();
+    if (key !== 'reset') this.setSessionData();
 
     let searchInfo: SearchInfo = {
       apiUrl: this.customerManageService.activityFunc,
@@ -161,6 +166,8 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
       filters: this.validateForm.getRawValue(),
       errMsg: '活動列表查無資料',
     }
+
     this.restDataSource = this.tableService.searchData(searchInfo);
   }
+
 }
