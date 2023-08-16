@@ -8,6 +8,7 @@ import { Observable } from "rxjs";
 export class ScheduleManageService {
 
   readonly scheduleFunc = 'schedule-management/';
+  readonly batchFunc = 'schedule-batch-history/';
 
   constructor(private service: ApiService) { }
 
@@ -19,8 +20,8 @@ export class ScheduleManageService {
     return this.service.doGet(this.scheduleFunc + scheduleId);
   }
 
-  getScheduleActivitySettingExportDetail(scheduleId: string, activityId: string): Observable<ResponseModel<ActivitySetting>> {
-    return this.service.doGet(`${this.scheduleFunc}${scheduleId}/${activityId}`);
+  getScheduleActivitySettingExportDetail(activityId: string): Observable<ResponseModel<ActivitySetting>> {
+    return this.service.doGet(this.batchFunc + activityId);
   }
 
   /** 可選的活動下拉選單 API*/

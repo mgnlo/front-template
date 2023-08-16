@@ -1,3 +1,4 @@
+import { filter } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,6 +11,7 @@ import { CheckboxIconComponent } from '@component/table/checkbox-icon/checkbox-i
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { CustomerManageService } from '../customer-manage.service';
+import { CommonUtil } from '@common/utils/common-util';
 
 @Component({
   selector: 'activity-list',
@@ -17,6 +19,7 @@ import { CustomerManageService } from '../customer-manage.service';
   styleUrls: ['./activity-list.component.scss'],
 })
 export class ActivityListComponent extends BaseComponent implements OnInit {
+  isSearch: Boolean = false;
 
   constructor(
     storageService: StorageService,
@@ -38,15 +41,6 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
   }
 
   statusList: Array<{ key: string; val: string }> = Object.entries(Status).map(([k, v]) => ({ key: k, val: v }));
-
-  ngOnInit(): void {
-    this.search();
-  }
-
-  ngOnDestroy(): void {
-    let sessionData = { page: this.paginator.nowPage, filter: this.validateForm.getRawValue() };
-    this.storageService.putSessionVal(this.sessionKey, sessionData);
-  }
 
   gridDefine = {
     pager: {
@@ -122,23 +116,58 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
     },
   };
 
+  ngOnInit(): void {
+    this.search();
+  }
+
+  ngOnDestroy(): void {
+    this.setSessionData();
+  }
+
+  setSessionData() {
+    const filterVal = this.isSearch ? this.validateForm.getRawValue() :
+      this.storageService.getSessionVal(this.sessionKey)?.filter ?? this.validateForm.getRawValue();
+
+    const sessionData = { page: this.paginator.nowPage, filter: filterVal };
+    this.storageService.putSessionVal(this.sessionKey, sessionData);
+  }
+
   add() {
     this.router.navigate(['pages', 'customer-manage', 'activity-set']);
   }
 
   reset() {
     this.validateForm.reset({ activityName: '', status: '', startDate: null, endDate: null });
-    this.search();
+    this.isSearch = true;
+    this.setSessionData();
+    this.search('reset');
   }
 
-  search() {
-    const page = this.storageService.getSessionVal(this.sessionKey)?.page;
+  search(key?: string) {
+    const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
+
+    this.isSearch = false;
+    if (key === 'search') this.isSearch = true;
+
+    if (['search', 'reset'].includes(key)) this.paginator.nowPage = 1;
+
+    let page = this.paginator.nowPage;
+
+    if (key !== 'search' && !!getSessionVal?.filter) {
+      page = getSessionVal.page;
+      CommonUtil.initializeFormWithSessionData(this.validateForm, getSessionVal);
+    }
+
+    if (key !== 'reset') this.setSessionData();
+
     let searchInfo: SearchInfo = {
       apiUrl: this.customerManageService.activityFunc,
-      nowPage: page ? page : this.paginator.nowPage,
+      nowPage: page,
       filters: this.validateForm.getRawValue(),
       errMsg: '活動列表查無資料',
     }
+
     this.restDataSource = this.tableService.searchData(searchInfo);
   }
+
 }

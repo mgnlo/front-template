@@ -1,8 +1,9 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { ActivitySetting, ScheduleActivitySetting, ScheduleDetailView, Schedule_Batch_History } from '@api/models/schedule-activity.model';
+import { ActivitySetting, ScheduleDetailView, Schedule_Batch_History } from '@api/models/schedule-activity.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
+import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, Status, StatusResult } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
@@ -39,6 +40,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     private scheduleManageService: ScheduleManageService,
     private dialogService: DialogService,
     private loadingService: LoadingService,
+    private tableService: Ng2SmartTableService,
   ) {
     super(storageService);
   }
@@ -125,21 +127,17 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
       }),
       filter(res => res.code === RestStatus.SUCCESS),
       tap((res) => {
-        const processedData = CommonUtil.getHistoryProcessData<ScheduleActivitySetting>('scheduleReviewHistory', res.result as ScheduleActivitySetting); // 異動歷程處理
-        if (!!processedData) {
-          this.isHistoryOpen = processedData.isHistoryOpen;
-          this.detail = processedData.detail;
-        }
-
-        if (res.result?.activitySetting) {
-          this.dataSource = new LocalDataSource();
-          this.dataSource.load(res.result.activitySetting);
-        }
-
-        console.info('res', res)
+        this.detail = JSON.parse(JSON.stringify(res.result));
         this.loadingService.close();
       })
     ).subscribe();
+
+    let searchInfo: SearchInfo = {
+      apiUrl: this.scheduleManageService.scheduleFunc + this.scheduleId + '/activity-setting',
+      nowPage: this.paginator.nowPage,
+      errMsg: '名單紀錄查無資料'
+    }
+    this.restDataSource = this.tableService.searchData(searchInfo)
   }
 
   setSessionVal() {

@@ -4,7 +4,7 @@
 <div class="pageContent">
   <nb-card>
     <nb-card-body>
-        <div class="row">
+        <div class="row" *ngIf="!!activitySetting">
             <div class="textGroup col-12 col-lg-4">
                 <p class="text_bold">活動名稱：</p>
                 <span>{{activitySetting.activityName}}</span>
@@ -49,8 +49,8 @@
         <h2>排程紀錄</h2>
     </nb-card-header>
     <nb-card-body>
-        <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
-        <paginator [source]="dataSource" [paginator]="paginator"></paginator>
+        <ng2-smart-table [settings]="gridDefine" [source]="restDataSource"></ng2-smart-table>
+        <paginator [source]="restDataSource" [paginator]="paginator"></paginator>
     </nb-card-body>
   </nb-card>
   <div class="row">

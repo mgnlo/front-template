@@ -3,7 +3,7 @@ import { CommonUtil } from '@common/utils/common-util';
 import { environment } from 'environments/environment';
 import { ServerDataSource } from 'ng2-smart-table';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, map } from 'rxjs/operators';
 
 export class CommonConf {
 
@@ -62,10 +62,19 @@ export class CommonServerDataSource extends ServerDataSource {
     const resultUrl = this.prefixUrl + this.conf.endPoint;
     let httpParams = this.createRequesParams();
 
+    //初始化
+    const page = (this?.initConf?.page ?? 1);
+    if (page > 1) {
+      if (httpParams.has('page')) httpParams = httpParams.delete('page');;
+      httpParams = httpParams.append('page', page)
+    }
+
     if (!!this.initConf) {
       if (!!this.initConf.filters && this.initConf.filters.length > 0) {
         this.initConf.filters.filter(filter => CommonUtil.isNotBlank(filter.value.toString()))
-          .forEach(filter => { httpParams = httpParams.append(filter.key, filter.value) });
+          .forEach(filter => {
+            httpParams = httpParams.append(filter.key, filter.value)
+          });
       }
 
       if (!!this.initConf.sorts) {
@@ -83,7 +92,11 @@ export class CommonServerDataSource extends ServerDataSource {
           this.apiStatusSubject.next('error');
           throw err;
         }),
-        tap(() => this.apiStatusSubject.next('finish')),
+        tap((res) => {
+          this.apiStatusSubject.next('finish')
+          const page = res?.body?.result?.pageable?.pageNumber ?? 0
+          this.setPage(page + 1, false)
+        }),
       );
   }
 

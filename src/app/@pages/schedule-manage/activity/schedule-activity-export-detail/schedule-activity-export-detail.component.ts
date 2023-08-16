@@ -1,13 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting, ScheduleActivitySetting, Schedule_Batch_History } from '@api/models/schedule-activity.model';
+import { DialogService } from '@api/services/dialog.service';
+import { LoadingService } from '@api/services/loading.service';
+import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, StatusResult } from '@common/enums/common-enum';
+import { RestStatus } from '@common/enums/rest-enum';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
+import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
+import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
 import { LocalDataSource } from 'ng2-smart-table';
+import { catchError, filter, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'schedule-activity-export-detail',
@@ -21,11 +28,18 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
 
   params: any;//路由參數
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
+  scheduleId: string;
+  activityId: string;
 
   constructor(
     storageService: StorageService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private scheduleManageService: ScheduleManageService,
+    private customerManageService: CustomerManageService,
+    private loadingService: LoadingService,
+    private dialogService: DialogService,
+    private tableService: Ng2SmartTableService,
   ) {
     super(storageService);
     this.params = this.activatedRoute.snapshot.params;
@@ -104,8 +118,29 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
   };
 
   ngOnInit(): void {
-    this.dataSource = new LocalDataSource();
-    this.dataSource.load(this.schedule_Batch_History);
+
+    this.scheduleId = this.activatedRoute.snapshot.params.scheduleId;
+    this.activityId = this.activatedRoute.snapshot.params.activityId;
+
+    this.customerManageService.getActivitySettingRow(this.activityId).pipe(
+      catchError(err => {
+        this.loadingService.close();
+        this.dialogService.alertAndBackToList(false, '查無此筆活動排程', ['pages', 'schedule-manage', 'schedule-activity-detail']);
+        throw new Error(err.message);
+      }),
+      filter(res => res.code === RestStatus.SUCCESS),
+      tap((res) => {
+        this.activitySetting = JSON.parse(JSON.stringify(res.result));
+        this.loadingService.close();
+      }),
+    ).subscribe();
+
+    let searchInfo: SearchInfo = {
+      apiUrl: this.scheduleManageService.batchFunc + this.activityId,
+      nowPage: this.paginator.nowPage,
+      errMsg: '查無此筆排程紀錄'
+    }
+    this.restDataSource = this.tableService.searchData(searchInfo);
   }
 
   cancel() {

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, DoCheck, Input, OnInit, SimpleChange } from '@angular/core';
 import { DataSource } from 'ng2-smart-table/lib/lib/data-source/data-source';
 
 export interface Paginator {
@@ -15,13 +15,12 @@ export interface Paginator {
   templateUrl: './paginator.component.html',
   styleUrls: ['./paginator.component.scss']
 })
-export class PaginatorComponent implements OnInit {
+export class PaginatorComponent implements DoCheck {
 
   @Input() source: DataSource;
   @Input() paginator: Paginator;
-  constructor() { }
 
-  ngOnInit(): void {
+  ngDoCheck(){
     if(!!this.source){
       this.source.onChanged().subscribe(()=>{
         this.paginator.totalCount = this.source.count();
@@ -31,6 +30,7 @@ export class PaginatorComponent implements OnInit {
         this.paginator.totalPage = Math.ceil(this.paginator.totalCount/perPage);
         this.paginator.rowStart = (page - 1) * perPage + 1;
         this.paginator.rowEnd = this.paginator.totalPage !== page ? page * perPage : (page-1) * perPage + this.paginator.totalCount % perPage;
+        if(this.paginator.totalPage === 1 && this.paginator.totalCount === perPage){ this.paginator.rowEnd = 10 }
       });
     }
   }

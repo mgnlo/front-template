@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ScheduleBatchHistory, ScheduleTagSetting, ScheduleTagSettingView } from '@api/models/schedule-tag.model';
 import { StorageService } from '@api/services/storage.service';
