@@ -14,6 +14,7 @@ import { ThemeModule } from '../../@theme/theme.module';
 import { routedComponents, ScheduleManageRoutingModule } from './schedule-manage-routing.module';
 import { ScheduleManageService } from './schedule-manage.service';
 import { ComponentModule } from "../../@component/component.module";
+import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
 
 export const NB_MODULES = [
   NbSpinnerModule,
@@ -46,7 +47,8 @@ export const NB_MODULES = [
     ...NB_MODULES
   ],
   providers: [
-    ScheduleManageService
+    CustomerManageService,
+    ScheduleManageService,
   ],
   declarations: [
     ...routedComponents,
