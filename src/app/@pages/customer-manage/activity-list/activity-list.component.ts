@@ -127,6 +127,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
   setSessionData() {
     const filterVal = this.isSearch ? this.validateForm.getRawValue() :
       this.storageService.getSessionVal(this.sessionKey)?.filter ?? this.validateForm.getRawValue();
+
     const sessionData = { page: this.paginator.nowPage, filter: filterVal };
     this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
@@ -166,7 +167,6 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
       errMsg: '活動列表查無資料',
     }
 
-    console.info('searchInfo', searchInfo)
     this.restDataSource = this.tableService.searchData(searchInfo);
   }
 
