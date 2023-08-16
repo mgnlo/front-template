@@ -91,7 +91,7 @@
           </div>
       </nb-card-body>
   </nb-card>
-  <nb-card *ngIf="detail?.historyGroupView || !!dataSource">
+  <nb-card>
     <nb-card-body>
         <nb-tabset>
             <nb-tab tabTitle="異動歷程" *ngIf="detail?.historyGroupView">
@@ -118,7 +118,7 @@
                 </ng-container>
               </div>
             </nb-tab>
-            <nb-tab tabTitle="標籤使用範圍" *ngIf="!!restDataSource">
+            <nb-tab tabTitle="標籤使用範圍">
                 <ng2-smart-table [settings]="gridDefine" [source]="restDataSource"></ng2-smart-table>
                 <paginator [source]="restDataSource" [paginator]="paginator"></paginator>
             </nb-tab>
