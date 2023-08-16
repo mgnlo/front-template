@@ -103,7 +103,7 @@
         </div>
     </nb-card-body>
   </nb-card>
-  <nb-card *ngIf="this.params['changeRoute'] === 'edit' && (detail?.historyGroupView || !!dataSource)">
+  <nb-card *ngIf="this.params['changeRoute'] === 'edit'">
     <nb-card-body>
         <nb-tabset>
             <nb-tab tabTitle="異動歷程" *ngIf="detail?.historyGroupView">
