@@ -34,4 +34,18 @@ export class PaginatorComponent implements OnInit {
       });
     }
   }
+
+  ngDoCheck(): void {
+    if(!!this.source){
+      this.source.onChanged().subscribe(()=>{
+        this.paginator.totalCount = this.source.count();
+        let page =this.source.getPaging().page;
+        let perPage = this.source.getPaging().perPage;
+        this.paginator.nowPage = page;
+        this.paginator.totalPage = Math.ceil(this.paginator.totalCount/perPage);
+        this.paginator.rowStart = (page - 1) * perPage + 1;
+        this.paginator.rowEnd = this.paginator.totalPage !== page ? page * perPage : Math.max((page-1), 1) * perPage + this.paginator.totalCount % perPage;
+      });
+    }
+  }
 }

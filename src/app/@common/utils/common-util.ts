@@ -155,11 +155,13 @@ export const CommonUtil = {
   },
   /** 暫存自動塞入表單*/
   initializeFormWithSessionData(validateForm: any, getSessionVal: any) {
-    Object.keys(getSessionVal.filter).forEach(key => {
-      const control = validateForm.controls[key];
-      if (control) {
-        control.patchValue(getSessionVal.filter[key]);
-      }
-    });
+    if (!!getSessionVal?.filter) {
+      Object.keys(getSessionVal.filter).forEach(key => {
+        const control = validateForm.controls[key];
+        if (control) {
+          control.patchValue(getSessionVal.filter[key]);
+        }
+      });
+    }
   },
 }; // End

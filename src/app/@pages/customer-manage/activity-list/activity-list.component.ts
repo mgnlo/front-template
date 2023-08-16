@@ -125,7 +125,9 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
   }
 
   setSessionData() {
-    let sessionData = { page: this.paginator.nowPage, filter: this.validateForm.getRawValue() };
+    const filterVal = this.isSearch ? this.validateForm.getRawValue() :
+      this.storageService.getSessionVal(this.sessionKey)?.filter ?? this.validateForm.getRawValue();
+    const sessionData = { page: this.paginator.nowPage, filter: filterVal };
     this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
 
@@ -135,6 +137,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
 
   reset() {
     this.validateForm.reset({ activityName: '', status: '', startDate: null, endDate: null });
+    this.isSearch = true;
     this.setSessionData();
     this.search('reset');
   }
@@ -142,10 +145,14 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
   search(key?: string) {
     const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
 
+    this.isSearch = false;
+    if (key === 'search') this.isSearch = true;
+
     if (['search', 'reset'].includes(key)) this.paginator.nowPage = 1;
+
     let page = this.paginator.nowPage;
 
-    if (key !== 'search' && !!getSessionVal) {
+    if (key !== 'search' && !!getSessionVal?.filter) {
       page = getSessionVal.page;
       CommonUtil.initializeFormWithSessionData(this.validateForm, getSessionVal);
     }
