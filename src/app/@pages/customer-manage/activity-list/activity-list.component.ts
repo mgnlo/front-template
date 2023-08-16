@@ -17,6 +17,7 @@ import { CustomerManageService } from '../customer-manage.service';
   styleUrls: ['./activity-list.component.scss'],
 })
 export class ActivityListComponent extends BaseComponent implements OnInit {
+  isSearch: Boolean = false;
 
   constructor(
     storageService: StorageService,
@@ -121,9 +122,8 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
     this.SetSessionData();
   }
 
-  SetSessionData(key?: string) {
-    let filterVal = key !== 'search' ? this.validateForm.getRawValue() : this.storageService.getSessionVal(this.sessionKey).filter;
-    let sessionData = { page: this.paginator.nowPage, filter: filterVal };
+  SetSessionData() {
+    let sessionData = { page: this.paginator.nowPage, filter: this.validateForm.getRawValue() };
     this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
 
@@ -134,12 +134,13 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
   reset() {
     this.validateForm.reset({ activityName: '', status: '', startDate: null, endDate: null });
     this.SetSessionData();
-    this.search();
+    this.search('reset');
   }
 
   search(key?: string) {
     const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
 
+    if (['search', 'reset'].includes(key)) this.paginator.nowPage = 1;
     let page = this.paginator.nowPage;
 
     if (key !== 'search' && !!getSessionVal) {
@@ -151,7 +152,6 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
         'status': getSessionVal.filter.status,
       })
     }
-    if (key === 'search') page = 1
 
     this.SetSessionData();
 
