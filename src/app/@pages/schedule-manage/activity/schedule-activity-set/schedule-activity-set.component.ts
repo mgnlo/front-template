@@ -46,7 +46,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   //預設名單列表
   scheduleActivitySetting: Array<ScheduleActivitySetting>;
-  scheduleActivitySettingModel: Array<ScheduleActivitySettingModel>;
+  scheduleActivitySettingModel: Array<ScheduleActivitySettingModel> = new Array;
 
   scheduleId: string;
 
