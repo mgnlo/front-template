@@ -6,7 +6,6 @@ import { Paginator } from '@component/table/paginator/paginator.component';
 import { LocalDataSource } from 'ng2-smart-table';
 // import { OAuth2BaseComponent, OAuth2Service } from '@module/oauth2';
 import { Subject } from 'rxjs';
-import { filter, last, takeLast, takeUntil, tap } from 'rxjs/operators';
 
 @Injectable()
 export class BaseComponent implements OnDestroy {
@@ -30,17 +29,11 @@ export class BaseComponent implements OnDestroy {
   }
 
   ngDoCheck() {
-    // this.updatePageInfo();
+
   }
 
   ngAfterViewInit() {
-    //#region 取得頁面暫存，重新載入
-    if(!!this?.restDataSource){
-      const page = this?.storageService?.getSessionVal(this?.sessionKey)?.page;
-      this?.restDataSource?.setPage(page ? page : this?.paginator?.nowPage)
-      this?.restDataSource?.load(this?.restDataSource?.getPaging());
-    }
-    //#endregion
+
   }
 
   getInvalidControls() {
@@ -48,28 +41,6 @@ export class BaseComponent implements OnDestroy {
       console.info(ctl + ' is invalid, value:', this.validateForm.get(ctl).errors);
     })
   }
-
-  // updatePageInfo() {
-  //   let source = (!!this.dataSource) ? this.dataSource : this.restDataSource;
-  //   if (!!source) {
-  //     source.onChanged().pipe(takeUntil(this.unsubscribe$), filter((val, i) => i === 0)).subscribe((event) => {
-  //       //get session page
-  //       if (event.action === 'refresh') {
-  //         let storage = this.storageService.getSessionVal(this.sessionKey);
-  //         if (!!storage?.page) {
-  //           source.setPage(storage.page, true);
-  //         }
-  //       }
-  //       this.paginator.totalCount = source.count();
-  //       let page = source.getPaging().page;
-  //       let perPage = source.getPaging().perPage;
-  //       this.paginator.nowPage = page;
-  //       this.paginator.totalPage = Math.ceil(this.paginator.totalCount / perPage);
-  //       this.paginator.rowStart = (page - 1) * perPage + 1;
-  //       this.paginator.rowEnd = this.paginator.rowStart + (perPage - 1);
-  //     });
-  //   }
-  // }
 
   //檢查檢核
   findInvalidControls() {
