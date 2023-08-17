@@ -26,6 +26,7 @@ export interface TagSetting {
 export class TagConditionSetting {
   tagId: string;
   conditionId: string;
+  version: string;
   groupId: number
   detectionCondition: string;
   conditionValue: string;

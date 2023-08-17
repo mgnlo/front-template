@@ -96,7 +96,7 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
         onComponentInitFunction: (instance: ColumnButtonComponent) => {
           instance.emitter.subscribe((res: ScheduleBatchHistory) => {
             let passData: NavigationExtras = { state: res };
-            this.router.navigate(['pages', 'schedule-manage', 'schedule-tag-export-detail', res.tagId], passData);
+            this.router.navigate(['pages', 'schedule-manage', 'schedule-tag-export-detail', res.referenceId], passData);
           })
         },
         sort: false,
@@ -129,7 +129,7 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
         conditionSettingMethod: m.conditionSettingMethod,
         conditionSettingQuery: m.conditionSettingQuery,
         tagDimension: m.tagDimension,
-        tagSubdimension: m.tagSubdimension,
+        tagSubDimension: m.tagSubDimension,
         scheduleSettings: m.scheduleSettings,
         uploadType: m.uploadType,
         filePath: m.filePath,
