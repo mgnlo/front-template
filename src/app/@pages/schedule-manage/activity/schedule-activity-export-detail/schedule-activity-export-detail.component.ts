@@ -29,7 +29,7 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
   params: any;//路由參數
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
   scheduleId: string;
-  activityId: string;
+  referenceId: string; //=activityId
 
   constructor(
     storageService: StorageService,
@@ -121,9 +121,9 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
   ngOnInit(): void {
 
     this.scheduleId = this.activatedRoute.snapshot.params.scheduleId;
-    this.activityId = this.activatedRoute.snapshot.params.activityId;
+    this.referenceId = this.activatedRoute.snapshot.params.referenceId;
 
-    this.customerManageService.getActivitySettingRow(this.activityId).pipe(
+    this.customerManageService.getActivitySettingRow(this.referenceId).pipe(
       catchError(err => {
         this.loadingService.close();
         this.dialogService.alertAndBackToList(false, '查無此筆活動排程', ['pages', 'schedule-manage', 'schedule-activity-detail']);
@@ -137,7 +137,7 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
     ).subscribe();
 
     let searchInfo: SearchInfo = {
-      apiUrl: this.scheduleManageService.batchFunc + this.activityId,
+      apiUrl: this.scheduleManageService.batchFunc + this.referenceId + '/history',
       nowPage: this.paginator.nowPage,
       errMsg: '查無此筆排程紀錄'
     }
