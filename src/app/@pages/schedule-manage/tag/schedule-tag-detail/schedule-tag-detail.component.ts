@@ -176,15 +176,14 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
           filterFunction: false,
           visible: true,
           renderComponent: CheckboxColumnComponent,
-          valuePrepareFunction: () => {
-            return {
+          onComponentInitFunction: (instance: CheckboxColumnComponent) => {
+            instance.settings = {
               isShowParam: { key: 'status', answer: ['enabled', 'reviewing'] },
               isSelectedName: 'isSelected',
               rowIdName: 'tagId',
               selectedRows: this.selectedRows,
             };
-          },
-          onComponentInitFunction: (instance: CheckboxColumnComponent) => {
+
             instance.emitter.subscribe((res) => {
               console.info('res', res)
 

@@ -13,7 +13,7 @@ import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/che
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
-import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
+import { Ng2SmartTableComponent } from 'ng2-smart-table';
 import { catchError, filter, tap } from 'rxjs/operators';
 
 @Component({
@@ -151,6 +151,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
 
   setGridDefineInit() {
     this.setSessionVal();
+
     if (!!this?.gridDefine?.columns?.['isChecked']) {
       delete this.gridDefine.columns['isChecked'];
     }
@@ -165,14 +166,39 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
           filterFunction: false,
           visible: true,
           renderComponent: CheckboxColumnComponent,
-          valuePrepareFunction: (value: any, row: ActivitySetting, cell: any) => {
-            return { value, row, cell, isShowParam: { key: 'status', answer: ['enabled', 'reviewing'] } };
-          },
+          onComponentInitFunction: (instance: CheckboxColumnComponent) => {
+            instance.settings = {
+              isShowParam: { key: 'status', answer: ['enabled', 'reviewing'] },
+              isSelectedName: 'isSelected',
+              rowIdName: 'activityId',
+              selectedRows: this.selectedRows,
+            };
+
+            instance.emitter.subscribe((res) => {
+              console.info('res', res)
+
+              if (res.isSelected) {
+                this.selectedRows.push({ rowId: res.tagId })
+                return;
+              }
+              if ((this.selectedRows.length ?? 0) > 0 && this.selectedRows.find(f => f.rowId === res.tagId)) {
+                this.selectedRows = this.selectedRows.filter(item => item.rowId !== res.tagId);
+              }
+
+            });
+          }
         },
       };
       this.gridDefine.columns = Object.assign(newColumn, this.gridDefine.columns);
     }
+
     this.ng2SmartTable.initGrid();
+
+    //設定切換頁面
+    let storage = this.storageService.getSessionVal(this.sessionKey);
+    if (!!storage?.page) {
+      this.restDataSource.setPage(storage.page, true);
+    }
   }
 
   onUserRowSelect(event) {
