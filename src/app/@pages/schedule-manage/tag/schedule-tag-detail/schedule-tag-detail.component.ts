@@ -162,6 +162,7 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
 
   setGridDefineInit() {
     this.setSessionVal();
+
     if (!!this?.gridDefine?.columns?.['isChecked']) {
       delete this.gridDefine.columns['isChecked'];
     }
@@ -195,7 +196,14 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
       };
       this.gridDefine.columns = Object.assign(newColumn, this.gridDefine.columns);
     }
+
     this.ng2SmartTable.initGrid();
+
+    //設定切換頁面
+    let storage = this.storageService.getSessionVal(this.sessionKey);
+    if (!!storage?.page) {
+      this.dataSource.setPage(storage.page, true);
+    }
   }
 
   onSelectAllChange() {
