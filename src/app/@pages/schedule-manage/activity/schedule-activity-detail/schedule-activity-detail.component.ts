@@ -27,7 +27,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   activitySetting: Array<ActivitySetting> = ScheduleActivitySettingMock[0].activitySetting;
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
   scheduleId: string;
-  selectedRows: any;
+  selectedRows: Array<{ rowId: string }> = new Array;
 
   isAllSelected: boolean = false;
 
@@ -150,6 +150,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   }
 
   setGridDefineInit() {
+    this.selectedRows = new Array;
     this.setSessionVal();
 
     if (!!this?.gridDefine?.columns?.['isChecked']) {
@@ -177,12 +178,12 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
             instance.emitter.subscribe((res) => {
               console.info('res', res)
 
-              if (res.isSelected) {
-                this.selectedRows.push({ rowId: res.tagId })
+              if (res.isSelected && res.activityId) {
+                this.selectedRows.push({ rowId: res.activityId })
                 return;
               }
-              if ((this.selectedRows.length ?? 0) > 0 && this.selectedRows.find(f => f.rowId === res.tagId)) {
-                this.selectedRows = this.selectedRows.filter(item => item.rowId !== res.tagId);
+              if ((this.selectedRows.length ?? 0) > 0 && this.selectedRows.find(f => f.rowId === res.activityId)) {
+                this.selectedRows = this.selectedRows.filter(item => item.rowId !== res.activityId);
               }
 
             });

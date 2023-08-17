@@ -160,6 +160,7 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
   }
 
   setGridDefineInit() {
+    this.selectedRows = new Array;
     this.setSessionVal();
 
     if (!!this?.gridDefine?.columns?.['isChecked']) {
@@ -187,7 +188,7 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
             instance.emitter.subscribe((res) => {
               console.info('res', res)
 
-              if (res.isSelected) {
+              if (res.isSelected && res.tagId) {
                 this.selectedRows.push({ rowId: res.tagId })
                 return;
               }
