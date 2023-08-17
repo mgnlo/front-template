@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting as ScheduleActivitySettingModel, ScheduleActivitySetting, ScheduleActivitySettingEditReq } from '@api/models/schedule-activity.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
-import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
+import { Ng2SmartTableService } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, Frequency, Status, StatusResult } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
@@ -13,6 +13,7 @@ import { CommonUtil } from '@common/utils/common-util';
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
+import { LocalDataSource } from 'ng2-smart-table';
 import { catchError, filter, tap } from 'rxjs/operators';
 import { PreviewDialogComponent } from './preview-dialog/preview.dialog/preview-dialog.component';
 
@@ -256,7 +257,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.scheduleId = this.activatedRoute.snapshot.params?.scheduleId;
-
+    this.dataSource = new LocalDataSource();
     if (!!this.scheduleId) {
       this.loadingService.open();
       this.scheduleManageService.getScheduleActivitySettingDetail(this.scheduleId).pipe(
@@ -283,23 +284,18 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
             }
           }
           //塞資料
-          Object.keys(res.result).filter(key => !!this.validateForm.controls[key]).forEach(key => {
-            this.validateForm.controls[key].setValue(res.result[key]?.toLowerCase());
+          Object.keys(res.result).forEach(key => {
+            if (!!this.validateForm.controls[key]) {
+              this.validateForm.controls[key].setValue(res.result[key]?.toLowerCase());
+            } else if (key === 'activitySetting') {
+              this.scheduleActivitySettingModel = res.result[key];
+              this.refreshFilterActivityList();
+              this.dataSource.load(this.scheduleActivitySettingModel);
+            }
           })
           this.loadingService.close();
         })
       ).subscribe();
-
-      let searchInfo: SearchInfo = {
-        apiUrl: this.scheduleManageService.scheduleFunc + this.scheduleId + '/activity-setting',
-        nowPage: this.paginator.nowPage,
-        errMsg: '名單紀錄查無資料'
-      }
-      this.restDataSource = this.tableService.searchData(searchInfo);
-      this.restDataSource.getElements().then(currentData => {
-        this.scheduleActivitySettingModel = JSON.parse(JSON.stringify(currentData));
-        this.refreshFilterActivityList();
-      })
     }
   }
 

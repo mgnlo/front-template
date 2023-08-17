@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-column-button',
@@ -20,8 +20,13 @@ export class ColumnButtonComponent {
   }
   @Output() emitter = new EventEmitter();
 
+  clickable: boolean = true;
+  ngOnChanges(changes: SimpleChanges): void {
+    this.clickable = changes.settings.currentValue?.clickable;
+  }
+
   emit() {
-    if (this.settings.clickable) {
+    if (this.clickable) {
       this.emitter.next(this.rowData);
     }
   }
