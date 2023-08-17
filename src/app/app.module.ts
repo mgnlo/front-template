@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -13,6 +13,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { NbDateFnsDateModule } from '@nebular/date-fns';
 import { ApiModule } from '@api/api.module';
 import { LoginComponent } from '@pages/login/login.component';
+
+import { ConfigService } from '@api/services/config.service';
 
 const NG_MODULES = [BrowserModule, BrowserAnimationsModule, HttpClientModule];
 
@@ -32,8 +34,12 @@ const NB_MODULES = [
   NbDateFnsDateModule.forRoot({}),
 ];
 
+export function initConfig(configService: ConfigService) {
+  return () => configService.loadConfig();
+}
+
 @NgModule({
-  declarations: [AppComponent,LoginComponent],
+  declarations: [AppComponent, LoginComponent],
   imports: [
     AppRoutingModule,
     ApiModule,
@@ -44,7 +50,13 @@ const NB_MODULES = [
     ...NG_MODULES,
     ...NB_MODULES,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initConfig,
+      deps: [ConfigService],
+      multi: true,
+    }],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

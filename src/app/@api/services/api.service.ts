@@ -4,15 +4,14 @@ import { ResponseModel } from '@api/models/base.model';
 import { RestStatus } from '@common/enums/rest-enum';
 import { Observable } from 'rxjs';
 import { tap, timeout } from 'rxjs/operators';
-import { environment } from '../../../environments/environment';
 import { ApiLogicError } from './../error/api-logic-error';
 import { LoadingService } from './loading.service';
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-
   private httpOptions = {
     headers: {
       'Content-type': 'application/json; charset=UTF-8;',
@@ -20,11 +19,12 @@ export class ApiService {
       //   Authorization: '',
     },
   };
-  private prefixUrl = environment.SERVER_URL + environment.API_URL;
+  private prefixUrl = this.configService.getConfig().SERVER_URL + this.configService.getConfig().API_URL;
 
   constructor(
     private http: HttpClient,
     private loadingService: LoadingService,
+    private configService: ConfigService
   ) { }
 
   private doSend<T>(

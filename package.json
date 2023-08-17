@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --aot --baseHref=/console-frontend/",
+    "build-ocp": "ng build --aot --baseHref=/", 
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
