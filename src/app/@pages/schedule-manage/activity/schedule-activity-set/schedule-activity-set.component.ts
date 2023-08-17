@@ -287,6 +287,8 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
           Object.keys(res.result).forEach(key => {
             if (!!this.validateForm.controls[key]) {
               this.validateForm.controls[key].setValue(res.result[key]?.toLowerCase());
+            } else if (key === 'activityName') {
+              this.validateForm.controls[key].setValue(res.result[key]);
             } else if (key === 'activitySetting') {
               this.scheduleActivitySettingModel = res.result[key];
               this.refreshFilterActivityList();

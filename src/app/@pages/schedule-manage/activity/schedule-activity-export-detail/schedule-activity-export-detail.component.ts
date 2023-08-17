@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting, ScheduleActivitySetting, Schedule_Batch_History } from '@api/models/schedule-activity.model';
@@ -13,7 +14,6 @@ import { ColumnButtonComponent } from '@component/table/column-button/column-but
 import { BaseComponent } from '@pages/base.component';
 import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
 import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
-import { LocalDataSource } from 'ng2-smart-table';
 import { catchError, filter, tap } from 'rxjs/operators';
 
 @Component({
@@ -69,7 +69,8 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
         class: 'left',
         width: '25%',
         valuePrepareFunction: (cell: string) => {
-          return `<span class="left">${cell}</span>`;
+          const datepipe: DatePipe = new DatePipe('en-US');
+          return `<p class="left">${datepipe.transform(cell,"yyyy-MM-dd HH:mm:ss")}</p>`;
         },
         sort: false,
       },
