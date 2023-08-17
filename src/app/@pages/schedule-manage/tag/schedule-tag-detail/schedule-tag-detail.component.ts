@@ -9,6 +9,7 @@ import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/che
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
+import { Grid } from 'ng2-smart-table/lib/lib/grid';
 
 @Component({
   selector: 'schedule-tag-detail',
@@ -161,6 +162,7 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
 
   setGridDefineInit() {
     this.selectedRows = new Array;
+    this.isAllSelected = false;
     this.setSessionVal();
 
     if (!!this?.gridDefine?.columns?.['isChecked']) {
@@ -180,7 +182,6 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
           onComponentInitFunction: (instance: CheckboxColumnComponent) => {
             instance.settings = {
               isShowParam: { key: 'status', answer: ['enabled', 'reviewing'] },
-              isSelectedName: 'isSelected',
               rowIdName: 'tagId',
               selectedRows: this.selectedRows,
             };
@@ -214,7 +215,26 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
 
   onSelectAllChange() {
     this.isAllSelected = !this.isAllSelected;
-
+    const idName = 'tagId'
+console.info('this.dataSource',this.dataSource.getElements())
+    if (this.dataSource instanceof LocalDataSource) {
+      this.dataSource.getElements().then((filteredAndSortedData) => {
+        if (this.isAllSelected) {
+          filteredAndSortedData.forEach((row) => {
+            const rowId = row[idName];
+            if (rowId && !this.selectedRows.some((selectedRow) => selectedRow.rowId === rowId)) {
+              this.selectedRows.push({ rowId: rowId });
+            }
+          });
+        } else {
+          filteredAndSortedData.forEach((row) => {
+            const rowId = row[idName];
+            this.selectedRows = this.selectedRows.filter((selectedRow) => selectedRow.rowId !== rowId);
+          });
+        }
+      });
+      this.ng2SmartTable.initGrid();
+    }
   }
 
   submitRefresh() {

@@ -13,7 +13,7 @@ import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/che
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
-import { Ng2SmartTableComponent } from 'ng2-smart-table';
+import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
 import { catchError, filter, tap } from 'rxjs/operators';
 
 @Component({
@@ -151,6 +151,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
 
   setGridDefineInit() {
     this.selectedRows = new Array;
+    this.isAllSelected = false;
     this.setSessionVal();
 
     if (!!this?.gridDefine?.columns?.['isChecked']) {
@@ -170,7 +171,6 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
           onComponentInitFunction: (instance: CheckboxColumnComponent) => {
             instance.settings = {
               isShowParam: { key: 'status', answer: ['enabled', 'reviewing'] },
-              isSelectedName: 'isSelected',
               rowIdName: 'activityId',
               selectedRows: this.selectedRows,
             };
@@ -202,8 +202,27 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     }
   }
 
-  onUserRowSelect(event) {
-    this.selectedRows = event.selected;
+  onSelectAllChange() {
+    this.isAllSelected = !this.isAllSelected;
+    const idName = 'activityId'
+    if (this.restDataSource instanceof LocalDataSource) {
+      this.restDataSource.getElements().then((filteredAndSortedData) => {
+        if (this.isAllSelected) {
+          filteredAndSortedData.forEach((row) => {
+            const rowId = row[idName];
+            if (rowId && !this.selectedRows.some((selectedRow) => selectedRow.rowId === rowId)) {
+              this.selectedRows.push({ rowId: rowId });
+            }
+          });
+        } else {
+          filteredAndSortedData.forEach((row) => {
+            const rowId = row[idName];
+            this.selectedRows = this.selectedRows.filter((selectedRow) => selectedRow.rowId !== rowId);
+          });
+        }
+      });
+      this.ng2SmartTable.initGrid();
+    }
   }
 
   submitRefresh() {

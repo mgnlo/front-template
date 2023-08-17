@@ -11,7 +11,6 @@ export class CheckboxColumnComponent {
     isChecked?: boolean;
     isShowParam?: { key: string; answer: string[] };
     isCheckedParam?: { key: string };
-    isSelectedName?: string;
     rowIdName?: string;
     selectedRows?: any[];
   };
@@ -24,13 +23,14 @@ export class CheckboxColumnComponent {
 
   showCheckbox(): boolean {
     const isShowParam = this.settings?.isShowParam;//是否要顯示CheckBox框
-    return isShowParam?.answer && isShowParam.answer.some(answer => answer.toLowerCase() === this.rowData[isShowParam.key]?.toLowerCase());
+    const isShow = isShowParam?.answer && isShowParam.answer.some(answer => answer.toLowerCase() === this.rowData[isShowParam.key]?.toLowerCase());
+    this.rowData['isShow'] = isShow;
+    return isShow;
   }
 
   initializeCheckboxState() {
     const isCheckedParam = this.settings?.isCheckedParam;//是顯示勾選
     const selectedRows = this.settings?.selectedRows;//顯示暫存被勾選項目
-    const isSelectedName = this.settings?.isSelectedName;//Model中存放Check點選的欄位
     const rowIdName = this.settings?.rowIdName;//Id名稱
 
 
@@ -42,16 +42,11 @@ export class CheckboxColumnComponent {
       this.settings.isChecked = true;
     }
 
-    if (isSelectedName) {
-      this.rowData[isSelectedName] = this.settings?.isChecked;
-    }
+    this.rowData['isSelected'] = this.settings?.isChecked;
   }
 
   onCheckboxChange() {
-    const isSelectedName = this.settings?.isSelectedName;
-    if (isSelectedName) {
-      this.rowData[isSelectedName] = !this.rowData[isSelectedName];
-    }
+    this.rowData['isSelected'] = !this.rowData['isSelected'];
 
     this.emitter.emit(this.rowData);
   }
