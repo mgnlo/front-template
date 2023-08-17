@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { ScheduleBatchHistory, ScheduleTagSetting, ScheduleTagSettingView } from '@api/models/schedule-tag.model';
+import { ScheduleTagSetting, ScheduleTagSettingView } from '@api/models/schedule-tag.model';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, Status, StatusResult } from '@common/enums/common-enum';
 import { ScheduleTagSettingMock } from '@common/mock-data/schedule-tag-list-mock';
