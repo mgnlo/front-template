@@ -1,19 +1,28 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'checkbox-column',
   template: `
-    <nb-checkbox *ngIf="isShow" status="info" [checked]="isChecked"></nb-checkbox>
+    <nb-checkbox *ngIf="isShow" status="info" [checked]="isChecked" (change)="onCheckboxChange()"></nb-checkbox>
   `,
 })
 export class CheckboxColumnComponent {
-  @Input() isShow: boolean;
-  @Input() isChecked: boolean;
-  @Input() value: any;
+  @Input() isShow: boolean;       //是否顯示
+  @Input() isChecked: boolean;    //是否勾選
+  @Input() value: any;            //外部參數
+  @Input() rowData: any;          //回傳資料
+  @Output() emitter = new EventEmitter();
+
+
+  onCheckboxChange() {
+    if (!!this.value?.isSelectedName) {
+      this.rowData[this.value.isSelectedName] = !this.isChecked;
+    }
+    this.emitter.emit(this.rowData);
+  }
 
   ngOnInit() {
-    //console.info('this.value', this.value)
-    const row = this.value?.row;
+    const row = this.rowData;
 
     const isShowParam = this.value?.isShowParam;
     this.isShow = isShowParam?.answer && row?.[isShowParam?.key] &&

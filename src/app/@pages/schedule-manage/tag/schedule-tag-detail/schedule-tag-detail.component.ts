@@ -18,8 +18,9 @@ import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
 })
 export class ScheduleTagDetailComponent extends BaseComponent implements OnInit {
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
-  selectedRows: any;
   isAllSelected: boolean = false;
+  selectedRows: Array<{ isChecked: boolean, rowId: string }> = new Array;
+  rowCheckboxStatus: { isChecked: boolean, rowId: string } = { isChecked: false, rowId: '' };
 
   //預設拉取資料
   scheduleTagListSetting: Array<ScheduleTagSetting> = ScheduleTagSettingMock;//Call API
@@ -99,7 +100,7 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
         width: '5%',
         renderComponent: ColumnButtonComponent,
         onComponentInitFunction: (instance: ColumnButtonComponent) => {
-          instance.emitter.subscribe((res: ScheduleBatchHistory) => {
+          instance.emitter.subscribe((res: ScheduleTagSettingView) => {
             let passData: NavigationExtras = { state: res };
             this.router.navigate(['pages', 'schedule-manage', 'schedule-tag-export-detail', res.tagId], passData);
           })
@@ -134,7 +135,7 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
         conditionSettingMethod: m.conditionSettingMethod,
         conditionSettingQuery: m.conditionSettingQuery,
         tagDimension: m.tagDimension,
-        tagSubdimension: m.tagSubdimension,
+        tagSubDimension: m.tagSubDimension,
         scheduleSettings: m.scheduleSettings,
         uploadType: m.uploadType,
         filePath: m.filePath,
@@ -181,9 +182,21 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
           filterFunction: false,
           visible: true,
           renderComponent: CheckboxColumnComponent,
-          valuePrepareFunction: (value: any, row: any, cell: any) => {
-            return { value, row, cell, isShowParam: { key: 'status', answer: ['enabled', 'reviewing'] } };
+          valuePrepareFunction: () => {
+            return {
+              isShowParam: { key: 'status', answer: ['enabled', 'reviewing'] },
+              isSelectedName: 'isSelected',
+            };
           },
+          onComponentInitFunction: (instance: CheckboxColumnComponent, rowId: string) => {
+            instance.emitter.subscribe((res) => {
+              console.info('res', res)
+              this.rowCheckboxStatus = res;
+              if (!!this.rowCheckboxStatus) {
+
+              }
+            });
+          }
         },
       };
       this.gridDefine.columns = Object.assign(newColumn, this.gridDefine.columns);
@@ -191,12 +204,15 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
     this.ng2SmartTable.initGrid();
   }
 
-  onUserRowSelect(event) {
-    this.selectedRows = event.selected;
+  onSelectAllChange() {
+    this.isAllSelected = !this.isAllSelected;
+
   }
 
   submitRefresh() {
-    console.info('selectedRows', this.selectedRows)
+    console.info('rowCheckboxStatus', this.rowCheckboxStatus);
+    console.info('selectedRows', this.selectedRows);
   }
+
 
 }
