@@ -257,7 +257,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.scheduleId = this.activatedRoute.snapshot.params?.scheduleId;
-
+    this.dataSource = new LocalDataSource();
     if (!!this.scheduleId) {
       this.loadingService.open();
       this.scheduleManageService.getScheduleActivitySettingDetail(this.scheduleId).pipe(
@@ -288,7 +288,6 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
             if (!!this.validateForm.controls[key]) {
               this.validateForm.controls[key].setValue(res.result[key]?.toLowerCase());
             } else if (key === 'activitySetting') {
-              this.dataSource = new LocalDataSource();
               this.scheduleActivitySettingModel = res.result[key];
               this.refreshFilterActivityList();
               this.dataSource.load(this.scheduleActivitySettingModel);
