@@ -32,6 +32,7 @@ export class ScheduleBatchHistory {
 
 
 export class ScheduleTagSettingView{
+  isSelected: boolean = false;
   tagId: string;
   version: string;
   tagName: string;
