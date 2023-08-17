@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting, ScheduleActivitySetting, Schedule_Batch_History } from '@api/models/schedule-activity.model';
@@ -13,7 +14,6 @@ import { ColumnButtonComponent } from '@component/table/column-button/column-but
 import { BaseComponent } from '@pages/base.component';
 import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
 import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
-import { LocalDataSource } from 'ng2-smart-table';
 import { catchError, filter, tap } from 'rxjs/operators';
 
 @Component({
@@ -29,7 +29,7 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
   params: any;//路由參數
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
   scheduleId: string;
-  activityId: string;
+  referenceId: string; //=activityId
 
   constructor(
     storageService: StorageService,
@@ -69,7 +69,8 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
         class: 'left',
         width: '25%',
         valuePrepareFunction: (cell: string) => {
-          return `<span class="left">${cell}</span>`;
+          const datepipe: DatePipe = new DatePipe('en-US');
+          return `<p class="left">${datepipe.transform(cell,"yyyy-MM-dd HH:mm:ss")}</p>`;
         },
         sort: false,
       },
@@ -120,9 +121,9 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
   ngOnInit(): void {
 
     this.scheduleId = this.activatedRoute.snapshot.params.scheduleId;
-    this.activityId = this.activatedRoute.snapshot.params.activityId;
+    this.referenceId = this.activatedRoute.snapshot.params.referenceId;
 
-    this.customerManageService.getActivitySettingRow(this.activityId).pipe(
+    this.customerManageService.getActivitySettingRow(this.referenceId).pipe(
       catchError(err => {
         this.loadingService.close();
         this.dialogService.alertAndBackToList(false, '查無此筆活動排程', ['pages', 'schedule-manage', 'schedule-activity-detail']);
@@ -136,7 +137,7 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
     ).subscribe();
 
     let searchInfo: SearchInfo = {
-      apiUrl: this.scheduleManageService.batchFunc + this.activityId,
+      apiUrl: this.scheduleManageService.batchFunc + this.referenceId + '/history',
       nowPage: this.paginator.nowPage,
       errMsg: '查無此筆排程紀錄'
     }

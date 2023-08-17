@@ -12,16 +12,8 @@ export class ScheduleManageService {
 
   constructor(private service: ApiService) { }
 
-  getScheduleActivitySettingList(): Observable<ResponseModel<Array<ScheduleActivitySetting>>> {
-    return this.service.doGet(this.scheduleFunc);
-  }
-
   getScheduleActivitySettingDetail(scheduleId: string): Observable<ResponseModel<ScheduleActivitySetting>> {
     return this.service.doGet(this.scheduleFunc + scheduleId);
-  }
-
-  getScheduleActivitySettingExportDetail(activityId: string): Observable<ResponseModel<ActivitySetting>> {
-    return this.service.doGet(this.batchFunc + activityId);
   }
 
   /** 可選的活動下拉選單 API*/

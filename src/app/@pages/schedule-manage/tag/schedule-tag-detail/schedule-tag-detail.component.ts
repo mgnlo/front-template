@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ScheduleTagSetting, ScheduleTagSettingView } from '@api/models/schedule-tag.model';
@@ -73,8 +74,13 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
       },
       batchTime: {
         title: '批次更新時間',
-        type: 'string',
+        type: 'html',
+        class: 'left',
         width: '25%',
+        valuePrepareFunction: (cell: string) => {
+          const datepipe: DatePipe = new DatePipe('en-US');
+          return `<p class="left">${datepipe.transform(cell,"yyyy-MM-dd HH:mm:ss")}</p>`;
+        },
         sort: false,
       },
       batchResult: {

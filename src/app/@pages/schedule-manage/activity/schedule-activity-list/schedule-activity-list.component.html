@@ -7,7 +7,9 @@
           <h2>排程列表</h2>
       </nb-card-header>
       <nb-card-body>
-          <div class="rightBox"><button nbButton status="primary" size="medium" (click)="add()">新增</button></div>
+          <div class="rightBox">
+            <button nbButton status="primary" size="medium" (click)="add()">新增</button>
+          </div>
           <ng2-smart-table [settings]="gridDefine" [source]="restDataSource"></ng2-smart-table>
           <paginator [source]="restDataSource" [paginator]="paginator"></paginator>
       </nb-card-body>
