@@ -94,9 +94,9 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
         width: '5%',
         renderComponent: ColumnButtonComponent,
         onComponentInitFunction: (instance: ColumnButtonComponent) => {
-          instance.emitter.subscribe((res: ScheduleBatchHistory) => {
+          instance.emitter.subscribe((res: ScheduleTagSettingView) => {
             let passData: NavigationExtras = { state: res };
-            this.router.navigate(['pages', 'schedule-manage', 'schedule-tag-export-detail', res.referenceId], passData);
+            this.router.navigate(['pages', 'schedule-manage', 'schedule-tag-export-detail', res.tagId], passData);
           })
         },
         sort: false,
