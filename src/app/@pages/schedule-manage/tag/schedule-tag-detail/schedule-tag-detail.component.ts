@@ -18,8 +18,7 @@ import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
 export class ScheduleTagDetailComponent extends BaseComponent implements OnInit {
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
   isAllSelected: boolean = false;
-  selectedRows: Array<{ isChecked: boolean, rowId: string }> = new Array;
-  rowCheckboxStatus: { isChecked: boolean, rowId: string } = { isChecked: false, rowId: '' };
+  selectedRows: Array<{ rowId: string }> = new Array;
 
   //預設拉取資料
   scheduleTagListSetting: Array<ScheduleTagSetting> = ScheduleTagSettingMock;//Call API
@@ -181,15 +180,22 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
             return {
               isShowParam: { key: 'status', answer: ['enabled', 'reviewing'] },
               isSelectedName: 'isSelected',
+              rowIdName: 'tagId',
+              selectedRows: this.selectedRows,
             };
           },
-          onComponentInitFunction: (instance: CheckboxColumnComponent, rowId: string) => {
+          onComponentInitFunction: (instance: CheckboxColumnComponent) => {
             instance.emitter.subscribe((res) => {
               console.info('res', res)
-              this.rowCheckboxStatus = res;
-              if (!!this.rowCheckboxStatus) {
 
+              if (res.isSelected) {
+                this.selectedRows.push({ rowId: res.tagId })
+                return;
               }
+              if ((this.selectedRows.length ?? 0) > 0 && this.selectedRows.find(f => f.rowId === res.tagId)) {
+                this.selectedRows = this.selectedRows.filter(item => item.rowId !== res.tagId);
+              }
+
             });
           }
         },
@@ -212,7 +218,6 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
   }
 
   submitRefresh() {
-    console.info('rowCheckboxStatus', this.rowCheckboxStatus);
     console.info('selectedRows', this.selectedRows);
   }
 
