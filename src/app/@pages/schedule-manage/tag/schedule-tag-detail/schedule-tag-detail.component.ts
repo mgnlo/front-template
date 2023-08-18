@@ -193,8 +193,25 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
 
     if (!!this?.gridDefine?.columns?.['isChecked']) {
       delete this.gridDefine.columns['isChecked'];
+      const newColumn = {
+        action: {
+          title: '查看',
+          type: 'custom',
+          width: '5%',
+          renderComponent: ColumnButtonComponent,
+          onComponentInitFunction: (instance: ColumnButtonComponent) => {
+            instance.emitter.subscribe((res: ScheduleTagSettingView) => {
+              let passData: NavigationExtras = { state: res };
+              this.router.navigate(['pages', 'schedule-manage', 'schedule-tag-export-detail', res.tagId], passData);
+            })
+          },
+          sort: false,
+        },
+      }
+      this.gridDefine.columns = Object.assign(this.gridDefine.columns, newColumn);
     }
     else {
+      delete this.gridDefine.columns['action'];
       const newColumn = {
         isChecked: {
           title: '',
@@ -210,6 +227,7 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
               isShowParam: { key: 'status', answer: ['enabled', 'reviewing'] },
               rowIdName: 'tagId',
               selectedRows: this.selectedRows,
+              isCheckedParam: { key: 'isSelect' },
             };
 
             instance.emitter.subscribe((res) => {
