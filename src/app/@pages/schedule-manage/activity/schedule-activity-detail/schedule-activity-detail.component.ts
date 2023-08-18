@@ -158,6 +158,8 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
       if (this.previousPage !== currentPage) {
         this.previousPage = currentPage;
 
+        console.info('this.previousPage', this.previousPage)
+
         const getSession = this.storageService.getSessionVal(this.sessionKey);
         if (getSession?.isOpenCheckbox && getSession?.isPageAllSelected?.find(f => f?.['pageNum'] === currentPage)) {
           this.isAllSelected = getSession?.isPageAllSelected?.find(f => f?.['pageNum'] === currentPage)?.val
