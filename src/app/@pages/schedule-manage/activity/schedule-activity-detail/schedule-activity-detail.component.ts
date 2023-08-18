@@ -13,7 +13,7 @@ import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/che
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
-import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
+import { Ng2SmartTableComponent } from 'ng2-smart-table';
 import { catchError, filter, tap } from 'rxjs/operators';
 
 @Component({

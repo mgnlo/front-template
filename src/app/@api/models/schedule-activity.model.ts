@@ -64,8 +64,10 @@ export interface ScheduleReviewHistory {
   creationTime?: string
   modificationTime?: string
   status?: string
+  activitySetting?: Array<ActivitySetting>
   newActivitySetting?: Array<ActivitySetting>
   lastActivitySetting?: Array<ActivitySetting>
+  scheduleReviewHistory?: Array<ScheduleReviewHistory>
 }
 
 //for HTML diaplay ViewModel

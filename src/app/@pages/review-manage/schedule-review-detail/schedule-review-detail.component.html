@@ -1,6 +1,6 @@
 <div class="pageTitle">
   <h1>名單排程審核</h1>
-  <ng-container *ngIf="reviewStatus === 'reviewing'">
+  <ng-container *ngIf="reviewStatus === 'reviewing' && isCompare">
     <button nbButton status="primary" size="small" (click)="viewToggle()" *ngIf="!isBefore">查看異動前內容</button>
     <button nbButton status="primary" size="small" (click)="viewToggle()" *ngIf="isBefore">返回本次異動內容</button>
   </ng-container>
