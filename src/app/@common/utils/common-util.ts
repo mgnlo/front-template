@@ -168,14 +168,33 @@ export const CommonUtil = {
       });
     }
   },
-  /** 取得Grid單頁全選(刪除)功能
-   *  return 更新的 selectedRows 選取數組
+  /** 設定每頁全選暫存
+   *  取得 更新的 tempPageIsAllSelected 頁碼和是否勾選全選
+   *  @param tempPageIsAllSelected 暫存資料
+   *  @param pageNum 頁碼
+   *  @param isAllSelected 是否全選
+  */
+  onSetTempPageIsAllSelected(
+    tempPageIsAllSelected: Array<{ pageNum: number, val: boolean }>,
+    pageNum: number,
+    isAllSelected: boolean) {
+    const existingIndex = tempPageIsAllSelected.findIndex(item => item.pageNum === pageNum);
+
+    if (existingIndex === -1) {
+      tempPageIsAllSelected.push({ pageNum: pageNum, val: isAllSelected });
+    } else {
+      tempPageIsAllSelected[existingIndex].val = isAllSelected;
+    }
+    return tempPageIsAllSelected;
+  },
+  /** 設定Grid單頁全選(刪除)功能
+   *  取得 更新的 selectedRows 選取數組
    *  @param idName 表單Id
    *  @param dataSource 表單來源
    *  @param selectedRows 選取數組
    *  @param isAllSelected 是否全選
   */
-  async getGridPageChecked(
+  async onSetGridPageChecked(
     idName: string,
     dataSource: LocalDataSource,
     selectedRows: Array<{ rowId: string }>,
@@ -185,7 +204,12 @@ export const CommonUtil = {
     }
 
     const filteredAndSortedData = await dataSource.getElements();
-    const selectedRowIds = new Set(selectedRows.map(selectedRow => selectedRow.rowId));
+
+    const selectedRowIds = new Set(
+      filteredAndSortedData
+        .filter(f => f?.isShow && f?.isSelected)
+        .map(selectedRow => selectedRow[idName])
+    );
 
     //有存在的id && 有顯示的Checkbox
     const filterSelectRow = row => row[idName] && row?.isShow;
