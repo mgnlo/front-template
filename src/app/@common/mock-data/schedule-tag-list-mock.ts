@@ -229,7 +229,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
     ]
   },
   {
-    "tagId": "cccccc123456",
+    "tagId": "cccccc1234567",
     "version": "uuid-cccc",
     "tagName": "標籤名稱",
     "tagDescription": "標籤說明",
@@ -302,7 +302,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
     ]
   },
   {
-    "tagId": "cccccc123456",
+    "tagId": "cccccc1234568",
     "version": "uuid-cccc",
     "tagName": "標籤名稱",
     "tagDescription": "標籤說明",
@@ -375,7 +375,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
     ]
   },
   {
-    "tagId": "cccccc123456",
+    "tagId": "cccccc1234569",
     "version": "uuid-cccc",
     "tagName": "標籤名稱",
     "tagDescription": "標籤說明",
@@ -448,7 +448,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
     ]
   },
   {
-    "tagId": "cccccc123456",
+    "tagId": "cccccc1234561",
     "version": "uuid-cccc",
     "tagName": "標籤名稱",
     "tagDescription": "標籤說明",
@@ -521,7 +521,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
     ]
   },
   {
-    "tagId": "cccccc123456",
+    "tagId": "cccccc1234562",
     "version": "uuid-cccc",
     "tagName": "標籤名稱",
     "tagDescription": "標籤說明",
@@ -594,7 +594,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
     ]
   },
   {
-    "tagId": "cccccc123456",
+    "tagId": "cccccc1234563",
     "version": "uuid-cccc",
     "tagName": "標籤名稱",
     "tagDescription": "標籤說明",
@@ -667,7 +667,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
     ]
   },
   {
-    "tagId": "cccccc123456",
+    "tagId": "cccccc1234564",
     "version": "uuid-cccc",
     "tagName": "標籤名稱",
     "tagDescription": "標籤說明",
@@ -740,7 +740,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
     ]
   },
   {
-    "tagId": "cccccc123456",
+    "tagId": "cccccc1234565",
     "version": "uuid-cccc",
     "tagName": "標籤名稱",
     "tagDescription": "標籤說明",
@@ -814,7 +814,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
     ]
   },
   {
-    "tagId": "cccccc123456",
+    "tagId": "cccccc1234566",
     "version": "uuid-cccc",
     "tagName": "標籤名稱",
     "tagDescription": "標籤說明",
@@ -887,7 +887,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
     ]
   },
   {
-    "tagId": "cccccc123456",
+    "tagId": "cccccc123456555",
     "version": "uuid-cccc",
     "tagName": "標籤名稱",
     "tagDescription": "標籤說明",
@@ -960,7 +960,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
     ]
   },
   {
-    "tagId": "cccccc123456",
+    "tagId": "cccccc123456666",
     "version": "uuid-cccc",
     "tagName": "標籤名稱",
     "tagDescription": "標籤說明",
@@ -1033,7 +1033,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
     ]
   },
   {
-    "tagId": "cccccc123456",
+    "tagId": "cccccc123456777",
     "version": "uuid-cccc",
     "tagName": "標籤名稱",
     "tagDescription": "標籤說明",
@@ -1106,7 +1106,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
     ]
   },
   {
-    "tagId": "cccccc123456",
+    "tagId": "cccccc12345699",
     "version": "uuid-cccc",
     "tagName": "標籤名稱",
     "tagDescription": "標籤說明",
@@ -1179,7 +1179,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
     ]
   },
   {
-    "tagId": "cccccc123456",
+    "tagId": "cccccc12345688",
     "version": "uuid-cccc",
     "tagName": "標籤名稱",
     "tagDescription": "標籤說明",

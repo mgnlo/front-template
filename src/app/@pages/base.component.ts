@@ -42,7 +42,7 @@ export class BaseComponent implements OnDestroy {
     if (!!this.dataSource) {
       this.dataSource.onChanged().pipe(takeUntil(this.unsubscribe$), filter((val, i) => i === 0)).subscribe((event) => {
         //get session page
-        if(event.action === 'refresh'){
+        if (event.action === 'refresh') {
           let storage = this.storageService.getSessionVal(this.sessionKey);
           if (!!storage?.page) {
             this.dataSource.setPage(storage.page, true);
@@ -63,6 +63,21 @@ export class BaseComponent implements OnDestroy {
     Object.keys(this.validateForm.controls).filter(ctl => this.validateForm.get(ctl).invalid).forEach(ctl => {
       console.info(ctl + ' is invalid, value:', this.validateForm.get(ctl).errors);
     })
+  }
+
+  /** 設定暫存資料
+   *  @param sessionData 存入Json資料
+  */
+  setSessionVal(sessionData: {}) {
+    this.storageService.putSessionVal(this.sessionKey, sessionData);
+  }
+
+  /** 取得暫存並設定頁面 */
+  getSessionSetPage() {
+    let storage = this.storageService.getSessionVal(this.sessionKey);
+    if (!!storage?.page) {
+      this.dataSource.setPage(storage.page, true);
+    }
   }
 
   //檢查檢核

@@ -10,7 +10,6 @@ import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/che
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
-import { Grid } from 'ng2-smart-table/lib/lib/grid';
 
 @Component({
   selector: 'schedule-tag-detail',
@@ -79,7 +78,7 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
         width: '25%',
         valuePrepareFunction: (cell: string) => {
           const datepipe: DatePipe = new DatePipe('en-US');
-          return `<p class="left">${datepipe.transform(cell,"yyyy-MM-dd HH:mm:ss")}</p>`;
+          return `<p class="left">${datepipe.transform(cell, "yyyy-MM-dd HH:mm:ss")}</p>`;
         },
         sort: false,
       },
@@ -157,19 +156,14 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
     }
   }
 
-  setSessionVal() {
-    let sessionData = { page: this.paginator.nowPage };
-    this.storageService.putSessionVal(this.sessionKey, sessionData);
-  }
-
   ngOnDestroy(): void {
-    this.setSessionVal();
+    this.setSessionVal({ page: this.paginator.nowPage });
   }
 
   setGridDefineInit() {
     this.selectedRows = new Array;
     this.isAllSelected = false;
-    this.setSessionVal();
+    this.setSessionVal({ page: this.paginator.nowPage });
 
     if (!!this?.gridDefine?.columns?.['isChecked']) {
       delete this.gridDefine.columns['isChecked'];
@@ -212,35 +206,26 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
 
     this.ng2SmartTable.initGrid();
 
-    //設定切換頁面
-    let storage = this.storageService.getSessionVal(this.sessionKey);
-    if (!!storage?.page) {
-      this.dataSource.setPage(storage.page, true);
-    }
+    this.getSessionSetPage()
   }
 
-  onSelectAllChange() {
+  onPageChange(event: any) {
+    // 在控制台输出调试信息，确保事件正常触发
+    console.log('onPageChange event:', event);
+  }
+
+  async onSelectAllChange() {
     this.isAllSelected = !this.isAllSelected;
-    const idName = 'tagId'
-console.info('this.dataSource',this.dataSource.getElements())
-    if (this.dataSource instanceof LocalDataSource) {
-      this.dataSource.getElements().then((filteredAndSortedData) => {
-        if (this.isAllSelected) {
-          filteredAndSortedData.forEach((row) => {
-            const rowId = row[idName];
-            if (rowId && !this.selectedRows.some((selectedRow) => selectedRow.rowId === rowId)) {
-              this.selectedRows.push({ rowId: rowId });
-            }
-          });
-        } else {
-          filteredAndSortedData.forEach((row) => {
-            const rowId = row[idName];
-            this.selectedRows = this.selectedRows.filter((selectedRow) => selectedRow.rowId !== rowId);
-          });
-        }
-      });
-      this.ng2SmartTable.initGrid();
-    }
+    this.setSessionVal({ page: this.paginator.nowPage });
+
+    const updatedSelectedRows = await CommonUtil.getGridPageChecked('tagId', this.dataSource, this.selectedRows, this.isAllSelected);
+
+    this.selectedRows = updatedSelectedRows;
+
+    this.ng2SmartTable.initGrid();
+
+    this.getSessionSetPage()
+
   }
 
   submitRefresh() {

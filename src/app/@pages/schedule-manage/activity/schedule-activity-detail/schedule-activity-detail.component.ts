@@ -140,19 +140,13 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     this.restDataSource = this.tableService.searchData(searchInfo)
   }
 
-  setSessionVal() {
-    let sessionData = { page: this.paginator.nowPage };
-    this.storageService.putSessionVal(this.sessionKey, sessionData);
-  }
-
   ngOnDestroy(): void {
-    this.setSessionVal();
+    this.setSessionVal({ page: this.paginator.nowPage });
   }
 
   setGridDefineInit() {
     this.selectedRows = new Array;
     this.isAllSelected = false;
-    this.setSessionVal();
 
     if (!!this?.gridDefine?.columns?.['isChecked']) {
       delete this.gridDefine.columns['isChecked'];
@@ -195,11 +189,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
 
     this.ng2SmartTable.initGrid();
 
-    //設定切換頁面
-    let storage = this.storageService.getSessionVal(this.sessionKey);
-    if (!!storage?.page) {
-      this.restDataSource.setPage(storage.page, true);
-    }
+    this.getSessionSetPage()
   }
 
   onSelectAllChange() {
