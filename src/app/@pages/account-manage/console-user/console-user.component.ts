@@ -139,7 +139,7 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
       }),
     });
 
-    if(!this.loginService.checkScope("console-user.update")) {
+    if (!this.loginService.checkScope("console-user.update")) {
       delete this.gridDefine.columns.action;
     }
   }
@@ -176,61 +176,60 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.queryAllConsoleGroup();
-    this.queryAllConsoleUser();
     this.dataSource = new LocalDataSource();
-    this.dataSource.load(this.consoleUserList);
+    // 初始化的時候，ConsoleUser 查詢需要等 ConsoleGroup 完成，不然會有 race condition
+    this.queryAllConsoleGroup();
   }
 
   search() {
     if (!this.consoleUserForm.invalid) {
       let rqData: ConsoleUserReq = {};
       let isQueryAll = true;
-      let busineeUnit = "";
+      let businessUnit = "";
 
-      if(this.account) {
+      if (this.account) {
         isQueryAll = false;
         rqData['account'] = this.account;
       }
-        
-      if(this.name) {
+
+      if (this.name) {
         isQueryAll = false;
-        rqData['name'] = this.account;
+        rqData['name'] = this.name;
       }
 
-      if(this.email)  {
+      if (this.email) {
         isQueryAll = false;
         rqData['email'] = this.email;
       }
 
       if (this.digitalFinancialSelect) {
-        busineeUnit += "Digital_Financial";
+        businessUnit += "Digital_Financial";
       }
 
       if (this.consumerFinanceSelect) {
-        busineeUnit += (busineeUnit.length > 0 ? "," : "") + "Consumer_Finance";
+        businessUnit += (businessUnit.length > 0 ? "," : "") + "Consumer_Finance";
       }
 
       if (this.wealthManagementSelect) {
-        busineeUnit += (busineeUnit.length > 0 ? "," : "") + "Wealth_Management";
+        businessUnit += (businessUnit.length > 0 ? "," : "") + "Wealth_Management";
       }
 
       if (this.creditCardsSelect) {
-        busineeUnit += (busineeUnit.length > 0 ? "," : "") + "Credit_Cards";
+        businessUnit += (businessUnit.length > 0 ? "," : "") + "Credit_Cards";
       }
 
-      if(busineeUnit.length > 0) {
+      if (businessUnit.length > 0) {
         isQueryAll = false;
-        rqData['busineeUnit'] = busineeUnit;
+        rqData['businessUnit'] = businessUnit;
       }
 
-      if(this.groupId.length > 0) {
+      if (this.groupId.length > 0) {
         isQueryAll = false;
         rqData['groupId'] = this.groupId;
       }
 
       // 這邊要判斷發送 6.1 or 6.2 電文去查詢
-      if(isQueryAll){
+      if (isQueryAll) {
         this.queryAllConsoleUser();
       } else {
         this.queryConsoleUserByParam(rqData);
@@ -243,6 +242,7 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
   }
 
   queryAllConsoleGroup() {
+    this.loadingService.open();
     this.accountManageService.getConsoleGroupList().pipe(
       catchError((err) => {
         this.loadingService.close();
@@ -254,14 +254,13 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
       })).subscribe(res => {
         if (res.code === RestStatus.SUCCESS) {
           this.consoleGroupList = res.result;
+          this.queryAllConsoleUser();
         }
       });
-
-    // 主機串接後，底下要拿掉
-    this.consoleGroupList = ConsoleGroupListMock;
   }
 
   queryAllConsoleUser() {
+    this.loadingService.open();
     this.accountManageService.getAllConsoleUser().pipe(
       catchError((err) => {
         this.loadingService.close();
@@ -273,14 +272,13 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
       })).subscribe(res => {
         if (res.code === RestStatus.SUCCESS) {
           this.consoleUserList = res.result;
+          this.dataSource.load(this.consoleUserList);
         }
       });
-
-    // 主機串接後，底下要拿掉
-    this.consoleUserList = ConsoleUserListMock;
   }
 
-  queryConsoleUserByParam(rqData: ConsoleUserReq) {    
+  queryConsoleUserByParam(rqData: ConsoleUserReq) {
+    this.loadingService.open();
     this.accountManageService.getConsoleUser(rqData).pipe(
       catchError((err) => {
         this.loadingService.close();
@@ -292,11 +290,9 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
       })).subscribe(res => {
         if (res.code === RestStatus.SUCCESS) {
           this.consoleUserList = res.result;
+          this.dataSource.load(this.consoleUserList);
         }
       });
-
-    // 主機串接後，底下要拿掉
-    this.consoleUserList = ConsoleUserListMock;
   }
 
   reset() {

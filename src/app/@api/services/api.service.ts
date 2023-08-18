@@ -26,7 +26,8 @@ export class ApiService {
       //   Authorization: '',
     },
   };
-  private prefixUrl = environment.SERVER_URL + environment.API_URL;
+  // private prefixUrl = environment.SERVER_URL + environment.API_URL;
+  private prefixUrl = "http://console-api-webcomm-c360.apps.ocp.webcomm.com.tw/api/";  
 
   constructor(
     private http: HttpClient,

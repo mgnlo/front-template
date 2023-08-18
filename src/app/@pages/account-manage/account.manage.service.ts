@@ -84,13 +84,13 @@ export class AccountManageService {
     // 6.2 搜尋使用者：GET /api/console-user?filterField=filterValue
     // List<ConsoleUser> with ConsoleGroup
     getConsoleUser(reqData: ConsoleUserReq): Observable<ResponseModel<Array<ConsoleUser>>> {
-        return this.service.doGet(this.consoleGroupFunc, reqData);
+        return this.service.doGet(this.consoleUserFunc, reqData);
     }
 
-    // 6.6 更新使用者：PUT /api/console-user/{userId}
+    // 6.7 更新使用者：PUT /api/console-user/{userId}
     // reqBody ConsoleUser with ConsoleGroup
     updateConsoleUser(userId: string, reqData: ConsoleUser): Observable<ResponseModel<any>> {
-        return this.service.doPut(this.consoleGroupFunc + userId, reqData);
+        return this.service.doPut(this.consoleUserFunc + userId, reqData);
     }
 
     // 7.1 取得所有群組：GET /api/console-group     

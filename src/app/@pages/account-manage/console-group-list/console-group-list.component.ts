@@ -96,6 +96,7 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
       });
     } else {
       // 這邊要發查電文 6.1 取得 ConsoleGroupList 內容
+      this.loadingService.open();
       this.accountManageService.getConsoleGroupList().pipe(
         catchError((err) => {
           this.loadingService.close();
@@ -111,13 +112,6 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
             document.querySelector("nb-layout-column").scrollTo(0, 0);
           }
         });
-
-      // mock data,正式串接後要拿掉
-      {
-        this.consoleGroupList = ConsoleGroupListMock;
-        this.dataSource.load(this.consoleGroupList);
-        document.querySelector("nb-layout-column").scrollTo(0, 0);
-      }
     }
   }
 
@@ -162,6 +156,7 @@ export class ConsoleGroupButtonComponent implements OnInit {
 
   seeDetail() {
     // 這邊要發查電文 7.2 取得 ConsoleGroup with ConsoleGroupScope with ConsoleUser 內容
+    this.loadingService.open();
     this.accountManageService.getConsoleGroup(this.value[0].groupId).pipe(
       catchError((err) => {
         this.loadingService.close();
@@ -175,8 +170,6 @@ export class ConsoleGroupButtonComponent implements OnInit {
           this.navigateToDetailPage(res.result);
         }
       });
-    // 未跟主機串接前，執行底下的 mock data,正式串接後要拿掉
-    this.navigateToDetailPage(ConsoleGroupDetailMock);
   }
 
   navigateToDetailPage(resData: ConsoleGroup) {

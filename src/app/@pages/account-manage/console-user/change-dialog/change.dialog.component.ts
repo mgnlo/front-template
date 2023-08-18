@@ -39,7 +39,7 @@ export class ChangeDialogComponent implements OnInit {
   }
 
   save() {
-    // 需要發送 6.6 電文進行更新
+    // 需要發送 6.7 電文進行更新
     this.consoleUserJson.consoleGroup.groupId = this.groupId;
     this.consoleGroupListJson.filter((consoleGroup: ConsoleGroup) => {
       if(consoleGroup.groupId == this.groupId){
@@ -60,9 +60,6 @@ export class ChangeDialogComponent implements OnInit {
           this.ref.close(this.consoleUserJson);
         }
       });
-
-    // 成功後需要通知主畫面異動成功，電文串接後底下刪除
-    this.ref.close(this.consoleUserJson);
   }
 
   close() {

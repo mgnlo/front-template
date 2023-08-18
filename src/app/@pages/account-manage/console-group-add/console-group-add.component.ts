@@ -207,13 +207,6 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
             });
           }
         });
-
-      // 主機串接後，底下要拿掉
-      this.router.navigate(this.accountManageService.CONSOLE_GROUP_LIST_PATH).then((res) => {
-        if (res) {
-          window.history.replaceState({}, '', this.router.url.split("?")[0]);
-        };
-      });
     } else {
       for (const control of Object.keys(this.consoleGroupAddForm.controls)) {
         this.consoleGroupAddForm.controls[control].markAsTouched();
