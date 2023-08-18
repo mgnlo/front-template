@@ -104,7 +104,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
       action: {
         title: '查看',
         type: 'custom',
-        width: '1%',
+        width: '5%',
         renderComponent: ColumnButtonComponent,
         onComponentInitFunction: (instance: ColumnButtonComponent) => {
           instance.emitter.subscribe((res: Schedule_Batch_History) => {
@@ -180,7 +180,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         action: {
           title: '查看',
           type: 'custom',
-          width: '1%',
+          width: '5%',
           renderComponent: ColumnButtonComponent,
           onComponentInitFunction: (instance: ColumnButtonComponent) => {
             instance.emitter.subscribe((res: Schedule_Batch_History) => {
