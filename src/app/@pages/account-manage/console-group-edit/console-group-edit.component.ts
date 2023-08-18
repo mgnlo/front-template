@@ -140,7 +140,7 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
     },
     delete: {
       confirmDelete: true,
-      deleteButtonContent: '<img width="21px" src="assets/images/icon-delete-hover.svg" alt="">'
+      deleteButtonContent: '<i class="actionIcon delete"></i>'
     }
   };
 

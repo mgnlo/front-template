@@ -6,6 +6,7 @@ import { Paginator } from '@component/table/paginator/paginator.component';
 import { LocalDataSource } from 'ng2-smart-table';
 // import { OAuth2BaseComponent, OAuth2Service } from '@module/oauth2';
 import { Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
 
 @Injectable()
 export class BaseComponent implements OnDestroy {
@@ -28,18 +29,56 @@ export class BaseComponent implements OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  ngDoCheck() {
+  ngAfterViewInit() {
 
   }
 
-  ngAfterViewInit() {
+  ngDoCheck() {
+    //this.updatePageInfo();
+  }
 
+  //盡量不要用這個
+  updatePageInfo() {
+    if (!!this.dataSource) {
+      this.dataSource.onChanged().pipe(takeUntil(this.unsubscribe$), filter((val, i) => i === 0)).subscribe((event) => {
+        //get session page
+        if (event.action === 'refresh') {
+          let storage = this.storageService.getSessionVal(this.sessionKey);
+          if (!!storage?.page) {
+            this.dataSource.setPage(storage.page, true);
+          }
+        }
+        this.paginator.totalCount = this.dataSource.count();
+        let page = this.dataSource.getPaging().page;
+        let perPage = this.dataSource.getPaging().perPage;
+        this.paginator.nowPage = page;
+        this.paginator.totalPage = Math.ceil(this.paginator.totalCount / perPage);
+        this.paginator.rowStart = (page - 1) * perPage + 1;
+        this.paginator.rowEnd = this.paginator.rowStart + (perPage - 1);
+      });
+    }
   }
 
   getInvalidControls() {
     Object.keys(this.validateForm.controls).filter(ctl => this.validateForm.get(ctl).invalid).forEach(ctl => {
       console.info(ctl + ' is invalid, value:', this.validateForm.get(ctl).errors);
     })
+  }
+
+  /** 設定暫存資料
+   *  @param sessionData 存入Json資料
+  */
+  setSessionVal(sessionData: {}) {
+    this.storageService.putSessionVal(this.sessionKey, sessionData);
+  }
+
+  /** 取得暫存並設定頁面 */
+  getSessionSetPage() {
+    let storage = this.storageService.getSessionVal(this.sessionKey);
+    if (!!storage?.page) {
+      this.dataSource?.setPage(storage.page, true);
+      this.restDataSource?.setPage(storage.page, true);
+    }
   }
 
   //檢查檢核

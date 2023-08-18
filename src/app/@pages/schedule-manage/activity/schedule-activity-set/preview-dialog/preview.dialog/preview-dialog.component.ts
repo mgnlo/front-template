@@ -37,7 +37,7 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
 
   //塞選邏輯
   activityFilter(value: string): Array<{ key: string; val: string }> {
-    const filterValue = value.toLowerCase();
+    const filterValue = value?.toLowerCase();
     if (CommonUtil.isBlank(filterValue)) return this.dataList;
     return this.dataList.filter((f) => {
       return f.val?.toLowerCase()?.includes(filterValue);

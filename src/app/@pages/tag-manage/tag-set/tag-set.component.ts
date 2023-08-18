@@ -409,7 +409,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     }
 
     // 驗證檔案格式
-    const fileExt = file.name.split('.').pop().toLowerCase();
+    const fileExt = file.name.split('.').pop()?.toLowerCase();
     if (!this.passFileArray.includes(fileExt)) {
       return { uploadFileMsg: '檔案格式錯誤' };
     }

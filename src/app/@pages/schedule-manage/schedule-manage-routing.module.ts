@@ -19,7 +19,7 @@ const routes: Routes = [
       { path: 'schedule-activity-detail/:scheduleId', component: ScheduleDetailComponent, data: {keepSession: true}},
       { path: 'schedule-activity-set', component: ScheduleAddComponent },
       { path: 'schedule-activity-set/:changeRoute/:scheduleId', component: ScheduleAddComponent}, //編輯
-      { path: 'schedule-activity-export-detail/:scheduleId/:activityId', component: ActivityExportDetailComponent, data: {keepSession: true}}, //名單查看
+      { path: 'schedule-activity-export-detail/:scheduleId/:referenceId', component: ActivityExportDetailComponent, data: {keepSession: true}}, //名單查看
 
       //標籤列表
       { path: "schedule-tag-detail", component: ScheduleTagDetailComponent, data: {keepSession: true}},

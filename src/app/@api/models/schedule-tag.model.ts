@@ -14,16 +14,34 @@ export interface ScheduleTagSetting {
   conditionSettingMethod: string;
   conditionSettingQuery: string;
   tagDimension: string;
-  tagSubdimension: string;
+  tagSubDimension: string;
   scheduleSettings: string;
   uploadType: string;
   filePath: string;
+  fileName: string;
+  fileData: string;
+  tagConditionSetting: Array<TagConditionSetting>;
   scheduleBatchHistory: Array<ScheduleBatchHistory>;
+}
+
+export class TagConditionSetting {
+  tagId: string;
+  conditionId: string;
+  version: string;
+  groupId: number
+  detectionCondition: string;
+  conditionValue: string;
+  thresholdValue: string;
+  joinValue?: string;
+
+  constructor(data: Partial<TagConditionSetting>) {
+    Object.assign(this, data);
+  }
 }
 
 export class ScheduleBatchHistory {
   historyId: string;
-  tagId: string;
+  referenceId: string;
   version: string;
   batchTime: string;
   batchResult: string;
@@ -47,7 +65,7 @@ export class ScheduleTagSettingView{
   conditionSettingMethod: string;
   conditionSettingQuery: string;
   tagDimension: string;
-  tagSubdimension: string;
+  tagSubDimension: string;
   scheduleSettings: string;
   uploadType: string;
   filePath: string;

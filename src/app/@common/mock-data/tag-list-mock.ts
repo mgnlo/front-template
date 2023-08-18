@@ -26,6 +26,7 @@ export const TagSettingMock: Array<TagSetting> = [
       {
         "tagId": "cccccc123456",
         "conditionId": "condition-key-1",
+        "version": "uuid-zzzz",
         "groupId": 1,
         "detectionCondition": "偵測條件1",
         "conditionValue": "條件值1",
@@ -35,6 +36,7 @@ export const TagSettingMock: Array<TagSetting> = [
       {
         "tagId": "cccccc123456",
         "conditionId": "condition-key-2",
+        "version": "uuid-zzzz",
         "groupId": 1,
         "detectionCondition": "偵測條件2",
         "conditionValue": "條件值2",
@@ -44,6 +46,7 @@ export const TagSettingMock: Array<TagSetting> = [
       {
         "tagId": "cccccc123456",
         "conditionId": "condition-key-3",
+        "version": "uuid-zzzz",
         "groupId": 2,
         "detectionCondition": "偵測條件3",
         "conditionValue": "條件值3",
@@ -141,6 +144,7 @@ export const TagSettingMock: Array<TagSetting> = [
       {
         "tagId": "cccccc123456",
         "conditionId": "condition-key-1",
+        "version": "uuid-zzzz",
         "groupId": 1,
         "detectionCondition": "偵測條件1",
         "conditionValue": "條件值1",
@@ -149,6 +153,7 @@ export const TagSettingMock: Array<TagSetting> = [
       {
         "tagId": "cccccc123456",
         "conditionId": "condition-key-2",
+        "version": "uuid-zzzz",
         "groupId": 1,
         "detectionCondition": "偵測條件2",
         "conditionValue": "條件值2",
@@ -157,6 +162,7 @@ export const TagSettingMock: Array<TagSetting> = [
       {
         "tagId": "cccccc123456",
         "conditionId": "condition-key-3",
+        "version": "uuid-zzzz",
         "groupId": 2,
         "detectionCondition": "偵測條件3",
         "conditionValue": "條件值3",

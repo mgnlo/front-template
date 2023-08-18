@@ -1,26 +1,53 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'checkbox-column',
   template: `
-    <nb-checkbox *ngIf="isShow" status="info" [checked]="isChecked"></nb-checkbox>
+    <nb-checkbox *ngIf="showCheckbox()" status="info" [checked]="settings?.isChecked" (change)="onCheckboxChange()"></nb-checkbox>
   `,
 })
 export class CheckboxColumnComponent {
-  @Input() isShow: boolean;
-  @Input() isChecked: boolean;
-  @Input() value: any;
+  @Input() settings: {
+    isChecked?: boolean;
+    isShowParam?: { key: string; answer: string[] };
+    isCheckedParam?: { key: string };
+    rowIdName?: string;
+    selectedRows?: any[];
+  };
+  @Input() rowData: any;
+  @Output() emitter = new EventEmitter();
 
   ngOnInit() {
-    //console.info('this.value', this.value)
-    const row = this.value?.row;
+    this.initializeCheckboxState();
+  }
 
-    const isShowParam = this.value?.isShowParam;
-    this.isShow = isShowParam?.answer && row?.[isShowParam?.key] &&
-      isShowParam?.answer?.some(answer => answer?.toLowerCase() === row?.[isShowParam?.key]?.toLowerCase()) ? true : false;
+  showCheckbox(): boolean {
+    const isShowParam = this.settings?.isShowParam;//是否要顯示CheckBox框
+    const isShow = isShowParam?.answer && isShowParam.answer.some(answer => answer?.toLowerCase() === this.rowData[isShowParam.key]?.toLowerCase());
+    this.rowData['isShow'] = isShow;
+    return isShow;
+  }
 
-    const isCheckedParam = this.value?.isCheckedParam;
-    this.isChecked = isCheckedParam?.key && row?.[isCheckedParam?.key] ? true : false;
+  initializeCheckboxState() {
+    const isCheckedParam = this.settings?.isCheckedParam;//是顯示勾選
+    const selectedRows = this.settings?.selectedRows;//顯示暫存被勾選項目
+    const rowIdName = this.settings?.rowIdName;//Id名稱
+
+
+    if (isCheckedParam?.key) {
+      this.settings.isChecked = !!this.rowData[isCheckedParam.key];
+    }
+
+    if (selectedRows?.length > 0 && selectedRows.find(f => f.rowId === this.rowData[rowIdName])) {
+      this.settings.isChecked = true;
+    }
+
+    this.rowData['isSelected'] = this.settings?.isChecked;
+  }
+
+  onCheckboxChange() {
+    this.rowData['isSelected'] = !this.rowData['isSelected'];
+
+    this.emitter.emit(this.rowData);
   }
 }
-

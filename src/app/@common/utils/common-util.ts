@@ -1,6 +1,7 @@
 import { FormArray, FormGroup, ValidationErrors } from '@angular/forms';
 import * as moment from 'moment';
 import { Moment } from 'moment';
+import { LocalDataSource } from 'ng2-smart-table';
 
 export const CommonUtil = {
   /** 檔案轉Base64*/
@@ -153,7 +154,10 @@ export const CommonUtil = {
       return { key: key, value: value };
     });
   },
-  /** 暫存自動塞入表單*/
+  /** 暫存自動塞入表單
+   * @param validateForm FormGroup
+   * @param getSessionVal 暫存資料
+  */
   initializeFormWithSessionData(validateForm: any, getSessionVal: any) {
     if (!!getSessionVal?.filter) {
       Object.keys(getSessionVal.filter).forEach(key => {
@@ -164,4 +168,65 @@ export const CommonUtil = {
       });
     }
   },
+  /** 設定每頁全選暫存
+   *  取得 更新的 tempPageIsAllSelected 頁碼和是否勾選全選
+   *  @param tempPageIsAllSelected 暫存資料
+   *  @param pageNum 頁碼
+   *  @param isAllSelected 是否全選
+  */
+  onSetTempPageIsAllSelected(
+    tempPageIsAllSelected: Array<{ pageNum: number, val: boolean }>,
+    pageNum: number,
+    isAllSelected: boolean) {
+    const existingIndex = tempPageIsAllSelected.findIndex(item => item.pageNum === pageNum);
+
+    if (existingIndex === -1) {
+      tempPageIsAllSelected.push({ pageNum: pageNum, val: isAllSelected });
+    } else {
+      tempPageIsAllSelected[existingIndex].val = isAllSelected;
+    }
+    return tempPageIsAllSelected;
+  },
+  /** 設定Grid單頁全選(刪除)功能
+   *  取得 更新的 selectedRows 選取數組
+   *  @param idName 表單Id
+   *  @param dataSource 表單來源
+   *  @param selectedRows 選取數組
+   *  @param isAllSelected 是否全選
+  */
+  async onSetGridPageChecked(
+    idName: string,
+    dataSource: LocalDataSource,
+    selectedRows: Array<{ rowId: string }>,
+    isAllSelected: boolean) {
+    if (!(dataSource instanceof LocalDataSource)) {
+      return new Array;
+    }
+
+    const filteredAndSortedData = await dataSource.getElements();
+
+    const selectedRowIds = new Set(
+      filteredAndSortedData
+        .filter(f => f?.isShow && f?.isSelected)
+        .map(selectedRow => selectedRow[idName])
+    );
+
+    //有存在的id && 有顯示的Checkbox
+    const filterSelectRow = row => row[idName] && row?.isShow;
+
+    if (isAllSelected) {
+      filteredAndSortedData
+        .filter(filterSelectRow)
+        .forEach(row => {
+          const rowId = row[idName];
+          if (!selectedRowIds.has(rowId)) {
+            selectedRows.push({ rowId });
+          }
+        });
+    } else {
+      selectedRows = selectedRows.filter(selectedRow => !selectedRowIds.has(selectedRow.rowId));
+    }
+
+    return selectedRows;
+  }
 }; // End

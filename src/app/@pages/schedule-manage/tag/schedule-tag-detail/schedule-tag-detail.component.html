@@ -15,7 +15,7 @@
         </div>
         <div class="tableContainer">
           <div class="selectAll" *ngIf="this?.gridDefine?.columns?.['isChecked']">
-              <nb-checkbox status="info" [checked]="isAllSelected"></nb-checkbox>
+              <nb-checkbox status="info" [checked]="isAllSelected" (change)="onSelectAllChange(true)"></nb-checkbox>
           </div>
           <ng2-smart-table #ng2SmartTable [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
           <paginator [source]="dataSource" [paginator]="paginator"></paginator>
