@@ -152,11 +152,7 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
   }
 
   ngAfterViewInit(): void {
-    //get session page
-    let storage = this.storageService.getSessionVal(this.sessionKey);
-    if (!!storage?.page) {
-      this.dataSource.setPage(storage.page);
-    }
+    this.getSessionSetPage();
   }
 
   ngOnDestroy(): void {
@@ -227,7 +223,6 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
               isShowParam: { key: 'status', answer: ['enabled', 'reviewing'] },
               rowIdName: 'tagId',
               selectedRows: this.selectedRows,
-              isCheckedParam: { key: 'isSelect' },
             };
 
             instance.emitter.subscribe((res) => {
@@ -290,7 +285,9 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
   }
 
   submitRefresh() {
+    const result = this.selectedRows.map(m => m.rowId);
     console.info('selectedRows', this.selectedRows);
+    console.info('result', result);
   }
 
 }

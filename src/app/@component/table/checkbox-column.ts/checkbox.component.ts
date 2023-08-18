@@ -23,7 +23,7 @@ export class CheckboxColumnComponent {
 
   showCheckbox(): boolean {
     const isShowParam = this.settings?.isShowParam;//是否要顯示CheckBox框
-    const isShow = isShowParam?.answer && isShowParam.answer.some(answer => answer.toLowerCase() === this.rowData[isShowParam.key]?.toLowerCase());
+    const isShow = isShowParam?.answer && isShowParam.answer.some(answer => answer?.toLowerCase() === this.rowData[isShowParam.key]?.toLowerCase());
     this.rowData['isShow'] = isShow;
     return isShow;
   }

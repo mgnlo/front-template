@@ -76,7 +76,8 @@ export class BaseComponent implements OnDestroy {
   getSessionSetPage() {
     let storage = this.storageService.getSessionVal(this.sessionKey);
     if (!!storage?.page) {
-      this.dataSource.setPage(storage.page, true);
+      this.dataSource?.setPage(storage.page, true);
+      this.restDataSource?.setPage(storage.page, true);
     }
   }
 

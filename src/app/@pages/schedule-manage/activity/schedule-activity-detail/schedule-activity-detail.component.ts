@@ -13,7 +13,7 @@ import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/che
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
-import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
+import { Ng2SmartTableComponent } from 'ng2-smart-table';
 import { catchError, filter, tap } from 'rxjs/operators';
 
 @Component({
@@ -27,9 +27,11 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   activitySetting: Array<ActivitySetting> = ScheduleActivitySettingMock[0].activitySetting;
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
   scheduleId: string;
-  selectedRows: Array<{ rowId: string }> = new Array;
 
   isAllSelected: boolean = false;
+  selectedRows: Array<{ rowId: string }> = new Array;
+  tempPageIsAllSelected: Array<{ pageNum: number, val: boolean }> = new Array;
+  previousPage: number; // 保存上一次頁碼
 
   @ViewChild(Ng2SmartTableComponent) ng2SmartTable: Ng2SmartTableComponent;
 
@@ -141,17 +143,58 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.setSessionVal({ page: this.paginator.nowPage });
+    this.setSessionVal(
+      {
+        page: this.paginator.nowPage,
+        isOpenCheckbox: this?.gridDefine?.columns?.['isChecked'] ? true : false,
+        isPageAllSelected: this.tempPageIsAllSelected,
+      });
+  }
+
+  ngDoCheck() {
+    if (this.ng2SmartTable) {
+      const currentPage = this.paginator.nowPage;
+
+      if (this.previousPage !== currentPage) {
+        this.previousPage = currentPage;
+
+        const getSession = this.storageService.getSessionVal(this.sessionKey);
+        if (getSession?.isOpenCheckbox && getSession?.isPageAllSelected?.find(f => f?.['pageNum'] === currentPage)) {
+          this.isAllSelected = getSession?.isPageAllSelected?.find(f => f?.['pageNum'] === currentPage)?.val
+          return
+        }
+        this.isAllSelected = false;
+
+      }
+    }
   }
 
   setGridDefineInit() {
     this.selectedRows = new Array;
     this.isAllSelected = false;
+    this.tempPageIsAllSelected = new Array;
 
     if (!!this?.gridDefine?.columns?.['isChecked']) {
       delete this.gridDefine.columns['isChecked'];
+      const newColumn = {
+        action: {
+          title: '查看',
+          type: 'custom',
+          width: '1%',
+          renderComponent: ColumnButtonComponent,
+          onComponentInitFunction: (instance: ColumnButtonComponent) => {
+            instance.emitter.subscribe((res: Schedule_Batch_History) => {
+              let passData: NavigationExtras = { state: res };
+              this.router.navigate(['pages', 'schedule-manage', 'schedule-activity-export-detail', this.scheduleId, res.activityId], passData);
+            })
+          },
+          sort: false,
+        },
+      }
+      this.gridDefine.columns = Object.assign(this.gridDefine.columns, newColumn);
     }
     else {
+      delete this.gridDefine.columns['action'];
       const newColumn = {
         isChecked: {
           title: '',
@@ -187,36 +230,51 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
       this.gridDefine.columns = Object.assign(newColumn, this.gridDefine.columns);
     }
 
+    this.setSessionVal(
+      {
+        page: this.paginator.nowPage,
+        isOpenCheckbox: this?.gridDefine?.columns?.['isChecked'] ? true : false,
+        isPageAllSelected: this.tempPageIsAllSelected,
+      });
+
     this.ng2SmartTable.initGrid();
 
     this.getSessionSetPage()
   }
 
-  onSelectAllChange() {
-    this.isAllSelected = !this.isAllSelected;
-    const idName = 'activityId'
-    if (this.restDataSource instanceof LocalDataSource) {
-      this.restDataSource.getElements().then((filteredAndSortedData) => {
-        if (this.isAllSelected) {
-          filteredAndSortedData.forEach((row) => {
-            const rowId = row[idName];
-            if (rowId && !this.selectedRows.some((selectedRow) => selectedRow.rowId === rowId)) {
-              this.selectedRows.push({ rowId: rowId });
-            }
-          });
-        } else {
-          filteredAndSortedData.forEach((row) => {
-            const rowId = row[idName];
-            this.selectedRows = this.selectedRows.filter((selectedRow) => selectedRow.rowId !== rowId);
-          });
-        }
-      });
-      this.ng2SmartTable.initGrid();
+  async onSelectAllChange(click?: boolean) {
+    const getSession = this.storageService.getSessionVal(this.sessionKey);
+    const isPageAllSelected = getSession?.isPageAllSelected || [];
+
+    const matchingPage = isPageAllSelected.find(f => f?.pageNum === this.paginator.nowPage);
+
+    if (!click && getSession?.isOpenCheckbox && matchingPage) {
+      this.isAllSelected = matchingPage.val;
+    } else {
+      this.isAllSelected = !this.isAllSelected;
     }
+
+    this.tempPageIsAllSelected = CommonUtil.onSetTempPageIsAllSelected(this.tempPageIsAllSelected, this.paginator.nowPage, this.isAllSelected)
+
+    this.setSessionVal(
+      {
+        page: this.paginator.nowPage,
+        isOpenCheckbox: this?.gridDefine?.columns?.['isChecked'] ? true : false,
+        isPageAllSelected: this.tempPageIsAllSelected,
+      });
+
+    this.selectedRows = await CommonUtil.onSetGridPageChecked('activityId', this.restDataSource, this.selectedRows, this.isAllSelected);
+
+    this.ng2SmartTable.initGrid();
+
+    this.getSessionSetPage()
+
   }
 
   submitRefresh() {
-    console.info('selectedRows', this.selectedRows)
+    const result = this.selectedRows.map(m => m.rowId);
+    console.info('selectedRows', this.selectedRows);
+    console.info('result', result);
   }
 
   edit() {

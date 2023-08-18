@@ -50,7 +50,7 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
         title: '名單數量',
         type: 'string',
         width: '15%',
-        valuePrepareFunction: (cell: string,  row: ScheduleActivitySetting) => {
+        valuePrepareFunction: (cell: string, row: ScheduleActivitySetting) => {
           return row.activitySetting.length;
         },
         sort: false
@@ -60,7 +60,7 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
         type: 'html',
         width: '25%',
         valuePrepareFunction: (cell: string, row: ScheduleActivitySetting) => {
-          return Frequency[cell.toLowerCase()]+" "+row.frequencyTime;
+          return Frequency[cell?.toLowerCase()] + " " + row.frequencyTime;
         },
         sort: false,
       },
@@ -79,7 +79,7 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
         type: 'string',
         width: '10%',
         valuePrepareFunction: (cell: string) => {
-          return Status[cell.toLowerCase()];
+          return Status[cell?.toLowerCase()];
         },
         sort: false,
       },
