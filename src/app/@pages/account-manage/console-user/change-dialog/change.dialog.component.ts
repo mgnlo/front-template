@@ -46,6 +46,7 @@ export class ChangeDialogComponent implements OnInit {
         this.consoleUserJson.consoleGroup = consoleGroup;
       }
     });
+    this.loadingService.open();
     this.accountManageService.updateConsoleUser(this.consoleUserJson.userId, this.consoleUserJson).pipe(
       catchError((err) => {
         this.loadingService.close();

@@ -101,7 +101,7 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
         renderComponent: ConsoleUserButtonComponent,
         onComponentInitFunction: (instance: any) => {
           instance.update.subscribe((updatedRow: ConsoleUser) => {
-            // Handle the save action here
+            // Handle the update 事件，進行後續更新成功後的程序，更新 table 內容
             const rowData = this.consoleUserList.find((row: any) => row.account === updatedRow.account);
 
             if (rowData) {
@@ -332,7 +332,7 @@ export class ConsoleUserButtonComponent implements OnInit {
 
     dialogRef.onClose.subscribe(res => {
       if (res) {
-        // 這邊收到異動成功的時候，是否重新電文？
+        // 這邊收到異動成功的時候，trigger update 事件
         this.update.emit(res);
       }
     });
