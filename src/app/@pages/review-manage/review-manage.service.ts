@@ -39,7 +39,7 @@ export class ReviewManageService {
         return this.service.doGet(this.scheduleReviewFunc + historyId + '/last-approved');
     }
 
-    updateScheduleReview(historyId: string, data: ScheduleReviewRowReq): Observable<ResponseModel<any>> {
+    updateScheduleReview(historyId: string, data: {reviewStatus: string, reviewComment?: string}): Observable<ResponseModel<any>> {
         return this.service.doPut(this.scheduleReviewFunc + historyId, data);
     }
 

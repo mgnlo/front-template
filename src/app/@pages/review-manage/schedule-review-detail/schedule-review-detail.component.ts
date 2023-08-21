@@ -63,7 +63,10 @@ export class ScheduleReviewDetailComponent extends BaseComponent implements OnIn
       this.reviewStatus = reviewData.result.reviewStatus;
       this.reviewComment = reviewData.result.reviewComment;
       this.isCompare = !!lastData.result ? true : false;
-      let newActivityList = reviewData.result.activitySetting.map(activity => { return { key: activity.activityId, value: activity.activityName } });
+      let newActivityList: {key: string, value: string}[] = [];
+      if(!!reviewData.result?.activitySetting){
+        newActivityList = reviewData.result.activitySetting.map(activity => { return { key: activity.activityId, value: activity.activityName } });
+      }
       const processedData = CommonUtil.getHistoryProcessData<ScheduleReviewHistory>('scheduleReviewHistory', reviewData.result as ScheduleReviewHistory);
       if (!!processedData) {
         this.isHistoryOpen = processedData.isHistoryOpen;
@@ -72,7 +75,10 @@ export class ScheduleReviewDetailComponent extends BaseComponent implements OnIn
       if (this.isCompare) {
         this.oldDetail = JSON.parse(JSON.stringify(lastData.result));
         this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
-        let oldActivityList = lastData.result.activitySetting.map(activity => { return { key: activity.activityId, value: activity.activityName } })
+        let oldActivityList: {key: string, value: string}[] = [];
+        if(!!lastData.result?.activitySetting){
+          oldActivityList = lastData.result.activitySetting.map(activity => { return { key: activity.activityId, value: activity.activityName } })
+        }
         let allActivityList = newActivityList.concat(oldActivityList.filter(oldActivity => !newActivityList.find(newActivity => newActivity.key == oldActivity.key)));
         allActivityList.forEach(activity => {
           let activityId = activity.key;
@@ -111,11 +117,31 @@ export class ScheduleReviewDetailComponent extends BaseComponent implements OnIn
   }
 
   approve() {
-    this.dialogService.openApprove({ bool: true, backTo: 'schedule-review-list' });
+    this.reviewManageService.updateScheduleReview(this.historyId, { reviewStatus: 'approved' }).pipe(
+      filter(res => res.code === RestStatus.SUCCESS),
+      catchError(err => {
+        this.loadingService.close();
+        this.dialogService.alertAndBackToList(false, err);
+        throw new Error(err.message);
+      }),
+      takeUntil(this.unsubscribe$),
+    ).subscribe(res => {
+      this.dialogService.openApprove({ bool: true, backTo: 'schedule-review-list' });
+    });
   }
 
   reject() {
-    this.dialogService.openReject({ title: '名單排程異動駁回說明', backTo: 'schedule-review-list' });
+    this.reviewManageService.updateScheduleReview(this.historyId, { reviewStatus: 'rejected' }).pipe(
+      filter(res => res.code === RestStatus.SUCCESS),
+      catchError(err => {
+        this.loadingService.close();
+        this.dialogService.alertAndBackToList(false, err);
+        throw new Error(err.message);
+      }),
+      takeUntil(this.unsubscribe$),
+    ).subscribe(res => {
+      this.dialogService.openReject({ title: '名單排程異動駁回說明', backTo: 'schedule-review-list' })
+    });
   }
 
   cancel() {

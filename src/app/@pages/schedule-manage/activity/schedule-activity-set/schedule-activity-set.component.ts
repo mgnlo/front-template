@@ -319,7 +319,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       this.scheduleManageService.createScheduleActivitySetting(reqData).pipe(
         catchError((err) => {
           this.loadingService.close();
-          this.dialogService.alertAndBackToList(false, err.message, ['pages', 'schedule-manage', 'schedule-activity-list']);
+          this.dialogService.alertAndBackToList(false, err.message);
           throw new Error(err.message);
         }),
         tap(res => {
@@ -335,7 +335,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       this.scheduleManageService.updateScheduleActivitySetting(this.scheduleId, reqData).pipe(
         catchError((err) => {
           this.loadingService.close();
-          this.dialogService.alertAndBackToList(false, err.message, ['pages', 'schedule-manage', 'schedule-activity-list']);
+          this.dialogService.alertAndBackToList(false, err.message);
           throw new Error(err.message);
         }),
         tap(res => {
