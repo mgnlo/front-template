@@ -2,12 +2,14 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TagReviewHistory, TagSetting } from '@api/models/tag-manage.model';
+import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
 import { ReviewStatus } from '@common/enums/review-enum';
 import { TagType } from '@common/enums/tag-enum';
 import { TagReviewListMock } from '@common/mock-data/tag-review-mock';
+import { CommonUtil } from '@common/utils/common-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { NbDateService } from '@nebular/theme';
@@ -24,10 +26,9 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
 
   constructor(
     storageService: StorageService,
-    private dateService: NbDateService<Date>,
     private activatedRoute: ActivatedRoute,
-    private cdr: ChangeDetectorRef,
     private reviewManageService: ReviewManageService,
+    private tableService: Ng2SmartTableService,
   ) {
     super(storageService);
     // 篩選條件
@@ -42,25 +43,22 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
   statusList: Array<{ key: string; val: string }> = Object.entries(ReviewStatus).map(([k, v]) => ({ key: k, val: v }))
   selected: string = '';
   mockData: Array<TagReviewHistory> = TagReviewListMock;
-  sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
+  sessionKey: string = this.activatedRoute.snapshot.routeConfig.path; 
+  isSearch: Boolean = false;
 
   ngOnInit(): void {
-    this.dataSource = new LocalDataSource();
-    this.dataSource.load(this.mockData);
-    //get session filter
-    this.storageService.getSessionFilter(this.sessionKey, this.validateForm).subscribe((res) => {
-      if (res === true) { this.search(); }
-    });
-
-    this.reviewManageService.getTagReviewList().subscribe((res) => {
-      if(res.code === RestStatus.SUCCESS){
-        console.info(res.message);
-      }
-    })
+    this.search();
   }
 
   ngOnDestroy(): void {
-    let sessionData = {page: this.paginator.nowPage, filter: this.validateForm.getRawValue()};
+    this.setSessionData();
+  }
+
+  setSessionData() {
+    const filterVal = this.isSearch ? this.validateForm.getRawValue() :
+      this.storageService.getSessionVal(this.sessionKey)?.filter ?? this.validateForm.getRawValue();
+
+    const sessionData = { page: this.paginator.nowPage, filter: filterVal };
     this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
 
@@ -151,22 +149,36 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
   };
 
   reset() {
-    this.dataSource.reset();
     this.validateForm.reset({ tagName: '', reviewStatus: '', startDate: null, endDate: null });
+    this.isSearch = true;
+    this.setSessionData();
+    this.search('reset');
   }
 
-  search() {
-    this.dataSource.reset();
-    let filter = this.validateForm.getRawValue();
-    //search modificationTime
-    let sDate = filter.startDate !== null ? this.dateService.format(filter.startDate, this.dateFormat) : null;
-    let eDate = filter.endDate !== null ? this.dateService.format(filter.endDate, this.dateFormat) : null;
-    if(!!sDate || !!eDate){
-      this.dataSource.addFilter({ field: 'modificationTime', filter: undefined, search: [sDate, eDate] });
+  search(key?: string) {
+    const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
+
+    this.isSearch = false;
+    if (key === 'search') this.isSearch = true;
+
+    if (['search', 'reset'].includes(key)) this.paginator.nowPage = 1;
+
+    let page = this.paginator.nowPage;
+
+    if (key !== 'search' && !!getSessionVal?.filter) {
+      page = getSessionVal.page;
+      CommonUtil.initializeFormWithSessionData(this.validateForm, getSessionVal);
     }
-    //search other
-    for (const [k, v] of Object.entries(filter).filter(([key, val]) => !key.includes('Date') && !!val)) {
-      this.dataSource.addFilter({ field: k, filter: undefined, search: v });
+
+    if (key !== 'reset') this.setSessionData();
+
+    let searchInfo: SearchInfo = {
+      apiUrl: this.reviewManageService.tagReviewFunc,
+      nowPage: page,
+      filters: this.validateForm.getRawValue(),
+      errMsg: '名單審核查無資料',
     }
+
+    this.restDataSource = this.tableService.searchData(searchInfo);
   }
 }

@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ScheduleReviewHistory } from '@api/models/schedule-activity.model';
+import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, Frequency } from '@common/enums/common-enum';
 import { ReviewStatus } from '@common/enums/review-enum';
 import { ScheduleReviewHistoryMock } from '@common/mock-data/schedule-review-mock';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { BaseComponent } from '@pages/base.component';
-import { LocalDataSource } from 'ng2-smart-table';
+import { ReviewManageService } from '../review-manage.service';
 
 @Component({
   selector: 'app-schedule-review-list',
@@ -19,9 +21,15 @@ export class ScheduleReviewListComponent extends BaseComponent implements OnInit
 
   constructor(
     storageService: StorageService,
+    private activatedRoute: ActivatedRoute,
+    private reviewManageService: ReviewManageService,
+    private tableService: Ng2SmartTableService,
   ) {
     super(storageService);
+    this.sessionKey = this.activatedRoute.snapshot.routeConfig.path;
   }
+
+  isSearch: boolean = false;
 
   gridDefine = {
     pager: {
@@ -88,8 +96,46 @@ export class ScheduleReviewListComponent extends BaseComponent implements OnInit
   };
 
   ngOnInit(): void {
-    this.dataSource = new LocalDataSource();
-    this.dataSource.load(this.mockData);
+    this.search();
+  }
+
+  ngOnDestroy(): void {
+    this.setSessionData();
+  }
+
+  setSessionData() {
+    const sessionData = { page: this.paginator.nowPage };
+    this.storageService.putSessionVal(this.sessionKey, sessionData);
+  }
+  
+  reset() {
+    this.isSearch = true;
+    this.setSessionData();
+    this.search('reset');
+  }
+
+  search(key?: string) {
+    const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
+
+    this.isSearch = false;
+
+    if (['search', 'reset'].includes(key)) this.paginator.nowPage = 1;
+
+    let page = this.paginator.nowPage;
+
+    if (key !== 'search' && !!getSessionVal?.filter) {
+      page = getSessionVal.page;
+    }
+
+    if (key !== 'reset') this.setSessionData();
+
+    let searchInfo: SearchInfo = {
+      apiUrl: this.reviewManageService.scheduleReviewFunc,
+      nowPage: page,
+      errMsg: '名單排程審核查無資料',
+    }
+
+    this.restDataSource = this.tableService.searchData(searchInfo);
   }
 
 }
