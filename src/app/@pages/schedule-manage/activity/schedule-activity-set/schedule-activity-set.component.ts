@@ -226,7 +226,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
               if (!!selectedData) {
                 this.activityListTemp = this.activityListTemp.filter(s => s.key !== selectedData.key);
 
-                const findData = this.ActivitySettingArray.find(f => f.activityId === selectedData.key);
+                const findData = this.ActivitySettingArray.find(f => f.activityId?.toLocaleLowerCase() === selectedData.key?.toLocaleLowerCase());
                 this.scheduleActivitySettingGrid.push(new scheduleActivitySetting({
                   activityId: findData?.activityId,
                   version: findData?.version,
