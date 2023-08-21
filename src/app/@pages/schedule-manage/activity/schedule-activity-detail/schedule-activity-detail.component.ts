@@ -3,7 +3,6 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ActivitySetting, ScheduleDetailView, Schedule_Batch_History } from '@api/models/schedule-activity.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
-import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, Status, StatusResult } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
@@ -14,7 +13,7 @@ import { BaseComponent } from '@pages/base.component';
 import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
 import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
 import { combineLatest, of } from 'rxjs';
-import { catchError, filter, tap, map } from 'rxjs/operators';
+import { catchError, filter, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'schedule-activity-detail',
