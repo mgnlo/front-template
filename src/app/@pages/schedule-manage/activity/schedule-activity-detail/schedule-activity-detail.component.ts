@@ -41,7 +41,6 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     private scheduleManageService: ScheduleManageService,
     private dialogService: DialogService,
     private loadingService: LoadingService,
-    private tableService: Ng2SmartTableService,
   ) {
     super(storageService);
   }
@@ -138,7 +137,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         const gridData = JSON.parse(JSON.stringify(gridRes.result));
         const scheduleActivityGrid = this.mapGridDataToActivitySettings(gridData);
         this.dataSource.load(scheduleActivityGrid);
-
+//以下這段要測
         if (storage?.page) {
           this.dataSource.setPage(storage.page);
           this.dataSource.setPaging(storage.page, this.dataSource.getPaging().perPage);
@@ -148,15 +147,6 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
       this.loadingService.close();
     });
 
-    //#region 改走本機查詢活動名單
-    // let searchInfo: SearchInfo = {
-    //   apiUrl: this.scheduleManageService.scheduleFunc + this.scheduleId + '/activity-setting',
-    //   nowPage: this.paginator.nowPage,
-    //   errMsg: '名單紀錄查無資料'
-    // }
-    //this.restDataSource = this.tableService.searchData(searchInfo)
-    // console.info('this.restDataSource', this.restDataSource)
-    //#endregion
   }
 
   ngOnDestroy(): void {
