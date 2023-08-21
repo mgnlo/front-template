@@ -2,10 +2,9 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActivitySetting as ScheduleActivitySettingModel, ScheduleActivitySetting, ScheduleActivitySettingEditReq } from '@api/models/schedule-activity.model';
+import { ActivitySetting as ScheduleActivitySettingModel, ScheduleActivitySettingEditReq } from '@api/models/schedule-activity.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
-import { Ng2SmartTableService } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, Frequency, Status, StatusResult } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
@@ -27,6 +26,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   Frequency = Frequency;
 
   params: any;//路由參數
+  changeRouteName: string;
   actionName: string;// 新增/編輯/複製
 
   //預設下拉時間日期
@@ -46,7 +46,6 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   filterActivityList: Array<{ key: string; val: string }> = new Array;
 
   //預設名單列表
-  scheduleActivitySetting: Array<ScheduleActivitySetting>;
   scheduleActivitySettingModel: Array<ScheduleActivitySettingModel> = new Array;
 
   scheduleId: string;
@@ -59,7 +58,6 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     private scheduleManageService: ScheduleManageService,
     private loadingService: LoadingService,
     private readonly changeDetectorRef: ChangeDetectorRef,
-    private tableService: Ng2SmartTableService,
   ) {
     super(storageService);
 
@@ -71,10 +69,6 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       minute: new FormControl(null, Validators.required),
       filePath: new FormControl(null, Validators.required),
     });
-
-    this.params = this.activatedRoute.snapshot.params;
-    const changeRouteName = this.params['changeRoute'] ?? "";
-    this.actionName = CommonUtil.getActionName(changeRouteName);
 
   }
 
@@ -256,7 +250,11 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   //#endregion
 
   ngOnInit(): void {
-    this.scheduleId = this.activatedRoute.snapshot.params?.scheduleId;
+    this.params = this.activatedRoute.snapshot.params;
+    this.changeRouteName = this.params['changeRoute'] ?? "";
+    this.actionName = CommonUtil.getActionName(this.changeRouteName);
+    this.scheduleId = this.params?.['scheduleId'];
+
     this.dataSource = new LocalDataSource();
     if (!!this.scheduleId) {
       this.loadingService.open();
@@ -312,41 +310,43 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   }
 
   submit() {
-    let valid = this.validateForm.valid;
-    let reqData: ScheduleActivitySettingEditReq = this.getRequestData();
-    if (valid && !this.scheduleId) {
-      this.loadingService.open();
-      this.scheduleManageService.createScheduleActivitySetting(reqData).pipe(
-        catchError((err) => {
-          this.loadingService.close();
-          this.dialogService.alertAndBackToList(false, err.message, ['pages', 'schedule-manage', 'schedule-activity-list']);
-          throw new Error(err.message);
-        }),
-        tap(res => {
-          console.info(res)
-          this.loadingService.close();
-        })).subscribe(res => {
-          if (res.code === RestStatus.SUCCESS) {
-            this.dialogService.alertAndBackToList(true, '新增成功', ['pages', 'schedule-manage', 'schedule-activity-list'])
-          }
-        });
-    } else if (valid && this.scheduleId) {
-      this.loadingService.open();
-      this.scheduleManageService.updateScheduleActivitySetting(this.scheduleId, reqData).pipe(
-        catchError((err) => {
-          this.loadingService.close();
-          this.dialogService.alertAndBackToList(false, err.message, ['pages', 'schedule-manage', 'schedule-activity-list']);
-          throw new Error(err.message);
-        }),
-        tap(res => {
-          console.info(res)
-          this.loadingService.close();
-        })).subscribe(res => {
-          if (res.code === RestStatus.SUCCESS) {
-            this.dialogService.alertAndBackToList(true, '編輯成功', ['pages', 'schedule-manage', 'schedule-activity-list'])
-          }
-        });
+    const valid = this.validateForm.valid;
+    const reqData: ScheduleActivitySettingEditReq = this.getRequestData();
+
+    if (!valid || !reqData) {
+      const route = this.scheduleId ? [this.changeRouteName, this.scheduleId] : [];
+      this.dialogService.alertAndBackToList(false, `${this.actionName}驗證失敗`, ['pages', 'schedule-manage', 'schedule-activity-set', ...route]);
+      return
     }
+
+    // 調用(新增or複製)或編輯
+    this.saveScheduleActivity(reqData);
+
+  }
+
+  saveScheduleActivity(reqData: any) {
+    this.loadingService.open();
+
+    const requestObservable = (this.scheduleId && this.changeRouteName === 'edit')
+      ? this.scheduleManageService.updateScheduleActivitySetting(this.scheduleId, reqData)
+      : this.scheduleManageService.createScheduleActivitySetting(reqData);
+
+    requestObservable.pipe(
+      catchError((err) => {
+        this.loadingService.close();
+        const route = this.scheduleId ? [this.changeRouteName, this.scheduleId] : [];
+        this.dialogService.alertAndBackToList(false, `${this.actionName}失敗`, ['pages', 'schedule-manage', 'schedule-activity-set', ...route]);
+        throw new Error(err.message);
+      }),
+      tap(res => {
+        console.info(res);
+        this.loadingService.close();
+      })
+    ).subscribe(res => {
+      if (res.code === RestStatus.SUCCESS) {
+        this.dialogService.alertAndBackToList(true, `${this.actionName}成功`, ['pages', 'schedule-manage', 'schedule-activity-list']);
+      }
+    });
   }
 
   getRequestData(): ScheduleActivitySettingEditReq {
