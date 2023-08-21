@@ -81,7 +81,7 @@ export interface ScheduleDetailView {
   modificationTime: string;
   status: string;
   filePath?: string;
-  historyGroupView: { [x: number]: HistoryGroupView };
+  historyGroupView?: { [x: number]: HistoryGroupView };
 }
 
 //for HTML diaplay ViewModel

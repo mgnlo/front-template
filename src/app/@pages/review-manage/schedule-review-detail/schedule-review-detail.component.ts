@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ScheduleDetailView, ScheduleReviewHistory } from '@api/models/schedule-activity.model';
+import { HistoryGroupView, ScheduleDetailView, ScheduleReviewHistory } from '@api/models/schedule-activity.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
@@ -29,6 +29,7 @@ export class ScheduleReviewDetailComponent extends BaseComponent implements OnIn
   historyId: string;
   isCompare: boolean = false;
   activitySettingView = { add: [], remove: [], same: [] }; //名單列表差異
+  historyGroupView: { [x: number]: HistoryGroupView } //歷史紀錄
 
   constructor(
     private router: Router,
@@ -63,11 +64,10 @@ export class ScheduleReviewDetailComponent extends BaseComponent implements OnIn
       this.reviewComment = reviewData.result.reviewComment;
       this.isCompare = !!lastData.result ? true : false;
       let newActivityList = reviewData.result.activitySetting.map(activity => { return { key: activity.activityId, value: activity.activityName } });
-      this.activitySettingView.add.push(newActivityList.map(activity => activity.value));
       const processedData = CommonUtil.getHistoryProcessData<ScheduleReviewHistory>('scheduleReviewHistory', reviewData.result as ScheduleReviewHistory);
       if (!!processedData) {
         this.isHistoryOpen = processedData.isHistoryOpen;
-        this.newDetail.historyGroupView = processedData.detail.historyGroupView;
+        this.historyGroupView = processedData.detail.historyGroupView;
       }
       if (this.isCompare) {
         this.oldDetail = JSON.parse(JSON.stringify(lastData.result));
@@ -86,7 +86,8 @@ export class ScheduleReviewDetailComponent extends BaseComponent implements OnIn
             this.activitySettingView.add.push(activity.value);
           }
         });
-        this.oldDetail.historyGroupView = processedData.detail.historyGroupView;
+      } else {
+        this.activitySettingView.add.push(newActivityList.map(activity => activity.value));
       }
       this.loadingService.close();
     });
