@@ -134,8 +134,8 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
 
         const gridData = JSON.parse(JSON.stringify(gridRes.result));
         const scheduleActivityGrid = this.mapGridDataToActivitySettings(gridData);
-        console.info('this.detailRes', detailRes)
-        console.info('this.gridRes', gridRes)
+        // console.info('this.detailRes', detailRes)
+        // console.info('this.gridRes', gridRes)
         this.dataSource.load(scheduleActivityGrid);
         //以下這段要測
         if (storage?.page) {
@@ -245,7 +245,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
             };
 
             instance.emitter.subscribe((res) => {
-              console.info('res', res)
+              // console.info('res', res)
 
               if (res.isSelected && res.activityId) {
                 this.selectedRows.push({ rowId: res.activityId })
@@ -288,7 +288,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
 
     this.tempPageIsAllSelected = CommonUtil.onSetTempPageIsAllSelected(this.tempPageIsAllSelected, this.paginator.nowPage, this.isAllSelected)
 
-    console.info('this.tempPageIsAllSelected', this.tempPageIsAllSelected)
+    // console.info('this.tempPageIsAllSelected', this.tempPageIsAllSelected)
     this.setSessionVal(
       {
         page: this.paginator.nowPage,
@@ -297,7 +297,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
       });
 
     this.selectedRows = await CommonUtil.onSetGridPageChecked('activityId', this.dataSource, this.selectedRows, this.isAllSelected);
-    console.info('this.selectedRows', this.selectedRows)
+    // console.info('this.selectedRows', this.selectedRows)
 
     this.ng2SmartTable.initGrid();
 
@@ -307,8 +307,8 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
 
   submitRefresh() {
     const result = this.selectedRows.map(m => m.rowId);
-    console.info('selectedRows', this.selectedRows);
-    console.info('result', result);
+    // console.info('selectedRows', this.selectedRows);
+    // console.info('result', result);
   }
 
   edit() {

@@ -226,7 +226,7 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
             };
 
             instance.emitter.subscribe((res) => {
-              console.info('res', res)
+              // console.info('res', res)
 
               if (res.isSelected && res.tagId) {
                 this.selectedRows.push({ rowId: res.tagId })
@@ -286,8 +286,8 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
 
   submitRefresh() {
     const result = this.selectedRows.map(m => m.rowId);
-    console.info('selectedRows', this.selectedRows);
-    console.info('result', result);
+    // console.info('selectedRows', this.selectedRows);
+    // console.info('result', result);
   }
 
 }

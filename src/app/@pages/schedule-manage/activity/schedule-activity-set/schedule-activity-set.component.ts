@@ -217,7 +217,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         return of(null);
       }),
       tap(res => {
-        console.info(res);
+        // console.info(res);
       })
     ).subscribe(res => {
       if (res.code === RestStatus.SUCCESS) {
@@ -322,7 +322,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
               this.validateForm.controls[key].setValue(res.result[key]);
             } else if (key === 'activitySetting') {
               this.scheduleActivitySettingGrid = res.result[key];
-              console.info('this.scheduleActivitySettingGrid', this.scheduleActivitySettingGrid)
+              // console.info('this.scheduleActivitySettingGrid', this.scheduleActivitySettingGrid)
             }
             this.dataSource.load(this.scheduleActivitySettingGrid);
           })
@@ -374,7 +374,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         throw new Error(err.message);
       }),
       tap(res => {
-        console.info(res);
+        // console.info(res);
         this.loadingService.close();
       })
     ).subscribe(res => {
@@ -392,7 +392,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     let executionFrequency = this.validateForm.get('executionFrequency').value;
     reqData.frequencyTime = executionFrequency === 'daily' ? hour + ':' + minute : daily + ':' + hour + ':' + minute;
     reqData.activityIds = this.scheduleActivitySettingGrid.map(activitySetting => activitySetting.activityId);
-    console.info('reqData', reqData);
+    // console.info('reqData', reqData);
 
     return reqData;
   }
