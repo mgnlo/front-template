@@ -78,7 +78,7 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
     private accountManageService: AccountManageService) {
     super(storageService);
     this.dataSource = new LocalDataSource();
-    this.hasConsoleGroupCreate = this.loginService.checkScope("console-group.create");
+    this.hasConsoleGroupCreate = this.loginService.checkUserScope("console-group.create");
   }
 
   ngOnInit(): void {

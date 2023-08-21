@@ -59,7 +59,7 @@ export class LoginService {
         }
     }
 
-    public checkScope(scope: string) {
+    public checkUserScope(scope: string) {
         let index = this._userProfile.consoleGroup.consoleGroupScope.findIndex(e => e.scope.startsWith(scope));
 
         return index >= 0 ? true : false;

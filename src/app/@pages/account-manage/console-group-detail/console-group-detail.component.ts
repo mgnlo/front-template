@@ -70,7 +70,7 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
         sort: false,
       }
     },
-    hideSubHeader: false, 
+    hideSubHeader: false,
     actions: {
       add: false,
       edit: false,
@@ -141,8 +141,8 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
     super(storageService);
     this.dataSource = new LocalDataSource();
     this.dataSource2 = new LocalDataSource();
-    this.hasConsoleGroupCreate = this.loginService.checkScope("console-group.create");
-    this.hasConsoleGroupUpdate = this.loginService.checkScope("console-group.update");
+    this.hasConsoleGroupCreate = this.loginService.checkUserScope("console-group.create");
+    this.hasConsoleGroupUpdate = this.loginService.checkUserScope("console-group.update");
   }
 
   ngOnInit(): void {

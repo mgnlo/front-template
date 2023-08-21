@@ -30,7 +30,7 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
   };
   consoleUser: any;
   consoleGroupScope: Array<GridInnerCheckBox> = this.accountManageService.createDefaultScopeGridInnerCheckBoxs();
-  
+
   enableOption: string = "true";
   consoleGroupAddForm: FormGroup;
 
@@ -190,6 +190,7 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
         }
       }
 
+      this.loadingService.open();
       this.accountManageService.createConsoleGroup(this.consoleGroup).pipe(
         catchError((err) => {
           this.loadingService.close();

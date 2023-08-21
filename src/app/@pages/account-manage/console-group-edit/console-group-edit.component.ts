@@ -182,7 +182,7 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
     // setTimeout(() => {
     //   this.dataSource.getAll().then(rs => {
     //   });
-    // }, 100);    
+    // }, 100);
   }
 
   cancel() {
@@ -216,6 +216,7 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
     }
 
     // 這邊要發送電文 7.4 更新群組設定去進行修改，request 內容同 7.2 的 response
+    this.loadingService.open();
     this.accountManageService.updateConsoleGroup(this.consoleGroupDetail.groupId, this.consoleGroupDetail).pipe(
       catchError((err) => {
         this.loadingService.close();
@@ -226,7 +227,7 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
         this.loadingService.close();
       })).subscribe(res => {
         if (res.code === RestStatus.SUCCESS) {
-          // 修改成功後是否要再發送電文重新 query 資料或者是就直接 update?  
+          // 修改成功後是否要再發送電文重新 query 資料或者是就直接 update?
           this.navigateToDetailPage();
         }
       });
