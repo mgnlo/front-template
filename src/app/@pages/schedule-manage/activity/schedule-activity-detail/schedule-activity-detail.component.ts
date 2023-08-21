@@ -135,8 +135,10 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
 
         const gridData = JSON.parse(JSON.stringify(gridRes.result));
         const scheduleActivityGrid = this.mapGridDataToActivitySettings(gridData);
+        console.info('this.detailRes', detailRes)
+        console.info('this.gridRes', gridRes)
         this.dataSource.load(scheduleActivityGrid);
-//以下這段要測
+        //以下這段要測
         if (storage?.page) {
           this.dataSource.setPage(storage.page);
           this.dataSource.setPaging(storage.page, this.dataSource.getPaging().perPage);
