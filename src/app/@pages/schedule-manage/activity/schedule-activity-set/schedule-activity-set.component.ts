@@ -357,6 +357,8 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     let executionFrequency = this.validateForm.get('executionFrequency').value;
     reqData.frequencyTime = executionFrequency === 'daily' ? hour + ':' + minute : daily + ':' + hour + ':' + minute;
     reqData.activityIds = this.scheduleActivitySettingModel.map(activitySetting => activitySetting.activityId);
+    console.info('reqData', reqData);
+
     return reqData;
   }
 
