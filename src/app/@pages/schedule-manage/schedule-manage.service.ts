@@ -16,6 +16,10 @@ export class ScheduleManageService {
     return this.service.doGet(this.scheduleFunc + scheduleId);
   }
 
+  getScheduleActivitySettingDetailGrid(scheduleId: string, rqParams?: { [key: string]: any }): Observable<ResponseModel<ActivitySetting>> {
+    return this.service.doGet(this.scheduleFunc + scheduleId + '/activity-setting', rqParams)
+  }
+
   /** 可選的活動下拉選單 API*/
   getScheduleActivityOptions(): Observable<ResponseModel<Array<ActivitySetting>>> {
     return this.service.doGet(this.scheduleFunc + 'options');

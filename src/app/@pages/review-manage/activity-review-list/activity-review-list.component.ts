@@ -1,17 +1,17 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ActivityReviewHistory } from '@api/models/activity-list.model';
+import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
-import { ColumnClass } from '@common/enums/common-enum';
+import { ColumnClass, Status } from '@common/enums/common-enum';
 import { ReviewStatus } from '@common/enums/review-enum';
-import { ActivityReviewListMock } from '@common/mock-data/activity-review-mock';
+import { CommonUtil } from '@common/utils/common-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { CheckboxIconComponent } from '@component/table/checkbox-icon/checkbox-icon.component';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
-import { NbDateService } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
-import { LocalDataSource } from 'ng2-smart-table';
+import { ReviewManageService } from '../review-manage.service';
 
 @Component({
   selector: 'activity-review-list',
@@ -22,9 +22,10 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
 
   constructor(
     storageService: StorageService,
-    private dateService: NbDateService<Date>,
     private activatedRoute: ActivatedRoute,
-    private cdr: ChangeDetectorRef,) {
+    private reviewManageService: ReviewManageService,
+    private tableService: Ng2SmartTableService,
+  ) {
     super(storageService);
     // 篩選條件
     this.validateForm = new FormGroup({
@@ -34,23 +35,24 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
       endDate: new FormControl(null, ValidatorsUtil.dateFmt),
     }, [ValidatorsUtil.dateRange]);
 
+    this.sessionKey = this.activatedRoute.snapshot.routeConfig.path;
   }
 
-  statusList: Array<{ key: string; val: string }> = Object.entries(ReviewStatus).map(([k, v]) => ({ key: k, val: v }))
-  mockData: Array<ActivityReviewHistory> = ActivityReviewListMock;
-  sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
+  isSearch: Boolean = false;
 
   ngOnInit(): void {
-    this.dataSource = new LocalDataSource();
-    this.dataSource.load(this.mockData);
-    //get session filter
-    this.storageService.getSessionFilter(this.sessionKey, this.validateForm).subscribe((res) => {
-      if (res === true) { this.search(); }
-    });
+    this.search();
   }
 
   ngOnDestroy(): void {
-    let sessionData = { page: this.paginator.nowPage, filter: this.validateForm.getRawValue() };
+    this.setSessionData();
+  }
+
+  setSessionData() {
+    const filterVal = this.isSearch ? this.validateForm.getRawValue() :
+      this.storageService.getSessionVal(this.sessionKey)?.filter ?? this.validateForm.getRawValue();
+
+    const sessionData = { page: this.paginator.nowPage, filter: filterVal };
     this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
 
@@ -94,7 +96,7 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
         width: '5%'
       },
       modificationTime: {
-        title: '名單有效起訖日',
+        title: '名單有效起迄日',
         type: 'string',
         width: '20%',
         sort: false,
@@ -102,7 +104,7 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
           return row.startDate + '~' + row.endDate;
         }
       },
-      type:{
+      type: {
         title: '異動類型',
         type: 'string',
         width: '10%',
@@ -132,29 +134,39 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
       edit: false,
       delete: false,
     },
-    // rowClassFunction: (row: Row) => {
-    //   console.info(row.getData().status)
-    //   return row.getData().status === 'ing' ? 'aa' : '';
-    // },
   };
 
   reset() {
-    this.dataSource.reset();
-    this.validateForm.reset({ tagName: '', reviewStatus: '', startDate: null, endDate: null });
+    this.validateForm.reset({ activityName: '', reviewStatus: '', startDate: null, endDate: null });
+    this.isSearch = true;
+    this.setSessionData();
+    this.search('reset');
   }
 
-  search() {
-    this.dataSource.reset();
-    let filter = this.validateForm.getRawValue();
-    //search modificationTime
-    let sDate = filter.startDate !== null ? this.dateService.format(filter.startDate, this.dateFormat) : null;
-    let eDate = filter.endDate !== null ? this.dateService.format(filter.endDate, this.dateFormat) : null;
-    if (!!sDate || !!eDate) {
-      this.dataSource.addFilter({ field: 'modificationTime', filter: undefined, search: [sDate, eDate] });
+  search(key?: string) {
+    const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
+
+    this.isSearch = false;
+    if (key === 'search') this.isSearch = true;
+
+    if (['search', 'reset'].includes(key)) this.paginator.nowPage = 1;
+
+    let page = this.paginator.nowPage;
+
+    if (key !== 'search' && !!getSessionVal?.filter) {
+      page = getSessionVal.page;
+      CommonUtil.initializeFormWithSessionData(this.validateForm, getSessionVal);
     }
-    //search other
-    for (const [k, v] of Object.entries(filter).filter(([key, val]) => !key.includes('Date') && !!val)) {
-      this.dataSource.addFilter({ field: k, filter: undefined, search: v });
+
+    if (key !== 'reset') this.setSessionData();
+
+    let searchInfo: SearchInfo = {
+      apiUrl: this.reviewManageService.activityReviewFunc,
+      nowPage: page,
+      filters: this.validateForm.getRawValue(),
+      errMsg: '客群名單審核查無資料',
     }
+
+    this.restDataSource = this.tableService.searchData(searchInfo);
   }
 }

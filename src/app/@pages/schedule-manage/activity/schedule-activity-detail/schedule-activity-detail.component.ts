@@ -7,14 +7,14 @@ import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, Status, StatusResult } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
-import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/checkbox.component';
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
-import { Ng2SmartTableComponent } from 'ng2-smart-table';
-import { catchError, filter, tap } from 'rxjs/operators';
+import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
+import { combineLatest, of } from 'rxjs';
+import { catchError, filter, tap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'schedule-activity-detail',
@@ -24,7 +24,6 @@ import { catchError, filter, tap } from 'rxjs/operators';
 export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   detail: ScheduleDetailView;
   isHistoryOpen: { [x: number]: boolean } = []; //異動歷程收合
-  activitySetting: Array<ActivitySetting> = ScheduleActivitySettingMock[0].activitySetting;
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
   scheduleId: string;
 
@@ -42,7 +41,6 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     private scheduleManageService: ScheduleManageService,
     private dialogService: DialogService,
     private loadingService: LoadingService,
-    private tableService: Ng2SmartTableService,
   ) {
     super(storageService);
   }
@@ -121,25 +119,34 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.scheduleId = this.activatedRoute.snapshot.params.scheduleId;
     this.loadingService.open();
-    this.scheduleManageService.getScheduleActivitySettingDetail(this.scheduleId).pipe(
-      catchError(err => {
-        this.loadingService.close();
-        this.dialogService.alertAndBackToList(false, '查無此筆資料，將為您導回名單排程', ['pages', 'schedule-manage', 'schedule-activity-list']);
-        throw new Error(err.message);
-      }),
-      filter(res => res.code === RestStatus.SUCCESS),
-      tap((res) => {
-        this.detail = JSON.parse(JSON.stringify(res.result));
-        this.loadingService.close();
-      })
-    ).subscribe();
+    this.dataSource = new LocalDataSource();
+    const detailObservable = this.scheduleManageService.getScheduleActivitySettingDetail(this.scheduleId);
+    const storage = this.storageService.getSessionVal(this.sessionKey);
+    const gridObservable = this.scheduleManageService.getScheduleActivitySettingDetailGrid(this.scheduleId, storage?.page ? { page: storage.page } : null);
 
-    let searchInfo: SearchInfo = {
-      apiUrl: this.scheduleManageService.scheduleFunc + this.scheduleId + '/activity-setting',
-      nowPage: this.paginator.nowPage,
-      errMsg: '名單紀錄查無資料'
-    }
-    this.restDataSource = this.tableService.searchData(searchInfo)
+    combineLatest([detailObservable, gridObservable]).pipe(
+      catchError(err => {
+        this.handleError(err, '查無此筆資料，將為您導回名單排程', ['pages', 'schedule-manage', 'schedule-activity-list']);
+        this.loadingService.close();
+        return of(null);
+      }),
+      filter(([detailRes, gridRes]) => detailRes !== null && detailRes.code === RestStatus.SUCCESS && gridRes !== null && gridRes.code === RestStatus.SUCCESS),
+      tap(([detailRes, gridRes]) => {
+        this.detail = JSON.parse(JSON.stringify(detailRes.result));
+
+        const gridData = JSON.parse(JSON.stringify(gridRes.result));
+        const scheduleActivityGrid = this.mapGridDataToActivitySettings(gridData);
+        this.dataSource.load(scheduleActivityGrid);
+//以下這段要測
+        if (storage?.page) {
+          this.dataSource.setPage(storage.page);
+          this.dataSource.setPaging(storage.page, this.dataSource.getPaging().perPage);
+        }
+      })
+    ).subscribe(() => {
+      this.loadingService.close();
+    });
+
   }
 
   ngOnDestroy(): void {
@@ -157,9 +164,6 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
 
       if (this.previousPage !== currentPage) {
         this.previousPage = currentPage;
-
-        console.info('this.previousPage', this.previousPage)
-
         const getSession = this.storageService.getSessionVal(this.sessionKey);
         if (getSession?.isOpenCheckbox && getSession?.isPageAllSelected?.find(f => f?.['pageNum'] === currentPage)) {
           this.isAllSelected = getSession?.isPageAllSelected?.find(f => f?.['pageNum'] === currentPage)?.val
@@ -169,6 +173,32 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
 
       }
     }
+  }
+
+  handleError(err: any, alertMessage: string, navigationPath?: string[]) {
+    this.loadingService.close();
+    this.dialogService.alertAndBackToList(false, alertMessage, navigationPath);
+    throw new Error(err.message);
+  }
+
+  mapGridDataToActivitySettings(gridData: any[]): ActivitySetting[] {
+    return gridData['content'].map(m => new ActivitySetting({
+      activityId: m.activityId,
+      version: m.version,
+      activityName: m.activityName,
+      activityDescription: m.activityDescription,
+      department: m.department,
+      owner: m.owner,
+      filterOptions: m.filterOptions,
+      listLimit: m.listLimit,
+      status: m.status,
+      startDate: m.startDate,
+      endDate: m.endDate,
+      createTime: m.createTime,
+      modificationTime: m.modificationTime,
+      scheduleSettings: m.scheduleSettings,
+      batchUpdateTime: m.batchUpdateTime
+    }));
   }
 
   setGridDefineInit() {
@@ -258,6 +288,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
 
     this.tempPageIsAllSelected = CommonUtil.onSetTempPageIsAllSelected(this.tempPageIsAllSelected, this.paginator.nowPage, this.isAllSelected)
 
+    console.info('this.tempPageIsAllSelected', this.tempPageIsAllSelected)
     this.setSessionVal(
       {
         page: this.paginator.nowPage,
@@ -265,7 +296,8 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         isPageAllSelected: this.tempPageIsAllSelected,
       });
 
-    this.selectedRows = await CommonUtil.onSetGridPageChecked('activityId', this.restDataSource, this.selectedRows, this.isAllSelected);
+    this.selectedRows = await CommonUtil.onSetGridPageChecked('activityId', this.dataSource, this.selectedRows, this.isAllSelected);
+    console.info('this.selectedRows', this.selectedRows)
 
     this.ng2SmartTable.initGrid();
 

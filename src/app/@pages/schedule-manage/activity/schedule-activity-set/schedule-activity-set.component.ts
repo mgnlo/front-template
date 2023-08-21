@@ -2,10 +2,9 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActivitySetting as ScheduleActivitySettingModel, ScheduleActivitySetting, ScheduleActivitySettingEditReq } from '@api/models/schedule-activity.model';
+import { ActivitySetting as scheduleActivitySetting, ScheduleActivitySettingEditReq } from '@api/models/schedule-activity.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
-import { Ng2SmartTableService } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, Frequency, Status, StatusResult } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
@@ -16,6 +15,7 @@ import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.se
 import { LocalDataSource } from 'ng2-smart-table';
 import { catchError, filter, tap } from 'rxjs/operators';
 import { PreviewDialogComponent } from './preview-dialog/preview.dialog/preview-dialog.component';
+import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
 
 @Component({
   selector: 'schedule-activity-set',
@@ -27,6 +27,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   Frequency = Frequency;
 
   params: any;//路由參數
+  changeRouteName: string;
   actionName: string;// 新增/編輯/複製
 
   //預設下拉時間日期
@@ -44,10 +45,13 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   //預設pup-up活動名單
   activityList: Array<{ key: string; val: string }> = new Array;
   filterActivityList: Array<{ key: string; val: string }> = new Array;
+  activityListTemp: Array<{ key: string; val: string }> = new Array;
 
   //預設名單列表
-  scheduleActivitySetting: Array<ScheduleActivitySetting>;
-  scheduleActivitySettingModel: Array<ScheduleActivitySettingModel> = new Array;
+  scheduleActivitySettingGrid: Array<scheduleActivitySetting> = new Array;
+
+  //全活動名單
+  ActivitySettingArray: Array<scheduleActivitySetting> = new Array;
 
   scheduleId: string;
 
@@ -57,9 +61,9 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private dialogService: DialogService,
     private scheduleManageService: ScheduleManageService,
+    private customerManageService: CustomerManageService,
     private loadingService: LoadingService,
     private readonly changeDetectorRef: ChangeDetectorRef,
-    private tableService: Ng2SmartTableService,
   ) {
     super(storageService);
 
@@ -71,10 +75,6 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       minute: new FormControl(null, Validators.required),
       filePath: new FormControl(null, Validators.required),
     });
-
-    this.params = this.activatedRoute.snapshot.params;
-    const changeRouteName = this.params['changeRoute'] ?? "";
-    this.actionName = CommonUtil.getActionName(changeRouteName);
 
   }
 
@@ -185,11 +185,12 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   //#region 刪除按鈕
   onDeleteConfirm(row: { activityId: string; }): void {
-    const index = this.scheduleActivitySettingModel.findIndex(item => item.activityId === row.activityId);
+    const index = this.scheduleActivitySettingGrid.findIndex(item => item.activityId === row.activityId);
     if (index !== -1) {
-      this.scheduleActivitySettingModel.splice(index, 1);
-      this.refreshFilterActivityList();
-      this.dataSource.load(this.scheduleActivitySettingModel);
+      const temp = this.scheduleActivitySettingGrid.find(item => item.activityId === row.activityId)
+      this.activityListTemp.push({ key: temp.activityId, val: temp.activityName })
+      this.scheduleActivitySettingGrid.splice(index, 1);
+      this.dataSource.load(this.scheduleActivitySettingGrid);
     }
   }
   //#endregion
@@ -216,14 +217,17 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
           this.refreshFilterActivityList();
 
+          console.info('this.filterActivityList ', this.filterActivityList)
           if (this.filterActivityList.length > 0) {
             this.dialogService.open(PreviewDialogComponent, {
               title: '設定名單內容',
               dataList: this.filterActivityList,
             }).onClose.subscribe((selectedData: { key: string; val: string }) => {
               if (!!selectedData) {
-                const findData = activityListSetting.find(f => f.activityId === selectedData.key);
-                this.scheduleActivitySettingModel.push(new ScheduleActivitySettingModel({
+                this.activityListTemp = this.activityListTemp.filter(s => s.key !== selectedData.key);
+
+                const findData = this.ActivitySettingArray.find(f => f.activityId?.toLocaleLowerCase() === selectedData.key?.toLocaleLowerCase());
+                this.scheduleActivitySettingGrid.push(new scheduleActivitySetting({
                   activityId: findData?.activityId,
                   version: findData?.version,
                   activityName: findData?.activityName,
@@ -238,8 +242,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
                   scheduleSettings: findData?.scheduleSettings,
                   batchUpdateTime: findData?.batchUpdateTime,
                 }))
-                this.refreshFilterActivityList();
-                this.dataSource.load(this.scheduleActivitySettingModel);
+                this.dataSource.load(this.scheduleActivitySettingGrid);
               }
             });;
           }
@@ -247,18 +250,45 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       });
   }
 
+  //#endregion
+
   //塞選不重複資料
   refreshFilterActivityList() {
+    if (this.activityListTemp && this.activityListTemp.length > 0) {
+      this.filterActivityList = [...this.activityListTemp, ...this.activityList]
+    }
+
     this.filterActivityList = this.activityList.filter(item =>
-      !this.scheduleActivitySettingModel.some(setting => setting.activityId === item.key)
+      !this.scheduleActivitySettingGrid.some(setting => setting.activityId === item.key)
     );
   }
   //#endregion
 
   ngOnInit(): void {
-    this.scheduleId = this.activatedRoute.snapshot.params?.scheduleId;
-    this.dataSource = new LocalDataSource();
+    this.params = this.activatedRoute.snapshot.params;
+    this.changeRouteName = this.params['changeRoute'] ?? "";
+    this.actionName = CommonUtil.getActionName(this.changeRouteName);
+    this.scheduleId = this.params?.['scheduleId'];
+
+    //#region 取得所有活動，以利後續作對照表
+    this.loadingService.open();
+    this.customerManageService.getActivitySettingList().pipe(
+      catchError(err => {
+        this.loadingService.close();
+        this.dialogService.alertAndBackToList(false, '查無名單資料資料，將為您導回名單排程', ['pages', 'schedule-manage', 'schedule-activity-list']);
+        throw new Error(err.message);
+      }),
+      filter(res => res.code === RestStatus.SUCCESS),
+      tap((res) => {
+        this.ActivitySettingArray = res.result['content']
+        this.loadingService.close();
+      })
+    ).subscribe();
+
+    //#endregion
+
     if (!!this.scheduleId) {
+      this.dataSource = new LocalDataSource();
       this.loadingService.open();
       this.scheduleManageService.getScheduleActivitySettingDetail(this.scheduleId).pipe(
         catchError(err => {
@@ -288,10 +318,9 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
             if (!!this.validateForm.controls[key]) {
               this.validateForm.controls[key].setValue(res.result[key]);
             } else if (key === 'activitySetting') {
-              this.scheduleActivitySettingModel = res.result[key];
+              this.scheduleActivitySettingGrid = res.result[key];
             }
-            this.refreshFilterActivityList();
-            this.dataSource.load(this.scheduleActivitySettingModel);
+            this.dataSource.load(this.scheduleActivitySettingGrid);
           })
           this.loadingService.close();
         })
@@ -312,41 +341,43 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   }
 
   submit() {
-    let valid = this.validateForm.valid;
-    let reqData: ScheduleActivitySettingEditReq = this.getRequestData();
-    if (valid && !this.scheduleId) {
-      this.loadingService.open();
-      this.scheduleManageService.createScheduleActivitySetting(reqData).pipe(
-        catchError((err) => {
-          this.loadingService.close();
-          this.dialogService.alertAndBackToList(false, err.message, ['pages', 'schedule-manage', 'schedule-activity-list']);
-          throw new Error(err.message);
-        }),
-        tap(res => {
-          console.info(res)
-          this.loadingService.close();
-        })).subscribe(res => {
-          if (res.code === RestStatus.SUCCESS) {
-            this.dialogService.alertAndBackToList(true, '新增成功', ['pages', 'schedule-manage', 'schedule-activity-list'])
-          }
-        });
-    } else if (valid && this.scheduleId) {
-      this.loadingService.open();
-      this.scheduleManageService.updateScheduleActivitySetting(this.scheduleId, reqData).pipe(
-        catchError((err) => {
-          this.loadingService.close();
-          this.dialogService.alertAndBackToList(false, err.message, ['pages', 'schedule-manage', 'schedule-activity-list']);
-          throw new Error(err.message);
-        }),
-        tap(res => {
-          console.info(res)
-          this.loadingService.close();
-        })).subscribe(res => {
-          if (res.code === RestStatus.SUCCESS) {
-            this.dialogService.alertAndBackToList(true, '編輯成功', ['pages', 'schedule-manage', 'schedule-activity-list'])
-          }
-        });
+    const valid = this.validateForm.valid;
+    const reqData: ScheduleActivitySettingEditReq = this.getRequestData();
+
+    if (!valid || !reqData) {
+      const route = this.scheduleId ? [this.changeRouteName, this.scheduleId] : [];
+      this.dialogService.alertAndBackToList(false, `${this.actionName}驗證失敗`, ['pages', 'schedule-manage', 'schedule-activity-set', ...route]);
+      return
     }
+
+    // 調用(新增or複製)或編輯
+    this.saveScheduleActivity(reqData);
+
+  }
+
+  saveScheduleActivity(reqData: any) {
+    this.loadingService.open();
+
+    const requestObservable = (this.scheduleId && this.changeRouteName === 'edit')
+      ? this.scheduleManageService.updateScheduleActivitySetting(this.scheduleId, reqData)
+      : this.scheduleManageService.createScheduleActivitySetting(reqData);
+
+    requestObservable.pipe(
+      catchError((err) => {
+        this.loadingService.close();
+        const route = this.scheduleId ? [this.changeRouteName, this.scheduleId] : [];
+        this.dialogService.alertAndBackToList(false, `${this.actionName}失敗`, ['pages', 'schedule-manage', 'schedule-activity-set', ...route]);
+        throw new Error(err.message);
+      }),
+      tap(res => {
+        console.info(res);
+        this.loadingService.close();
+      })
+    ).subscribe(res => {
+      if (res.code === RestStatus.SUCCESS) {
+        this.dialogService.alertAndBackToList(true, `${this.actionName}成功`, ['pages', 'schedule-manage', 'schedule-activity-list']);
+      }
+    });
   }
 
   getRequestData(): ScheduleActivitySettingEditReq {
@@ -356,7 +387,9 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     let minute: string = this.validateForm.get('minute')?.value;
     let executionFrequency = this.validateForm.get('executionFrequency').value;
     reqData.frequencyTime = executionFrequency === 'daily' ? hour + ':' + minute : daily + ':' + hour + ':' + minute;
-    reqData.activityIds = this.scheduleActivitySettingModel.map(activitySetting => activitySetting.activityId);
+    reqData.activityIds = this.scheduleActivitySettingGrid.map(activitySetting => activitySetting.activityId);
+    console.info('reqData', reqData);
+
     return reqData;
   }
 

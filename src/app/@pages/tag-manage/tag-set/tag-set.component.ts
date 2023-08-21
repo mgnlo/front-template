@@ -161,7 +161,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
         sort: false,
       },
       during: {
-        title: '起訖時間',
+        title: '起迄時間',
         type: 'html',
         class: 'col-3',
         valuePrepareFunction: (cell: any, row: ActivitySetting) => {

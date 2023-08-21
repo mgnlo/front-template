@@ -1,6 +1,6 @@
 <div class="pageTitle">
   <h1>名單排程審核</h1>
-  <ng-container *ngIf="reviewStatus === 'reviewing'">
+  <ng-container *ngIf="reviewStatus === 'reviewing' && isCompare">
     <button nbButton status="primary" size="small" (click)="viewToggle()" *ngIf="!isBefore">查看異動前內容</button>
     <button nbButton status="primary" size="small" (click)="viewToggle()" *ngIf="isBefore">返回本次異動內容</button>
   </ng-container>
@@ -63,13 +63,13 @@
         <button nbButton status="info" size="medium" (click)="approve()">同意</button>
     </div>
   </div>
-  <nb-card *ngIf="detail?.historyGroupView">
+  <nb-card *ngIf="historyGroupView">
     <nb-card-header>
         <h2>異動歷程</h2>
     </nb-card-header>
     <nb-card-body>
       <div class="historyList">
-          <ng-container *ngFor="let hg of detail.historyGroupView | keyvalue; let i=index;">
+          <ng-container *ngFor="let hg of historyGroupView | keyvalue; let i=index;">
               <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
                   <div class="mainItem">
                       <h4 (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">{{history.type}}</h4>

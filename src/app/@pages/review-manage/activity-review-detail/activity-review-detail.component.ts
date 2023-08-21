@@ -2,11 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Navigation, Router } from '@angular/router';
 import { ActivityDetail, ActivityReviewHistory, ActivitySetting, TagGroupView } from '@api/models/activity-list.model';
 import { DialogService } from '@api/services/dialog.service';
+import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
+import { RestStatus } from '@common/enums/rest-enum';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
-import { ActivityReviewListMock } from '@common/mock-data/activity-review-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
+import { catchError, filter, tap } from 'rxjs/operators';
+import { ReviewManageService } from '../review-manage.service';
 
 @Component({
   selector: 'activity-review-detail',
@@ -35,31 +38,49 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
     private router: Router,
     private dialogService: DialogService,
     private activatedRoute: ActivatedRoute,
+    private loadingService: LoadingService,
+    private reviewManageService: ReviewManageService,
   ) {
     super(storageService);
   }
 
   ngOnInit(): void {
     this.historyId = this.activatedRoute.snapshot.params.historyId;
-    this.newReview = ActivityReviewListMock.filter(review => review.historyId === this.historyId)[0];
-    this.reviewStatus = this.newReview.reviewStatus;
-    this.reviewComment = this.newReview.reviewComment;
-    this.oldReview = ActivityListMock.filter(row => row.activityId === this.newReview.referenceId)[0];
-    this.newDetail = JSON.parse(JSON.stringify(this.newReview));
-    this.oldDetail = JSON.parse(JSON.stringify(this.oldReview));
-    this.newDetail.tagGroupView = CommonUtil.groupBy(this.newReview.activityListCondition, 'tagGroup');
-    this.oldDetail.tagGroupView = CommonUtil.groupBy(this.oldReview.activityListCondition, 'tagGroup');
-    this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
-    const processedData = CommonUtil.getHistoryProcessData<ActivitySetting>('activityReviewHistory', this.oldReview as ActivitySetting);
-    if (!!processedData) {
-      this.isHistoryOpen = processedData.isHistoryOpen;
-      this.detail = processedData.detail;
-      this.newDetail.historyGroupView = this.detail.historyGroupView;
-      this.oldDetail.historyGroupView = this.detail.historyGroupView;
-      this.detail.tagGroupView = this.newDetail.tagGroupView;
-      this.compareCondition(this.detail.tagGroupView, 'old');
-      Object.keys(this.detail.tagGroupView).forEach(key => this.isConditionOpen[key] = true);
-    }
+    //find current review
+    this.reviewManageService.getActivityReviewRow(this.historyId).pipe(
+      catchError(err => {
+        this.loadingService.close();
+        this.dialogService.alertAndBackToList(false, '查無此筆審核，將為您導回客群名單審核列表', ['pages', 'review-manage', 'activity-review-list']);
+        throw new Error(err.message);
+      }),
+      filter(res => res.code === RestStatus.SUCCESS),
+      tap((res) => {
+        this.newReview = JSON.parse(JSON.stringify(res.result));
+        this.reviewStatus = this.newReview.reviewStatus;
+        this.reviewComment = this.newReview.reviewComment;
+        this.oldReview = ActivityListMock.filter(row => row.activityId === this.newReview.referenceId)[0];
+        this.newDetail = JSON.parse(JSON.stringify(this.newReview));
+        this.detail = this.newDetail;
+        this.loadingService.close();
+        //TODO find previous approved
+        // if(!!this.oldReview){
+          //TODO:後端回傳data還缺tagGroup 和 activityReviewHistory
+          // this.oldDetail = JSON.parse(JSON.stringify(this.oldReview));
+          // this.newDetail.tagGroupView = CommonUtil.groupBy(this.newReview.activityListCondition, 'tagGroup');
+          // this.oldDetail.tagGroupView = CommonUtil.groupBy(this.oldReview.activityListCondition, 'tagGroup');
+          // this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
+          // const processedData = CommonUtil.getHistoryProcessData<ActivitySetting>('activityReviewHistory', this.oldReview as ActivitySetting);
+          // if (!!processedData) {
+          //   this.isHistoryOpen = processedData.isHistoryOpen;
+          //   this.detail = processedData.detail;
+          //   this.newDetail.historyGroupView = this.detail.historyGroupView;
+          //   this.oldDetail.historyGroupView = this.detail.historyGroupView;
+          //   this.detail.tagGroupView = this.newDetail.tagGroupView;
+          //   this.compareCondition(this.detail.tagGroupView, 'old');
+          //   Object.keys(this.detail.tagGroupView).forEach(key => this.isConditionOpen[key] = true);
+          // }
+      })
+    ).subscribe();
   }
 
   viewToggle() {
