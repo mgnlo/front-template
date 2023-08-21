@@ -3,7 +3,6 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ActivitySetting, ScheduleDetailView, Schedule_Batch_History } from '@api/models/schedule-activity.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
-import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, Status, StatusResult } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
@@ -14,7 +13,7 @@ import { BaseComponent } from '@pages/base.component';
 import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
 import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
 import { combineLatest, of } from 'rxjs';
-import { catchError, filter, tap, map } from 'rxjs/operators';
+import { catchError, filter, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'schedule-activity-detail',
@@ -126,8 +125,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
 
     combineLatest([detailObservable, gridObservable]).pipe(
       catchError(err => {
-        this.handleError(err, '查無此筆資料，將為您導回名單排程', ['pages', 'schedule-manage', 'schedule-activity-list']);
-        this.loadingService.close();
+        this.handleErrorResponse(err, '查無此筆資料，將為您導回名單排程', ['pages', 'schedule-manage', 'schedule-activity-list']);
         return of(null);
       }),
       filter(([detailRes, gridRes]) => detailRes !== null && detailRes.code === RestStatus.SUCCESS && gridRes !== null && gridRes.code === RestStatus.SUCCESS),
@@ -136,8 +134,10 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
 
         const gridData = JSON.parse(JSON.stringify(gridRes.result));
         const scheduleActivityGrid = this.mapGridDataToActivitySettings(gridData);
+        // console.info('this.detailRes', detailRes)
+        // console.info('this.gridRes', gridRes)
         this.dataSource.load(scheduleActivityGrid);
-//以下這段要測
+        //以下這段要測
         if (storage?.page) {
           this.dataSource.setPage(storage.page);
           this.dataSource.setPaging(storage.page, this.dataSource.getPaging().perPage);
@@ -175,9 +175,9 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     }
   }
 
-  handleError(err: any, alertMessage: string, navigationPath?: string[]) {
+  handleErrorResponse(err: any, message: string, route: Array<any>) {
     this.loadingService.close();
-    this.dialogService.alertAndBackToList(false, alertMessage, navigationPath);
+    this.dialogService.alertAndBackToList(false, message, route);
     throw new Error(err.message);
   }
 
@@ -245,7 +245,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
             };
 
             instance.emitter.subscribe((res) => {
-              console.info('res', res)
+              // console.info('res', res)
 
               if (res.isSelected && res.activityId) {
                 this.selectedRows.push({ rowId: res.activityId })
@@ -288,7 +288,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
 
     this.tempPageIsAllSelected = CommonUtil.onSetTempPageIsAllSelected(this.tempPageIsAllSelected, this.paginator.nowPage, this.isAllSelected)
 
-    console.info('this.tempPageIsAllSelected', this.tempPageIsAllSelected)
+    // console.info('this.tempPageIsAllSelected', this.tempPageIsAllSelected)
     this.setSessionVal(
       {
         page: this.paginator.nowPage,
@@ -297,7 +297,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
       });
 
     this.selectedRows = await CommonUtil.onSetGridPageChecked('activityId', this.dataSource, this.selectedRows, this.isAllSelected);
-    console.info('this.selectedRows', this.selectedRows)
+    // console.info('this.selectedRows', this.selectedRows)
 
     this.ng2SmartTable.initGrid();
 
@@ -307,8 +307,8 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
 
   submitRefresh() {
     const result = this.selectedRows.map(m => m.rowId);
-    console.info('selectedRows', this.selectedRows);
-    console.info('result', result);
+    // console.info('selectedRows', this.selectedRows);
+    // console.info('result', result);
   }
 
   edit() {

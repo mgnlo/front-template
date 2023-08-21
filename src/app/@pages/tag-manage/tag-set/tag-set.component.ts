@@ -233,7 +233,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
           this.loadingService.close();
         })
       ).subscribe(res => {
-        console.info(res.result);
+        // console.info(res.result);
         //#region 設定欄位
         const formData = this.validateForm.getRawValue();
         this.changeTagType(formData.tagType);
@@ -266,7 +266,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   }
 
   ngDoCheck() {
-    //console.info('this.findInvalidControls()', this.findInvalidControls())
+    // console.info('this.findInvalidControls()', this.findInvalidControls())
   }
 
   //#region 標籤類型 更動時切換驗證
@@ -357,7 +357,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       this.conditions.removeAt(index);
     }
 
-    //console.info('changeConditionsBtn', this.conditions.getRawValue())
+    // console.info('changeConditionsBtn', this.conditions.getRawValue())
   }
 
   setConditions(action: 'add' | 'remove', key: string, id: number, index: number) {
@@ -367,7 +367,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     } else {
       fg.removeControl(`${key}`);
     }
-    //console.info('setConditions', this.conditions.getRawValue())
+    // console.info('setConditions', this.conditions.getRawValue())
   }
   //#endregion
 
@@ -499,7 +499,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
         throw new Error(err.message);
       }),
       tap(res => {
-        console.info(res);
+        // console.info(res);
         this.loadingService.close();
       })
     ).subscribe(res => {
