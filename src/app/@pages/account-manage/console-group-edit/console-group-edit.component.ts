@@ -215,6 +215,8 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
       }
     }
 
+    this.consoleGroupDetail.consoleUser = this.dataSource["data"];
+
     // 這邊要發送電文 7.4 更新群組設定去進行修改，request 內容同 7.2 的 response
     this.loadingService.open();
     this.accountManageService.updateConsoleGroup(this.consoleGroupDetail.groupId, this.consoleGroupDetail).pipe(
@@ -231,9 +233,6 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
           this.navigateToDetailPage();
         }
       });
-
-    // 正式串接後底下要拿掉
-    this.navigateToDetailPage();
   }
 
   navigateToDetailPage() {
