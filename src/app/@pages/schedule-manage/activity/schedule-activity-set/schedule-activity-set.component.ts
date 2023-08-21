@@ -217,6 +217,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         return of(null);
       }),
       tap(res => {
+        this.loadingService.close();
         // console.info(res);
       })
     ).subscribe(res => {
@@ -290,8 +291,8 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     this.actionName = CommonUtil.getActionName(this.changeRouteName);
     this.scheduleId = this.params?.['scheduleId'];
 
+    this.dataSource = new LocalDataSource();
     if (!!this.scheduleId) {
-      this.dataSource = new LocalDataSource();
       this.loadingService.open();
       this.scheduleManageService.getScheduleActivitySettingDetail(this.scheduleId).pipe(
         catchError(err => {
