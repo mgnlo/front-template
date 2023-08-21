@@ -110,7 +110,7 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
         sort: false,
       },
       modificationTime: {
-        title: '標籤有效起訖日',
+        title: '標籤有效起迄日',
         type: 'string',
         width: '20%',
         sort: false,

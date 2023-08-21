@@ -6,6 +6,7 @@ import { RejectDialogComponent, RejectDialogOption } from '@component/dialog/rej
 import { NbDialogRef, NbDialogService, NbGlobalPhysicalPosition, NbIconConfig, NbToastrConfig, NbToastrService } from '@nebular/theme';
 import { interval } from 'rxjs';
 import { map, takeWhile } from 'rxjs/operators';
+import { LoadingService } from './loading.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +16,7 @@ export class DialogService {
   constructor(
     private router: Router,
     private dialogService: NbDialogService,
+    private loadingService: LoadingService,
     private toastrService: NbToastrService,
   ) { }
 
@@ -52,10 +54,12 @@ export class DialogService {
    * @param url 有傳就會導頁, 沒傳就停留原頁
    * */
   alertAndBackToList(isSuccess: boolean, msg: string, url?: string[]): void {
+    this.loadingService.open();
     this.showToast(isSuccess ? 'success' : 'danger', msg);
     if (!!url) {
       interval(1500).pipe(map(val => 1 - val), takeWhile(x => x >= 0)).subscribe(() => {
         this.router.navigate(url);
+        this.loadingService.close();
       })
     }
   }

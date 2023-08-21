@@ -96,7 +96,7 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
         width: '5%'
       },
       modificationTime: {
-        title: '名單有效起訖日',
+        title: '名單有效起迄日',
         type: 'string',
         width: '20%',
         sort: false,
