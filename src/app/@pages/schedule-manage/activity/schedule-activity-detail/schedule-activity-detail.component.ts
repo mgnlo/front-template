@@ -126,7 +126,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
 
     combineLatest([detailObservable, gridObservable]).pipe(
       catchError(err => {
-        this.handleError(err, '查無此筆資料，將為您導回名單排程', ['pages', 'schedule-manage', 'schedule-activity-list']);
+        this.handleErrorResponse(err, '查無此筆資料，將為您導回名單排程', ['pages', 'schedule-manage', 'schedule-activity-list']);
         return of(null);
       }),
       filter(([detailRes, gridRes]) => detailRes !== null && detailRes.code === RestStatus.SUCCESS && gridRes !== null && gridRes.code === RestStatus.SUCCESS),
@@ -176,9 +176,9 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     }
   }
 
-  handleError(err: any, alertMessage: string, navigationPath?: string[]) {
+  handleErrorResponse(err: any, message: string, route: Array<any>) {
     this.loadingService.close();
-    this.dialogService.alertAndBackToList(false, alertMessage, navigationPath);
+    this.dialogService.alertAndBackToList(false, message, route);
     throw new Error(err.message);
   }
 

@@ -200,9 +200,11 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   add() {
     this.loadingService.open();
 
+    const route = this.scheduleId ? ['edit', this.scheduleId] : [];
+    const routePath = ['pages', 'schedule-manage', 'schedule-activity-set', ...route];
     this.customerManageService.getActivitySettingList().pipe(
       catchError(err => {
-        this.handleErrorResponse(err, '查詢名單列表失敗')
+        this.handleErrorResponse(err, '查詢名單列表失敗', routePath)
         return of(null);
       }),
       filter(res => res.code === RestStatus.SUCCESS),
@@ -211,7 +213,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       }),
       switchMap(() => this.scheduleManageService.getScheduleActivityOptions()),
       catchError(err => {
-        this.handleErrorResponse(err, `查詢名單列表${this.actionName}失敗`)
+        this.handleErrorResponse(err, `查詢名單列表${this.actionName}失敗`, routePath)
         return of(null);
       }),
       tap(res => {
@@ -234,10 +236,9 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     });
   }
 
-  handleErrorResponse(err: any, message: string) {
+  handleErrorResponse(err: any, message: string, route: Array<any>) {
     this.loadingService.close();
-    const route = this.scheduleId ? ['edit', this.scheduleId] : [];
-    this.dialogService.alertAndBackToList(false, message, ['pages', 'schedule-manage', 'schedule-activity-set', ...route]);
+    this.dialogService.alertAndBackToList(false, message, route);
     throw new Error(err.message);
   }
 
@@ -251,7 +252,9 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
         const findData = this.ActivitySettingArray.find(f => f.activityId?.toLowerCase() === selectedData.key?.toLowerCase());
         if (!findData) {
-          this.handleErrorResponse(null, `查詢名單列表${this.actionName}失敗`);
+          const route = this.scheduleId ? ['edit', this.scheduleId] : [];
+          const routePath = ['pages', 'schedule-manage', 'schedule-activity-set', ...route];
+          this.handleErrorResponse(null, `查詢名單列表${this.actionName}失敗`, routePath);
           return;
         }
 
