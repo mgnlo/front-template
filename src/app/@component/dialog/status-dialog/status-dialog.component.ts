@@ -4,20 +4,20 @@ import { NbDialogRef } from '@nebular/theme';
 import { interval } from 'rxjs';
 import { map, takeWhile } from 'rxjs/operators';
 
-export class ApproveDialogOption {
+export class StatusDialogOption {
   bool: boolean;
   backTo: string;
 }
 @Component({
-  selector: 'ngx-approve-dialog',
-  templateUrl: 'approve-dialog.component.html',
-  styleUrls: ['approve-dialog.component.scss'],
+  selector: 'ngx-status-dialog',
+  templateUrl: 'status-dialog.component.html',
+  styleUrls: ['status-dialog.component.scss'],
 })
-export class ApproveDialogComponent implements OnInit {
+export class StatusDialogComponent implements OnInit {
 
-  @Input() option: ApproveDialogOption;
+  @Input() option: StatusDialogOption;
 
-  constructor(protected ref: NbDialogRef<ApproveDialogComponent>, private router: Router) {}
+  constructor(protected ref: NbDialogRef<StatusDialogComponent>, private router: Router) {}
 
   ngOnInit() {
     interval(1500).pipe(

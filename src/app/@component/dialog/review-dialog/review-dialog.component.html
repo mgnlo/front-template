@@ -1,0 +1,35 @@
+<nb-card class="dialogCard {{dialogSize}}" [formGroup]="form" *ngIf="!option.isApproved">
+  <nb-card-header>
+    <h2>{{option.title}}</h2>
+  </nb-card-header>
+  <nb-card-body>
+    <p>請敘述異動駁回原因以利人員調整/修改：</p>
+    <div class="row">
+      <div class="fieldGroup col-12" [ngClass]="{'error': form.touched && form.get('reason').invalid}">
+        <div>
+          <textarea nbInput fullWidth type="text" class="textBox" placeholder="請輸入" formControlName="reason"
+            [status]="form.touched && form.get('reason').invalid ? 'danger': 'basic'"></textarea>
+        </div>
+        <div class="note errorText">
+          <nb-icon icon="alert-triangle"></nb-icon>
+          <p>請輸入異動駁回原因</p>
+        </div>
+      </div>
+    </div>
+  </nb-card-body>
+  <nb-card-footer>
+    <div class="btnGroup">
+      <button nbButton status="basic" size="medium" (click)="cancel()">取消</button>
+      <button nbButton status="info" size="medium" (click)="submit()" [disabled]="form.invalid">送出</button>
+    </div>
+  </nb-card-footer>
+</nb-card>
+
+<nb-card class="dialogCard statusDialog {{dialogSize}}" *ngIf="option.isApproved">
+  <nb-card-body>
+    <ng-container>
+      <nb-icon status="success" icon="checkmark-circle-outline"></nb-icon>
+      <p>批准成功！</p>
+    </ng-container>
+  </nb-card-body>
+</nb-card>

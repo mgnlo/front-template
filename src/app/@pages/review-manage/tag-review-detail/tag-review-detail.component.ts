@@ -1,15 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { Navigation, Router } from '@angular/router';
+import { ActivatedRoute, Navigation, Router } from '@angular/router';
 import { ActivitySetting, TagSetting } from '@api/models/activity-list.model';
 import { TagDetailView, TagReviewHistory } from '@api/models/tag-manage.model';
 import { DialogService } from '@api/services/dialog.service';
+import { LoadingService } from '@api/services/loading.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { Status } from '@common/enums/common-enum';
+import { RestStatus } from '@common/enums/rest-enum';
 import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
 import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
+import { filter, catchError, takeUntil, tap } from 'rxjs/operators';
+import { ReviewManageService } from '../review-manage.service';
 
 @Component({
   selector: 'tag-review-detail',
@@ -28,13 +32,17 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   isBefore: boolean = false;
   reviewStatus: string;
   reviewComment: string;
+  historyId: string
 
   constructor(
     storageService: StorageService,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private dialogService: DialogService,
     private tableService: Ng2SmartTableService,
     private customerManageService: CustomerManageService,
+    private reviewManageService: ReviewManageService,
+    private loadingService: LoadingService,
   ) {
     super(storageService);
     if (!!this.router.getCurrentNavigation()?.extras) {
@@ -56,6 +64,7 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.historyId = this.activatedRoute.snapshot.params.historyId;
     let searchInfo: SearchInfo = {
       apiUrl: this.customerManageService.activityFunc,
       nowPage: this.paginator.nowPage,
@@ -125,10 +134,6 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
       edit: false,
       delete: false,
     },
-    // rowClassFunction: (row: Row) => {
-    //   console.info(row.getData().status)
-    //   return row.getData().status === 'ing' ? 'aa' : '';
-    // },
   };
 
   viewToggle() {
@@ -146,12 +151,21 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
     }
   }
 
-  approve() {
-    this.dialogService.openApprove({ bool: true, backTo: 'tag-review-list' });
-  }
-
-  reject() {
-    this.dialogService.openReject({ title: '標籤異動駁回說明', backTo: 'tag-review-list' });
+  send(reviewStatus: 'rejected' | 'approved') {
+    let dialogOption = { title: '標籤異動駁回說明', isApproved: reviewStatus === 'approved' };
+    this.dialogService.openReview(dialogOption).componentRef.instance.emit.subscribe(reviewInfo => {
+      let req = { reviewStatus: reviewStatus, reviewComment: reviewInfo.reviewComment }
+      this.reviewManageService.updateTagReview(this.historyId, req).pipe(
+        filter(res => res.code === RestStatus.SUCCESS),
+        catchError(err => {
+          this.loadingService.close();
+          this.dialogService.alertAndBackToList(false, err);
+          throw new Error(err.message);
+        }),
+        takeUntil(this.unsubscribe$),
+        tap(res => this.router.navigate(['pages', 'review-manage', 'tag-review-list']))
+      ).subscribe();
+    })
   }
 
   cancel() {

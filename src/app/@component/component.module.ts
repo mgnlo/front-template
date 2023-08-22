@@ -5,9 +5,8 @@ import { NbDateFnsDateModule } from '@nebular/date-fns';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbIconModule, NbInputModule, NbRadioModule, NbSelectModule, NbSpinnerModule } from '@nebular/theme';
 import { AlertDialogComponent } from './dialog/alert-dialog/alert-dialog.component';
-import { ApproveDialogComponent } from './dialog/approve-dialog/approve-dialog.component';
 import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
-import { RejectDialogComponent } from './dialog/reject-dialog/reject-dialog.component';
+import { ReviewDialogComponent } from './dialog/review-dialog/review-dialog.component';
 import { BasicInputComponent } from './form/basic-input/input.component';
 import { DateRangeComponent } from './form/date-range/date-range.component';
 import { DropdownComponent } from './form/dropdown/dropdown.component';
@@ -17,10 +16,10 @@ import { ColumnButtonComponent } from './table/column-button/column-button.compo
 import { DetailButtonComponent } from './table/detail-button/detail-button.component';
 import { PaginatorComponent } from './table/paginator/paginator.component';
 import { CheckboxColumnComponent } from './table/checkbox-column.ts/checkbox.component';
+import { StatusDialogComponent } from './dialog/status-dialog/status-dialog.component';
 
 export const COMPONENTS = [
-  ApproveDialogComponent,
-  RejectDialogComponent,
+  StatusDialogComponent,
   ConfirmDialogComponent,
   AlertDialogComponent,
   PaginatorComponent,
@@ -31,7 +30,8 @@ export const COMPONENTS = [
   RadioComponent,
   CheckboxColumnComponent,
   DropdownComponent,
-  DateRangeComponent
+  DateRangeComponent,
+  ReviewDialogComponent,
 ];
 
 export const NB_MODULES = [

@@ -1,8 +1,8 @@
 import { Injectable, TemplateRef, Type } from '@angular/core';
 import { Router } from '@angular/router';
 import { toastIcon, toastTitle } from '@common/enums/common-enum';
-import { ApproveDialogComponent, ApproveDialogOption } from '@component/dialog/approve-dialog/approve-dialog.component';
-import { RejectDialogComponent, RejectDialogOption } from '@component/dialog/reject-dialog/reject-dialog.component';
+import { StatusDialogComponent, StatusDialogOption } from '@component/dialog/status-dialog/status-dialog.component';
+import { ReviewDialogComponent, ReviewDialogOption } from '@component/dialog/review-dialog/review-dialog.component';
 import { NbDialogRef, NbDialogService, NbGlobalPhysicalPosition, NbIconConfig, NbToastrConfig, NbToastrService } from '@nebular/theme';
 import { interval } from 'rxjs';
 import { map, takeWhile } from 'rxjs/operators';
@@ -27,9 +27,8 @@ export class DialogService {
     });
   }
 
-  openReject(option: RejectDialogOption): void {
-
-    this.dialogService.open(RejectDialogComponent, {
+  openReview(option: ReviewDialogOption): NbDialogRef<ReviewDialogComponent>{
+    return this.dialogService.open(ReviewDialogComponent, {
       context: {
         dialogSize: 'medium',
         option: option,
@@ -38,9 +37,9 @@ export class DialogService {
     });
   }
 
-  openApprove(option: ApproveDialogOption): void {
+  openStatus(option: StatusDialogOption): void {
 
-    this.dialogService.open(ApproveDialogComponent, {
+    this.dialogService.open(StatusDialogComponent, {
       context: {
         option: option,
       },
