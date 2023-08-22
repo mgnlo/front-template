@@ -70,7 +70,7 @@ export class CommonServerDataSource extends ServerDataSource {
       if (httpParams.has('page')) httpParams = httpParams.delete('page');;
       httpParams = httpParams.append('page', page)
     }
-    debugger
+
     if (this.conf.filterFieldKey !== '#field#') {
       const filterFieldKey = JSON.parse(this.conf.filterFieldKey)
       if (!!filterFieldKey && filterFieldKey.length > 0) {
@@ -79,7 +79,6 @@ export class CommonServerDataSource extends ServerDataSource {
             httpParams = httpParams.append(filter.key, filter.value)
           });
       }
-
     }
 
     if (!!this.initConf) {
