@@ -26,7 +26,8 @@ export class CommonConf {
 
   constructor(
     { endPoint = '', sortFieldKey = '', sortDirKey = '',
-      pagerPageKey = '', pagerLimitKey = '', filterFieldKey = '', totalKey = '', dataKey = '' } = {}) {
+      pagerPageKey = '', pagerLimitKey = '', filterFieldKey = '',
+      totalKey = '', dataKey = '' } = {}) {
 
     this.endPoint = endPoint ? endPoint : '';
     this.sortFieldKey = sortFieldKey ? sortFieldKey : CommonConf.SORT_FIELD_KEY;
@@ -59,24 +60,29 @@ export class CommonServerDataSource extends ServerDataSource {
   }
 
   protected requestElements(): Observable<any> {
+
     const resultUrl = this.prefixUrl + this.conf.endPoint;
     let httpParams = this.createRequesParams();
 
-    //初始化
+    //初始化頁面
     const page = (this?.initConf?.page ?? 1);
     if (page > 1) {
       if (httpParams.has('page')) httpParams = httpParams.delete('page');;
       httpParams = httpParams.append('page', page)
     }
-
-    if (!!this.initConf) {
-      if (!!this.initConf.filters && this.initConf.filters.length > 0) {
-        this.initConf.filters.filter(filter => CommonUtil.isNotBlank(filter.value.toString()))
+    debugger
+    if (this.conf.filterFieldKey !== '#field#') {
+      const filterFieldKey = JSON.parse(this.conf.filterFieldKey)
+      if (!!filterFieldKey && filterFieldKey.length > 0) {
+        filterFieldKey.filter(filter => CommonUtil.isNotBlank(filter.value.toString()))
           .forEach(filter => {
             httpParams = httpParams.append(filter.key, filter.value)
           });
       }
 
+    }
+
+    if (!!this.initConf) {
       if (!!this.initConf.sorts) {
         this.setSort(this.initConf.sorts, false);
       }

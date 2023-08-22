@@ -42,6 +42,7 @@ export class Ng2SmartTableService {
 
     if (!!searchInfo?.filters) {
       initConf.filters = CommonUtil.getSearchFilters(searchInfo.filters);
+      conf.filterFieldKey = JSON.stringify(initConf.filters)
     }
 
     if (!!searchInfo?.sorts) {
