@@ -168,6 +168,20 @@ export const CommonUtil = {
       });
     }
   },
+  /** 刪除最後一個特定字元(含重複)
+   *  @param inputString 輸入字串
+   *  @param targetChar 欲刪除字元
+  */
+  removeLastCharIfEquals(inputString: string, targetChar: string) {
+    if (!inputString || !targetChar) {
+      return inputString;
+    }
+
+    const regex = new RegExp(`${targetChar}+[^${targetChar}]*$`);
+    const result = inputString.replace(regex, '');
+
+    return result;
+  },
   /** 設定每頁全選暫存
    *  取得 更新的 tempPageIsAllSelected 頁碼和是否勾選全選
    *  @param tempPageIsAllSelected 暫存資料

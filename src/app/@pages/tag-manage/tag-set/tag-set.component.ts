@@ -431,15 +431,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   //#endregion
 
   //#region 刪除最後一個特定字元(含重複)
-  removeLastCharIfEquals(inputString, targetChar) {
-    if (!inputString || !targetChar) {
-      return inputString;
-    }
-
-    const regex = new RegExp(`${targetChar}+[^${targetChar}]*$`);
-    const result = inputString.replace(regex, '');
-
-    return result;
+  removeLastCharIfEquals(inputString: string, targetChar: string) {
+    return CommonUtil.removeLastCharIfEquals(inputString, targetChar);
   }
   //#endregion
 

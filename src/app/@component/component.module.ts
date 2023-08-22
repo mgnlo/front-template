@@ -17,6 +17,8 @@ import { ColumnButtonComponent } from './table/column-button/column-button.compo
 import { DetailButtonComponent } from './table/detail-button/detail-button.component';
 import { PaginatorComponent } from './table/paginator/paginator.component';
 import { CheckboxColumnComponent } from './table/checkbox-column.ts/checkbox.component';
+import { DownloadFileComponent } from './form/file/download-file/download-file.component';
+import { UploadFileComponent } from './form/file/upload-file/upload-file.component';
 
 export const COMPONENTS = [
   ApproveDialogComponent,
@@ -31,7 +33,9 @@ export const COMPONENTS = [
   RadioComponent,
   CheckboxColumnComponent,
   DropdownComponent,
-  DateRangeComponent
+  DateRangeComponent,
+  DownloadFileComponent,
+  UploadFileComponent
 ];
 
 export const NB_MODULES = [

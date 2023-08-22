@@ -1,0 +1,30 @@
+<input type="file" (change)="onFileSelected($event)" />
+<button (click)="onUpload()">Upload File</button>
+<div *ngIf="uploadResponse.status === 'success'">
+  File uploaded successfully. File ID: {{ uploadResponse.fileId }}
+</div>
+<div *ngIf="uploadResponse.status === 'error'">{{ uploadResponse.message }}</div>
+
+
+
+<div class="fieldGroup essential col-12 col-lg-6" [ngClass]="{'error': hasError(), 'essential': required}" [formGroup]="form">
+  <label>名單上傳</label>
+  <div>
+    <input nbInput fullWidth [formControlName]="ctlName" placeholder="請上傳檔案" [status]="hasError() ? 'danger':'basic'"
+          type="text"[placeholder] = "placeholder"/>
+    <input nbInput fullWidth type="file"  [accept]="removeLastCharIfEquals(passFileArrayStr,',')" (change)="onFileSelected($event)" (click)="onFileSelected($event)" />
+    <button nbButton status="warning" size="tiny" class="iconBtn">
+        <nb-icon icon="folder-add-outline"></nb-icon>
+    </button>
+  </div>
+  <div class="note errorText">
+    <nb-icon icon="alert-triangle"></nb-icon>
+    <!-- <p>{{validateForm.get('fileName')?.errors?.uploadFileMsg}}</p> -->
+    <p *ngIf=" (ctl?.dirty || ctl?.touched) && ctl?.errors?.required; else otherErr">此為必填欄位</p>
+    <ng-template #otherErr>{{firstErr}}</ng-template>
+  </div>
+  <div class="note">
+    <nb-icon icon="alert-circle"></nb-icon>
+    <p>請上傳{{removeLastCharIfEquals(passFileArrayStr,',')}}格式類型檔案</p>
+  </div>
+</div>
