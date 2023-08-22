@@ -371,7 +371,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       catchError((err) => {
         this.loadingService.close();
         const route = this.scheduleId ? [this.changeRouteName, this.scheduleId] : [];
-        this.dialogService.alertAndBackToList(false, `${this.actionName}失敗`, ['pages', 'schedule-manage', 'schedule-activity-set', ...route]);
+        this.dialogService.alertAndBackToList(false, `${this.actionName}失敗 ${err}`, ['pages', 'schedule-manage', 'schedule-activity-set']);
         throw new Error(err.message);
       }),
       tap(res => {
