@@ -138,6 +138,14 @@ export class TagListComponent extends BaseComponent implements OnInit {
     this.setSessionVal({ page: this.paginator.nowPage, filter: filterVal });
   }
 
+  reset() {
+    this.validateForm.reset({ tagName: '', status: '', startDate: null, endDate: null, });
+    this.isSearch = true;
+    this.paginator.nowPage = 1;
+    this.setSessionData();
+    this.search('reset');
+  }
+
   search(key?: string) {
     const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
 
@@ -162,13 +170,6 @@ export class TagListComponent extends BaseComponent implements OnInit {
       errMsg: '標籤列表查無資料',
     }
     this.restDataSource = this.tableService.searchData(searchInfo);
-  }
-
-  reset() {
-    this.validateForm.reset({ tagName: '', status: '', startDate: null, endDate: null, });
-    this.isSearch = true;
-    this.setSessionData();
-    this.search('reset');
   }
 
   add() {

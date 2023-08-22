@@ -138,6 +138,7 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
   reset() {
     this.validateForm.reset({ activityName: '', reviewStatus: '', startDate: null, endDate: null });
     this.isSearch = true;
+    this.paginator.nowPage = 1;
     this.setSessionData();
     this.search('reset');
   }

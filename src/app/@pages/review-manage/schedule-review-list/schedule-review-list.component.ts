@@ -110,6 +110,7 @@ export class ScheduleReviewListComponent extends BaseComponent implements OnInit
 
   reset() {
     this.isSearch = true;
+    this.paginator.nowPage = 1;
     this.setSessionData();
     this.search('reset');
   }
