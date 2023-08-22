@@ -13,14 +13,17 @@ RUN npm install -legacy-peer-deps
 COPY ./ ./
 
 # 指定建立build output資料夾，--prod為Production Mode
-RUN npm run build --output-path=./dist/Console-Frontend
+RUN npm run build-ocp --output-path=./dist/Console-Frontend
 
 
 # pull nginx image
 FROM nginx:1.24.0-alpine-slim
 
+RUN chgrp -R 0 /etc/nginx/ /var/cache/nginx /var/run /var/log/nginx  && \ 
+  chmod -R g+rwX /etc/nginx/ /var/cache/nginx /var/run /var/log/nginx
+
 # 從第一階段的檔案copy
-COPY --from=build-stage /usr/app/dist/Console-Frontend /usr/share/nginx/html/console-frontend
+COPY --from=build-stage /usr/app/dist/Console-Frontend /usr/share/nginx/html
 
 # 覆蓋image裡的設定檔
 COPY ./nginx-custom.conf /etc/nginx/conf.d/default.conf

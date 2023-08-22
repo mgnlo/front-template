@@ -2,8 +2,6 @@ import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ScheduleActivitySetting } from '@api/models/schedule-activity.model';
-import { DialogService } from '@api/services/dialog.service';
-import { LoadingService } from '@api/services/loading.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { Frequency, Status } from '@common/enums/common-enum';
