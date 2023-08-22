@@ -227,6 +227,24 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
 
             instance.emitter.subscribe((res) => {
               // console.info('res', res)
+              //#region 用grid按鈕，控制是否全選
+              const pageData = this.dataSource.getElements()
+              pageData.then((res) => {
+                const hasActionFieldCNT = res.filter((f) => f.isShow).length;
+                const wasSelected = res.filter((f) => f.isShow && f.isSelected).length;
+
+                if (wasSelected === hasActionFieldCNT) this.isAllSelected = true;
+                if (wasSelected === 0) this.isAllSelected = false;
+
+                this.tempPageIsAllSelected = CommonUtil.onSetTempPageIsAllSelected(this.tempPageIsAllSelected, this.paginator.nowPage, this.isAllSelected)
+                this.setSessionVal(
+                  {
+                    page: this.paginator.nowPage,
+                    isOpenCheckbox: this?.gridDefine?.columns?.['isChecked'] ? true : false,
+                    isPageAllSelected: this.tempPageIsAllSelected,
+                  });
+              })
+              //#endregion
 
               if (res.isSelected && res.tagId) {
                 this.selectedRows.push({ rowId: res.tagId })
