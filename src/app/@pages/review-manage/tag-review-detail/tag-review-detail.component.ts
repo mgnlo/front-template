@@ -159,7 +159,6 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
         filter(res => res.code === RestStatus.SUCCESS),
         catchError(err => {
           this.dialogService.alertAndBackToList(false, err);
-          this.loadingService.close();
           throw new Error(err.message);
         }),
         takeUntil(this.unsubscribe$),

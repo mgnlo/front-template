@@ -93,7 +93,6 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
       this.customerManageService.getActivitySettingRow(this.activityId).pipe(
         catchError(err => {
           this.dialogService.alertAndBackToList(false, '查無該筆資料，將為您導回客群名單', ['pages', 'customer-manage', 'activity-list']);
-          this.loadingService.close();
           throw new Error(err.message);
         }),
         filter(res => res.code === RestStatus.SUCCESS),
@@ -153,7 +152,6 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     if (!valid || !reqData) {
       const route = this.activityId ? [this.activityId] : [];
       this.dialogService.alertAndBackToList(false, `${this.actionName}驗證失敗`, ['pages', 'customer-manage', 'customer-set', ...route]);
-      this.loadingService.close();
       return
     }
 
@@ -174,7 +172,6 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
       catchError((err) => {
         const route = this.activityId ? [this.activityId] : [];
         this.dialogService.alertAndBackToList(false, `${this.actionName}失敗`, ['pages', 'customer-manage', 'activity-set', ...route]);
-        this.loadingService.close();
         throw new Error(err.message);
       }),
       tap(res => {
@@ -184,7 +181,6 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     ).subscribe(res => {
       if (res.code === RestStatus.SUCCESS) {
         this.dialogService.alertAndBackToList(true, `${this.actionName}成功`, ['pages', 'customer-manage', 'activity-list']);
-        this.loadingService.close();
       }
     });
   }

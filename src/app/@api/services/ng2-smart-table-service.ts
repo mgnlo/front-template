@@ -54,7 +54,6 @@ export class Ng2SmartTableService {
       switch (status) {
         case 'error':
           this.dialogService.alertAndBackToList(false, searchInfo.errMsg);
-          this.loadingService.close();
           break;
         case 'finish':
           this.loadingService.close();

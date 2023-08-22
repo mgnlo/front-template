@@ -5,7 +5,7 @@ import { StatusDialogComponent, StatusDialogOption } from '@component/dialog/sta
 import { ReviewDialogComponent, ReviewDialogOption } from '@component/dialog/review-dialog/review-dialog.component';
 import { NbDialogRef, NbDialogService, NbGlobalPhysicalPosition, NbIconConfig, NbToastrConfig, NbToastrService } from '@nebular/theme';
 import { interval } from 'rxjs';
-import { map, takeWhile } from 'rxjs/operators';
+import { finalize, map, takeWhile } from 'rxjs/operators';
 import { LoadingService } from './loading.service';
 
 @Injectable({
@@ -27,7 +27,7 @@ export class DialogService {
     });
   }
 
-  openReview(option: ReviewDialogOption): NbDialogRef<ReviewDialogComponent>{
+  openReview(option: ReviewDialogOption): NbDialogRef<ReviewDialogComponent> {
     return this.dialogService.open(ReviewDialogComponent, {
       context: {
         dialogSize: 'medium',
@@ -58,9 +58,16 @@ export class DialogService {
     if (!!url) {
       interval(1500).pipe(map(val => 1 - val), takeWhile(x => x >= 0)).subscribe(() => {
         this.router.navigate(url);
+      });
+    }
+    // 無論是否有提供 URL，最後都會關閉 loadingService
+    interval(1500).pipe(
+      map(val => 1 - val),
+      takeWhile(x => x >= 0),
+      finalize(() => {
         this.loadingService.close();
       })
-    }
+    ).subscribe();
   }
 
   showToast(status: string, content: string) {
