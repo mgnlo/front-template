@@ -1,8 +1,7 @@
 import { Injectable } from "@angular/core";
-import { ActivityReviewHistory } from "@api/models/activity-list.model";
+import { ActivityReviewHistory, TagReviewHistory } from "@api/models/activity-list.model";
 import { ResponseModel } from "@api/models/base.model";
-import { ScheduleReviewHistory, ScheduleReviewRowReq } from "@api/models/schedule-activity.model";
-import { TagReviewRowReq, TagReviewRowResp } from "@api/models/tag-manage.model";
+import { ScheduleReviewHistory } from "@api/models/schedule-activity.model";
 import { ApiService } from "@api/services/api.service";
 import { Observable } from "rxjs";
 
@@ -13,21 +12,29 @@ export class ReviewManageService {
     readonly activityReviewFunc = 'activity-review-history/';
     readonly scheduleReviewFunc = 'schedule-review-history/';
 
-    constructor(private service: ApiService) {}
+    constructor(private service: ApiService) { }
 
     getActivityReviewRow(historyId: string): Observable<ResponseModel<ActivityReviewHistory>> {
         return this.service.doGet(this.activityReviewFunc + historyId);
     }
 
-    updateActivityReview(historyId: string, data: any): Observable<ResponseModel<any>> {
+    getLastApprovedActivity(historyId: string): Observable<ResponseModel<ActivityReviewHistory>> {
+        return this.service.doGet(this.activityReviewFunc + historyId + '/last-approved');
+    }
+
+    updateActivityReview(historyId: string, data: { reviewStatus: string, reviewComment: string }): Observable<ResponseModel<any>> {
         return this.service.doPut(this.activityReviewFunc + historyId, data);
     }
 
-    getTagReviewRow(historyId: string): Observable<ResponseModel<TagReviewRowResp>> {
+    getTagReviewRow(historyId: string): Observable<ResponseModel<TagReviewHistory>> {
         return this.service.doGet(this.tagReviewFunc + historyId);
     }
 
-    updateTagReview(historyId: string, data: TagReviewRowReq): Observable<ResponseModel<any>> {
+    getLastApprovedTag(historyId: string): Observable<ResponseModel<TagReviewHistory>> {
+        return this.service.doGet(this.tagReviewFunc + historyId + '/last-approved');
+    }
+
+    updateTagReview(historyId: string, data: { reviewStatus: string, reviewComment: string }): Observable<ResponseModel<any>> {
         return this.service.doPut(this.tagReviewFunc + historyId, data);
     }
 
@@ -39,7 +46,7 @@ export class ReviewManageService {
         return this.service.doGet(this.scheduleReviewFunc + historyId + '/last-approved');
     }
 
-    updateScheduleReview(historyId: string, data: {reviewStatus: string, reviewComment?: string}): Observable<ResponseModel<any>> {
+    updateScheduleReview(historyId: string, data: { reviewStatus: string, reviewComment: string }): Observable<ResponseModel<any>> {
         return this.service.doPut(this.scheduleReviewFunc + historyId, data);
     }
 

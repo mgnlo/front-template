@@ -8,7 +8,7 @@ import { RestStatus } from '@common/enums/rest-enum';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
 import { combineLatest } from 'rxjs';
-import { catchError, filter, takeUntil } from 'rxjs/operators';
+import { catchError, filter, takeUntil, tap } from 'rxjs/operators';
 import { ReviewManageService } from '../review-manage.service';
 
 @Component({
@@ -53,7 +53,7 @@ export class ScheduleReviewDetailComponent extends BaseComponent implements OnIn
       filter(res => res[0].code === RestStatus.SUCCESS && res[1].code === RestStatus.SUCCESS),
       catchError(err => {
         this.loadingService.close();
-        this.dialogService.alertAndBackToList(false, err, ['pages', 'review-manage', 'schedule-review-list']);
+        this.dialogService.alertAndBackToList(false, `${err.message}，將為您導回名單排程審核列表`, ['pages', 'review-manage', 'schedule-review-list']);
         throw new Error(err.message);
       }),
       takeUntil(this.unsubscribe$),
@@ -63,8 +63,8 @@ export class ScheduleReviewDetailComponent extends BaseComponent implements OnIn
       this.reviewStatus = reviewData.result.reviewStatus;
       this.reviewComment = reviewData.result.reviewComment;
       this.isCompare = !!lastData.result ? true : false;
-      let newActivityList: {key: string, value: string}[] = [];
-      if(!!reviewData.result?.activitySetting){
+      let newActivityList: { key: string, value: string }[] = [];
+      if (!!reviewData.result?.activitySetting) {
         newActivityList = reviewData.result.activitySetting.map(activity => { return { key: activity.activityId, value: activity.activityName } });
       }
       const processedData = CommonUtil.getHistoryProcessData<ScheduleReviewHistory>('scheduleReviewHistory', reviewData.result as ScheduleReviewHistory);
@@ -75,8 +75,8 @@ export class ScheduleReviewDetailComponent extends BaseComponent implements OnIn
       if (this.isCompare) {
         this.oldDetail = JSON.parse(JSON.stringify(lastData.result));
         this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
-        let oldActivityList: {key: string, value: string}[] = [];
-        if(!!lastData.result?.activitySetting){
+        let oldActivityList: { key: string, value: string }[] = [];
+        if (!!lastData.result?.activitySetting) {
           oldActivityList = lastData.result.activitySetting.map(activity => { return { key: activity.activityId, value: activity.activityName } })
         }
         let allActivityList = newActivityList.concat(oldActivityList.filter(oldActivity => !newActivityList.find(newActivity => newActivity.key == oldActivity.key)));
@@ -116,32 +116,21 @@ export class ScheduleReviewDetailComponent extends BaseComponent implements OnIn
     this.detail = this.isBefore === true ? this.oldDetail : this.newDetail;
   }
 
-  approve() {
-    this.reviewManageService.updateScheduleReview(this.historyId, { reviewStatus: 'approved' }).pipe(
-      filter(res => res.code === RestStatus.SUCCESS),
-      catchError(err => {
-        this.loadingService.close();
-        this.dialogService.alertAndBackToList(false, err);
-        throw new Error(err.message);
-      }),
-      takeUntil(this.unsubscribe$),
-    ).subscribe(res => {
-      this.dialogService.openApprove({ bool: true, backTo: 'schedule-review-list' });
-    });
-  }
-
-  reject() {
-    this.reviewManageService.updateScheduleReview(this.historyId, { reviewStatus: 'rejected' }).pipe(
-      filter(res => res.code === RestStatus.SUCCESS),
-      catchError(err => {
-        this.loadingService.close();
-        this.dialogService.alertAndBackToList(false, err);
-        throw new Error(err.message);
-      }),
-      takeUntil(this.unsubscribe$),
-    ).subscribe(res => {
-      this.dialogService.openReject({ title: '名單排程異動駁回說明', backTo: 'schedule-review-list' })
-    });
+  send(reviewStatus: 'rejected' | 'approved') {
+    let dialogOption = { title: '名單排程異動駁回說明', isApproved: reviewStatus === 'approved' };
+    this.dialogService.openReview(dialogOption).componentRef.instance.emit.subscribe(reviewInfo => {
+      let req = { reviewStatus: reviewStatus, reviewComment: reviewInfo.reviewComment }
+      this.reviewManageService.updateScheduleReview(this.historyId, req).pipe(
+        filter(res => res.code === RestStatus.SUCCESS),
+        catchError(err => {
+          this.loadingService.close();
+          this.dialogService.alertAndBackToList(false, err);
+          throw new Error(err.message);
+        }),
+        takeUntil(this.unsubscribe$),
+        tap(res => this.router.navigate(['pages', 'review-manage', 'schedule-review-list']))
+      ).subscribe();
+    })
   }
 
   cancel() {

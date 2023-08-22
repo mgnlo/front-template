@@ -5,10 +5,10 @@ import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
 import { RestStatus } from '@common/enums/rest-enum';
-import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
-import { catchError, filter, tap } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+import { catchError, filter, takeUntil, tap } from 'rxjs/operators';
 import { ReviewManageService } from '../review-manage.service';
 
 @Component({
@@ -32,6 +32,7 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
   reviewStatus: string;
   reviewComment: string;
   historyId: string;
+  isCompare: boolean = false;
 
   constructor(
     storageService: StorageService,
@@ -46,41 +47,47 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
 
   ngOnInit(): void {
     this.historyId = this.activatedRoute.snapshot.params.historyId;
-    //find current review
-    this.reviewManageService.getActivityReviewRow(this.historyId).pipe(
+
+    this.loadingService.open();
+    combineLatest([
+      this.reviewManageService.getActivityReviewRow(this.historyId),
+      this.reviewManageService.getLastApprovedActivity(this.historyId)
+    ]).pipe(
+      filter(res => res[0].code === RestStatus.SUCCESS && res[1].code === RestStatus.SUCCESS),
       catchError(err => {
         this.loadingService.close();
-        this.dialogService.alertAndBackToList(false, '查無此筆審核，將為您導回客群名單審核列表', ['pages', 'review-manage', 'activity-review-list']);
+        this.dialogService.alertAndBackToList(false, `${err.message}，將為您導回客群名單審核列表`, ['pages', 'review-manage', 'activity-review-list']);
         throw new Error(err.message);
       }),
-      filter(res => res.code === RestStatus.SUCCESS),
-      tap((res) => {
-        this.newReview = JSON.parse(JSON.stringify(res.result));
-        this.reviewStatus = this.newReview.reviewStatus;
-        this.reviewComment = this.newReview.reviewComment;
-        this.oldReview = ActivityListMock.filter(row => row.activityId === this.newReview.referenceId)[0];
-        this.newDetail = JSON.parse(JSON.stringify(this.newReview));
-        this.detail = this.newDetail;
-        this.loadingService.close();
-        //TODO find previous approved
-        // if(!!this.oldReview){
-          //TODO:後端回傳data還缺tagGroup 和 activityReviewHistory
-          // this.oldDetail = JSON.parse(JSON.stringify(this.oldReview));
-          // this.newDetail.tagGroupView = CommonUtil.groupBy(this.newReview.activityListCondition, 'tagGroup');
-          // this.oldDetail.tagGroupView = CommonUtil.groupBy(this.oldReview.activityListCondition, 'tagGroup');
-          // this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
-          // const processedData = CommonUtil.getHistoryProcessData<ActivitySetting>('activityReviewHistory', this.oldReview as ActivitySetting);
-          // if (!!processedData) {
-          //   this.isHistoryOpen = processedData.isHistoryOpen;
-          //   this.detail = processedData.detail;
-          //   this.newDetail.historyGroupView = this.detail.historyGroupView;
-          //   this.oldDetail.historyGroupView = this.detail.historyGroupView;
-          //   this.detail.tagGroupView = this.newDetail.tagGroupView;
-          //   this.compareCondition(this.detail.tagGroupView, 'old');
-          //   Object.keys(this.detail.tagGroupView).forEach(key => this.isConditionOpen[key] = true);
-          // }
-      })
-    ).subscribe();
+      takeUntil(this.unsubscribe$),
+    ).subscribe(([reviewData, lastData]) => {
+      this.newDetail = JSON.parse(JSON.stringify(reviewData.result));
+      this.detail = this.newDetail;
+      this.reviewStatus = reviewData.result.reviewStatus;
+      this.reviewComment = reviewData.result.reviewComment;
+      this.isCompare = !!lastData.result ? true : false;
+      if (!!reviewData.result?.activityListCondition) {
+        this.newDetail.tagGroupView = CommonUtil.groupBy(this.newReview.activityListCondition, 'tagGroup');
+      }
+      const processedData = CommonUtil.getHistoryProcessData<ActivitySetting>('activityReviewHistory', this.oldReview as ActivitySetting);
+      if (!!processedData) {
+        this.isHistoryOpen = processedData.isHistoryOpen;
+        this.detail = processedData.detail;
+        this.newDetail.historyGroupView = this.detail.historyGroupView;
+        this.oldDetail.historyGroupView = this.detail.historyGroupView;
+        this.detail.tagGroupView = this.newDetail.tagGroupView;
+        this.compareCondition(this.detail.tagGroupView, 'old');
+        Object.keys(this.detail.tagGroupView).forEach(key => this.isConditionOpen[key] = true);
+      }
+      if (this.isCompare) {
+        this.oldDetail = JSON.parse(JSON.stringify(lastData.result));
+        if (!!lastData.result?.activityListCondition) {
+          this.oldDetail.tagGroupView = CommonUtil.groupBy(this.oldReview.activityListCondition, 'tagGroup');
+        }
+        this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
+      }
+      this.loadingService.close();
+    });
   }
 
   viewToggle() {
@@ -126,12 +133,21 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
     });
   }
 
-  approve() {
-    this.dialogService.openApprove({ bool: true, backTo: 'activity-review-list' });
-  }
-
-  reject() {
-    this.dialogService.openReject({ title: '客群名單異動駁回說明', backTo: 'activity-review-list' });
+  send(reviewStatus: 'rejected' | 'approved') {
+    let dialogOption = { title: '客群名單異動駁回說明', isApproved: reviewStatus === 'approved' };
+    this.dialogService.openReview(dialogOption).componentRef.instance.emit.subscribe(reviewInfo => {
+      let req = { reviewStatus: reviewStatus, reviewComment: reviewInfo.reviewComment }
+      this.reviewManageService.updateActivityReview(this.historyId, req).pipe(
+        filter(res => res.code === RestStatus.SUCCESS),
+        catchError(err => {
+          this.loadingService.close();
+          this.dialogService.alertAndBackToList(false, err);
+          throw new Error(err.message);
+        }),
+        takeUntil(this.unsubscribe$),
+        tap(res => this.router.navigate(['pages', 'review-manage', 'activity-review-list']))
+      ).subscribe();
+    })
   }
 
   cancel() {
