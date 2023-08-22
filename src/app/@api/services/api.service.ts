@@ -72,7 +72,7 @@ export class ApiService {
 
         if (error.status === 403) {
           // JWT 失效主機發送 403 錯誤，這邊需要導頁回兆豐登入頁，待補(需要確認導頁網址與相關參數)
-          this.storageService.removeLocalVal("jwtToken");
+          this.storageService.removeSessionVal("jwtToken");
         }
 
         return throwError(errorMessage);

@@ -23,7 +23,7 @@ export class LoginService {
         this.service.jwtToken = this._jwtToken;
         this._userProfile = this.parseJwtPayload();
         this.userProfileSubject.next(this._userProfile);
-        this.storageService.putLocalVal("jwtToken", jwt);
+        this.storageService.putSessionVal("jwtToken", jwt);
     };
 
     private _userProfile: ConsoleUser;
@@ -37,7 +37,7 @@ export class LoginService {
     constructor(
         private service: ApiService,
         private storageService: StorageService) {
-        let storageJwt = this.storageService.getLocalVal("jwtToken");
+        let storageJwt = this.storageService.getSessionVal("jwtToken");
 
         if(storageJwt) {
           this.jwtToken = storageJwt;
@@ -61,7 +61,7 @@ export class LoginService {
                 return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
             }).join(''));
 
-            return JSON.parse(jsonPayload);
+            return JSON.parse(JSON.parse(jsonPayload).sub);
         } else {
             return null;
         }
