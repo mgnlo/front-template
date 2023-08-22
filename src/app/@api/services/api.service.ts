@@ -8,6 +8,7 @@ import { environment } from '../../../environments/environment';
 import { ApiLogicError } from './../error/api-logic-error';
 import { LoadingService } from './loading.service';
 import { LoginService } from './login.service';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -27,11 +28,12 @@ export class ApiService {
     },
   };
   // private prefixUrl = environment.SERVER_URL + environment.API_URL;
-  private prefixUrl = "http://console-api-webcomm-c360.apps.ocp.webcomm.com.tw/api/";  
+  private prefixUrl = "http://console-api-webcomm-c360.apps.ocp.webcomm.com.tw/api/";
 
   constructor(
     private http: HttpClient,
     private loadingService: LoadingService,
+    private storageService: StorageService
   ) { }
 
   private doSend<T>(
@@ -43,7 +45,7 @@ export class ApiService {
     let observable: Observable<ResponseModel<T>>;
     const resultUrl = this.prefixUrl + url;
     // const requestModel = { requestObj };
-        
+
     if(this._jwtToken) {
       this.httpOptions.headers["Authorization"] = `Bearer ${this._jwtToken}`;
     }
@@ -69,7 +71,8 @@ export class ApiService {
         let errorMessage = 'An error occurred';
 
         if (error.status === 403) {
-          // JWT 失效主機發送 403 錯誤，這邊需要導頁回兆豐登入頁，待補(需要確認導頁網址與相關參數)          
+          // JWT 失效主機發送 403 錯誤，這邊需要導頁回兆豐登入頁，待補(需要確認導頁網址與相關參數)
+          this.storageService.removeLocalVal("jwtToken");
         }
 
         return throwError(errorMessage);

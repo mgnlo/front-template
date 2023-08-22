@@ -4,12 +4,13 @@ import { ApiService } from './api.service';
 import { Observable } from 'rxjs/internal/Observable';
 import { ResponseModel } from '@api/models/base.model';
 import { StorageService } from './storage.service';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 @Injectable({
     providedIn: 'root'
 })
 export class LoginService {
-    readonly consoleUserFunc = 'console-user/';
+    readonly ssoLoginFunc = 'ssoLogin/';
 
     private _jwtToken: string = null;
 
@@ -21,25 +22,32 @@ export class LoginService {
         this._jwtToken = jwt;
         this.service.jwtToken = this._jwtToken;
         this._userProfile = this.parseJwtPayload();
+        this.userProfileSubject.next(this._userProfile);
         this.storageService.putLocalVal("jwtToken", jwt);
     };
 
     private _userProfile: ConsoleUser;
 
-    public get userProfile() {
-        return this._userProfile;
+    public getUserProfileSubject() {
+        return this.userProfileSubject;
     }
+
+    public userProfileSubject: BehaviorSubject<ConsoleUser> = new BehaviorSubject<ConsoleUser>(null);
 
     constructor(
         private service: ApiService,
         private storageService: StorageService) {
-        this.jwtToken = this.storageService.getLocalVal("jwtToken");
+        let storageJwt = this.storageService.getLocalVal("jwtToken");
+
+        if(storageJwt) {
+          this.jwtToken = storageJwt;
+        }
     }
 
     // SSO 登入：GET /api/ssoLogin?lightID=
     // response JWT PAYLOAD： ConsoleUser with ConsoleGroup with ConsoleGroupScope
     singleSignOn(lightID: string): Observable<ResponseModel<string>> {
-        return this.service.doGet(this.consoleUserFunc, {
+        return this.service.doGet(this.ssoLoginFunc, {
             lightID: lightID
         });
     }
