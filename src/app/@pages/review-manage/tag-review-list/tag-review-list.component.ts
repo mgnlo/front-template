@@ -43,7 +43,7 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
   statusList: Array<{ key: string; val: string }> = Object.entries(ReviewStatus).map(([k, v]) => ({ key: k, val: v }))
   selected: string = '';
   mockData: Array<TagReviewHistory> = TagReviewListMock;
-  sessionKey: string = this.activatedRoute.snapshot.routeConfig.path; 
+  sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
   isSearch: Boolean = false;
 
   ngOnInit(): void {
@@ -58,8 +58,7 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
     const filterVal = this.isSearch ? this.validateForm.getRawValue() :
       this.storageService.getSessionVal(this.sessionKey)?.filter ?? this.validateForm.getRawValue();
 
-    const sessionData = { page: this.paginator.nowPage, filter: filterVal };
-    this.storageService.putSessionVal(this.sessionKey, sessionData);
+    this.setSessionVal({ page: this.paginator.nowPage, filter: filterVal });
   }
 
   gridDefine = {

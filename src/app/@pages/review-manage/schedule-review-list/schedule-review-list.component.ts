@@ -107,7 +107,7 @@ export class ScheduleReviewListComponent extends BaseComponent implements OnInit
     const sessionData = { page: this.paginator.nowPage };
     this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
-  
+
   reset() {
     this.isSearch = true;
     this.setSessionData();
@@ -123,7 +123,7 @@ export class ScheduleReviewListComponent extends BaseComponent implements OnInit
 
     let page = this.paginator.nowPage;
 
-    if (key !== 'search' && !!getSessionVal?.filter) {
+    if (key !== 'search' && !!getSessionVal?.page) {
       page = getSessionVal.page;
     }
 
