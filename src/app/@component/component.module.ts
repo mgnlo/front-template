@@ -19,6 +19,7 @@ import { CheckboxColumnComponent } from './table/checkbox-column.ts/checkbox.com
 import { StatusDialogComponent } from './dialog/status-dialog/status-dialog.component';
 import { DownloadFileComponent } from './form/file/download-file/download-file.component';
 import { UploadFileComponent } from './form/file/upload-file/upload-file.component';
+import { CheckboxGroupComponent } from './form/checkbox-group/checkbox-group.component';
 
 export const COMPONENTS = [
   StatusDialogComponent,
@@ -35,7 +36,8 @@ export const COMPONENTS = [
   DateRangeComponent,
   ReviewDialogComponent,
   DownloadFileComponent,
-  UploadFileComponent
+  UploadFileComponent,
+  CheckboxGroupComponent
 ];
 
 export const NB_MODULES = [

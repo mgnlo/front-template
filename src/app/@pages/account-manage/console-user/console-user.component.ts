@@ -1,23 +1,18 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ActivatedRoute, LoadChildren, NavigationExtras, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ConsoleGroup } from '@api/models/console-group.model';
-import { ConsoleGroupListMock } from '@common/mock-data/console-group-list-mock';
-import { ConsoleUserListMock } from '@common/mock-data/console-user-list-mock';
-import { NbDateService, NbDialogRef } from '@nebular/theme';
-import { BaseComponent } from '@pages/base.component';
-import * as moment from 'moment';
-import { LocalDataSource } from 'ng2-smart-table';
-import { AccountManageService } from '../account.manage.service';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { BusinessUnit } from '@common/enums/console-user-enum';
-import { ConsoleUser, ConsoleUserReq } from '@api/models/console-user.model';
-import { ChangeDialogComponent } from './change-dialog/change.dialog.component';
 import { DialogService } from '@api/services/dialog.service';
-import { ValidateUtil } from '@common/utils/validate-util';
-import { StorageService } from '@api/services/storage.service';
-import { catchError, tap } from 'rxjs/operators';
 import { LoadingService } from '@api/services/loading.service';
+import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
+import { StorageService } from '@api/services/storage.service';
+import { BusinessUnit } from '@common/enums/console-user-enum';
 import { RestStatus } from '@common/enums/rest-enum';
+import { ValidatorsUtil } from '@common/utils/validators-util';
+import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
+import { BaseComponent } from '@pages/base.component';
+import { catchError, filter, tap } from 'rxjs/operators';
+import { AccountManageService } from '../account.manage.service';
+import { ChangeDialogComponent } from './change-dialog/change.dialog.component';
 
 @Component({
   selector: 'console-user',
@@ -25,23 +20,9 @@ import { RestStatus } from '@common/enums/rest-enum';
   styleUrls: ['./console-user.component.scss'],
 })
 export class ConsoleUserComponent extends BaseComponent implements OnInit {
-  account: string = "";
-  name: string = "";
-  email: string = "";
-  groupId: string = "";
-
   consoleGroupList: Array<ConsoleGroup>;
-  consoleUserList: Array<ConsoleUser>;
-  mockData: any;
-
-  consoleUserForm: FormGroup;
-  digitalFinancialSelect: boolean;
-  consumerFinanceSelect: boolean;
-  wealthManagementSelect: boolean;
-  creditCardsSelect: boolean;
-  businessUnit = BusinessUnit;
-
-  dataSource: LocalDataSource; //table
+  businessUnit: Array<{ key: string; val: string }> = Object.entries(BusinessUnit).map(([k, v]) => ({ key: k, val: v }));
+  isSearch: boolean = false;
   gridDefine = {
     pager: {
       display: true,
@@ -91,24 +72,22 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
       },
       action: {
         title: '變更',
-        type: 'custom',
         class: 'col-1',
-        valuePrepareFunction: (cell, row: ConsoleUser) => [{
-          row: row,
-          consoleGroupList: this.consoleGroupList
-        }],
-        renderComponent: ConsoleUserButtonComponent,
-        onComponentInitFunction: (instance: any) => {
-          instance.update.subscribe((updatedRow: ConsoleUser) => {
-            // Handle the save action here
-            const rowData = this.consoleUserList.find((row: any) => row.account === updatedRow.account);
-
-            if (rowData) {
-              Object.assign(rowData, updatedRow);
-              this.dataSource.update(rowData, updatedRow); // Update the data source
-            }
-          });
-          instance.buttonIcon = 'edit-outline'
+        type: 'custom',
+        renderComponent: ColumnButtonComponent,
+        onComponentInitFunction: (instance: ColumnButtonComponent) => {
+          instance.settings = { btnStatus: 'primary', btnIcon: 'edit-outline' }
+          instance.emitter.subscribe((row) => {
+            const dialogRef = this.dialogService.open(ChangeDialogComponent, {
+              consoleUser: JSON.stringify(row),
+              consoleGroupList: JSON.stringify(this.consoleGroupList),
+            });
+            dialogRef.onClose.subscribe(res => {
+              if (res) {
+                // TODO: 這邊收到異動成功的時候，是否重新電文？
+              }
+            });
+          })
         },
         sort: false,
       },
@@ -124,117 +103,62 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
   constructor(
     storageService: StorageService,
     private loadingService: LoadingService,
-    private router: Router,
     private accountManageService: AccountManageService,
-    private dateService: NbDateService<Date>) {
+    private dialogService: DialogService,
+    private tableService: Ng2SmartTableService,
+  ) {
     super(storageService);
 
-    this.consoleUserForm = new FormGroup({
-      account: new FormControl('', [this.maxLengthValidate(20)]),
-      name: new FormControl('', [this.maxLengthValidate(20)]),
-      email: new FormControl('', {
-        validators: [this.maxLengthValidate(50), this.emailFormatValidate],
-        updateOn: 'blur'
-      }),
+    this.validateForm = new FormGroup({
+      account: new FormControl(null),
+      name: new FormControl(null),
+      email: new FormControl(null, { validators: ValidatorsUtil.email, updateOn: 'blur' }),
+      businessUnit: new FormGroup({}),
+      groupId: new FormControl(''),
     });
-  }
-
-  maxLengthValidate(length: number): ValidatorFn {
-    return (ctl: AbstractControl): ValidationErrors | null => {
-      const value = ctl.value;
-
-      if (value && value.leangth > length) {
-        return { errMsg: `欄位最長為${length}個字元` };
-      } else {
-        return null;
-      }
-    }
-  }
-
-  emailFormatValidate(ctl: AbstractControl) {
-    const val = ctl.value;
-
-    if (val && !ValidateUtil.checkEmail(val)) {
-      ctl['_updateOn'] = "change";
-      return { errMsg: "電子郵件輸入錯誤" };
-    } else {
-      ctl['_updateOn'] = "blur";
-    }
-
-    return null;
-  }
-
-  isError(formCtrlName: string) {
-    let viewCtrl: AbstractControl = this.consoleUserForm.get(formCtrlName);
-
-    return (viewCtrl.touched || viewCtrl.dirty) && viewCtrl.errors?.errMsg;
   }
 
   ngOnInit(): void {
     this.queryAllConsoleGroup();
-    this.queryAllConsoleUser();
-    this.dataSource = new LocalDataSource();
-    this.dataSource.load(this.consoleUserList);
+    this.search();
+    let fg = this.validateForm.get('businessUnit') as FormGroup;
+    this.businessUnit.forEach(unit => { fg.setControl(unit.key, new FormControl(false)) })
   }
 
-  search() {
-    if (!this.consoleUserForm.invalid) {
-      let rqData: ConsoleUserReq = {};
-      let isQueryAll = true;
-      let busineeUnit = "";
+  search(key?: string) {
+    const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
 
-      if(this.account) {
-        isQueryAll = false;
-        rqData['account'] = this.account;
-      }
-        
-      if(this.name) {
-        isQueryAll = false;
-        rqData['name'] = this.account;
-      }
+    this.isSearch = false;
 
-      if(this.email)  {
-        isQueryAll = false;
-        rqData['email'] = this.email;
-      }
+    if (['search', 'reset'].includes(key)) this.paginator.nowPage = 1;
 
-      if (this.digitalFinancialSelect) {
-        busineeUnit += "Digital_Financial";
-      }
+    let page = this.paginator.nowPage;
 
-      if (this.consumerFinanceSelect) {
-        busineeUnit += (busineeUnit.length > 0 ? "," : "") + "Consumer_Finance";
-      }
-
-      if (this.wealthManagementSelect) {
-        busineeUnit += (busineeUnit.length > 0 ? "," : "") + "Wealth_Management";
-      }
-
-      if (this.creditCardsSelect) {
-        busineeUnit += (busineeUnit.length > 0 ? "," : "") + "Credit_Cards";
-      }
-
-      if(busineeUnit.length > 0) {
-        isQueryAll = false;
-        rqData['busineeUnit'] = busineeUnit;
-      }
-
-      if(this.groupId.length > 0) {
-        isQueryAll = false;
-        rqData['groupId'] = this.groupId;
-      }
-
-      // 這邊要判斷發送 6.1 or 6.2 電文去查詢
-      if(isQueryAll){
-        this.queryAllConsoleUser();
-      } else {
-        this.queryConsoleUserByParam(rqData);
-      }
-    } else {
-      for (const control of Object.keys(this.consoleUserForm.controls)) {
-        this.consoleUserForm.controls[control].markAsTouched();
-      }
+    if (key !== 'search' && !!getSessionVal?.page) {
+      page = getSessionVal.page;
     }
+
+    if (key !== 'reset') this.setSessionData();
+
+    let req = this.validateForm.getRawValue();
+    if (!!req['businessUnit']) {
+      req['businessUnit'] = Object.keys(req['businessUnit']).filter((unit) => req['businessUnit'][unit] === true).map((unit) => unit);
+    }
+
+    let searchInfo: SearchInfo = {
+      apiUrl: this.accountManageService.consoleUserFunc,
+      nowPage: page,
+      filters: req,
+      errMsg: '使用者管理查無資料',
+    }
+
+    this.restDataSource = this.tableService.searchData(searchInfo);
+  }
+
+  setSessionData() {
+    const filterVal = this.isSearch ? this.validateForm.getRawValue() :
+      this.storageService.getSessionVal(this.sessionKey)?.filter ?? this.validateForm.getRawValue();
+    this.setSessionVal({ page: this.paginator.nowPage, filter: filterVal });
   }
 
   queryAllConsoleGroup() {
@@ -243,97 +167,19 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
         this.loadingService.close();
         throw new Error(err.message);
       }),
+      filter(res => res.code === RestStatus.SUCCESS),
       tap(res => {
-        console.info(res)
+        this.consoleGroupList = res.result;
         this.loadingService.close();
-      })).subscribe(res => {
-        if (res.code === RestStatus.SUCCESS) {
-          this.consoleGroupList = res.result;
-        }
-      });
-
-    // 主機串接後，底下要拿掉
-    this.consoleGroupList = ConsoleGroupListMock;
-  }
-
-  queryAllConsoleUser() {
-    this.accountManageService.getAllConsoleUser().pipe(
-      catchError((err) => {
-        this.loadingService.close();
-        throw new Error(err.message);
-      }),
-      tap(res => {
-        console.info(res)
-        this.loadingService.close();
-      })).subscribe(res => {
-        if (res.code === RestStatus.SUCCESS) {
-          this.consoleUserList = res.result;
-        }
-      });
-
-    // 主機串接後，底下要拿掉
-    this.consoleUserList = ConsoleUserListMock;
-  }
-
-  queryConsoleUserByParam(rqData: ConsoleUserReq) {    
-    this.accountManageService.getConsoleUser(rqData).pipe(
-      catchError((err) => {
-        this.loadingService.close();
-        throw new Error(err.message);
-      }),
-      tap(res => {
-        console.info(res)
-        this.loadingService.close();
-      })).subscribe(res => {
-        if (res.code === RestStatus.SUCCESS) {
-          this.consoleUserList = res.result;
-        }
-      });
-
-    // 主機串接後，底下要拿掉
-    this.consoleUserList = ConsoleUserListMock;
+      })).subscribe();
   }
 
   reset() {
-    this.digitalFinancialSelect = false;
-    this.consumerFinanceSelect = false;
-    this.wealthManagementSelect = false;
-    this.creditCardsSelect = false;
-    this.groupId = "";
-
-    this.consoleUserForm.reset({
-      account: "",
-      name: "",
-      email: ""
-    });
-  }
-}
-
-@Component({
-  selector: 'ngx-console-user-button',
-  template: '<div class="btnCol"><button nbButton ghost status="primary" size="large" (click)="edit()"><nb-icon icon="edit-outline"></nb-icon></button></div>'
-})
-export class ConsoleUserButtonComponent implements OnInit {
-  @Input() value: Array<any>;
-  @Output() update: EventEmitter<any> = new EventEmitter<any>();
-
-  constructor(private dialogService: DialogService) { }
-
-  ngOnInit() {
-    // document.querySelector("nb-layout-column").scrollTo(0, 0);
-  }
-
-  edit() {
-    const dialogRef = this.dialogService.open(ChangeDialogComponent, {
-      consoleUser: JSON.stringify(this.value[0].row),
-      consoleGroupList: JSON.stringify(this.value[0].consoleGroupList),
-    });
-
-    dialogRef.onClose.subscribe(res => {
-      if (res) {
-        // 這邊收到異動成功的時候，是否重新電文？
-        this.update.emit(res);
-      }
-    });
+    this.validateForm.reset({ account: null, name: null, email: null, businessUnit: new FormGroup({}), groupId: '' });
+    let fg = this.validateForm.get('businessUnit') as FormGroup;
+    this.businessUnit.forEach(unit => { fg.setControl(unit.key, new FormControl(false)) });
+    this.isSearch = true;
+    this.setSessionData();
+    this.search('reset');
   }
 }
