@@ -53,8 +53,8 @@ export class Ng2SmartTableService {
     restDataSource.apiStatus().pipe(takeUntil(unsubscribe$)).subscribe(status => {
       switch (status) {
         case 'error':
-          this.loadingService.close();
           this.dialogService.alertAndBackToList(false, searchInfo.errMsg);
+          this.loadingService.close();
           break;
         case 'finish':
           this.loadingService.close();

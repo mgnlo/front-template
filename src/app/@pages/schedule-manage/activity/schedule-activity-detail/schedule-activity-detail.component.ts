@@ -176,8 +176,8 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   }
 
   handleErrorResponse(err: any, message: string, route: Array<any>) {
-    this.loadingService.close();
     this.dialogService.alertAndBackToList(false, message, route);
+    this.loadingService.close();
     throw new Error(err.message);
   }
 

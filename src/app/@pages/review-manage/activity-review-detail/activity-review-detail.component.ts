@@ -55,8 +55,8 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
     ]).pipe(
       filter(res => res[0].code === RestStatus.SUCCESS && res[1].code === RestStatus.SUCCESS),
       catchError(err => {
-        this.loadingService.close();
         this.dialogService.alertAndBackToList(false, `${err.message}，將為您導回客群名單審核列表`, ['pages', 'review-manage', 'activity-review-list']);
+        this.loadingService.close();
         throw new Error(err.message);
       }),
       takeUntil(this.unsubscribe$),
@@ -140,8 +140,8 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
       this.reviewManageService.updateActivityReview(this.historyId, req).pipe(
         filter(res => res.code === RestStatus.SUCCESS),
         catchError(err => {
-          this.loadingService.close();
           this.dialogService.alertAndBackToList(false, err);
+          this.loadingService.close();
           throw new Error(err.message);
         }),
         takeUntil(this.unsubscribe$),

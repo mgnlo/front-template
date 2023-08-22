@@ -125,8 +125,8 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
 
     this.customerManageService.getActivitySettingRow(this.referenceId).pipe(
       catchError(err => {
-        this.loadingService.close();
         this.dialogService.alertAndBackToList(false, '查無此筆活動排程', ['pages', 'schedule-manage', 'schedule-activity-detail']);
+        this.loadingService.close();
         throw new Error(err.message);
       }),
       filter(res => res.code === RestStatus.SUCCESS),

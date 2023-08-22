@@ -110,8 +110,8 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
     this.loadingService.open();
     this.tagManageService.getTagSettingRow(this.tagId).pipe(
       catchError(err => {
-        this.loadingService.close();
         this.dialogService.alertAndBackToList(false, '查無此筆資料，將為您導回標籤管理', ['pages', 'tag-manage', 'tag-list']);
+        this.loadingService.close();
         throw new Error(err.message);
       }),
       filter(res => res.code === RestStatus.SUCCESS),
