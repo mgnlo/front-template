@@ -204,25 +204,18 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     const routePath = ['pages', 'schedule-manage', 'schedule-activity-set', ...route];
     this.customerManageService.getActivitySettingList().pipe(
       catchError(err => {
-        this.handleErrorResponse(err, '查詢名單列表失敗', routePath)
-        return of(null);
-      }),
-      filter(res => res.code === RestStatus.SUCCESS),
-      tap((res) => {
-        this.ActivitySettingArray = res.result['content'];
-      }),
-      switchMap(() => this.scheduleManageService.getScheduleActivityOptions()),
-      catchError(err => {
         this.handleErrorResponse(err, `查詢名單列表${this.actionName}失敗`, routePath)
         return of(null);
       }),
       tap(res => {
         this.loadingService.close();
-        // console.info(res);
+        // console.info('res.result', res.result);
       })
     ).subscribe(res => {
       if (res.code === RestStatus.SUCCESS) {
-        const activityListSetting = res.result;
+        const activityListSetting = res.result['content'];
+        const activitySettingArray = [...this.ActivitySettingArray, ...activityListSetting]
+        // console.info('activitySettingArray', activitySettingArray)
         this.activityList = activityListSetting.map(m => ({ key: m.activityId, val: m.activityName }));
 
         this.refreshFilterActivityList();
@@ -232,7 +225,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
           return;
         }
 
-        this.openPreviewDialog();
+        this.openPreviewDialog(activitySettingArray);
       }
     });
   }
@@ -243,7 +236,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     throw new Error(err.message);
   }
 
-  openPreviewDialog() {
+  openPreviewDialog(allActivityArray: Array<scheduleActivitySetting>) {
     this.dialogService.open(PreviewDialogComponent, {
       title: '設定名單內容',
       dataList: this.filterActivityList,
@@ -251,7 +244,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       if (!!selectedData) {
         this.activityListTemp = this.activityListTemp.filter(s => s.key !== selectedData.key);
 
-        const findData = this.ActivitySettingArray.find(f => f.activityId?.toLowerCase() === selectedData.key?.toLowerCase());
+        const findData = allActivityArray.find(f => f.activityId?.toLowerCase() === selectedData.key?.toLowerCase());
         if (!findData) {
           const route = this.scheduleId ? ['edit', this.scheduleId] : [];
           const routePath = ['pages', 'schedule-manage', 'schedule-activity-set', ...route];
@@ -323,7 +316,13 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
               this.validateForm.controls[key].setValue(res.result[key]);
             } else if (key === 'activitySetting') {
               this.scheduleActivitySettingGrid = res.result[key];
-              // console.info('this.scheduleActivitySettingGrid', this.scheduleActivitySettingGrid)
+              //去重
+              this.scheduleActivitySettingGrid = Array.from(new Set(this.scheduleActivitySettingGrid.map(obj => obj.activityId))).map(activityId => {
+                return this.scheduleActivitySettingGrid.find(obj => obj.activityId === activityId);
+              });
+              //存取以利後續查詢
+              this.ActivitySettingArray = [...this.scheduleActivitySettingGrid];
+              // console.info('this.scheduleActivitySettingGrid ', this.scheduleActivitySettingGrid)
             }
             this.dataSource.load(this.scheduleActivitySettingGrid);
           })
