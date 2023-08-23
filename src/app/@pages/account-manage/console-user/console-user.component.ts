@@ -84,9 +84,7 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
               consoleGroupList: JSON.stringify(this.consoleGroupList),
             });
             dialogRef.onClose.subscribe(res => {
-              if (res) {
-                // TODO: 這邊收到異動成功的時候，是否重新電文？
-              }
+              if (res) { this.search() }
             });
           })
         },
@@ -128,19 +126,12 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
   }
 
   search(key?: string) {
-    const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
 
     this.isSearch = false;
 
     if (['search', 'reset'].includes(key)) this.paginator.nowPage = 1;
 
     let page = this.paginator.nowPage;
-
-    if (key !== 'search' && !!getSessionVal?.page) {
-      page = getSessionVal.page;
-    }
-
-    if (key !== 'reset') this.setSessionData();
 
     let req = this.validateForm.getRawValue();
     if (!!req['businessUnit']) {
@@ -155,12 +146,6 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
     }
 
     this.dataSource = this.tableService.searchData(searchInfo);
-  }
-
-  setSessionData() {
-    const filterVal = this.isSearch ? this.validateForm.getRawValue() :
-      this.storageService.getSessionVal(this.sessionKey)?.filter ?? this.validateForm.getRawValue();
-    this.setSessionVal({ page: this.paginator.nowPage, filter: filterVal });
   }
 
   queryAllConsoleGroup() {
@@ -181,7 +166,6 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
     let fg = this.validateForm.get('businessUnit') as FormGroup;
     this.businessUnit.forEach(unit => { fg.setControl(unit.key, new FormControl(false)) });
     this.isSearch = true;
-    this.setSessionData();
     this.search('reset');
   }
 }

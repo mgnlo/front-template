@@ -1,18 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Navigation, Router } from '@angular/router';
 import { ActivitySetting, TagSetting } from '@api/models/activity-list.model';
-import { TagDetailView, TagReviewHistory } from '@api/models/tag-manage.model';
+import { HistoryGroupView, TagDetailView } from '@api/models/tag-manage.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { Status } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
-import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
 import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
-import { filter, catchError, takeUntil, tap } from 'rxjs/operators';
+import { catchError, filter, takeUntil, tap } from 'rxjs/operators';
 import { ReviewManageService } from '../review-manage.service';
 
 @Component({
@@ -32,7 +31,9 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   isBefore: boolean = false;
   reviewStatus: string;
   reviewComment: string;
-  historyId: string
+  historyId: string;
+  isCompare: boolean = false;
+  historyGroupView: { [x: number]: HistoryGroupView };
 
   constructor(
     storageService: StorageService,
@@ -45,22 +46,6 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
     private loadingService: LoadingService,
   ) {
     super(storageService);
-    if (!!this.router.getCurrentNavigation()?.extras) {
-      let tagReview = this.router.getCurrentNavigation().extras.state as TagReviewHistory;
-      let list = TagSettingMock.filter(row => row.tagId === tagReview.referenceId)[0];
-      this.newDetail = JSON.parse(JSON.stringify(tagReview));
-      this.oldDetail = JSON.parse(JSON.stringify(list));
-      this.detail = this.newDetail;
-      this.reviewStatus = tagReview.reviewStatus;
-      this.reviewComment = tagReview.reviewComment;
-      this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
-      const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistory', list as TagSetting);
-      if (!!processedData) {
-        this.isHistoryOpen = processedData.isHistoryOpen;
-        this.oldDetail.historyGroupView = processedData.detail.historyGroupView;
-        this.newDetail.historyGroupView = processedData.detail.historyGroupView;
-      }
-    }
   }
 
   ngOnInit(): void {
@@ -71,6 +56,39 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
       errMsg: '標籤使用範圍查無資料'
     }
     this.restDataSource = this.tableService.searchData(searchInfo);
+
+    this.reviewManageService.getTagReviewRow(this.historyId).pipe(
+      filter(res => res.code === RestStatus.SUCCESS),
+      catchError(err => {
+        this.dialogService.alertAndBackToList(false, `${err.message}，將為您導回標籤審核列表`);
+        throw new Error(err.message);
+      }),
+      takeUntil(this.unsubscribe$),
+      tap(res => {
+        this.newDetail = JSON.parse(JSON.stringify(res.result));
+        this.detail = this.newDetail;
+        this.reviewStatus = res.result.reviewStatus;
+        this.reviewComment = res.result.reviewComment;
+        const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistoryAud', this.newDetail as TagSetting);
+        if (!!processedData) {
+          this.isHistoryOpen = processedData.isHistoryOpen;
+          this.historyGroupView = processedData.detail.historyGroupView;
+        }
+        this.loadingService.close();
+      })
+    ).subscribe();
+
+    this.reviewManageService.getLastApprovedTag(this.historyId).pipe(
+      filter(res => res.code === RestStatus.SUCCESS),
+      catchError(err => { throw new Error(err.message)}),
+      takeUntil(this.unsubscribe$),
+      tap(res => {
+        this.isCompare = !!res.result ? true : false;
+        this.oldDetail = JSON.parse(JSON.stringify(res.result));
+        this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
+        this.loadingService.close();
+      })
+    ).subscribe();
   }
 
   gridDefine = {
