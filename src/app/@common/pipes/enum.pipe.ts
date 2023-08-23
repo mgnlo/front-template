@@ -3,6 +3,7 @@ import { Gender } from '@common/enums/activity-list-enum';
 import { TagDimension, TagType, TagSubDimension, TagSetCondition } from '@common/enums/tag-enum';
 import { BgClass, ColumnClass, Filter, Frequency, MathSymbol, ReviewCompareClass, Schedule, Status } from '@common/enums/common-enum';
 import { ReviewStatus } from '@common/enums/review-enum';
+import { BusinessUnit } from '@common/enums/console-user-enum';
 
 export const ENUMS = {
   'gender': Gender,
@@ -19,6 +20,7 @@ export const ENUMS = {
   'bgClass': BgClass,
   'frequency': Frequency,
   'mathSymbol':MathSymbol,
+  'businessUnit': BusinessUnit,
 };
 @Pipe({
   name: 'enum'

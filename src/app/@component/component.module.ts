@@ -17,6 +17,7 @@ import { DetailButtonComponent } from './table/detail-button/detail-button.compo
 import { PaginatorComponent } from './table/paginator/paginator.component';
 import { CheckboxColumnComponent } from './table/checkbox-column.ts/checkbox.component';
 import { StatusDialogComponent } from './dialog/status-dialog/status-dialog.component';
+import { CheckboxGroupComponent } from './form/checkbox-group/checkbox-group.component';
 
 export const COMPONENTS = [
   StatusDialogComponent,
@@ -32,6 +33,7 @@ export const COMPONENTS = [
   DropdownComponent,
   DateRangeComponent,
   ReviewDialogComponent,
+  CheckboxGroupComponent
 ];
 
 export const NB_MODULES = [

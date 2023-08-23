@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { NavigationExtras, Router } from '@angular/router';
 import { ResponseModel } from '@api/models/base.model';
 import { ConsoleGroup } from '@api/models/console-group.model';
 import { ConsoleUser, ConsoleUserReq } from '@api/models/console-user.model';
 import { ApiService } from '@api/services/api.service';
 import { DialogService } from '@api/services/dialog.service';
-import { RestStatus } from '@common/enums/rest-enum';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class AccountManageService {

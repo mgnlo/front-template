@@ -1,4 +1,4 @@
-import { AbstractControl, ValidatorFn } from '@angular/forms';
+import { AbstractControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { RegExpUtil } from './reg-exp-util';
 import { ValidateUtil } from './validate-util';
 
@@ -111,7 +111,7 @@ export const ValidatorsUtil = {
     const v = ctl.value;
     const exp = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
     if (v && (ctl.dirty || ctl.touched) && !ValidateUtil.checkEmail(ctl.value) && !exp.test(v)) {
-      return { 'email': 'email格式有誤' };
+      return { 'email': '電子郵件輸入錯誤' };
     }
     return null;
   },
@@ -130,11 +130,21 @@ export const ValidatorsUtil = {
     }
     return null;
   },
+  /** 是否為空 */
   blank: (ctl: AbstractControl) => {
     const v: string = ctl.value;
     if (v && (ctl.dirty || ctl.touched) && ((v || '').trim().length === 0)) {
       return { 'blank': '不可為空' };
     }
     return null;
-  }
+  },
+  /** 檢查FormGroup至少要幾個FormControl為true (用於multi checkbox) */
+  atLeast: (num: number): ValidatorFn => {
+    return (fg: FormGroup) => {
+      if (!!fg.controls && (fg.dirty || fg.touched) && Object.keys(fg.controls).filter(ctl => fg.get(ctl).value == true).length < num) {
+        return { 'least': `至少選取 ${num} 個` };
+      }
+      return null;
+    };
+  },
 };

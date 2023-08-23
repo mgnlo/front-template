@@ -6,78 +6,15 @@
         <nb-card-header>
             <h2>查詢設定值</h2>
         </nb-card-header>
-        <nb-card-body [formGroup]="consoleUserForm">
+        <nb-card-body [formGroup]="validateForm">
+            <div class="row" >
+                <basic-input class="col-12 col-lg-6" title="帳號" [form]="validateForm" ctlName="account" [maxlength]="20"></basic-input>
+                <basic-input class="col-12 col-lg-6" title="姓名" [form]="validateForm" ctlName="name" [maxlength]="20"></basic-input>
+            </div>
             <div class="row">
-                <div class="fieldGroup col-12 col-lg-6" [ngClass]="{'error': isError('account')}">
-                    <label>帳號</label>
-                    <div>
-                        <input nbInput fullWidth type="text" maxlength="20" placeholder="請輸入" formControlName="account"
-                            [(ngModel)]="account" [status]="isError('account') ? 'danger' : 'basic'"/>
-                    </div>
-                    <div class="note errorText">
-                        <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>{{ isError('account') }}</p>
-                    </div>
-                </div>
-                <div class="fieldGroup col-12 col-lg-6" [ngClass]="{'error': isError('name')}">
-                    <label>姓名</label>
-                    <div>
-                        <input nbInput fullWidth type="text" maxlength="20" placeholder="請輸入" formControlName="name"
-                            [(ngModel)]="name" [status]="isError('name') ? 'danger' : 'basic'"/>
-                    </div>
-                    <div class="note errorText">
-                        <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>{{ isError('name') }}</p>
-                    </div>
-                </div>
-                <div class="fieldGroup col-12 col-lg-6" [ngClass]="{'error': isError('email')}">
-                    <label>電子郵件</label>
-                    <div>
-                        <input nbInput fullWidth type="text" maxlength="50" placeholder="請輸入" formControlName="email"
-                            [(ngModel)]="email"  [status]="isError('email') ? 'danger' : 'basic'"/>
-                    </div>
-                    <div class="note errorText">
-                        <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>{{ isError('email') }}</p>
-                    </div>
-                </div>
-                <div class="fieldGroup col-12 col-md-6">
-                    <label>所屬單位</label>
-                    <div>
-                        <div>
-                            <div class="checkboxGroup">
-                                <nb-checkbox status="basic" [(checked)]="digitalFinancialSelect">{{ businessUnit.Digital_Financial
-                                    }}</nb-checkbox>
-                                <nb-checkbox status="basic" [(checked)]="consumerFinanceSelect">{{ businessUnit.Consumer_Finance
-                                    }}</nb-checkbox>
-                                <nb-checkbox status="basic" [(checked)]="wealthManagementSelect">{{ businessUnit.Wealth_Management
-                                    }}</nb-checkbox>
-                                <nb-checkbox status="basic" [(checked)]="creditCardsSelect">{{ businessUnit.Credit_Cards
-                                    }}</nb-checkbox>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- 欄位錯誤訊息 -->
-                    <div class="note errorText">
-                        <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>欄位錯誤訊息</p>
-                    </div>
-                </div>
-                <div class="fieldGroup col-12 col-lg-6">
-                    <label>授予權限</label>
-                    <div>
-                        <nb-select fullWidth placeholder="請選擇" [(selected)]="groupId">
-                            <nb-option value="">全部</nb-option>
-                            <nb-option *ngFor="let consoleGroup of consoleGroupList" [value]="consoleGroup.groupId">{{
-                                consoleGroup.groupName }}</nb-option>
-                        </nb-select>
-                    </div>
-                    <!-- 欄位錯誤訊息 -->
-                    <div class="note errorText">
-                        <nb-icon icon="alert-triangle"></nb-icon>
-                        <p>欄位錯誤訊息</p>
-                    </div>
-                </div>
+                <basic-input class="col-12 col-lg-6" title="電子郵件" [form]="validateForm" ctlName="email" [maxlength]="50"></basic-input>
+                <checkbox-group class="col-12 col-lg-6" title="所屬單位" [form]="validateForm" formGroupName="businessUnit"></checkbox-group>
+                <dropdown class="col-12 col-lg-6" title="授予權限" [form]="validateForm" ctlName="groupId" [selectList]="{options: consoleGroupList, key: 'groupId', val: 'groupName'}"></dropdown>
             </div>
         </nb-card-body>
     </nb-card>
@@ -85,7 +22,7 @@
     <div class="row">
         <div class="btnGroup">
             <button nbButton status="basic" size="medium" (click)="reset()">清除</button>
-            <button nbButton status="primary" size="medium" (click)="search()">查詢</button>
+            <button nbButton status="primary" size="medium" (click)="search('search')" [disabled]="validateForm.invalid">查詢</button>
         </div>
     </div>
     
@@ -94,8 +31,8 @@
             <h2>使用者列表</h2>
         </nb-card-header>
         <nb-card-body>
-            <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
-            <paginator [source]="dataSource" [paginator]="paginator"></paginator>
+            <ng2-smart-table [settings]="gridDefine" [source]="restDataSource"></ng2-smart-table>
+            <paginator [source]="restDataSource" [paginator]="paginator"></paginator>
         </nb-card-body>
     </nb-card>
 </div>

@@ -1,12 +1,12 @@
-import { NgModule } from "@angular/core"
-import { RouterModule, Routes } from "@angular/router"
-import { AccountManageComponent } from "./account-manage.component"
-import { ConsoleGroupButtonComponent, ConsoleGroupListComponent } from "./console-group-list/console-group-list.component";
+import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
+import { AccountManageComponent } from "./account-manage.component";
+import { ConsoleGroupAddCheckboxComponent, ConsoleGroupAddComponent } from "./console-group-add/console-group-add.component";
 import { ConsoleGroupDetailCheckboxComponent, ConsoleGroupDetailComponent } from "./console-group-detail/console-group-detail.component";
 import { ConsoleGroupEditCheckboxComponent, ConsoleGroupEditComponent } from "./console-group-edit/console-group-edit.component";
-import { ConsoleGroupAddCheckboxComponent, ConsoleGroupAddComponent } from "./console-group-add/console-group-add.component";
-import { ConsoleUserButtonComponent, ConsoleUserComponent } from "./console-user/console-user.component";
+import { ConsoleGroupButtonComponent, ConsoleGroupListComponent } from "./console-group-list/console-group-list.component";
 import { ChangeDialogComponent } from "./console-user/change-dialog/change.dialog.component";
+import { ConsoleUserComponent } from "./console-user/console-user.component";
 
 const routes: Routes = [
     {
@@ -39,6 +39,5 @@ export const routedComponents = [
     ConsoleGroupAddComponent,
     ConsoleGroupAddCheckboxComponent,
     ConsoleUserComponent,
-    ConsoleUserButtonComponent,
     ChangeDialogComponent
 ];
