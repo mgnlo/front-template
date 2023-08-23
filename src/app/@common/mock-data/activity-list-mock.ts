@@ -43,7 +43,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
       },
     ],
     version: "uuuid-zzzz",
-    activityReviewHistory: [
+    activityReviewHistoryAudit: [
       {
         historyId: "h123456",
         version: "uuid-zzzz",
@@ -158,7 +158,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
       }
     ],
     version: "uuuid-zzzz",
-    activityReviewHistory: [
+    activityReviewHistoryAudit: [
       {
         historyId: "h123456",
         version: "uuid-zzzz",
@@ -273,7 +273,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
       }
     ],
     version: "uuuid-zzzz",
-    activityReviewHistory: [
+    activityReviewHistoryAudit: [
       {
         historyId: "h123456",
         version: "uuid-zzzz",
@@ -388,7 +388,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
       }
     ],
     version: "uuuid-zzzz",
-    activityReviewHistory: [
+    activityReviewHistoryAudit: [
       {
         historyId: "h123456",
         version: "uuid-zzzz",
@@ -503,7 +503,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
       }
     ],
     version: "uuuid-zzzz",
-    activityReviewHistory: [
+    activityReviewHistoryAudit: [
       {
         historyId: "h123456",
         version: "uuid-zzzz",
@@ -634,7 +634,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
       },
     ],
     version: "uuuid-zzzz",
-    activityReviewHistory: [
+    activityReviewHistoryAudit: [
       {
         historyId: "h123456",
         version: "uuid-zzzz",
@@ -749,7 +749,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
       }
     ],
     version: "uuuid-zzzz",
-    activityReviewHistory: [
+    activityReviewHistoryAudit: [
       {
         historyId: "h123456",
         version: "uuid-zzzz",
@@ -864,7 +864,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
       }
     ],
     version: "uuuid-zzzz",
-    activityReviewHistory: [
+    activityReviewHistoryAudit: [
       {
         historyId: "h123456",
         version: "uuid-zzzz",
@@ -979,7 +979,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
       }
     ],
     version: "uuuid-zzzz",
-    activityReviewHistory: [
+    activityReviewHistoryAudit: [
       {
         historyId: "h123456",
         version: "uuid-zzzz",
@@ -1094,7 +1094,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
       }
     ],
     version: "uuuid-zzzz",
-    activityReviewHistory: [
+    activityReviewHistoryAudit: [
       {
         historyId: "h123456",
         version: "uuid-zzzz",
@@ -1209,7 +1209,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
       }
     ],
     version: "uuuid-zzzz",
-    activityReviewHistory: [
+    activityReviewHistoryAudit: [
       {
         historyId: "h123456",
         version: "uuid-zzzz",
@@ -1324,7 +1324,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
       }
     ],
     version: "uuuid-zzzz",
-    activityReviewHistory: [
+    activityReviewHistoryAudit: [
       {
         historyId: "h123456",
         version: "uuid-zzzz",
@@ -1439,7 +1439,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
       }
     ],
     version: "uuuid-zzzz",
-    activityReviewHistory: [
+    activityReviewHistoryAudit: [
       {
         historyId: "h123456",
         version: "uuid-zzzz",
@@ -1554,7 +1554,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
       }
     ],
     version: "uuuid-zzzz",
-    activityReviewHistory: [
+    activityReviewHistoryAudit: [
       {
         historyId: "h123456",
         version: "uuid-zzzz",
