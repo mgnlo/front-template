@@ -373,7 +373,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   //#endregion
 
   //#region 檔案上傳並驗證
-  onClickFileSelected(event: any) {
+  onFileSelected(event: any) {
+    debugger
     const file: File = event.target.files[0];
     const fileValidatorResult = this.fileValidator(file);
     if (fileValidatorResult !== null) {
@@ -381,10 +382,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       this.filePlaceholderName = '請上傳檔案';
       return
     }
-  }
-
-  onFileSelected(event: any) {
-    const file: File = event.target.files[0];
     this.filePlaceholderName = CommonUtil.isBlank(file?.name) ? this.filePlaceholderName : file.name;
     this.uploadFileName = CommonUtil.getFileNameWithoutExtension(file?.name);
     this.uploadType = file?.type?.split('/')?.[1] ? file?.type?.split('/')?.[1] : CommonUtil.getFileExtension(file?.name);
