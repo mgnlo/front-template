@@ -45,7 +45,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   filePlaceholderName: string = '請上傳檔案';
   uploadFileName: string;
   fileData: string;
-  fileDataId: string;
   uploadType: string;
   //#region 檔案白名單
   passFileArrayStr: string = '.csv,,,,'
@@ -382,12 +381,18 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       return
     }
     this.filePlaceholderName = CommonUtil.isBlank(file?.name) ? this.filePlaceholderName : file.name;
-    this.uploadFileName = file?.name;
+    this.uploadFileName = CommonUtil.getFileNameWithoutExtension(file?.name);
+    this.uploadType = file?.type?.split('/')?.[1] ? file?.type?.split('/')?.[1] : CommonUtil.getFileExtension(file?.name);
 
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('fileType', this.uploadType);
+
+    // console.info('file', file)
+    // console.info('uploadType', this.uploadType)
+    // console.info('formData', formData)
+
     this.loadingService.open();
-    console.info('formData',formData)
     this.fileService.uploadFileService(formData).pipe(
       catchError((err) => {
         this.validateForm?.get('fileName')?.setErrors({ uploadFileMsg: '檔案上傳失敗' });
@@ -402,8 +407,13 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       })
     ).subscribe(res => {
       if (res.code === RestStatus.SUCCESS) {
+        const fileId = res.result['Id'];
+        if (CommonUtil.isBlank(fileId)) {
+          this.validateForm?.get('fileName')?.setErrors({ uploadFileMsg: '檔案上傳失敗(識別碼為空)' });
+          return
+        }
+        this.fileData = fileId;
         this.validateForm?.get('fileName')?.setErrors(null);
-
       }
     });
 
@@ -428,17 +438,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
     // 驗證通過，返回null表示驗證成功
     return null;
-  }
-  //#endregion
-
-  //#region 抓檔案名稱並無副檔名
-  getFileNameWithoutExtension(fileName: string): string {
-    const lastDotIndex = fileName.lastIndexOf('.');
-    if (lastDotIndex !== -1) {
-      return fileName.substring(0, lastDotIndex);
-    } else {
-      return fileName;
-    }
   }
   //#endregion
 

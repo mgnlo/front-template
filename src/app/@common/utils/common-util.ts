@@ -4,6 +4,26 @@ import { Moment } from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
 
 export const CommonUtil = {
+  /** 取得副檔名*/
+  getFileExtension(fileName: string): string {
+    const lastDotIndex = fileName.lastIndexOf('.');
+
+    if (lastDotIndex === -1) {
+      return ''; // 若找不到點，則沒有副檔名
+    }
+
+    const extension = fileName.substring(lastDotIndex + 1).toLowerCase();
+    return extension;
+  },
+  /** 取得檔案名稱，無副檔名*/
+  getFileNameWithoutExtension(fileName: string): string {
+    const lastDotIndex = fileName.lastIndexOf('.');
+    if (lastDotIndex !== -1) {
+      return fileName.substring(0, lastDotIndex);
+    } else {
+      return fileName;
+    }
+  },
   /** 檔案轉Base64*/
   convertFileToBase64(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
