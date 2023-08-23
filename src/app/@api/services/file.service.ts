@@ -9,8 +9,8 @@ import { ApiService } from './api.service';
 export class FileService {
 
   readonly fileFunc = 'file';
-  readonly fileUploadFunc = `${this.fileFunc}/upload/`;
-  readonly fileDownloadFunc = `${this.fileFunc}/downLoad/`;
+  readonly fileUploadFunc = `${this.fileFunc}/upload`;
+  readonly fileDownloadFunc = `${this.fileFunc}/downLoad`;
 
   constructor(private service: ApiService) { }
 
