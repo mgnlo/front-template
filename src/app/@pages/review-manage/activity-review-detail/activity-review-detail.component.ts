@@ -68,10 +68,10 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
       if (!!reviewData.result?.activityListCondition) {
         this.newDetail.tagGroupView = CommonUtil.groupBy(this.newReview.activityListCondition, 'tagGroup');
       }
-      const processedData = CommonUtil.getHistoryProcessData<ActivitySetting>('activityReviewHistory', this.oldReview as ActivitySetting);
+      const processedData = CommonUtil.getHistoryProcessData<ActivitySetting>('activityReviewHistoryAud', this.oldReview as ActivitySetting);
       if (!!processedData) {
         this.isHistoryOpen = processedData.isHistoryOpen;
-        this.detail = processedData.detail;
+        this.detail.historyGroupView = processedData.detail?.historyGroupView;
         this.newDetail.historyGroupView = this.detail.historyGroupView;
         this.oldDetail.historyGroupView = this.detail.historyGroupView;
         this.detail.tagGroupView = this.newDetail.tagGroupView;

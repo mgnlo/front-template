@@ -66,7 +66,7 @@ export class ScheduleReviewDetailComponent extends BaseComponent implements OnIn
       if (!!reviewData.result?.activitySetting) {
         newActivityList = reviewData.result.activitySetting.map(activity => { return { key: activity.activityId, value: activity.activityName } });
       }
-      const processedData = CommonUtil.getHistoryProcessData<ScheduleReviewHistory>('scheduleReviewHistory', reviewData.result as ScheduleReviewHistory);
+      const processedData = CommonUtil.getHistoryProcessData<ScheduleReviewHistory>('scheduleReviewHistoryAud', reviewData.result as ScheduleReviewHistory);
       if (!!processedData) {
         this.isHistoryOpen = processedData.isHistoryOpen;
         this.historyGroupView = processedData.detail.historyGroupView;

@@ -115,10 +115,11 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
       }),
       filter(res => res.code === RestStatus.SUCCESS),
       tap((res) => {
+        this.detail = JSON.parse(JSON.stringify(res.result));
         const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistoryAud', res.result as TagSetting); // 異動歷程處理
         if (!!processedData) {
           this.isHistoryOpen = processedData.isHistoryOpen;
-          this.detail = processedData.detail;
+          this.detail.historyGroupView = processedData.detail?.historyGroupView;
         }
 
         this.loadingService.close();

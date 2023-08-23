@@ -190,6 +190,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
         }),
         filter(res => res.code === RestStatus.SUCCESS),
         tap((res) => {
+          this.detail = JSON.parse(JSON.stringify(res.result));
           const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistoryAud', res.result as TagSetting); // 異動歷程處理
           Object.keys(res.result).forEach(key => {
             if (!!this.validateForm.controls[key]) {
@@ -227,7 +228,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
           if (!!processedData) {
             if (this.changeRouteName === 'edit') {
               this.isHistoryOpen = processedData.isHistoryOpen;
-              this.detail = processedData.detail;
+              this.detail.historyGroupView = processedData.detail?.historyGroupView;
             }
           }
           this.loadingService.close();

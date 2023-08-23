@@ -46,10 +46,10 @@ export class ActivityDetailComponent extends BaseComponent implements OnInit {
       tap((res) => {
         this.detail = JSON.parse(JSON.stringify(res.result));
 
-        const processedData = CommonUtil.getHistoryProcessData<ActivitySetting>('activityReviewHistory', res.result as ActivitySetting);
+        const processedData = CommonUtil.getHistoryProcessData<ActivitySetting>('activityReviewHistoryAud', res.result as ActivitySetting);
         if (!!processedData) {
           this.isHistoryOpen = processedData.isHistoryOpen;
-          this.detail = processedData.detail;
+          this.detail.historyGroupView = processedData.detail?.historyGroupView;
         }
         this.detail.tagGroupView = CommonUtil.groupBy(res.result.activityListCondition, 'tagGroup');
         Object.keys(this.detail.tagGroupView).forEach(key => this.isConditionOpen[key] = true);
