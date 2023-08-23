@@ -15,11 +15,12 @@ import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
 import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
 import * as moment from 'moment';
-import { catchError, filter, tap } from 'rxjs/operators';
+import { catchError, filter, tap, finalize } from 'rxjs/operators';
 import { TagManageService } from '../tag-manage.service';
 import { TagConditionDialogComponent } from './condition-dialog/condition-dialog.component';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { TagConditionChartLineMock } from '@common/mock-data/tag-condition-chart-line-mock';
+import { FileService } from '@api/services/file.service';
 
 @Component({
   selector: 'tag-set',
@@ -42,8 +43,9 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   maxSizeInMB: number = 5;//檔案大小
   filePlaceholderName: string = '請上傳檔案';
-  fileName: string;
+  uploadFileName: string;
   fileData: string;
+  fileDataId: string;
   uploadType: string;
   //#region 檔案白名單
   passFileArrayStr: string = '.csv,,,,'
@@ -87,7 +89,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private readonly changeDetectorRef: ChangeDetectorRef,
     private tagManageService: TagManageService,
-    private customerManageService: CustomerManageService,
+    private fileService: FileService,
     private loadingService: LoadingService,
     private dialogService: DialogService,
     private tableService: Ng2SmartTableService,
@@ -370,29 +372,40 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   }
   //#endregion
 
-  //#region 檔案上傳(轉Base64)並驗證
+  //#region 檔案上傳並驗證
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     const fileValidatorResult = this.fileValidator(file);
-    this.filePlaceholderName = CommonUtil.isBlank(file?.name) ? this.filePlaceholderName : file.name;
     if (fileValidatorResult !== null) {
       this.validateForm?.get('fileName')?.setErrors(fileValidatorResult);
       this.filePlaceholderName = '請上傳檔案';
       return
     }
+    this.filePlaceholderName = CommonUtil.isBlank(file?.name) ? this.filePlaceholderName : file.name;
+    this.uploadFileName = file?.name;
 
-    CommonUtil.convertFileToBase64(file)
-      .then(base64String => {
-        this.fileName = this.getFileNameWithoutExtension(file.name);
-        this.fileData = base64String;
-        this.uploadType = file.type;
+    const formData = new FormData();
+    formData.append('file', file);
+    this.loadingService.open();
+    console.info('formData',formData)
+    this.fileService.uploadFileService(formData).pipe(
+      catchError((err) => {
+        this.validateForm?.get('fileName')?.setErrors({ uploadFileMsg: '檔案上傳失敗' });
+        throw new Error(err.message);
+      }),
+      tap(res => {
+        // console.info(res);
+        //this.loadingService.close();
+      }),
+      finalize(() => {
+        this.loadingService.close();
       })
-      .catch(error => {
-        this.validateForm?.get('fileName')?.setErrors({ uploadFileMsg: error });
-        return
-      });
+    ).subscribe(res => {
+      if (res.code === RestStatus.SUCCESS) {
+        this.validateForm?.get('fileName')?.setErrors(null);
 
-    this.validateForm?.get('fileName')?.setErrors(null);
+      }
+    });
 
   }
 
@@ -513,7 +526,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       status: formData.status,
       tagType: formData.tagType,
       uploadType: (formData.tagType === 'document') ? this.uploadType : null,
-      fileName: (formData.tagType === 'document') ? this.fileName : null,
+      fileName: (formData.tagType === 'document') ? this.uploadFileName : null,
       //filePath: formData.filePath,
       fileData: (formData.tagType === 'document') ? this.fileData : null,
       conditionSettingMethod: formData.conditionSettingMethod, //條件設定方式
