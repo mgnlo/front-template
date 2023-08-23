@@ -1,6 +1,6 @@
 <div class="pageTitle">
     <h1>客群名單審核</h1>
-    <ng-container *ngIf="reviewStatus === 'reviewing'">
+    <ng-container *ngIf="reviewStatus === 'reviewing' && isCompare">
         <button nbButton status="primary" size="small" (click)="viewToggle()" *ngIf="!isBefore">查看異動前內容</button>
         <button nbButton status="primary" size="small" (click)="viewToggle()" *ngIf="isBefore">返回本次異動內容</button>
     </ng-container>
@@ -52,7 +52,7 @@
                     <span>{{detail?.batchUpdateTime}}</span>
                 </div>
             </div>
-            <!-- <ng-container *ngFor="let tag of detail.tagGroupView | keyvalue; let i = index;">
+            <ng-container *ngFor="let tag of detail?.tagGroupView | keyvalue; let i = index;">
                 <div class="subTitle">
                     <p>活動名單條件{{tag.key}}</p>
                     <button nbButton [status]="isConditionOpen[tag.key] ? 'info' : 'basic'" size="small" class="iconBtn btnSwitch"
@@ -70,7 +70,7 @@
                         </div>
                     </div>
                 </ng-container>
-            </ng-container> -->
+            </ng-container>
         </nb-card-body>
     </nb-card>
     <div class="row" *ngIf="reviewStatus!=='reviewing'">

@@ -59,17 +59,17 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
       takeUntil(this.unsubscribe$),
       tap(res => {
         this.newDetail = JSON.parse(JSON.stringify(res.result));
-        this.detail = this.newDetail;
         this.reviewStatus = res.result.reviewStatus;
         this.reviewComment = res.result.reviewComment;
+        this.newDetail.tagGroupView = CommonUtil.groupBy(res.result.activityListCondition, 'tagGroup');
+        this.detail = this.newDetail;
+        Object.keys(this.detail.tagGroupView).forEach(key => this.isConditionOpen[key] = true);
         const processedData = CommonUtil.getHistoryProcessData<ActivitySetting>('activityReviewHistoryAud', this.oldReview as ActivitySetting);
         if (!!processedData) {
           this.isHistoryOpen = processedData.isHistoryOpen;
           this.detail = processedData.detail;
           this.historyGroupView = this.detail.historyGroupView;
-          this.detail.tagGroupView = this.newDetail.tagGroupView;
           this.compareCondition(this.detail.tagGroupView, 'old');
-          Object.keys(this.detail.tagGroupView).forEach(key => this.isConditionOpen[key] = true);
         }
         this.loadingService.close();
       })
