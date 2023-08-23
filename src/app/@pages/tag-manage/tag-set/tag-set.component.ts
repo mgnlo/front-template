@@ -396,7 +396,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     // console.info('file', file)
     // console.info('uploadType', this.uploadType)
     // console.info('formData', formData)
-    debugger
+
     this.loadingService.open();
     this.fileService.uploadFileService(formData).pipe(
       catchError((err) => {
@@ -421,7 +421,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
         this.validateForm?.get('fileName')?.setErrors(null);
       }
     });
-
+    // this.validateForm?.get('fileName')?.setErrors(null);
   }
 
   fileValidator(file: File): { [key: string]: any } | null {
@@ -557,6 +557,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
           }) : null,
     });
 
+    // console.info('reqData',reqData)
     return reqData;
   }
   //#endregion
