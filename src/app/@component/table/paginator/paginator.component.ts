@@ -23,7 +23,7 @@ export class PaginatorComponent implements DoCheck {
   ngDoCheck(){
     if(!!this.source){
       this.source.onChanged().subscribe(()=>{
-        this.paginator.totalCount = this.source.count();
+        this.paginator.totalCount = typeof this.source.count() !== 'object' ? this.source.count(): Object.keys(this.source.count()).length;
         let page =this.source.getPaging().page;
         let perPage = this.source.getPaging().perPage;
         this.paginator.nowPage = page;

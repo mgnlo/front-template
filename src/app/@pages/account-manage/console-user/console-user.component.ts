@@ -10,6 +10,7 @@ import { RestStatus } from '@common/enums/rest-enum';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
+import { LocalDataSource } from 'ng2-smart-table';
 import { catchError, filter, tap } from 'rxjs/operators';
 import { AccountManageService } from '../account.manage.service';
 import { ChangeDialogComponent } from './change-dialog/change.dialog.component';
@@ -119,6 +120,7 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.dataSource = new LocalDataSource();
     this.queryAllConsoleGroup();
     this.search();
     let fg = this.validateForm.get('businessUnit') as FormGroup;
@@ -142,7 +144,7 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
 
     let req = this.validateForm.getRawValue();
     if (!!req['businessUnit']) {
-      req['businessUnit'] = Object.keys(req['businessUnit']).filter((unit) => req['businessUnit'][unit] === true).map((unit) => unit);
+      req['businessUnit'] = Object.keys(req['businessUnit']).filter((unit) => req['businessUnit'][unit] === true).map((unit) => unit).toString();
     }
 
     let searchInfo: SearchInfo = {
@@ -152,7 +154,7 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
       errMsg: '使用者管理查無資料',
     }
 
-    this.restDataSource = this.tableService.searchData(searchInfo);
+    this.dataSource = this.tableService.searchData(searchInfo);
   }
 
   setSessionData() {
