@@ -213,7 +213,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       })
     ).subscribe(res => {
       if (res.code === RestStatus.SUCCESS) {
-        const activityListSetting = res.result['content'];
+        const activityListSetting: Array<scheduleActivitySetting> = JSON.parse(JSON.stringify(res.result?.content));
         const activitySettingArray = [...this.ActivitySettingArray, ...activityListSetting]
         // console.info('activitySettingArray', activitySettingArray)
         this.activityList = activityListSetting.map(m => ({ key: m.activityId, val: m.activityName }));
