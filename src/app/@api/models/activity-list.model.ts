@@ -15,7 +15,7 @@ export interface ActivitySetting {
   batchUpdateTime: string;
   activityListCondition: Array<ActivityListCondition>;
   version: string;
-  activityReviewHistory: Array<ActivityReviewHistory>;
+  activityReviewHistoryAudit: Array<ActivityReviewHistory>;
 }
 export class ActivityListCondition {
   activityId?: string;
