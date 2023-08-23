@@ -31,8 +31,8 @@
             <h2>使用者列表</h2>
         </nb-card-header>
         <nb-card-body>
-            <ng2-smart-table [settings]="gridDefine" [source]="restDataSource"></ng2-smart-table>
-            <paginator [source]="restDataSource" [paginator]="paginator"></paginator>
+            <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
+            <paginator [source]="dataSource" [paginator]="paginator"></paginator>
         </nb-card-body>
     </nb-card>
 </div>
