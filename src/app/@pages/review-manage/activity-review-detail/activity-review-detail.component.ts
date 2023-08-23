@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Navigation, Router } from '@angular/router';
-import { ActivityDetail, ActivityReviewHistory, ActivitySetting, TagGroupView } from '@api/models/activity-list.model';
+import { ActivityDetail, ActivityReviewHistory, ActivitySetting, HistoryGroupView, TagGroupView } from '@api/models/activity-list.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
@@ -33,6 +33,7 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
   reviewComment: string;
   historyId: string;
   isCompare: boolean = false;
+  historyGroupView: {[x: number]: HistoryGroupView};
 
   constructor(
     storageService: StorageService,
@@ -49,44 +50,49 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
     this.historyId = this.activatedRoute.snapshot.params.historyId;
 
     this.loadingService.open();
-    combineLatest([
-      this.reviewManageService.getActivityReviewRow(this.historyId),
-      this.reviewManageService.getLastApprovedActivity(this.historyId)
-    ]).pipe(
-      filter(res => res[0].code === RestStatus.SUCCESS && res[1].code === RestStatus.SUCCESS),
+    this.reviewManageService.getActivityReviewRow(this.historyId).pipe(
+      filter(res => res.code === RestStatus.SUCCESS),
       catchError(err => {
-        this.dialogService.alertAndBackToList(false, `${err.message}，將為您導回客群名單審核列表`, ['pages', 'review-manage', 'activity-review-list']);
+        this.dialogService.alertAndBackToList(false, `${err.message}，將為您導回標籤審核列表`);
         throw new Error(err.message);
       }),
       takeUntil(this.unsubscribe$),
-    ).subscribe(([reviewData, lastData]) => {
-      this.newDetail = JSON.parse(JSON.stringify(reviewData.result));
-      this.detail = this.newDetail;
-      this.reviewStatus = reviewData.result.reviewStatus;
-      this.reviewComment = reviewData.result.reviewComment;
-      this.isCompare = !!lastData.result ? true : false;
-      if (!!reviewData.result?.activityListCondition) {
-        this.newDetail.tagGroupView = CommonUtil.groupBy(this.newReview.activityListCondition, 'tagGroup');
-      }
-      const processedData = CommonUtil.getHistoryProcessData<ActivitySetting>('activityReviewHistoryAudit', this.oldReview as ActivitySetting);
-      if (!!processedData) {
-        this.isHistoryOpen = processedData.isHistoryOpen;
-        this.detail.historyGroupView = processedData.detail?.historyGroupView;
-        this.newDetail.historyGroupView = this.detail.historyGroupView;
-        this.oldDetail.historyGroupView = this.detail.historyGroupView;
-        this.detail.tagGroupView = this.newDetail.tagGroupView;
-        this.compareCondition(this.detail.tagGroupView, 'old');
-        Object.keys(this.detail.tagGroupView).forEach(key => this.isConditionOpen[key] = true);
-      }
-      if (this.isCompare) {
-        this.oldDetail = JSON.parse(JSON.stringify(lastData.result));
-        if (!!lastData.result?.activityListCondition) {
-          this.oldDetail.tagGroupView = CommonUtil.groupBy(this.oldReview.activityListCondition, 'tagGroup');
+      tap(res => {
+        this.newDetail = JSON.parse(JSON.stringify(res.result));
+        this.detail = this.newDetail;
+        this.reviewStatus = res.result.reviewStatus;
+        this.reviewComment = res.result.reviewComment;
+        const processedData = CommonUtil.getHistoryProcessData<ActivitySetting>('activityReviewHistoryAud', this.oldReview as ActivitySetting);
+        if (!!processedData) {
+          this.isHistoryOpen = processedData.isHistoryOpen;
+          this.detail = processedData.detail;
+          this.historyGroupView = this.detail.historyGroupView;
+          this.detail.tagGroupView = this.newDetail.tagGroupView;
+          this.compareCondition(this.detail.tagGroupView, 'old');
+          Object.keys(this.detail.tagGroupView).forEach(key => this.isConditionOpen[key] = true);
         }
+        this.loadingService.close();
+      })
+    ).subscribe();
+
+    this.reviewManageService.getLastApprovedActivity(this.historyId).pipe(
+      filter(res => res.code === RestStatus.SUCCESS),
+      catchError(err => { throw new Error(err.message) }),
+      takeUntil(this.unsubscribe$),
+      tap(res => {
+        this.isCompare = !!res.result ? true : false;
+        this.oldDetail = JSON.parse(JSON.stringify(res.result));
         this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
-      }
-      this.loadingService.close();
-    });
+        if (this.isCompare) {
+          this.oldDetail = JSON.parse(JSON.stringify(res.result));
+          if (!!res.result?.activityListCondition) {
+            this.oldDetail.tagGroupView = CommonUtil.groupBy(this.oldReview.activityListCondition, 'tagGroup');
+          }
+          this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
+        }
+        this.loadingService.close();
+      })
+    ).subscribe();
   }
 
   viewToggle() {
