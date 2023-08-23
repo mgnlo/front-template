@@ -10,7 +10,7 @@ import { Status } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
-import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
+import { TagManageService } from '@pages/tag-manage/tag-manage.service';
 import { catchError, filter, takeUntil, tap } from 'rxjs/operators';
 import { ReviewManageService } from '../review-manage.service';
 
@@ -41,21 +41,15 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private dialogService: DialogService,
     private tableService: Ng2SmartTableService,
-    private customerManageService: CustomerManageService,
     private reviewManageService: ReviewManageService,
     private loadingService: LoadingService,
+    private tagManageService: TagManageService,
   ) {
     super(storageService);
   }
 
   ngOnInit(): void {
     this.historyId = this.activatedRoute.snapshot.params.historyId;
-    let searchInfo: SearchInfo = {
-      apiUrl: this.customerManageService.activityFunc,
-      nowPage: this.paginator.nowPage,
-      errMsg: '標籤使用範圍查無資料'
-    }
-    this.restDataSource = this.tableService.searchData(searchInfo);
 
     this.reviewManageService.getTagReviewRow(this.historyId).pipe(
       filter(res => res.code === RestStatus.SUCCESS),
@@ -76,7 +70,16 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
         }
         this.loadingService.close();
       })
-    ).subscribe();
+    ).subscribe(res => {
+      if(!!res.result.referenceId){
+        let searchInfo: SearchInfo = {
+          apiUrl: `${this.tagManageService.tagFunc}${res.result.referenceId}/activity-setting`,
+          nowPage: this.paginator.nowPage,
+          errMsg: '標籤使用範圍查無資料'
+        }
+        this.restDataSource = this.tableService.searchData(searchInfo);
+      }
+    });
 
     this.reviewManageService.getLastApprovedTag(this.historyId).pipe(
       filter(res => res.code === RestStatus.SUCCESS),
