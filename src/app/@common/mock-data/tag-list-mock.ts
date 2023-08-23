@@ -53,7 +53,7 @@ export const TagSettingMock: Array<TagSetting> = [
         "thresholdValue": "門檻值3",
       }
     ],
-    "tagReviewHistory": [
+    "tagReviewHistoryAud": [
       {
         "historyId": "hh123456",
         "referenceId": "cccccc123456",
@@ -169,7 +169,7 @@ export const TagSettingMock: Array<TagSetting> = [
         "thresholdValue": "門檻值3"
       }
     ],
-    "tagReviewHistory": [
+    "tagReviewHistoryAud": [
       {
         "historyId": "hh123456",
         "referenceId": "cccccc123456",

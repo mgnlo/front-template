@@ -20,7 +20,7 @@ export interface TagSetting {
   fileData: string;
   version: string
   tagConditionSetting: Array<TagConditionSetting>;
-  tagReviewHistory: Array<TagReviewHistory>;
+  tagReviewHistoryAud: Array<TagReviewHistory>;
 }
 
 export class TagConditionSetting {
