@@ -9,7 +9,7 @@ export interface ScheduleActivitySetting {
   modificationTime: string;
   status: string;
   activitySetting: Array<ActivitySetting>;
-  scheduleReviewHistory: Array<ScheduleReviewHistory>;
+  scheduleReviewHistoryAud: Array<ScheduleReviewHistory>;
 }
 
 export class ActivitySetting {
@@ -67,7 +67,7 @@ export interface ScheduleReviewHistory {
   activitySetting?: Array<ActivitySetting>
   newActivitySetting?: Array<ActivitySetting>
   lastActivitySetting?: Array<ActivitySetting>
-  scheduleReviewHistory?: Array<ScheduleReviewHistory>
+  scheduleReviewHistoryAud?: Array<ScheduleReviewHistory>
 }
 
 //for HTML diaplay ViewModel

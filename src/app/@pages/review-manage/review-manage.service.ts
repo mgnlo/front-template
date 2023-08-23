@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
-import { ActivityReviewHistory, TagReviewHistory } from "@api/models/activity-list.model";
+import { ActivityReviewHistory } from "@api/models/activity-list.model";
 import { ResponseModel } from "@api/models/base.model";
 import { ScheduleReviewHistory } from "@api/models/schedule-activity.model";
+import { TagReviewHistory } from "@api/models/tag-manage.model";
 import { ApiService } from "@api/services/api.service";
 import { Observable } from "rxjs";
 
@@ -26,11 +27,11 @@ export class ReviewManageService {
         return this.service.doPut(this.activityReviewFunc + historyId, data);
     }
 
-    getTagReviewRow(historyId: string): Observable<ResponseModel<TagReviewHistory>> {
+    getTagReviewRow(historyId: string): Observable<ResponseModel<ActivityReviewHistory>> {
         return this.service.doGet(this.tagReviewFunc + historyId);
     }
 
-    getLastApprovedTag(historyId: string): Observable<ResponseModel<TagReviewHistory>> {
+    getLastApprovedTag(historyId: string): Observable<ResponseModel<ActivityReviewHistory>> {
         return this.service.doGet(this.tagReviewFunc + historyId + '/last-approved');
     }
 

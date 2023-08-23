@@ -83,7 +83,7 @@ export const ScheduleActivitySettingMock: Array<ScheduleActivitySetting> = [
         ]
       }
     ],
-    "scheduleReviewHistory": [
+    "scheduleReviewHistoryAud": [
       {
         "historyId": "h123456",
         "version": "uuid-zzzz",
