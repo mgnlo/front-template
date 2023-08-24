@@ -3,7 +3,6 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ConsoleGroup } from '@api/models/console-group.model';
 import { ConsoleGroupListMock } from '@common/mock-data/console-group-list-mock';
 import { BaseComponent } from '@pages/base.component';
-import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
 import { AccountManageService } from '../account.manage.service';
 import { ConsoleGroupDetailMock } from '@common/mock-data/console-group-detail-mock';
@@ -13,6 +12,7 @@ import { LoadingService } from '@api/services/loading.service';
 import { RestStatus } from '@common/enums/rest-enum';
 import { ConfigService } from '@api/services/config.service';
 import { LoginService } from '@api/services/login.service';
+import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 
 @Component({
   selector: 'console-group-list',
@@ -55,7 +55,7 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
         title: '查看',
         type: 'custom',
         class: 'col-1',
-        valuePrepareFunction: (cell, row: ConsoleGroup) => [row, this.consoleGroupList, this.dataSource],
+        valuePrepareFunction: (cell, row: ConsoleGroup) => [row, this.consoleGroupList, this.isMock ? this.dataSource : this.restDataSource],
         renderComponent: ConsoleGroupButtonComponent,
         sort: false,
       },
@@ -77,9 +77,10 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
     private loginService: LoginService,
     private loadingService: LoadingService,
     private activatedRoute: ActivatedRoute,
-    private accountManageService: AccountManageService) {
+    private accountManageService: AccountManageService,
+    private tableService: Ng2SmartTableService
+  ) {
     super(storageService, configService);
-    this.dataSource = new LocalDataSource();
     this.hasConsoleGroupCreate = this.loginService.checkUserScope("console-group.create");
   }
 
@@ -99,21 +100,8 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
     } else {
       // 這邊要發查電文 6.1 取得 ConsoleGroupList 內容
       this.loadingService.open();
-      this.accountManageService.getConsoleGroupList().pipe(
-        catchError((err) => {
-          this.loadingService.close();
-          throw new Error(err.message);
-        }),
-        tap(res => {
-          console.info(res)
-          this.loadingService.close();
-        })).subscribe(res => {
-          if (res.code === RestStatus.SUCCESS) {
-            this.consoleGroupList = res.result;
-            this.dataSource.load(this.consoleGroupList);
-            document.querySelector("nb-layout-column").scrollTo(0, 0);
-          }
-        });
+      this.search();
+      document.querySelector("nb-layout-column").scrollTo(0, 0);
     }
   }
 
@@ -128,11 +116,34 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
         window.history.replaceState({}, '', this.router.url.split("?")[0]);
         this.accountManageService.setConsoleGroupListCache({
           scrollPosition: document.querySelector("nb-layout-column").scrollTop,
-          page: this.dataSource.getPaging().page,
+          page: !!this.dataSource ? this.dataSource.getPaging().page : this.restDataSource.getPaging().page,
           consoleGroupList: this.consoleGroupList
         });
       };
     });
+  }
+
+  search(key?: string) {
+
+    if (this.isMock) {
+      this.dataSource.reset();
+      this.dataSource.load(ConsoleGroupListMock);
+      return;
+    }
+
+    const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
+    if (['search', 'reset'].includes(key)) { this.paginator.nowPage = 1; }
+    let page = this.paginator.nowPage;
+    if (key !== 'search' && !!getSessionVal?.filter) { page = getSessionVal.page; }
+    if (key !== 'reset') { this.setSessionVal({ page: this.paginator.nowPage }); }
+
+    let searchInfo: SearchInfo = {
+      apiUrl: this.accountManageService.consoleGroupFunc,
+      nowPage: page,
+      errMsg: '權限管理列表查無資料',
+    }
+
+    this.restDataSource = this.tableService.searchData(searchInfo);
   }
 }
 

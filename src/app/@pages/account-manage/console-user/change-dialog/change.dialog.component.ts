@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, Output } from '@angular/core';
 import { ConsoleGroup } from '@api/models/console-group.model';
 import { ConsoleUser } from '@api/models/console-user.model';
+import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { RestStatus } from '@common/enums/rest-enum';
 import { NbDialogRef } from '@nebular/theme';
@@ -14,40 +15,35 @@ import { catchError, tap } from 'rxjs/operators';
   providers: [AccountManageService]
 })
 export class ChangeDialogComponent implements OnInit {
-  @Input() consoleUser: string;
-  @Input() consoleGroupList: string;
-
-  consoleUserJson: ConsoleUser;
-  consoleGroupListJson: Array<ConsoleGroup>;
-  groupId;
+  @Input() consoleUser: ConsoleUser;
+  @Input() consoleGroupList: Array<ConsoleGroup>;
+  groupId: string = '';
 
   constructor(
     protected ref: NbDialogRef<ChangeDialogComponent>,
     private loadingService: LoadingService,
-    private accountManageService: AccountManageService) {
-
-  }
+    private accountManageService: AccountManageService,
+    private dialogService: DialogService,
+  ) {}
 
   ngOnInit() {
-    this.consoleUserJson = JSON.parse(this.consoleUser);
-    this.consoleGroupListJson = JSON.parse(this.consoleGroupList);
     // document.querySelector(".option-list").scrollTop = 0;
 
     requestAnimationFrame(() => {
-      this.groupId = this.consoleUserJson.consoleGroup.groupId;
+      this.groupId = this.consoleUser?.consoleGroup.groupId;
     });
   }
 
   save() {
     // 需要發送 6.7 電文進行更新
-    this.consoleUserJson.consoleGroup.groupId = this.groupId;
-    this.consoleGroupListJson.filter((consoleGroup: ConsoleGroup) => {
-      if(consoleGroup.groupId == this.groupId){
-        this.consoleUserJson.consoleGroup = consoleGroup;
+    this.consoleUser.consoleGroup.groupId = this.groupId;
+    this.consoleGroupList.filter((consoleGroup: ConsoleGroup) => {
+      if (consoleGroup.groupId == this.groupId) {
+        this.consoleUser.consoleGroup = consoleGroup;
       }
     });
     this.loadingService.open();
-    this.accountManageService.updateConsoleUser(this.consoleUserJson.userId, this.consoleUserJson).pipe(
+    this.accountManageService.updateConsoleUser(this.consoleUser.userId, this.consoleUser).pipe(
       catchError((err) => {
         this.loadingService.close();
         throw new Error(err.message);
@@ -57,8 +53,8 @@ export class ChangeDialogComponent implements OnInit {
         this.loadingService.close();
       })).subscribe(res => {
         if (res.code === RestStatus.SUCCESS) {
-          // 成功後需要通知主畫面異動成功
-          this.ref.close(this.consoleUserJson);
+          this.dialogService.alertAndBackToList(true, `${this.consoleUser.account} 權限變更成功`);
+          this.ref.close(this.consoleUser);
         }
       });
   }

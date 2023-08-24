@@ -16,6 +16,8 @@ import { catchError, filter, tap } from 'rxjs/operators';
 import { AccountManageService } from '../account.manage.service';
 import { ChangeDialogComponent } from './change-dialog/change.dialog.component';
 import { LoginService } from '@api/services/login.service';
+import { ConsoleGroupListMock } from '@common/mock-data/console-group-list-mock';
+import { ConsoleUserListMock } from '@common/mock-data/console-user-list-mock';
 
 @Component({
   selector: 'console-user',
@@ -50,24 +52,24 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
       },
       email: {
         title: '電子郵件',
-        type: 'string',
-        class: 'col-4',
-        valuePrepareFunction: (cell: boolean) => cell,
+        type: 'html',
+        class: 'left col-4',
+        valuePrepareFunction: (cell: string) => {
+          return `<p class="left">${cell}</p>`;
+        },
         sort: false,
       },
       businessUnit: {
         title: '所屬單位',
-        type: 'html',
+        type: 'string',
         class: 'col-2',
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${BusinessUnit[cell]}</p>`;
-        },
+        valuePrepareFunction: (cell: string) => BusinessUnit[cell],
         sort: false,
       },
       consoleGroup: {
         title: '權限',
         type: 'html',
-        class: 'col-2',
+        class: 'left col-2',
         valuePrepareFunction: (cell: any) => {
           return `<p class="left">${cell.groupName}</p>`;
         },
@@ -82,8 +84,8 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
           instance.settings = { btnStatus: 'primary', btnIcon: 'edit-outline' }
           instance.emitter.subscribe((row) => {
             const dialogRef = this.dialogService.open(ChangeDialogComponent, {
-              consoleUser: JSON.stringify(row),
-              consoleGroupList: JSON.stringify(this.consoleGroupList),
+              consoleUser: row,
+              consoleGroupList: this.consoleGroupList,
             });
             dialogRef.onClose.subscribe(res => {
               if (res) { this.search() }
@@ -111,7 +113,6 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
     private loginService: LoginService,
   ) {
     super(storageService, configService);
-
     this.validateForm = new FormGroup({
       account: new FormControl(null),
       name: new FormControl(null),
@@ -126,7 +127,6 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dataSource = new LocalDataSource();
     this.queryAllConsoleGroup();
     this.search();
     let fg = this.validateForm.get('businessUnit') as FormGroup;
@@ -134,6 +134,16 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
   }
 
   search(key?: string) {
+
+    if (this.isMock) {
+      this.dataSource.reset();
+      let filter = this.validateForm.getRawValue();
+      for (const [k, v] of Object.entries(filter).filter(([key, val]) => !!val)) {
+        this.dataSource.addFilter({ field: k, filter: undefined, search: v });
+      }
+      this.dataSource.load(ConsoleUserListMock);
+      return;
+    }
 
     this.isSearch = false;
 
@@ -153,19 +163,27 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
       errMsg: '使用者管理查無資料',
     }
 
-    this.dataSource = this.tableService.searchData(searchInfo);
+    this.restDataSource = this.tableService.searchData(searchInfo);
   }
 
   queryAllConsoleGroup() {
     this.loadingService.open();
-    this.accountManageService.getConsoleGroupList().pipe(
+
+    if (this.isMock) {
+      this.dataSource.load(ConsoleGroupListMock);
+      this.loadingService.close();
+      return;
+    }
+
+    // 有分頁但下拉選單需要一次取全部
+    this.accountManageService.getConsoleGroupList(20).pipe(
       catchError((err) => {
         this.loadingService.close();
         throw new Error(err.message);
       }),
       filter(res => res.code === RestStatus.SUCCESS),
       tap(res => {
-        this.consoleGroupList = res.result;
+        this.consoleGroupList = res.result['content'];
         this.loadingService.close();
       })).subscribe();
   }

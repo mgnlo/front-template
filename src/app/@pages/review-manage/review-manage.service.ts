@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import { ActivityReviewHistory } from "@api/models/activity-list.model";
 import { ResponseModel } from "@api/models/base.model";
 import { ScheduleReviewHistory } from "@api/models/schedule-activity.model";
-import { TagReviewHistory } from "@api/models/tag-manage.model";
 import { ApiService } from "@api/services/api.service";
 import { Observable } from "rxjs";
 

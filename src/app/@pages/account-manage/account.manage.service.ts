@@ -93,8 +93,8 @@ export class AccountManageService {
 
     // 7.1 取得所有群組：GET /api/console-group     
     // response List<ConsoleGroup>
-    getConsoleGroupList(): Observable<ResponseModel<Array<ConsoleGroup>>> {
-        return this.service.doGet(this.consoleGroupFunc);
+    getConsoleGroupList(size?: number): Observable<ResponseModel<Array<ConsoleGroup>>> {
+        return !!size ? this.service.doGet(this.consoleGroupFunc, {size}) : this.service.doGet(this.consoleGroupFunc);
     }
 
     // 7.2 取得群組設定：GET /api/console-group/{groupId}
