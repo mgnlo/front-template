@@ -22,14 +22,14 @@ export class LoginService {
         this._jwtToken = jwt;
         this.service.jwtToken = this._jwtToken;
         this._userProfile = this.parseJwtPayload();
-        this.userProfileSubject.next(this._userProfile);
+        this.userProfileSubject.next({...this._userProfile});
         this.storageService.putSessionVal("jwtToken", jwt);
     };
 
     private _userProfile: ConsoleUser;
 
     public getUserProfileSubject() {
-        return this.userProfileSubject;
+        return this.userProfileSubject.asObservable();
     }
 
     public userProfileSubject: BehaviorSubject<ConsoleUser> = new BehaviorSubject<ConsoleUser>(null);
