@@ -1,13 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Navigation, Router } from '@angular/router';
-import { ActivitySetting, TagSetting } from '@api/models/activity-list.model';
+import { ActivitySetting } from '@api/models/activity-list.model';
 import { HistoryGroupView, TagDetailView } from '@api/models/tag-manage.model';
+import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { Status } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
+import { ActivityListMock } from '@common/mock-data/activity-list-mock';
+import { TagSettingMock } from '@common/mock-data/tag-list-mock';
+import { TagReviewListMock } from '@common/mock-data/tag-review-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
 import { TagManageService } from '@pages/tag-manage/tag-manage.service';
@@ -37,6 +41,7 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
 
   constructor(
     storageService: StorageService,
+    configService: ConfigService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private dialogService: DialogService,
@@ -45,13 +50,37 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
     private loadingService: LoadingService,
     private tagManageService: TagManageService,
   ) {
-    super(storageService);
+    super(storageService, configService);
   }
 
   ngOnInit(): void {
     this.historyId = this.activatedRoute.snapshot.params.historyId;
 
     this.loadingService.open();
+
+    if (this.isMock) {
+      let newMockData = TagReviewListMock.find(tag => tag.historyId === this.historyId);
+      this.newDetail = JSON.parse(JSON.stringify(newMockData));
+      console.info(this.newDetail);
+      this.detail = this.newDetail;
+      this.reviewStatus = newMockData.reviewStatus;
+      this.reviewComment = newMockData.reviewComment;
+      let oldMockData = TagSettingMock.find(tag => tag.tagId === newMockData.referenceId);
+      if (!!oldMockData) {
+        this.isCompare = !!oldMockData ? true : false;
+        this.oldDetail = JSON.parse(JSON.stringify(oldMockData));
+        const processedData = CommonUtil.getHistoryProcessData<TagDetailView>('tagReviewHistoryAud', this.oldDetail as TagDetailView);
+        if (!!processedData) {
+          this.isHistoryOpen = processedData.isHistoryOpen;
+          this.historyGroupView = processedData.detail.historyGroupView;
+        }
+        this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
+      }
+      this.dataSource.load(ActivityListMock);
+      this.loadingService.close();
+      return;
+    }
+
     this.reviewManageService.getTagReviewRow(this.historyId).pipe(
       filter(res => res.code === RestStatus.SUCCESS),
       catchError(err => {
@@ -64,7 +93,7 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
         this.detail = this.newDetail;
         this.reviewStatus = res.result.reviewStatus;
         this.reviewComment = res.result.reviewComment;
-        const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistoryAud', this.newDetail as TagSetting);
+        const processedData = CommonUtil.getHistoryProcessData<TagDetailView>('tagReviewHistoryAud', this.newDetail as TagDetailView);
         if (!!processedData) {
           this.isHistoryOpen = processedData.isHistoryOpen;
           this.historyGroupView = processedData.detail.historyGroupView;
@@ -180,7 +209,17 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   }
 
   send(reviewStatus: 'rejected' | 'approved') {
+
     let dialogOption = { title: '標籤異動駁回說明', isApproved: reviewStatus === 'approved' };
+
+    if (this.isMock) {
+      this.dialogService.openReview(dialogOption).componentRef.instance.emit.subscribe(mockInfo => {
+        this.dialogService.openReview(dialogOption).close();
+        this.router.navigate(['pages', 'review-manage', 'tag-review-list']);
+      });
+      return;
+    }
+
     this.dialogService.openReview(dialogOption).componentRef.instance.emit.subscribe(reviewInfo => {
       let req = { reviewStatus: reviewStatus, reviewComment: reviewInfo.reviewComment }
       this.reviewManageService.updateTagReview(this.historyId, req).pipe(

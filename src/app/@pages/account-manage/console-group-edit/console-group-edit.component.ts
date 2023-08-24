@@ -14,6 +14,7 @@ import { LoadingService } from '@api/services/loading.service';
 import { DialogService } from '@api/services/dialog.service';
 import { RestStatus } from '@common/enums/rest-enum';
 import { GroupScope } from '@common/enums/console-group-enum';
+import { ConfigService } from '@api/services/config.service';
 
 @Component({
   selector: 'console-group-edit',
@@ -146,13 +147,14 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
 
   constructor(
     storageService: StorageService,
+    configService: ConfigService,
     private router: Router,
     private accountManageService: AccountManageService,
     private activatedRoute: ActivatedRoute,
     private loadingService: LoadingService,
     private dialogService: DialogService,
     private dateService: NbDateService<Date>) {
-    super(storageService);
+    super(storageService, configService);
 
     try {
       this.consoleGroupDetail = JSON.parse(this.activatedRoute.snapshot.queryParamMap.get("consoleGroupDetail"));

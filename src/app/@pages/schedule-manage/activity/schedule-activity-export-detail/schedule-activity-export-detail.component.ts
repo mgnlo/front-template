@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting, ScheduleActivitySetting, Schedule_Batch_History } from '@api/models/schedule-activity.model';
+import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
@@ -33,6 +34,7 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
 
   constructor(
     storageService: StorageService,
+    configService: ConfigService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private scheduleManageService: ScheduleManageService,
@@ -41,7 +43,7 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
     private dialogService: DialogService,
     private tableService: Ng2SmartTableService,
   ) {
-    super(storageService);
+    super(storageService, configService);
     this.params = this.activatedRoute.snapshot.params;
   }
 
@@ -70,7 +72,7 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
         width: '25%',
         valuePrepareFunction: (cell: string) => {
           const datepipe: DatePipe = new DatePipe('en-US');
-          return `<p class="left">${datepipe.transform(cell,"yyyy-MM-dd HH:mm:ss")}</p>`;
+          return `<p class="left">${datepipe.transform(cell, "yyyy-MM-dd HH:mm:ss")}</p>`;
         },
         sort: false,
       },
@@ -122,6 +124,11 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
 
     this.scheduleId = this.activatedRoute.snapshot.params.scheduleId;
     this.referenceId = this.activatedRoute.snapshot.params.referenceId;
+
+    if (this.isMock) {
+      this.dataSource.load(this.schedule_Batch_History);
+      return;
+    }
 
     this.customerManageService.getActivitySettingRow(this.referenceId).pipe(
       catchError(err => {

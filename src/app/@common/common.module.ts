@@ -1,4 +1,5 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
+import { ConfigService } from '@api/services/config.service';
 import { StorageService } from '@api/services/storage.service';
 import { LoadingService } from '../@api/services/loading.service';
 import { EnumPipe } from './pipes/enum.pipe';
@@ -16,7 +17,7 @@ export class CommonModule {
   public static forRoot(): ModuleWithProviders<CommonModule> {
     return {
       ngModule: CommonModule,
-      providers: [LoadingService, StorageService],
+      providers: [LoadingService, StorageService, ConfigService],
     };
   }
 }

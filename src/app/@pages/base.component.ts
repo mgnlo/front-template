@@ -1,5 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
+import { ConfigService } from '@api/services/config.service';
 import { StorageService } from '@api/services/storage.service';
 import { CommonServerDataSource } from '@common/ng2-smart-table/common-server-data-source';
 import { Paginator } from '@component/table/paginator/paginator.component';
@@ -21,8 +22,12 @@ export class BaseComponent implements OnDestroy {
   validationMessages: any;     // 欄位檢核提示訊息 -> 初始化時須各別設定
   tmpCtrl: AbstractControl;    // 多層次使用
   sessionKey: string;
+  isMock: boolean = false;
 
-  constructor(protected storageService: StorageService) { }
+  constructor(protected storageService: StorageService, protected configService: ConfigService) {
+    this.isMock = configService.getConfig().IS_MOCK;
+    if (this.isMock) { this.dataSource = new LocalDataSource(); }
+  }
 
   ngOnDestroy(): void {
     this.unsubscribe$.next(undefined);

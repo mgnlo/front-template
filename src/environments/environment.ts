@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   SERVER_URL: 'http://localhost:8080',
   API_URL: '/portal/webcomm/api/',
+  IS_MOCK: true,
 };
 
 /*

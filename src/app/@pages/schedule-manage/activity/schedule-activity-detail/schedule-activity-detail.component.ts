@@ -1,11 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ActivitySetting, ScheduleDetailView, Schedule_Batch_History } from '@api/models/schedule-activity.model';
+import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, Status, StatusResult } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
+import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/checkbox.component';
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
@@ -35,13 +37,14 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
 
   constructor(
     storageService: StorageService,
+    configService: ConfigService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private scheduleManageService: ScheduleManageService,
     private dialogService: DialogService,
     private loadingService: LoadingService,
   ) {
-    super(storageService);
+    super(storageService, configService);
   }
 
   gridDefine = {
@@ -118,6 +121,15 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.scheduleId = this.activatedRoute.snapshot.params.scheduleId;
     this.loadingService.open();
+
+    if (this.isMock) {
+      let mockData = ScheduleActivitySettingMock.find(schedule => schedule.scheduleId === this.scheduleId)
+      this.detail = JSON.parse(JSON.stringify(mockData));
+      this.dataSource.load(mockData.activitySetting);
+      this.loadingService.close();
+      return;
+    }
+
     this.dataSource = new LocalDataSource();
     const detailObservable = this.scheduleManageService.getScheduleActivitySettingDetail(this.scheduleId);
     const storage = this.storageService.getSessionVal(this.sessionKey);

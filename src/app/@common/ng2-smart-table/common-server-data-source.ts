@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
+import { ConfigService } from '@api/services/config.service';
 import { CommonUtil } from '@common/utils/common-util';
-import { environment } from 'environments/environment';
 import { ServerDataSource } from 'ng2-smart-table';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
@@ -51,7 +51,7 @@ export class ServerSourceInitConfig {
 export class CommonServerDataSource extends ServerDataSource {
 
   private initConf: ServerSourceInitConfig;
-  private prefixUrl = environment.SERVER_URL + environment.API_URL;
+  private prefixUrl = new ConfigService().getConfig().SERVER_URL + new ConfigService().getConfig().API_URL;
   private apiStatusSubject: BehaviorSubject<'init' | 'loading' | 'finish' | 'error'> = new BehaviorSubject('init');
 
   constructor(protected http: HttpClient, conf: CommonConf | {} = {}, initConf?: ServerSourceInitConfig) {

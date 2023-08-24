@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HistoryGroupView, ScheduleDetailView, ScheduleReviewHistory } from '@api/models/schedule-activity.model';
+import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
 import { RestStatus } from '@common/enums/rest-enum';
+import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
+import { ScheduleReviewHistoryMock } from '@common/mock-data/schedule-review-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
 import { catchError, filter, takeUntil, tap } from 'rxjs/operators';
@@ -31,20 +34,66 @@ export class ScheduleReviewDetailComponent extends BaseComponent implements OnIn
   historyGroupView: { [x: number]: HistoryGroupView } //歷史紀錄
 
   constructor(
+    storageService: StorageService,
+    configService: ConfigService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private loadingService: LoadingService,
     private reviewManageService: ReviewManageService,
     private dialogService: DialogService,
-    storageService: StorageService,
   ) {
-    super(storageService);
+    super(storageService, configService);
   }
 
   ngOnInit(): void {
     this.historyId = this.activatedRoute.snapshot.params.historyId;
 
     this.loadingService.open();
+
+    if (this.isMock) {
+      let newMockData = ScheduleReviewHistoryMock.find(schedule => schedule.historyId === this.historyId);
+      this.newDetail = JSON.parse(JSON.stringify(newMockData));
+      this.detail = this.newDetail;
+      this.reviewStatus = newMockData.reviewStatus;
+      this.reviewComment = newMockData.reviewComment;
+      const processedData = CommonUtil.getHistoryProcessData<ScheduleReviewHistory>('scheduleReviewHistoryAud', newMockData as ScheduleReviewHistory);
+      if (!!processedData) {
+        this.isHistoryOpen = processedData.isHistoryOpen;
+        this.historyGroupView = processedData.detail.historyGroupView;
+      }
+      let newActivityList: { key: string, value: string }[] = [];
+      if (!!newMockData?.activitySetting) {
+        newActivityList = newMockData.activitySetting.map(activity => { return { key: activity.activityId, value: activity.activityName } });
+      }
+      let oldMockData = ScheduleActivitySettingMock.find(schedule => schedule.scheduleId === newMockData.referenceId);
+      this.isCompare = !!oldMockData ? true : false;
+      if (this.isCompare) {
+        this.oldDetail = JSON.parse(JSON.stringify(oldMockData));
+        this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
+        let oldActivityList: { key: string, value: string }[] = [];
+        if (!!oldMockData?.activitySetting) {
+          oldActivityList = oldMockData.activitySetting.map(activity => { return { key: activity.activityId, value: activity.activityName } })
+        }
+        let allActivityList = newActivityList.concat(oldActivityList.filter(oldActivity => !newActivityList.find(newActivity => newActivity.key == oldActivity.key)));
+        allActivityList.forEach(activity => {
+          let activityId = activity.key;
+          let oldActivityIds = oldActivityList.map(oldActivity => oldActivity.key);
+          let newActivityIds = newActivityList.map(newActivity => newActivity.key);
+          if (oldActivityIds.includes(activityId) && newActivityIds.includes(activityId)) {
+            this.activitySettingView.same.push(activity.value);
+          } else if (oldActivityIds.includes(activityId) && !newActivityIds.includes(activityId)) {
+            this.activitySettingView.remove.push(activity.value);
+          } else if (!oldActivityIds.includes(activityId) && newActivityIds.includes(activityId)) {
+            this.activitySettingView.add.push(activity.value);
+          }
+        });
+      } else {
+        this.activitySettingView.add.push(newActivityList.map(activity => activity.value));
+      }
+      this.loadingService.close();
+      return;
+    }
+
     this.reviewManageService.getScheduleReviewRow(this.historyId).pipe(
       filter(res => res.code === RestStatus.SUCCESS),
       catchError(err => {
@@ -127,6 +176,15 @@ export class ScheduleReviewDetailComponent extends BaseComponent implements OnIn
 
   send(reviewStatus: 'rejected' | 'approved') {
     let dialogOption = { title: '名單排程異動駁回說明', isApproved: reviewStatus === 'approved' };
+
+    if (this.isMock) {
+      this.dialogService.openReview(dialogOption).componentRef.instance.emit.subscribe(mockInfo => {
+        this.dialogService.openReview(dialogOption).close();
+        this.router.navigate(['pages', 'review-manage', 'schedule-review-list']);
+      });
+      return;
+    }
+
     this.dialogService.openReview(dialogOption).componentRef.instance.emit.subscribe(reviewInfo => {
       let req = { reviewStatus: reviewStatus, reviewComment: reviewInfo.reviewComment }
       this.reviewManageService.updateScheduleReview(this.historyId, req).pipe(

@@ -1,20 +1,18 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TagReviewHistory, TagSetting } from '@api/models/tag-manage.model';
+import { ConfigService } from '@api/services/config.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass } from '@common/enums/common-enum';
-import { RestStatus } from '@common/enums/rest-enum';
 import { ReviewStatus } from '@common/enums/review-enum';
 import { TagType } from '@common/enums/tag-enum';
 import { TagReviewListMock } from '@common/mock-data/tag-review-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
-import { NbDateService } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
-import { LocalDataSource } from 'ng2-smart-table';
 import { ReviewManageService } from '../review-manage.service';
 
 @Component({
@@ -26,11 +24,12 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
 
   constructor(
     storageService: StorageService,
+    configService: ConfigService,
     private activatedRoute: ActivatedRoute,
     private reviewManageService: ReviewManageService,
     private tableService: Ng2SmartTableService,
   ) {
-    super(storageService);
+    super(storageService, configService);
     // 篩選條件
     this.validateForm = new FormGroup({
       tagName: new FormControl(''),
@@ -141,10 +140,6 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
       edit: false,
       delete: false,
     },
-    // rowClassFunction: (row: Row) => {
-    //   console.info(row.getData().status)
-    //   return row.getData().status === 'ing' ? 'aa' : '';
-    // },
   };
 
   reset() {
@@ -156,6 +151,17 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
   }
 
   search(key?: string) {
+
+    if (this.isMock) {
+      this.dataSource.reset();
+      let filter = this.validateForm.getRawValue();
+      for (const [k, v] of Object.entries(filter).filter(([key, val]) => !!val)) {
+        this.dataSource.addFilter({ field: k, filter: undefined, search: v });
+      }
+      this.dataSource.load(TagReviewListMock);
+      return;
+    }
+
     const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
 
     this.isSearch = false;

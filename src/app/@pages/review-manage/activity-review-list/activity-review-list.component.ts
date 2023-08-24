@@ -2,10 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ActivityReviewHistory } from '@api/models/activity-list.model';
+import { ConfigService } from '@api/services/config.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
-import { ColumnClass, Status } from '@common/enums/common-enum';
+import { ColumnClass } from '@common/enums/common-enum';
 import { ReviewStatus } from '@common/enums/review-enum';
+import { ActivityReviewListMock } from '@common/mock-data/activity-review-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { CheckboxIconComponent } from '@component/table/checkbox-icon/checkbox-icon.component';
@@ -22,11 +24,12 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
 
   constructor(
     storageService: StorageService,
+    configService: ConfigService,
     private activatedRoute: ActivatedRoute,
     private reviewManageService: ReviewManageService,
     private tableService: Ng2SmartTableService,
   ) {
-    super(storageService);
+    super(storageService, configService);
     // 篩選條件
     this.validateForm = new FormGroup({
       activityName: new FormControl(''),
@@ -144,6 +147,17 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
   }
 
   search(key?: string) {
+
+    if (this.isMock) {
+      this.dataSource.reset();
+      let filter = this.validateForm.getRawValue();
+      for (const [k, v] of Object.entries(filter).filter(([key, val]) => !!val)) {
+        this.dataSource.addFilter({ field: k, filter: undefined, search: v });
+      }
+      this.dataSource.load(ActivityReviewListMock);
+      return;
+    }
+
     const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
 
     this.isSearch = false;

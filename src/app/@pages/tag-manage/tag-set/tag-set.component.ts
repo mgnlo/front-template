@@ -9,11 +9,12 @@ import { StorageService } from '@api/services/storage.service';
 import { MathSymbol, Status } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
 import { TagDimension, TagJoinValue, TagSetCondition, TagSubDimension, TagType } from '@common/enums/tag-enum';
+import { ActivityListMock } from '@common/mock-data/activity-list-mock';
+import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { RegExpUtil } from '@common/utils/reg-exp-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
-import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
 import * as moment from 'moment';
 import { catchError, filter, tap, finalize } from 'rxjs/operators';
 import { TagManageService } from '../tag-manage.service';
@@ -21,6 +22,7 @@ import { TagConditionDialogComponent } from './condition-dialog/condition-dialog
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { TagConditionChartLineMock } from '@common/mock-data/tag-condition-chart-line-mock';
 import { FileService } from '@api/services/file.service';
+import { ConfigService } from '@api/services/config.service';
 
 @Component({
   selector: 'tag-set',
@@ -84,6 +86,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   constructor(
     storageService: StorageService,
+    configService: ConfigService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private readonly changeDetectorRef: ChangeDetectorRef,
@@ -93,7 +96,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     private dialogService: DialogService,
     private tableService: Ng2SmartTableService,
   ) {
-    super(storageService);
+    super(storageService, configService);
     this.validateForm = new FormGroup({
       tagName: new FormControl(null, Validators.required),
       status: new FormControl('enabled', Validators.required),
@@ -183,6 +186,18 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     //#region 載入編輯資料
     if (!!this.tagId) {
       this.loadingService.open();
+
+      if (this.isMock) {
+        let mockData = TagSettingMock.find(tag => tag.tagId === this.tagId)
+        this.setData(mockData);
+        this.loadingService.close();
+        const formData = this.validateForm.getRawValue();
+        this.changeTagType(formData.tagType);
+        this.changeConditionSettingMethod(formData.conditionSettingMethod);
+        this.dataSource.load(ActivityListMock);
+        return;
+      }
+
       this.tagManageService.getTagSettingRow(this.tagId).pipe(
         catchError(err => {
           this.dialogService.alertAndBackToList(false, '查無該筆資料，將為您導回標籤列表', ['pages', 'tag-manage', 'tag-list']);
@@ -190,47 +205,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
         }),
         filter(res => res.code === RestStatus.SUCCESS),
         tap((res) => {
-          this.detail = JSON.parse(JSON.stringify(res.result));
-          const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistoryAud', res.result as TagSetting); // 異動歷程處理
-          Object.keys(res.result).forEach(key => {
-            if (!!this.validateForm.controls[key]) {
-              switch (key) {
-                case 'startDate':
-                case 'endDate':
-                  this.validateForm.controls[key].setValue(new Date(res.result[key]))
-                  break;
-                case 'tagConditionSetting':
-                  this.conditions.removeAt(0);
-                  res.result.tagConditionSetting.forEach((conditionSetting, index) => {
-                    if (!!conditionSetting.joinValue) {
-                      this.conditions.push(new FormGroup({
-                        id: new FormControl(index),
-                        ['detectionCondition_' + index]: new FormControl(conditionSetting.detectionCondition, Validators.required),
-                        ['thresholdValue_' + index]: new FormControl(+conditionSetting.thresholdValue, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
-                        ['joinValue_' + index]: new FormControl(conditionSetting.joinValue, Validators.required)
-                      }));
-                    } else {
-                      this.conditions.push(new FormGroup({
-                        id: new FormControl(index),
-                        ['detectionCondition_' + index]: new FormControl(conditionSetting.detectionCondition, Validators.required),
-                        ['thresholdValue_' + index]: new FormControl(+conditionSetting.thresholdValue, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
-                      }));
-                    }
-                  })
-                  //console.info(this.conditions.getRawValue());
-                  break;
-                default:
-                  this.validateForm.controls[key].setValue(res.result[key]);
-                  break;
-              }
-            }
-          });
-          if (!!processedData) {
-            if (this.changeRouteName === 'edit') {
-              this.isHistoryOpen = processedData.isHistoryOpen;
-              this.detail.historyGroupView = processedData.detail?.historyGroupView;
-            }
-          }
+          this.setData(res.result);
           this.loadingService.close();
         })
       ).subscribe(res => {
@@ -485,6 +460,12 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       return
     }
 
+    if (this.isMock) {
+      this.dialogService.alertAndBackToList(true, `${this.actionName}成功`, ['pages', 'tag-manage', 'tag-list']);
+      this.loadingService.close();
+      return;
+    }
+
     // 調用(新增or複製)或編輯
     this.saveTagSetting(reqData);
   }
@@ -556,6 +537,50 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
     // console.info('reqData',reqData)
     return reqData;
+  }
+
+  setData(result: TagSetting) {
+    this.detail = JSON.parse(JSON.stringify(result));
+    const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistoryAud', result as TagSetting); // 異動歷程處理
+    Object.keys(result).forEach(key => {
+      if (!!this.validateForm.controls[key]) {
+        switch (key) {
+          case 'startDate':
+          case 'endDate':
+            this.validateForm.controls[key].setValue(new Date(result[key]))
+            break;
+          case 'tagConditionSetting':
+            this.conditions.removeAt(0);
+            result.tagConditionSetting.forEach((conditionSetting, index) => {
+              if (!!conditionSetting.joinValue) {
+                this.conditions.push(new FormGroup({
+                  id: new FormControl(index),
+                  ['detectionCondition_' + index]: new FormControl(conditionSetting.detectionCondition, Validators.required),
+                  ['thresholdValue_' + index]: new FormControl(+conditionSetting.thresholdValue, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
+                  ['joinValue_' + index]: new FormControl(conditionSetting.joinValue, Validators.required)
+                }));
+              } else {
+                this.conditions.push(new FormGroup({
+                  id: new FormControl(index),
+                  ['detectionCondition_' + index]: new FormControl(conditionSetting.detectionCondition, Validators.required),
+                  ['thresholdValue_' + index]: new FormControl(+conditionSetting.thresholdValue, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
+                }));
+              }
+            })
+            //console.info(this.conditions.getRawValue());
+            break;
+          default:
+            this.validateForm.controls[key].setValue(result[key]);
+            break;
+        }
+      }
+    });
+    if (!!processedData) {
+      if (this.changeRouteName === 'edit') {
+        this.isHistoryOpen = processedData.isHistoryOpen;
+        this.detail.historyGroupView = processedData.detail?.historyGroupView;
+      }
+    }
   }
   //#endregion
 

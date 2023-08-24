@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ConsoleGroup } from '@api/models/console-group.model';
+import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
@@ -101,12 +102,13 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
 
   constructor(
     storageService: StorageService,
+    configService: ConfigService,
     private loadingService: LoadingService,
     private accountManageService: AccountManageService,
     private dialogService: DialogService,
     private tableService: Ng2SmartTableService,
   ) {
-    super(storageService);
+    super(storageService, configService);
 
     this.validateForm = new FormGroup({
       account: new FormControl(null),

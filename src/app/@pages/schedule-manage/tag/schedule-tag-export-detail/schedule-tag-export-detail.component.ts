@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Schedule_Batch_History } from '@api/models/schedule-activity.model';
 import { ScheduleTagSetting } from '@api/models/schedule-tag.model';
+import { ConfigService } from '@api/services/config.service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, StatusResult } from '@common/enums/common-enum';
 import { ScheduleTagSettingMock } from '@common/mock-data/schedule-tag-list-mock';
@@ -24,10 +25,11 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
 
   constructor(
     storageService: StorageService,
+    configService: ConfigService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
   ) {
-    super(storageService);
+    super(storageService, configService);
     this.params = this.activatedRoute.snapshot.params;
   }
 

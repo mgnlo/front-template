@@ -2,9 +2,11 @@ import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ScheduleActivitySetting } from '@api/models/schedule-activity.model';
+import { ConfigService } from '@api/services/config.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { Frequency, Status } from '@common/enums/common-enum';
+import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { ScheduleManageService } from '../../schedule-manage.service';
@@ -20,12 +22,13 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
 
   constructor(
     storageService: StorageService,
+    configService: ConfigService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private scheduleManageService: ScheduleManageService,
     private tableService: Ng2SmartTableService,
   ) {
-    super(storageService);
+    super(storageService, configService);
   }
 
   gridDefine = {
@@ -99,6 +102,12 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
   };
 
   ngOnInit(): void {
+
+    if (this.isMock) {
+      this.dataSource.load(ScheduleActivitySettingMock);
+      return;
+    }
+
     const page = this.storageService.getSessionVal(this.sessionKey)?.page;
     let searchInfo: SearchInfo = {
       apiUrl: this.scheduleManageService.scheduleFunc,

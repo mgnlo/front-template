@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ScheduleReviewHistory } from '@api/models/schedule-activity.model';
+import { ConfigService } from '@api/services/config.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, Frequency } from '@common/enums/common-enum';
@@ -21,11 +22,12 @@ export class ScheduleReviewListComponent extends BaseComponent implements OnInit
 
   constructor(
     storageService: StorageService,
+    configService: ConfigService,
     private activatedRoute: ActivatedRoute,
     private reviewManageService: ReviewManageService,
     private tableService: Ng2SmartTableService,
   ) {
-    super(storageService);
+    super(storageService, configService);
     this.sessionKey = this.activatedRoute.snapshot.routeConfig.path;
   }
 
@@ -57,7 +59,7 @@ export class ScheduleReviewListComponent extends BaseComponent implements OnInit
         },
         sort: false,
       },
-      type:{
+      type: {
         title: '異動類型',
         type: 'string',
         sort: false,
@@ -116,6 +118,12 @@ export class ScheduleReviewListComponent extends BaseComponent implements OnInit
   }
 
   search(key?: string) {
+
+    if (this.isMock) {
+      this.dataSource.load(ScheduleReviewHistoryMock);
+      return;
+    }
+
     const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
 
     this.isSearch = false;

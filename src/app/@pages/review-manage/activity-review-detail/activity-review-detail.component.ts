@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Navigation, Router } from '@angular/router';
 import { ActivityDetail, ActivityReviewHistory, ActivitySetting, HistoryGroupView, TagGroupView } from '@api/models/activity-list.model';
+import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
 import { RestStatus } from '@common/enums/rest-enum';
+import { ActivityListMock } from '@common/mock-data/activity-list-mock';
+import { ActivityReviewListMock } from '@common/mock-data/activity-review-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
-import { combineLatest } from 'rxjs';
 import { catchError, filter, takeUntil, tap } from 'rxjs/operators';
 import { ReviewManageService } from '../review-manage.service';
 
@@ -33,23 +35,55 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
   reviewComment: string;
   historyId: string;
   isCompare: boolean = false;
-  historyGroupView: {[x: number]: HistoryGroupView};
+  historyGroupView: { [x: number]: HistoryGroupView };
 
   constructor(
     storageService: StorageService,
+    configService: ConfigService,
     private router: Router,
     private dialogService: DialogService,
     private activatedRoute: ActivatedRoute,
     private loadingService: LoadingService,
     private reviewManageService: ReviewManageService,
   ) {
-    super(storageService);
+    super(storageService, configService);
   }
 
   ngOnInit(): void {
     this.historyId = this.activatedRoute.snapshot.params.historyId;
 
     this.loadingService.open();
+
+    if (this.isMock) {
+      let newMockData = ActivityReviewListMock.find(activity => activity.historyId === this.historyId);
+      this.newDetail = JSON.parse(JSON.stringify(newMockData));
+      this.newReview = JSON.parse(JSON.stringify(newMockData));
+      this.reviewStatus = newMockData.reviewStatus;
+      this.reviewComment = newMockData.reviewComment;
+      this.newDetail.tagGroupView = CommonUtil.groupBy(newMockData.activityListCondition, 'tagGroup');
+      this.detail = this.newDetail;
+      Object.keys(this.detail.tagGroupView).forEach(key => this.isConditionOpen[key] = true);
+      const processedData = CommonUtil.getHistoryProcessData<ActivityDetail>('activityReviewHistoryAud', this.newDetail as ActivityDetail);
+      if (!!processedData) {
+        this.isHistoryOpen = processedData.isHistoryOpen;
+        this.detail = processedData.detail;
+        this.historyGroupView = this.detail.historyGroupView;
+      }
+      let oldMockData = ActivityListMock.find(activity => activity.activityId === newMockData.referenceId);
+      this.isCompare = !!oldMockData ? true : false;
+      if (this.isCompare) {
+        this.oldDetail = JSON.parse(JSON.stringify(oldMockData));
+        this.oldReview = JSON.parse(JSON.stringify(oldMockData));
+        if (!!oldMockData?.activityListCondition) {
+          this.oldDetail.tagGroupView = CommonUtil.groupBy(oldMockData.activityListCondition, 'tagGroup');
+        }
+        this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
+        this.compareCondition(this.detail.tagGroupView, 'old');
+      }
+      this.loadingService.close();
+      return;
+    }
+
     this.reviewManageService.getActivityReviewRow(this.historyId).pipe(
       filter(res => res.code === RestStatus.SUCCESS),
       catchError(err => {
@@ -74,7 +108,7 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
         }
         this.loadingService.close();
       })
-    ).subscribe(()=> {
+    ).subscribe(() => {
       this.reviewManageService.getLastApprovedActivity(this.historyId).pipe(
         filter(res => res.code === RestStatus.SUCCESS),
         catchError(err => {
@@ -85,11 +119,9 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
         takeUntil(this.unsubscribe$),
         tap(res => {
           this.isCompare = !!res.result ? true : false;
-          this.oldDetail = JSON.parse(JSON.stringify(res.result));
-          this.oldReview = JSON.parse(JSON.stringify(res.result));
-          this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
           if (this.isCompare) {
             this.oldDetail = JSON.parse(JSON.stringify(res.result));
+            this.oldReview = JSON.parse(JSON.stringify(res.result));
             if (!!res.result?.activityListCondition) {
               this.oldDetail.tagGroupView = CommonUtil.groupBy(res.result.activityListCondition, 'tagGroup');
             }
@@ -100,7 +132,7 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
         })
       ).subscribe();
     });
-    
+
   }
 
   viewToggle() {
@@ -148,6 +180,15 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
 
   send(reviewStatus: 'rejected' | 'approved') {
     let dialogOption = { title: '客群名單異動駁回說明', isApproved: reviewStatus === 'approved' };
+
+    if (this.isMock) {
+      this.dialogService.openReview(dialogOption).componentRef.instance.emit.subscribe(mockInfo => {
+        this.dialogService.openReview(dialogOption).close();
+        this.router.navigate(['pages', 'review-manage', 'activity-review-list']);
+      });
+      return;
+    }
+
     this.dialogService.openReview(dialogOption).componentRef.instance.emit.subscribe(reviewInfo => {
       let req = { reviewStatus: reviewStatus, reviewComment: reviewInfo.reviewComment }
       this.reviewManageService.updateActivityReview(this.historyId, req).pipe(

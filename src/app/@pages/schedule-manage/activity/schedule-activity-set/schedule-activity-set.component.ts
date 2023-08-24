@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActivitySetting as scheduleActivitySetting, ScheduleActivitySettingEditReq } from '@api/models/schedule-activity.model';
+import { ActivitySetting as scheduleActivitySetting, ScheduleActivitySetting, ScheduleActivitySettingEditReq } from '@api/models/schedule-activity.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
@@ -17,6 +17,8 @@ import { catchError, filter, switchMap, tap } from 'rxjs/operators';
 import { PreviewDialogComponent } from './preview-dialog/preview.dialog/preview-dialog.component';
 import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
 import { of } from 'rxjs';
+import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
+import { ConfigService } from '@api/services/config.service';
 
 @Component({
   selector: 'schedule-activity-set',
@@ -58,6 +60,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   constructor(
     storageService: StorageService,
+    configService: ConfigService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private dialogService: DialogService,
@@ -66,7 +69,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     private loadingService: LoadingService,
     private readonly changeDetectorRef: ChangeDetectorRef,
   ) {
-    super(storageService);
+    super(storageService, configService);
 
     this.validateForm = new FormGroup({
       jobName: new FormControl(null, Validators.required),
@@ -285,6 +288,14 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
     this.dataSource = new LocalDataSource();
     if (!!this.scheduleId) {
+
+      if (this.isMock) {
+        let mockData = ScheduleActivitySettingMock.find(schedule => schedule.scheduleId === this.scheduleId)
+        this.setData(mockData);
+        this.loadingService.close();
+        return;
+      }
+
       this.loadingService.open();
       this.scheduleManageService.getScheduleActivitySettingDetail(this.scheduleId).pipe(
         catchError(err => {
@@ -293,37 +304,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         }),
         filter(res => res.code === RestStatus.SUCCESS),
         tap((res) => {
-          const frequencyTime = res.result?.frequencyTime;
-          const frequencyTimeArray = frequencyTime.split(/[:：]/);
-          if (frequencyTimeArray.length > 0 && res.result.executionFrequency) {
-            let executionFrequency = res.result.executionFrequency?.toLowerCase();
-            this.changeFrequencyType(executionFrequency);
-            if (res.result.executionFrequency?.toLowerCase() === 'daily') {
-              this.validateForm.get('hour').setValue(frequencyTimeArray[0]);
-              this.validateForm.get('minute').setValue(frequencyTimeArray[1]);
-            }
-            else {
-              this.validateForm.get('daily').setValue(frequencyTimeArray[0]);
-              this.validateForm.get('hour').setValue(frequencyTimeArray[1]);
-              this.validateForm.get('minute').setValue(frequencyTimeArray[2]);
-            }
-          }
-          //塞資料
-          Object.keys(res.result).forEach(key => {
-            if (!!this.validateForm.controls[key]) {
-              this.validateForm.controls[key].setValue(res.result[key]);
-            } else if (key === 'activitySetting') {
-              this.scheduleActivitySettingGrid = res.result[key];
-              //去重
-              this.scheduleActivitySettingGrid = Array.from(new Set(this.scheduleActivitySettingGrid.map(obj => obj.activityId))).map(activityId => {
-                return this.scheduleActivitySettingGrid.find(obj => obj.activityId === activityId);
-              });
-              //存取以利後續查詢
-              this.ActivitySettingArray = [...this.scheduleActivitySettingGrid];
-              // console.info('this.scheduleActivitySettingGrid ', this.scheduleActivitySettingGrid)
-            }
-            this.dataSource.load(this.scheduleActivitySettingGrid);
-          })
+          this.setData(res.result);
           this.loadingService.close();
         })
       ).subscribe();
@@ -350,6 +331,12 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       const route = this.scheduleId ? [this.changeRouteName, this.scheduleId] : [];
       this.dialogService.alertAndBackToList(false, `${this.actionName}驗證失敗`, ['pages', 'schedule-manage', 'schedule-activity-set', ...route]);
       return
+    }
+    
+    if (this.isMock) {
+      this.dialogService.alertAndBackToList(true, `${this.actionName}成功`, ['pages', 'schedule-manage', 'schedule-activity-list']);
+      this.loadingService.close();
+      return;
     }
 
     // 調用(新增or複製)或編輯
@@ -392,6 +379,40 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     // console.info('reqData', reqData);
 
     return reqData;
+  }
+
+  setData(result: ScheduleActivitySetting) {
+    const frequencyTime = result?.frequencyTime;
+    const frequencyTimeArray = frequencyTime.split(/[:：]/);
+    if (frequencyTimeArray.length > 0 && result.executionFrequency) {
+      let executionFrequency = result.executionFrequency?.toLowerCase();
+      this.changeFrequencyType(executionFrequency);
+      if (result.executionFrequency?.toLowerCase() === 'daily') {
+        this.validateForm.get('hour').setValue(frequencyTimeArray[0]);
+        this.validateForm.get('minute').setValue(frequencyTimeArray[1]);
+      }
+      else {
+        this.validateForm.get('daily').setValue(frequencyTimeArray[0]);
+        this.validateForm.get('hour').setValue(frequencyTimeArray[1]);
+        this.validateForm.get('minute').setValue(frequencyTimeArray[2]);
+      }
+    }
+    //塞資料
+    Object.keys(result).forEach(key => {
+      if (!!this.validateForm.controls[key]) {
+        this.validateForm.controls[key].setValue(result[key]);
+      } else if (key === 'activitySetting') {
+        this.scheduleActivitySettingGrid = result[key];
+        //去重
+        this.scheduleActivitySettingGrid = Array.from(new Set(this.scheduleActivitySettingGrid.map(obj => obj.activityId))).map(activityId => {
+          return this.scheduleActivitySettingGrid.find(obj => obj.activityId === activityId);
+        });
+        //存取以利後續查詢
+        this.ActivitySettingArray = [...this.scheduleActivitySettingGrid];
+        // console.info('this.scheduleActivitySettingGrid ', this.scheduleActivitySettingGrid)
+      }
+      this.dataSource.load(this.scheduleActivitySettingGrid);
+    })
   }
 
 }

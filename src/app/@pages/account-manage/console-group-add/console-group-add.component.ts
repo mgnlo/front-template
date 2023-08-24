@@ -11,6 +11,7 @@ import { LoadingService } from '@api/services/loading.service';
 import { catchError, tap } from 'rxjs/operators';
 import { RestStatus } from '@common/enums/rest-enum';
 import { GroupScope } from '@common/enums/console-group-enum';
+import { ConfigService } from '@api/services/config.service';
 
 @Component({
   selector: 'console-group-add',
@@ -101,12 +102,13 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
 
   constructor(
     storageService: StorageService,
+    configService: ConfigService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private loadingService: LoadingService,
     private accountManageService: AccountManageService,
     private dateService: NbDateService<Date>) {
-    super(storageService);
+    super(storageService, configService);
 
     let mode = this.activatedRoute.snapshot.queryParamMap.get("mode");
 

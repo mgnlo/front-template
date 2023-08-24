@@ -1,4 +1,5 @@
 {
     "SERVER_URL": "http://localhost:8080",
-    "API_URL": "/portal/webcomm/api/"
+    "API_URL": "/portal/webcomm/api/",
+    "IS_MOCK": true
 }

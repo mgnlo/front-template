@@ -5,12 +5,14 @@ import { ActivitySetting } from '@api/models/activity-list.model';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { Status } from '@common/enums/common-enum';
+import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { CheckboxIconComponent } from '@component/table/checkbox-icon/checkbox-icon.component';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { CustomerManageService } from '../customer-manage.service';
 import { CommonUtil } from '@common/utils/common-util';
+import { ConfigService } from '@api/services/config.service';
 
 @Component({
   selector: 'activity-list',
@@ -22,12 +24,13 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
 
   constructor(
     storageService: StorageService,
+    configService: ConfigService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private customerManageService: CustomerManageService,
     private tableService: Ng2SmartTableService,
   ) {
-    super(storageService);
+    super(storageService, configService);
     // 篩選條件
     this.validateForm = new FormGroup({
       activityName: new FormControl(''),
@@ -143,6 +146,17 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
   }
 
   search(key?: string) {
+
+    if (this.isMock) {
+      this.dataSource.reset();
+      let filter = this.validateForm.getRawValue();
+      for (const [k, v] of Object.entries(filter).filter(([key, val]) => !!val)) {
+        this.dataSource.addFilter({ field: k, filter: undefined, search: v });
+      }
+      this.dataSource.load(ActivityListMock);
+      return;
+    }
+
     const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
 
     this.isSearch = false;

@@ -7,12 +7,14 @@ import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
 import { Status } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
+import { ActivityListMock } from '@common/mock-data/activity-list-mock';
+import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
-import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
 import { catchError, filter, tap } from 'rxjs/operators';
 import { TagManageService } from '../tag-manage.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
+import { ConfigService } from '@api/services/config.service';
 
 @Component({
   selector: 'tag-detail',
@@ -30,15 +32,15 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
 
   constructor(
     storageService: StorageService,
+    configService: ConfigService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private tagManageService: TagManageService,
-    private customerManageService: CustomerManageService,
     private dialogService: DialogService,
     private loadingService: LoadingService,
     private tableService: Ng2SmartTableService,
   ) {
-    super(storageService);
+    super(storageService, configService);
   }
 
   gridDefine = {
@@ -106,6 +108,20 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.tagId = this.activatedRoute.snapshot.params.tagId;
+
+    if (this.isMock) {
+      let mockData = TagSettingMock.find(tag => tag.tagId === this.tagId)
+      this.detail = JSON.parse(JSON.stringify(mockData));
+      const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistoryAud', mockData as TagSetting); // 異動歷程處理
+      if (!!processedData) {
+        this.isHistoryOpen = processedData.isHistoryOpen;
+        this.detail.historyGroupView = processedData.detail?.historyGroupView;
+      }
+      this.loadingService.close();
+      this.dataSource.load(ActivityListMock);
+      return;
+    }
+
     //#region 取得標籤明細
     this.loadingService.open();
     this.tagManageService.getTagSettingRow(this.tagId).pipe(

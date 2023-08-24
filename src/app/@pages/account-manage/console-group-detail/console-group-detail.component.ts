@@ -10,6 +10,7 @@ import { AccountManageService } from '../account.manage.service';
 import { BusinessUnit } from '@common/enums/console-user-enum';
 import { StorageService } from '@api/services/storage.service';
 import { GroupScope } from '@common/enums/console-group-enum';
+import { ConfigService } from '@api/services/config.service';
 
 @Component({
   selector: 'console-group-detail',
@@ -137,11 +138,12 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
 
   constructor(
     storageService: StorageService,
+    configService: ConfigService,
     private router: Router,
     private accountManageService: AccountManageService,
     private activatedRoute: ActivatedRoute,
     private dateService: NbDateService<Date>) {
-    super(storageService);
+    super(storageService, configService);
     this.dataSource = new LocalDataSource();
     this.dataSource2 = new LocalDataSource();
   }

@@ -12,6 +12,7 @@ import { StorageService } from '@api/services/storage.service';
 import { catchError, tap } from 'rxjs/operators';
 import { LoadingService } from '@api/services/loading.service';
 import { RestStatus } from '@common/enums/rest-enum';
+import { ConfigService } from '@api/services/config.service';
 
 @Component({
   selector: 'console-group-list',
@@ -69,11 +70,12 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
 
   constructor(
     storageService: StorageService,
+    configService: ConfigService,
     private router: Router,
     private loadingService: LoadingService,
     private activatedRoute: ActivatedRoute,
     private accountManageService: AccountManageService) {
-    super(storageService);
+    super(storageService, configService);
     this.dataSource = new LocalDataSource();
   }
 

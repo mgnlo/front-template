@@ -92,6 +92,7 @@ export interface TagDetailView {
   version: string
   historyGroupView: { [x: number]: HistoryGroupView };
   tagConditionSetting: Array<TagConditionSetting>;
+  tagReviewHistoryAud: Array<TagReviewHistory>;
 }
 
 //for HTML diaplay ViewModel

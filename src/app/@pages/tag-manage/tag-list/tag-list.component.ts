@@ -11,6 +11,8 @@ import { DetailButtonComponent } from '@component/table/detail-button/detail-but
 import { BaseComponent } from '@pages/base.component';
 import { TagManageService } from '../tag-manage.service';
 import { CommonUtil } from '@common/utils/common-util';
+import { TagSettingMock } from '@common/mock-data/tag-list-mock';
+import { ConfigService } from '@api/services/config.service';
 
 @Component({
   selector: 'tag-list',
@@ -27,12 +29,13 @@ export class TagListComponent extends BaseComponent implements OnInit {
 
   constructor(
     storageService: StorageService,
+    configService: ConfigService,
     private router: Router,
     private tagManageService: TagManageService,
     private activatedRoute: ActivatedRoute,
     private tableService: Ng2SmartTableService,
   ) {
-    super(storageService);
+    super(storageService, configService);
     this.validateForm = new FormGroup({
       tagName: new FormControl(''),
       status: new FormControl(''),
@@ -147,6 +150,17 @@ export class TagListComponent extends BaseComponent implements OnInit {
   }
 
   search(key?: string) {
+
+    if (this.isMock) {
+      this.dataSource.reset();
+      let filter = this.validateForm.getRawValue();
+      for (const [k, v] of Object.entries(filter).filter(([key, val]) => !!val)) {
+        this.dataSource.addFilter({ field: k, filter: undefined, search: v });
+      }
+      this.dataSource.load(TagSettingMock);
+      return;
+    }
+
     const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
 
     this.isSearch = false;

@@ -130,9 +130,11 @@
                 </ng-container>
               </div>
             </nb-tab>
-            <nb-tab tabTitle="標籤使用範圍" *ngIf="!!restDataSource">
-                <ng2-smart-table [settings]="gridDefine" [source]="restDataSource"></ng2-smart-table>
-                <paginator [source]="restDataSource" [paginator]="paginator"></paginator>
+            <nb-tab tabTitle="標籤使用範圍" *ngIf="!!restDataSource || !!dataSource">
+                <ng2-smart-table *ngIf="!!restDataSource" [settings]="gridDefine" [source]="restDataSource"></ng2-smart-table>
+                <paginator *ngIf="!!restDataSource" [source]="restDataSource" [paginator]="paginator"></paginator>
+                <ng2-smart-table *ngIf="!!dataSource" [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
+                <paginator *ngIf="!!dataSource" [source]="dataSource" [paginator]="paginator"></paginator>
             </nb-tab>
         </nb-tabset>
     </nb-card-body>

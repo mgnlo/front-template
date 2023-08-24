@@ -27,9 +27,11 @@
           <h2>標籤列表</h2>
       </nb-card-header>
       <nb-card-body>
-          <div class="rightBox"><button nbButton status="primary" size="medium" (click)="add()">新增</button></div>
-          <ng2-smart-table [settings]="gridDefine" [source]="restDataSource"></ng2-smart-table>
-          <paginator [source]="restDataSource" [paginator]="paginator"></paginator>
+            <div class="rightBox"><button nbButton status="primary" size="medium" (click)="add()">新增</button></div>
+            <ng2-smart-table *ngIf="!!restDataSource" [settings]="gridDefine" [source]="restDataSource"></ng2-smart-table>
+            <paginator *ngIf="!!restDataSource" [source]="restDataSource" [paginator]="paginator"></paginator>
+            <ng2-smart-table *ngIf="!!dataSource" [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
+            <paginator *ngIf="!!dataSource" [source]="dataSource" [paginator]="paginator"></paginator>
       </nb-card-body>
   </nb-card>
 </div>
