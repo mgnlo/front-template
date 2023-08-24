@@ -1,17 +1,24 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ResponseModel } from '@api/models/base.model';
 import { RestStatus } from '@common/enums/rest-enum';
-import { Observable } from 'rxjs';
-import { tap, timeout } from 'rxjs/operators';
 import { ApiLogicError } from './../error/api-logic-error';
 import { LoadingService } from './loading.service';
 import { ConfigService } from './config.service';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap, timeout } from 'rxjs/operators';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
+  _jwtToken: string = null
+
+  public set jwtToken(jwt: string) {
+    this._jwtToken = jwt;
+  }
+
   private httpOptions = {
     headers: {
       'Content-type': 'application/json; charset=UTF-8;',
@@ -20,11 +27,13 @@ export class ApiService {
     },
   };
   private prefixUrl = this.configService.getConfig().SERVER_URL + this.configService.getConfig().API_URL;
+  // private prefixUrl = "http://console-api-webcomm-c360.apps.ocp.webcomm.com.tw/api/";
 
   constructor(
     private http: HttpClient,
     private loadingService: LoadingService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private storageService: StorageService
   ) { }
 
   private doSend<T>(
@@ -36,6 +45,10 @@ export class ApiService {
     let observable: Observable<ResponseModel<T>>;
     const resultUrl = this.prefixUrl + url;
     // const requestModel = { requestObj };
+
+    if(this._jwtToken) {
+      this.httpOptions.headers["Authorization"] = `Bearer ${this._jwtToken}`;
+    }
 
     switch (method) {
       case 'post':
@@ -54,6 +67,16 @@ export class ApiService {
 
     return observable.pipe(
       timeout(30000),
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = 'An error occurred';
+
+        if (error.status === 403) {
+          // JWT 失效主機發送 403 錯誤，這邊需要導頁回兆豐登入頁，待補(需要確認導頁網址與相關參數)
+          this.storageService.removeSessionVal("jwtToken");
+        }
+
+        return throwError(errorMessage);
+      }),
       tap(res => {
         if (res && res.code !== RestStatus.SUCCESS) {
           throw new ApiLogicError(res.message, res.code);

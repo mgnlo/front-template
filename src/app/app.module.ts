@@ -12,9 +12,8 @@ import { NbButtonModule, NbCardModule, NbDatepickerModule, NbDialogModule, NbGlo
 import { HttpClientModule } from '@angular/common/http';
 import { NbDateFnsDateModule } from '@nebular/date-fns';
 import { ApiModule } from '@api/api.module';
-import { LoginComponent } from '@pages/login/login.component';
-
 import { ConfigService } from '@api/services/config.service';
+import { SSOLoginComponent } from './sso-login/sso-login.component';
 
 const NG_MODULES = [BrowserModule, BrowserAnimationsModule, HttpClientModule];
 
@@ -39,7 +38,7 @@ export function initConfig(configService: ConfigService) {
 }
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent],
+  declarations: [AppComponent, SSOLoginComponent],
   imports: [
     AppRoutingModule,
     ApiModule,

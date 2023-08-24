@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ConsoleGroup } from '@api/models/console-group.model';
 import { ConsoleGroupListMock } from '@common/mock-data/console-group-list-mock';
-import { NbDateService } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
@@ -13,6 +12,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { LoadingService } from '@api/services/loading.service';
 import { RestStatus } from '@common/enums/rest-enum';
 import { ConfigService } from '@api/services/config.service';
+import { LoginService } from '@api/services/login.service';
 
 @Component({
   selector: 'console-group-list',
@@ -68,15 +68,19 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
     }
   };
 
+  hasConsoleGroupCreate: boolean;
+
   constructor(
     storageService: StorageService,
     configService: ConfigService,
     private router: Router,
+    private loginService: LoginService,
     private loadingService: LoadingService,
     private activatedRoute: ActivatedRoute,
     private accountManageService: AccountManageService) {
     super(storageService, configService);
     this.dataSource = new LocalDataSource();
+    this.hasConsoleGroupCreate = this.loginService.checkUserScope("console-group.create");
   }
 
   ngOnInit(): void {
@@ -94,6 +98,7 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
       });
     } else {
       // 這邊要發查電文 6.1 取得 ConsoleGroupList 內容
+      this.loadingService.open();
       this.accountManageService.getConsoleGroupList().pipe(
         catchError((err) => {
           this.loadingService.close();
@@ -109,13 +114,6 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
             document.querySelector("nb-layout-column").scrollTo(0, 0);
           }
         });
-
-      // mock data,正式串接後要拿掉
-      {
-        this.consoleGroupList = ConsoleGroupListMock;
-        this.dataSource.load(this.consoleGroupList);
-        document.querySelector("nb-layout-column").scrollTo(0, 0);
-      }
     }
   }
 
@@ -148,6 +146,7 @@ export class ConsoleGroupButtonComponent implements OnInit {
 
   constructor(
     private router: Router,
+    public loginService: LoginService,
     private accountManageService: AccountManageService,
     private loadingService: LoadingService) {
 
@@ -159,6 +158,7 @@ export class ConsoleGroupButtonComponent implements OnInit {
 
   seeDetail() {
     // 這邊要發查電文 7.2 取得 ConsoleGroup with ConsoleGroupScope with ConsoleUser 內容
+    this.loadingService.open();
     this.accountManageService.getConsoleGroup(this.value[0].groupId).pipe(
       catchError((err) => {
         this.loadingService.close();
@@ -172,8 +172,6 @@ export class ConsoleGroupButtonComponent implements OnInit {
           this.navigateToDetailPage(res.result);
         }
       });
-    // 未跟主機串接前，執行底下的 mock data,正式串接後要拿掉
-    this.navigateToDetailPage(ConsoleGroupDetailMock);
   }
 
   navigateToDetailPage(resData: ConsoleGroup) {

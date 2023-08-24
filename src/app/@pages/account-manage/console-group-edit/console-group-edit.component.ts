@@ -24,22 +24,14 @@ import { ConfigService } from '@api/services/config.service';
 export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
   consoleGroupDetail: ConsoleGroup;
   // consoleUser: any;
-  consoleGroupScope: Array<GridInnerCheckBox> = [
-    { featureName: "dashboard", read: false },
-    { featureName: "customer", read: false },
-    { featureName: "activity", read: false, create: false, update: false, review: false },
-    { featureName: "tag", read: false, create: false, update: false, review: false },
-    { featureName: "schedule", read: false, create: false, update: false, review: false },
-    { featureName: "console-user", read: false, create: false, update: false, review: false },
-    { featureName: "console-group", read: false, create: false, update: false, review: false }
-  ];
+  consoleGroupScope: Array<GridInnerCheckBox> = this.accountManageService.createDefaultScopeGridInnerCheckBoxs();
 
   dataSource2: LocalDataSource;
   enableOption: any;
   gridDefine2 = {
     pager: {
       display: true,
-      perPage: 10,
+      perPage: 12,
     },
     columns: {
       featureName: {
@@ -75,11 +67,11 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
         renderComponent: ConsoleGroupEditCheckboxComponent,
         sort: false,
       },
-      review: {
-        title: '審核',
+      delete: {
+        title: '刪除',
         type: 'custom',
         class: 'col-1',
-        valuePrepareFunction: (cell, row: GridInnerCheckBox) => [row, 'review'],
+        valuePrepareFunction: (cell, row: GridInnerCheckBox) => [row, 'delete'],
         renderComponent: ConsoleGroupEditCheckboxComponent,
         sort: false,
       }
@@ -191,7 +183,7 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
     // setTimeout(() => {
     //   this.dataSource.getAll().then(rs => {
     //   });
-    // }, 100);    
+    // }, 100);
   }
 
   cancel() {
@@ -224,7 +216,10 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
       }
     }
 
+    this.consoleGroupDetail.consoleUser = this.dataSource["data"];
+
     // 這邊要發送電文 7.4 更新群組設定去進行修改，request 內容同 7.2 的 response
+    this.loadingService.open();
     this.accountManageService.updateConsoleGroup(this.consoleGroupDetail.groupId, this.consoleGroupDetail).pipe(
       catchError((err) => {
         this.loadingService.close();
@@ -235,13 +230,10 @@ export class ConsoleGroupEditComponent extends BaseComponent implements OnInit {
         this.loadingService.close();
       })).subscribe(res => {
         if (res.code === RestStatus.SUCCESS) {
-          // 修改成功後是否要再發送電文重新 query 資料或者是就直接 update?  
+          // 修改成功後是否要再發送電文重新 query 資料或者是就直接 update?
           this.navigateToDetailPage();
         }
       });
-
-    // 正式串接後底下要拿掉
-    this.navigateToDetailPage();
   }
 
   navigateToDetailPage() {

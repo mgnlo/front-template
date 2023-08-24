@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { LoginService } from '@api/services/login.service';
 import {
   NbMediaBreakpointsService,
   NbMenuService,
@@ -7,7 +8,7 @@ import {
 } from '@nebular/theme';
 
 import { LayoutService } from '@theme/layout/layout.service';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -15,7 +16,7 @@ import { map, takeUntil } from 'rxjs/operators';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   isActive = true;
 
   private destroy$: Subject<void> = new Subject<void>();
@@ -24,11 +25,11 @@ export class HeaderComponent implements OnInit {
     title: 'Webcomm',
   };
   public user: any = {
-    account: 'administrator',
-    firstName: 'Admin',
+    account: '',
+    firstName: '',
     lastName: '',
-    fullName: 'Admin',
-    title: '管理員',
+    fullName: '',
+    title: '',
     picture: null,
   };
   public userMenu = [{ title: 'Profile' }, { title: 'Logout' }];
@@ -42,13 +43,26 @@ export class HeaderComponent implements OnInit {
     { value: 'corporate', name: 'Corporate' },
   ];
 
+  userProfileSubscription: Subscription;
+
   constructor(
     private menuService: NbMenuService,
     private breakpointService: NbMediaBreakpointsService,
     private themeService: NbThemeService,
     private sidebarService: NbSidebarService,
-    private layoutService: LayoutService
-  ) {}
+    private layoutService: LayoutService,
+    private loginService: LoginService
+  ) {
+    // 這邊不確定要怎麼跟 UI 的 user 定義對應，暫時先這樣
+    this.userProfileSubscription = this.loginService.getUserProfileSubject().subscribe(userProfile => {
+      if(userProfile){
+        this.user.account = userProfile.account;
+        this.user.fullName = userProfile.name;
+        this.user.name = userProfile.name;
+        this.user.title = userProfile.name;
+      }
+    });
+  }
 
   public ngOnInit(): void {
     const { xl } = this.breakpointService.getBreakpointsMap();
@@ -71,6 +85,10 @@ export class HeaderComponent implements OnInit {
         takeUntil(this.destroy$)
       )
       .subscribe((themeName) => (this.currentTheme = themeName));
+  }
+
+  public ngOnDestroy(){
+    this.userProfileSubscription.unsubscribe();
   }
 
   public changeTheme(themeName: string) {

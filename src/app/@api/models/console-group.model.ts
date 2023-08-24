@@ -25,5 +25,5 @@ export class GridInnerCheckBox {
     read: boolean;
     create?: boolean;
     update?: boolean;
-    review?: boolean;
+    delete?: boolean;
   }

@@ -11,6 +11,7 @@ import { BusinessUnit } from '@common/enums/console-user-enum';
 import { StorageService } from '@api/services/storage.service';
 import { GroupScope } from '@common/enums/console-group-enum';
 import { ConfigService } from '@api/services/config.service';
+import { LoginService } from '@api/services/login.service';
 
 @Component({
   selector: 'console-group-detail',
@@ -19,21 +20,13 @@ import { ConfigService } from '@api/services/config.service';
 })
 export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit {
   consoleGroupDetail: ConsoleGroup;
-  consoleGroupScope: Array<GridInnerCheckBox> = [
-    { featureName: "dashboard", read: false },
-    { featureName: "customer", read: false },
-    { featureName: "activity", read: false, create: false, update: false, review: false },
-    { featureName: "tag", read: false, create: false, update: false, review: false },
-    { featureName: "schedule", read: false, create: false, update: false, review: false },
-    { featureName: "console-user", read: false, create: false, update: false, review: false },
-    { featureName: "console-group", read: false, create: false, update: false, review: false }
-  ];
+  consoleGroupScope: Array<GridInnerCheckBox> = this.accountManageService.createDefaultScopeGridInnerCheckBoxs();
 
   dataSource2: LocalDataSource;
   gridDefine2 = {
     pager: {
       display: true,
-      perPage: 10,
+      perPage: 12,
     },
     columns: {
       featureName: {
@@ -69,16 +62,16 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
         renderComponent: ConsoleGroupDetailCheckboxComponent,
         sort: false,
       },
-      review: {
-        title: '審核',
+      delete: {
+        title: '刪除',
         type: 'custom',
         class: 'col-1',
-        valuePrepareFunction: (cell, row: GridInnerCheckBox) => row.review,
+        valuePrepareFunction: (cell, row: GridInnerCheckBox) => row.delete,
         renderComponent: ConsoleGroupDetailCheckboxComponent,
         sort: false,
       }
     },
-    hideSubHeader: true, 
+    hideSubHeader: false,
     actions: {
       add: false,
       edit: false,
@@ -136,16 +129,22 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
     }
   };
 
+  hasConsoleGroupCreate: boolean;
+  hasConsoleGroupUpdate: boolean;
+
   constructor(
     storageService: StorageService,
     configService: ConfigService,
     private router: Router,
+    private loginService: LoginService,
     private accountManageService: AccountManageService,
     private activatedRoute: ActivatedRoute,
     private dateService: NbDateService<Date>) {
     super(storageService, configService);
     this.dataSource = new LocalDataSource();
     this.dataSource2 = new LocalDataSource();
+    this.hasConsoleGroupCreate = this.loginService.checkUserScope("console-group.create");
+    this.hasConsoleGroupUpdate = this.loginService.checkUserScope("console-group.update");
   }
 
   ngOnInit(): void {

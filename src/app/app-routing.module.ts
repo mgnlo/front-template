@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from '@pages/login/login.component';
+import { SSOLoginComponent } from './sso-login/sso-login.component';
 
 const routes: Routes = [
   {
@@ -8,8 +8,8 @@ const routes: Routes = [
     loadChildren: () =>
       import('@pages/pages.module').then((m) => m.PagesModule),
   },
-  { path: "login", component: LoginComponent },
-  { path: '', redirectTo: 'pages', pathMatch: 'full' },
+  // { path: '', redirectTo: 'pages', pathMatch: 'full' },
+  { path: "", component: SSOLoginComponent }
 ];
 
 @NgModule({

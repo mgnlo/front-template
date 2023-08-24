@@ -15,6 +15,7 @@ import { LocalDataSource } from 'ng2-smart-table';
 import { catchError, filter, tap } from 'rxjs/operators';
 import { AccountManageService } from '../account.manage.service';
 import { ChangeDialogComponent } from './change-dialog/change.dialog.component';
+import { LoginService } from '@api/services/login.service';
 
 @Component({
   selector: 'console-user',
@@ -107,6 +108,7 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
     private accountManageService: AccountManageService,
     private dialogService: DialogService,
     private tableService: Ng2SmartTableService,
+    private loginService: LoginService,
   ) {
     super(storageService, configService);
 
@@ -117,6 +119,10 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
       businessUnit: new FormGroup({}),
       groupId: new FormControl(''),
     });
+
+    if (!this.loginService.checkUserScope("console-user.update")) {
+      delete this.gridDefine.columns.action;
+    }
   }
 
   ngOnInit(): void {
@@ -151,6 +157,7 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
   }
 
   queryAllConsoleGroup() {
+    this.loadingService.open();
     this.accountManageService.getConsoleGroupList().pipe(
       catchError((err) => {
         this.loadingService.close();

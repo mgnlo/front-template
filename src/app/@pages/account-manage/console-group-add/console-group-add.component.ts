@@ -30,24 +30,15 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
     modificationTime: null
   };
   consoleUser: any;
-  consoleGroupScope: Array<GridInnerCheckBox> = [
-    { featureName: "dashboard", read: false },
-    { featureName: "customer", read: false },
-    { featureName: "activity", read: false, create: false, update: false, review: false },
-    { featureName: "tag", read: false, create: false, update: false, review: false },
-    { featureName: "schedule", read: false, create: false, update: false, review: false },
-    { featureName: "console-user", read: false, create: false, update: false, review: false },
-    { featureName: "console-group", read: false, create: false, update: false, review: false }
-  ];
-  
+  consoleGroupScope: Array<GridInnerCheckBox> = this.accountManageService.createDefaultScopeGridInnerCheckBoxs();
+
   enableOption: string = "true";
-  // groupName: string;
   consoleGroupAddForm: FormGroup;
 
   gridDefine = {
     pager: {
       display: true,
-      perPage: 10,
+      perPage: 12,
     },
     columns: {
       featureName: {
@@ -83,11 +74,11 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
         renderComponent: ConsoleGroupAddCheckboxComponent,
         sort: false,
       },
-      review: {
-        title: '審核',
+      delete: {
+        title: '刪除',
         type: 'custom',
         class: 'col-1',
-        valuePrepareFunction: (cell, row: GridInnerCheckBox) => [row, 'review'],
+        valuePrepareFunction: (cell, row: GridInnerCheckBox) => [row, 'delete'],
         renderComponent: ConsoleGroupAddCheckboxComponent,
         sort: false,
       }
@@ -201,6 +192,7 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
         }
       }
 
+      this.loadingService.open();
       this.accountManageService.createConsoleGroup(this.consoleGroup).pipe(
         catchError((err) => {
           this.loadingService.close();
@@ -218,13 +210,6 @@ export class ConsoleGroupAddComponent extends BaseComponent implements OnInit {
             });
           }
         });
-
-      // 主機串接後，底下要拿掉
-      this.router.navigate(this.accountManageService.CONSOLE_GROUP_LIST_PATH).then((res) => {
-        if (res) {
-          window.history.replaceState({}, '', this.router.url.split("?")[0]);
-        };
-      });
     } else {
       for (const control of Object.keys(this.consoleGroupAddForm.controls)) {
         this.consoleGroupAddForm.controls[control].markAsTouched();
