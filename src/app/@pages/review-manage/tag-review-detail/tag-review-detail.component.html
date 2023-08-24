@@ -109,8 +109,8 @@
     <nb-card>
         <nb-card-body>
             <nb-tabset>
-                <nb-tab tabTitle="異動歷程" *ngIf="!!historyGroupView">
-                    <div class="historyList">
+                <nb-tab tabTitle="異動歷程">
+                    <div class="historyList" *ngIf="!!historyGroupView">
                         <ng-container *ngFor="let hg of historyGroupView | keyvalue; let i=index;">
                             <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
                                 <div class="mainItem">
@@ -133,7 +133,7 @@
                         </ng-container>
                     </div>
                 </nb-tab>
-                <nb-tab tabTitle="標籤使用範圍">
+                <nb-tab tabTitle="標籤使用範圍" *ngIf="restDataSource">
                     <ng2-smart-table [settings]="gridDefine" [source]="restDataSource"></ng2-smart-table>
                     <paginator [source]="restDataSource" [paginator]="paginator"></paginator>
                 </nb-tab>

@@ -85,14 +85,14 @@
             <button nbButton status="info" size="medium" (click)="send('approved')">同意</button>
         </div>
     </div>
-    <nb-card *ngIf="detail?.historyGroupView">
+    <nb-card *ngIf="historyGroupView">
         <nb-card-header>
             <h2>異動歷程</h2>
         </nb-card-header>
         <nb-card-body>
             <div class="historyList">
                 <!-- 已完成或正在進行的增加class="active"，有子項目加cl3ss="moreBtn"(視需求，可加可不加) -->
-                <ng-container *ngFor="let hg of detail.historyGroupView | keyvalue; let i=index;">
+                <ng-container *ngFor="let hg of historyGroupView | keyvalue; let i=index;">
                     <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
                         <div class="mainItem">
                             <h4 (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">{{history.type}}</h4>

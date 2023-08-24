@@ -51,10 +51,11 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.historyId = this.activatedRoute.snapshot.params.historyId;
 
+    this.loadingService.open();
     this.reviewManageService.getTagReviewRow(this.historyId).pipe(
       filter(res => res.code === RestStatus.SUCCESS),
       catchError(err => {
-        this.dialogService.alertAndBackToList(false, `${err.message}，將為您導回標籤審核列表`);
+        this.dialogService.alertAndBackToList(false, `${err.message}，將為您導回標籤審核列表`, ['pages', 'review-manage', 'tag-review-list']);
         throw new Error(err.message);
       }),
       takeUntil(this.unsubscribe$),
@@ -71,7 +72,8 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
         this.loadingService.close();
       })
     ).subscribe(res => {
-      if(!!res.result.referenceId){
+
+      if (!!res.result.referenceId) {
         let searchInfo: SearchInfo = {
           apiUrl: `${this.tagManageService.tagFunc}${res.result.referenceId}/activity-setting`,
           nowPage: this.paginator.nowPage,
@@ -79,19 +81,24 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
         }
         this.restDataSource = this.tableService.searchData(searchInfo);
       }
+
+      this.reviewManageService.getLastApprovedTag(this.historyId).pipe(
+        filter(res => res.code === RestStatus.SUCCESS),
+        catchError(err => {
+          this.dialogService.alertAndBackToList(false, `${err.message}，無前次核准紀錄`);
+          this.loadingService.close();
+          throw new Error(err.message);
+        }),
+        takeUntil(this.unsubscribe$),
+        tap(res => {
+          this.isCompare = !!res.result ? true : false;
+          this.oldDetail = JSON.parse(JSON.stringify(res.result));
+          this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
+          this.loadingService.close();
+        })
+      ).subscribe();
     });
 
-    this.reviewManageService.getLastApprovedTag(this.historyId).pipe(
-      filter(res => res.code === RestStatus.SUCCESS),
-      catchError(err => { throw new Error(err.message)}),
-      takeUntil(this.unsubscribe$),
-      tap(res => {
-        this.isCompare = !!res.result ? true : false;
-        this.oldDetail = JSON.parse(JSON.stringify(res.result));
-        this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
-        this.loadingService.close();
-      })
-    ).subscribe();
   }
 
   gridDefine = {

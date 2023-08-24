@@ -7,7 +7,6 @@ import { StorageService } from '@api/services/storage.service';
 import { RestStatus } from '@common/enums/rest-enum';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
-import { combineLatest } from 'rxjs';
 import { catchError, filter, takeUntil, tap } from 'rxjs/operators';
 import { ReviewManageService } from '../review-manage.service';
 
@@ -46,58 +45,69 @@ export class ScheduleReviewDetailComponent extends BaseComponent implements OnIn
     this.historyId = this.activatedRoute.snapshot.params.historyId;
 
     this.loadingService.open();
-    combineLatest([
-      this.reviewManageService.getScheduleReviewRow(this.historyId),
-      this.reviewManageService.getLastApprovedSchedule(this.historyId)
-    ]).pipe(
-      filter(res => res[0].code === RestStatus.SUCCESS && res[1].code === RestStatus.SUCCESS),
+    this.reviewManageService.getScheduleReviewRow(this.historyId).pipe(
+      filter(res => res.code === RestStatus.SUCCESS),
       catchError(err => {
         this.dialogService.alertAndBackToList(false, `${err.message}，將為您導回名單排程審核列表`, ['pages', 'review-manage', 'schedule-review-list']);
+        this.loadingService.close();
         throw new Error(err.message);
       }),
       takeUntil(this.unsubscribe$),
-    ).subscribe(([reviewData, lastData]) => {
-      this.newDetail = JSON.parse(JSON.stringify(reviewData.result));
-      this.detail = this.newDetail;
-      this.reviewStatus = reviewData.result.reviewStatus;
-      this.reviewComment = reviewData.result.reviewComment;
-      this.isCompare = !!lastData.result ? true : false;
-      let newActivityList: { key: string, value: string }[] = [];
-      if (!!reviewData.result?.activitySetting) {
-        newActivityList = reviewData.result.activitySetting.map(activity => { return { key: activity.activityId, value: activity.activityName } });
-      }
-      const processedData = CommonUtil.getHistoryProcessData<ScheduleReviewHistory>('scheduleReviewHistoryAud', reviewData.result as ScheduleReviewHistory);
-      if (!!processedData) {
-        this.isHistoryOpen = processedData.isHistoryOpen;
-        this.historyGroupView = processedData.detail.historyGroupView;
-      }
-      if (this.isCompare) {
-        this.oldDetail = JSON.parse(JSON.stringify(lastData.result));
-        this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
-        let oldActivityList: { key: string, value: string }[] = [];
-        if (!!lastData.result?.activitySetting) {
-          oldActivityList = lastData.result.activitySetting.map(activity => { return { key: activity.activityId, value: activity.activityName } })
+      tap(res => {
+        this.newDetail = JSON.parse(JSON.stringify(res.result));
+        this.detail = this.newDetail;
+        this.reviewStatus = res.result.reviewStatus;
+        this.reviewComment = res.result.reviewComment;
+        const processedData = CommonUtil.getHistoryProcessData<ScheduleReviewHistory>('scheduleReviewHistoryAud', res.result as ScheduleReviewHistory);
+        if (!!processedData) {
+          this.isHistoryOpen = processedData.isHistoryOpen;
+          this.historyGroupView = processedData.detail.historyGroupView;
         }
-        let allActivityList = newActivityList.concat(oldActivityList.filter(oldActivity => !newActivityList.find(newActivity => newActivity.key == oldActivity.key)));
-        allActivityList.forEach(activity => {
-          let activityId = activity.key;
-          let oldActivityIds = oldActivityList.map(oldActivity => oldActivity.key);
-          let newActivityIds = newActivityList.map(newActivity => newActivity.key);
-          if (oldActivityIds.includes(activityId) && newActivityIds.includes(activityId)) {
-            this.activitySettingView.same.push(activity.value);
-          } else if (oldActivityIds.includes(activityId) && !newActivityIds.includes(activityId)) {
-            this.activitySettingView.remove.push(activity.value);
-          } else if (!oldActivityIds.includes(activityId) && newActivityIds.includes(activityId)) {
-            this.activitySettingView.add.push(activity.value);
-          }
-        });
-      } else {
-        this.activitySettingView.add.push(newActivityList.map(activity => activity.value));
+        this.loadingService.close();
+      })
+    ).subscribe(res => {
+      let newActivityList: { key: string, value: string }[] = [];
+      if (!!res.result?.activitySetting) {
+        newActivityList = res.result.activitySetting.map(activity => { return { key: activity.activityId, value: activity.activityName } });
       }
-      this.loadingService.close();
-    });
 
-    // console.info(this.detail)
+      this.reviewManageService.getLastApprovedSchedule(this.historyId).pipe(
+        filter(res => res.code === RestStatus.SUCCESS),
+        catchError(err => {
+          this.dialogService.alertAndBackToList(false, `${err.message}，無前次核准紀錄`);
+          this.loadingService.close();
+          throw new Error(err.message);
+        }),
+        takeUntil(this.unsubscribe$),
+        tap(res => {
+          this.isCompare = !!res.result ? true : false;
+          if (this.isCompare) {
+            this.oldDetail = JSON.parse(JSON.stringify(res.result));
+            this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
+            let oldActivityList: { key: string, value: string }[] = [];
+            if (!!res.result?.activitySetting) {
+              oldActivityList = res.result.activitySetting.map(activity => { return { key: activity.activityId, value: activity.activityName } })
+            }
+            let allActivityList = newActivityList.concat(oldActivityList.filter(oldActivity => !newActivityList.find(newActivity => newActivity.key == oldActivity.key)));
+            allActivityList.forEach(activity => {
+              let activityId = activity.key;
+              let oldActivityIds = oldActivityList.map(oldActivity => oldActivity.key);
+              let newActivityIds = newActivityList.map(newActivity => newActivity.key);
+              if (oldActivityIds.includes(activityId) && newActivityIds.includes(activityId)) {
+                this.activitySettingView.same.push(activity.value);
+              } else if (oldActivityIds.includes(activityId) && !newActivityIds.includes(activityId)) {
+                this.activitySettingView.remove.push(activity.value);
+              } else if (!oldActivityIds.includes(activityId) && newActivityIds.includes(activityId)) {
+                this.activitySettingView.add.push(activity.value);
+              }
+            });
+          } else {
+            this.activitySettingView.add.push(newActivityList.map(activity => activity.value));
+          }
+          this.loadingService.close();
+        })
+      ).subscribe();
+    })
   }
 
   changeClass(key1: string, key2?: string) {

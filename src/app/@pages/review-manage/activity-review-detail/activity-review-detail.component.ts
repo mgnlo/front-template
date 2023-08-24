@@ -54,45 +54,53 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
       filter(res => res.code === RestStatus.SUCCESS),
       catchError(err => {
         this.dialogService.alertAndBackToList(false, `${err.message}，將為您導回標籤審核列表`);
+        this.loadingService.close();
         throw new Error(err.message);
       }),
       takeUntil(this.unsubscribe$),
       tap(res => {
         this.newDetail = JSON.parse(JSON.stringify(res.result));
+        this.newReview = JSON.parse(JSON.stringify(res.result));
         this.reviewStatus = res.result.reviewStatus;
         this.reviewComment = res.result.reviewComment;
         this.newDetail.tagGroupView = CommonUtil.groupBy(res.result.activityListCondition, 'tagGroup');
         this.detail = this.newDetail;
         Object.keys(this.detail.tagGroupView).forEach(key => this.isConditionOpen[key] = true);
-        const processedData = CommonUtil.getHistoryProcessData<ActivitySetting>('activityReviewHistoryAud', this.oldReview as ActivitySetting);
+        const processedData = CommonUtil.getHistoryProcessData<ActivityDetail>('activityReviewHistoryAud', this.newDetail as ActivityDetail);
         if (!!processedData) {
           this.isHistoryOpen = processedData.isHistoryOpen;
           this.detail = processedData.detail;
           this.historyGroupView = this.detail.historyGroupView;
-          this.compareCondition(this.detail.tagGroupView, 'old');
         }
         this.loadingService.close();
       })
-    ).subscribe();
-
-    this.reviewManageService.getLastApprovedActivity(this.historyId).pipe(
-      filter(res => res.code === RestStatus.SUCCESS),
-      catchError(err => { throw new Error(err.message) }),
-      takeUntil(this.unsubscribe$),
-      tap(res => {
-        this.isCompare = !!res.result ? true : false;
-        this.oldDetail = JSON.parse(JSON.stringify(res.result));
-        this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
-        if (this.isCompare) {
+    ).subscribe(()=> {
+      this.reviewManageService.getLastApprovedActivity(this.historyId).pipe(
+        filter(res => res.code === RestStatus.SUCCESS),
+        catchError(err => {
+          this.dialogService.alertAndBackToList(false, `${err.message}，無前次核准紀錄`);
+          this.loadingService.close();
+          throw new Error(err.message);
+        }),
+        takeUntil(this.unsubscribe$),
+        tap(res => {
+          this.isCompare = !!res.result ? true : false;
           this.oldDetail = JSON.parse(JSON.stringify(res.result));
-          if (!!res.result?.activityListCondition) {
-            this.oldDetail.tagGroupView = CommonUtil.groupBy(this.oldReview.activityListCondition, 'tagGroup');
-          }
+          this.oldReview = JSON.parse(JSON.stringify(res.result));
           this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
-        }
-        this.loadingService.close();
-      })
-    ).subscribe();
+          if (this.isCompare) {
+            this.oldDetail = JSON.parse(JSON.stringify(res.result));
+            if (!!res.result?.activityListCondition) {
+              this.oldDetail.tagGroupView = CommonUtil.groupBy(res.result.activityListCondition, 'tagGroup');
+            }
+            this.isSameList = CommonUtil.compareObj(this.newDetail, this.oldDetail);
+            this.compareCondition(this.detail.tagGroupView, 'old');
+          }
+          this.loadingService.close();
+        })
+      ).subscribe();
+    });
+    
   }
 
   viewToggle() {
