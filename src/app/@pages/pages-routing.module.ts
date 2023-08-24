@@ -8,14 +8,14 @@ const routes: Routes = [
     path: '',
     component: PagesComponent,
     children: [
-      {
-        path: '', redirectTo: 'dashboard',
-        loadChildren: () =>
-          import('@pages/dashboard/dashboard.module').then(
-            (m) => m.DashboardModule
-          ),
-        canActivateChild: [CleanSessionGuard]
-      },
+      // {
+      //   path: '', redirectTo: 'dashboard',
+      //   loadChildren: () =>
+      //     import('@pages/dashboard/dashboard.module').then(
+      //       (m) => m.DashboardModule
+      //     ),
+      //   canActivateChild: [CleanSessionGuard]
+      // },
       {
         path: 'element',
         loadChildren: () =>
