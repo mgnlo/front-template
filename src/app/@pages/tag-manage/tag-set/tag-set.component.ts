@@ -29,7 +29,7 @@ import { ConfigService } from '@api/services/config.service';
   templateUrl: './tag-set.component.html',
   styleUrls: ['./tag-set.component.scss']
 })
-export class TagAddComponent extends BaseComponent implements OnInit {
+export class TagSetComponent extends BaseComponent implements OnInit {
 
   //取得新增條件區塊
   get conditions(): FormArray {
@@ -86,6 +86,9 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   //預設集合方式
   joinValueList: Array<{ key: string; val: string }> = Object.entries(TagJoinValue).map(([k, v]) => ({ key: k, val: v }))
+
+  //預設條件分佈級距
+  conditionDialogData: TagConditionChartLine;// = TagConditionChartLineMock
 
   constructor(
     storageService: StorageService,
@@ -186,6 +189,10 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   };
 
   ngOnInit(): void {
+    //#region 抓取(主/子)標籤構面
+    // this.tagManageService.getTagConditionalDistribution()
+    //#endregion
+
     //#region 載入編輯資料
     if (!!this.tagId) {
       this.loadingService.open();
@@ -278,7 +285,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       this.changeConditionSettingMethod(formData.conditionSettingMethod);
       //#endregion
     }
-
   }
 
   ngAfterViewChecked(): void {
@@ -356,10 +362,12 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   }
   //#endregion
 
-  //#region 偵測條件下拉及查詢
+  //#region 取得偵測條件下拉資料&&塞選查詢  //取得圖表資料
+
+  //取得偵測條件下拉資料
   getConditionValueList(): void {
     if (this.conditionValueList.length > 0 &&
-        this.conditionValueList.some(s => s.val === this.validateForm?.get('conditionValue')?.value)) return
+      this.conditionValueList.some(s => s.val === this.validateForm?.get('conditionValue')?.value)) return
 
     this.conditionValueList = new Array<{ key: string; val: string }>();
     this.filterConditionValueList = new Array<{ key: string; val: string }>();
@@ -367,6 +375,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     this.validateForm?.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '查詢偵測條件中' });
     this.tagManageService.getTagConditionList().pipe(
       catchError((err) => {
+        this.filterConditionValueList = new Array<{ key: string; val: string }>();
         this.validateForm?.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '查詢偵測條件失敗' });
         throw new Error(err.message);
       }),
@@ -394,18 +403,20 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   //輸入查詢
   onConditionValueChange(event: any) {
+    this.getTagConditionalDistribution();
+
     if (this.enterKeyHandled) {
       this.enterKeyHandled = false;
       return;
     }
 
-    const inputData = event.target.value;
-    this.conditionValueFilter(inputData);
+    this.conditionValueFilter(event.target.value);
   }
 
   //下拉選擇
   onConditionValueSelectChange(event: any) {
-    if (this.conditionValueList.some(s => s.val === event)) return
+    this.getTagConditionalDistribution();
+
     this.conditionValueFilter(event);
   }
 
@@ -423,6 +434,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
     this.validateForm?.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '查詢偵測條件中' });
     this.tagManageService.filterTagConditionList(new TagConditionChartLine({ conditionName: value })).pipe(
       catchError((err) => {
+        this.filterConditionValueList = new Array<{ key: string; val: string }>();
         this.validateForm?.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '查詢偵測條件失敗' });
         throw new Error(err.message);
       }),
@@ -437,6 +449,32 @@ export class TagAddComponent extends BaseComponent implements OnInit {
         });
         this.validateForm?.get('conditionValue')?.setErrors(null);
         console.info('this.filterConditionValueList', this.filterConditionValueList)
+      }
+    });
+  }
+
+  //取得圖表資料
+  getTagConditionalDistribution() {
+    const inputValue = this.validateForm.get('conditionValue')?.value ?? ''
+    const conditionValue = this.filterConditionValueList.find(item => item.val === inputValue)?.key
+
+    if(this.isMock){
+      this.conditionDialogData = TagConditionChartLineMock as TagConditionChartLine;
+      return
+    }
+
+    if (!conditionValue) {
+      this.conditionDialogData = undefined;
+      return
+    }
+
+    this.tagManageService.getTagConditionalDistribution(conditionValue).pipe(
+      catchError((err) => {
+        throw new Error(err.message);
+      }),
+    ).subscribe(res => {
+      if (res.code === RestStatus.SUCCESS) {
+        this.conditionDialogData = JSON.parse(JSON.stringify(res.result))
       }
     });
   }
@@ -591,11 +629,9 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   //#region 條件分佈級距彈出視窗
   conditionDialog() {
-    //這裡要改 call API
-    const conditionDialogData = TagConditionChartLineMock as TagConditionChartLine;
     this.dialogService.open(TagConditionDialogComponent, {
       title: '條件分佈級距',
-      data: conditionDialogData,
+      data: this.conditionDialogData,
     });
   }
   //#endregion
@@ -675,7 +711,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
             return new TagConditionSetting({
               tagId: this.tagId,
               groupId: 1,//因只有一個，固定為1
-              conditionValue: formData.conditionValue,
+              conditionValue: this.filterConditionValueList.find(item => item.val === formData.conditionValue)?.key,
               detectionCondition: m['detectionCondition_' + id],
               thresholdValue: m['thresholdValue_' + id],
               joinValue: m['joinValue_' + id],
@@ -683,7 +719,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
           }) : null,
     });
 
-    // console.info('reqData',reqData)
+    // console.info('reqData', reqData)
     return reqData;
   }
 

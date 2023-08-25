@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ResponseModel } from "@api/models/base.model";
-import { TagConditionChartLine, TagSetting, TagSettingEditReq } from "@api/models/tag-manage.model";
+import { TagCategory, TagConditionChartLine, TagSetting, TagSettingEditReq } from "@api/models/tag-manage.model";
 import { ApiService } from "@api/services/api.service";
 import { Observable } from "rxjs";
 
@@ -35,4 +35,13 @@ export class TagManageService {
   filterTagConditionList(data: TagConditionChartLine): Observable<ResponseModel<Array<TagConditionChartLine>>> {
     return this.service.doGet(this.tagConditionFunc, data);
   }
+
+  getTagDimensionList(): Observable<ResponseModel<Array<TagCategory>>> {
+    return this.service.doGet(this.tagConditionFunc + 'category');
+  }
+
+  getTagConditionalDistribution(conditionValue: string): Observable<ResponseModel<Array<TagConditionChartLine>>> {
+    return this.service.doGet(this.tagConditionFunc + conditionValue);
+  }
+
 }

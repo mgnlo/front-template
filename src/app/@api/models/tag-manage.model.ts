@@ -67,6 +67,19 @@ export class TagReviewHistory {
   filePath?: string;
 }
 
+//#region 標籤構面
+export class TagCategory {
+  categoryValue: string;
+  categoryName: string;
+  tagTopic: Array<TagTopic>;
+}
+
+export class TagTopic {
+  tagTopicValue: string;
+  tagTopicName: string;
+}
+//#endregion
+
 //#region 異動歷程/紀錄
 //for HTML diaplay ViewModel
 export interface TagDetailView {

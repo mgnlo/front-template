@@ -91,7 +91,8 @@
           </div>
           <div class="row rightBox">
             <div class="fieldBtn col-12 col-lg-2">
-                <button nbButton status="control" (click)="conditionDialog()">
+                <button nbButton [status]="!this.conditionDialogData?.conditionValue?'basic':'control'"
+                        (click)="conditionDialog()" [disabled]="!this.conditionDialogData?.conditionValue">
                     <nb-icon icon="bar-chart-outline"></nb-icon>條件分佈級距
                 </button>
             </div>
