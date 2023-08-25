@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting } from '@api/models/activity-list.model';
@@ -56,6 +56,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
 
   enterKeyHandled = false;
+
 
   //預設狀態
   tagStatusList = [Status.enabled, Status.disabled];
@@ -403,6 +404,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   //輸入查詢
   onConditionValueChange(event: any) {
+
     this.getTagConditionalDistribution();
 
     if (this.enterKeyHandled) {
@@ -458,7 +460,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     const inputValue = this.validateForm.get('conditionValue')?.value ?? ''
     const conditionValue = this.filterConditionValueList.find(item => item.val === inputValue)?.key
 
-    if(this.isMock){
+    if (this.isMock) {
       this.conditionDialogData = TagConditionChartLineMock as TagConditionChartLine;
       return
     }

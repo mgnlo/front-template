@@ -11,5 +11,5 @@ export const RegExpUtil = {
   dateFmt1: /^\d{4}[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/,
   /** yyyyMMdd*/
   dateFmt2: /^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$/,
-  removeChinese : /[\u4e00-\u9fa5]/g,
+  chinese: /[\u4e00-\u9fa5]/g,
 }
