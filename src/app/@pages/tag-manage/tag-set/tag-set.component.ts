@@ -9,8 +9,6 @@ import { StorageService } from '@api/services/storage.service';
 import { MathSymbol, Status } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
 import { TagDimension, TagJoinValue, TagSetCondition, TagSubDimension, TagType } from '@common/enums/tag-enum';
-import { ActivityListMock } from '@common/mock-data/activity-list-mock';
-import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { RegExpUtil } from '@common/utils/reg-exp-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
@@ -22,6 +20,8 @@ import { TagConditionDialogComponent } from './condition-dialog/condition-dialog
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { TagConditionChartLineMock } from '@common/mock-data/tag-condition-chart-line-mock';
 import { FileService } from '@api/services/file.service';
+import { TagSettingMock } from '@common/mock-data/tag-list-mock';
+import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { ConfigService } from '@api/services/config.service';
 
 @Component({
@@ -55,6 +55,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
 
+  enterKeyHandled = false;
+
   //預設狀態
   tagStatusList = [Status.enabled, Status.disabled];
   statusList: Array<{ key: string; val: string }> = Object.entries(Status)
@@ -79,15 +81,16 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   tagSetConditionList: Array<{ key: string; val: string }> = Object.entries(TagSetCondition).map(([k, v]) => ({ key: k, val: v }))
 
   //預設偵測條件
-  condition_valueList: Array<{ key: string; val: string }> = [{ key: 'condition_A', val: '近三個月_基金_申購金額' }, { key: 'condition_B', val: '假資料B' }, { key: 'condition_C', val: '假資料C' }];
+  conditionValueList: Array<{ key: string; val: string }> = new Array<{ key: string; val: string }>();
+  filterConditionValueList: Array<{ key: string; val: string }> = new Array<{ key: string; val: string }>();
 
   //預設集合方式
   joinValueList: Array<{ key: string; val: string }> = Object.entries(TagJoinValue).map(([k, v]) => ({ key: k, val: v }))
 
   constructor(
     storageService: StorageService,
-    configService: ConfigService,
     private router: Router,
+    configService: ConfigService,
     private activatedRoute: ActivatedRoute,
     private readonly changeDetectorRef: ChangeDetectorRef,
     private tagManageService: TagManageService,
@@ -108,7 +111,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       tagDimension: new FormControl(null, Validators.required),
       tagSubDimension: new FormControl(null, Validators.required),
       tagDescription: new FormControl(null),
-      conditionValue: new FormControl(null, Validators.required),
+      conditionValue: new FormControl(null, this.existsInConditionValueList),
       conditionSettingQuery: new FormControl(null, Validators.required),
       tagConditionSetting: new FormArray([]),
     }, [ValidatorsUtil.dateRange]);
@@ -205,7 +208,47 @@ export class TagAddComponent extends BaseComponent implements OnInit {
         }),
         filter(res => res.code === RestStatus.SUCCESS),
         tap((res) => {
-          this.setData(res.result);
+          this.detail = JSON.parse(JSON.stringify(res.result));
+          const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistoryAud', res.result as TagSetting); // 異動歷程處理
+          Object.keys(res.result).forEach(key => {
+            if (!!this.validateForm.controls[key]) {
+              switch (key) {
+                case 'startDate':
+                case 'endDate':
+                  this.validateForm.controls[key].setValue(new Date(res.result[key]))
+                  break;
+                case 'tagConditionSetting':
+                  this.conditions.removeAt(0);
+                  res.result.tagConditionSetting.forEach((conditionSetting, index) => {
+                    if (!!conditionSetting.joinValue) {
+                      this.conditions.push(new FormGroup({
+                        id: new FormControl(index),
+                        ['detectionCondition_' + index]: new FormControl(conditionSetting.detectionCondition, Validators.required),
+                        ['thresholdValue_' + index]: new FormControl(+conditionSetting.thresholdValue, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
+                        ['joinValue_' + index]: new FormControl(conditionSetting.joinValue, Validators.required)
+                      }));
+                    } else {
+                      this.conditions.push(new FormGroup({
+                        id: new FormControl(index),
+                        ['detectionCondition_' + index]: new FormControl(conditionSetting.detectionCondition, Validators.required),
+                        ['thresholdValue_' + index]: new FormControl(+conditionSetting.thresholdValue, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
+                      }));
+                    }
+                  })
+                  //console.info(this.conditions.getRawValue());
+                  break;
+                default:
+                  this.validateForm.controls[key].setValue(res.result[key]);
+                  break;
+              }
+            }
+          });
+          if (!!processedData) {
+            if (this.changeRouteName === 'edit') {
+              this.isHistoryOpen = processedData.isHistoryOpen;
+              this.detail.historyGroupView = processedData.detail?.historyGroupView;
+            }
+          }
           this.loadingService.close();
         })
       ).subscribe(res => {
@@ -235,6 +278,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       this.changeConditionSettingMethod(formData.conditionSettingMethod);
       //#endregion
     }
+
   }
 
   ngAfterViewChecked(): void {
@@ -312,6 +356,108 @@ export class TagAddComponent extends BaseComponent implements OnInit {
   }
   //#endregion
 
+  //#region 偵測條件下拉及查詢
+  getConditionValueList(): void {
+    if (this.conditionValueList.length > 0 &&
+        this.conditionValueList.some(s => s.val === this.validateForm?.get('conditionValue')?.value)) return
+
+    this.conditionValueList = new Array<{ key: string; val: string }>();
+    this.filterConditionValueList = new Array<{ key: string; val: string }>();
+
+    this.validateForm?.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '查詢偵測條件中' });
+    this.tagManageService.getTagConditionList().pipe(
+      catchError((err) => {
+        this.validateForm?.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '查詢偵測條件失敗' });
+        throw new Error(err.message);
+      }),
+    ).subscribe(res => {
+      if (res.code === RestStatus.SUCCESS) {
+        if (!res.result || res.result.length === 0) {
+          this.validateForm?.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '無偵測條件' });
+          return
+        }
+        res.result.forEach(m => {
+          this.conditionValueList.push({ key: m.conditionValue, val: m.conditionName });
+        });
+        this.filterConditionValueList = [...this.conditionValueList];
+        this.validateForm?.get('conditionValue')?.setErrors(null);
+      }
+    });
+  }
+
+  //阻擋Enter
+  onKeyDown(event: KeyboardEvent): void {
+    if (event.code === 'Enter') {
+      this.enterKeyHandled = true;
+    }
+  }
+
+  //輸入查詢
+  onConditionValueChange(event: any) {
+    if (this.enterKeyHandled) {
+      this.enterKeyHandled = false;
+      return;
+    }
+
+    const inputData = event.target.value;
+    this.conditionValueFilter(inputData);
+  }
+
+  //下拉選擇
+  onConditionValueSelectChange(event: any) {
+    if (this.conditionValueList.some(s => s.val === event)) return
+    this.conditionValueFilter(event);
+  }
+
+  //塞選邏輯
+  conditionValueFilter(value: string): void {
+    const filterValue = value?.toLowerCase();
+
+    this.filterConditionValueList = new Array<{ key: string; val: string }>();
+
+    if (CommonUtil.isBlank(filterValue)) {
+      this.filterConditionValueList = this.conditionValueList
+      return
+    }
+
+    this.validateForm?.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '查詢偵測條件中' });
+    this.tagManageService.filterTagConditionList(new TagConditionChartLine({ conditionName: value })).pipe(
+      catchError((err) => {
+        this.validateForm?.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '查詢偵測條件失敗' });
+        throw new Error(err.message);
+      }),
+    ).subscribe(res => {
+      if (res.code === RestStatus.SUCCESS) {
+        if (!res.result || res.result.length === 0) {
+          this.validateForm?.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '無偵測條件' });
+          return
+        }
+        res.result.forEach(m => {
+          this.filterConditionValueList.push({ key: m.conditionValue, val: m.conditionName });
+        });
+        this.validateForm?.get('conditionValue')?.setErrors(null);
+        console.info('this.filterConditionValueList', this.filterConditionValueList)
+      }
+    });
+  }
+
+  // 檢查是否存在清單中
+  existsInConditionValueList = (ctl: FormControl): { [key: string]: any } | null => {
+    if ((ctl.dirty || ctl.touched || ctl.valueChanges) && this.conditionValueList) {
+      const filterValue = ctl.value?.toLowerCase();
+      if (!CommonUtil.isBlank(filterValue) && this.conditionValueList.filter(item => item.val?.toLowerCase() === filterValue).length === 0) {
+        return { 'condition_valueErrMsg': '不存在偵測條件清單中' }; // 驗證失敗
+      }
+    }
+
+    if ((ctl.dirty || ctl.touched) && CommonUtil.isBlank(ctl.value)) {
+      return { 'condition_valueErrMsg': '不可為空' }; // 驗證失敗
+    }
+
+    return null; // 驗證成功
+  };
+  //#endregion
+
   //#region 條件區塊異動
   changeConditionsBtn(action: 'add' | 'remove', index: number) {
     if (action === 'add') {
@@ -349,7 +495,8 @@ export class TagAddComponent extends BaseComponent implements OnInit {
 
   //#region 檔案上傳並驗證
   onFileSelected(event: any) {
-    debugger
+    console.log('event', event);
+
     const file: File = event.target.files[0];
     const fileValidatorResult = this.fileValidator(file);
     if (fileValidatorResult !== null) {
@@ -357,22 +504,29 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       this.filePlaceholderName = '請上傳檔案';
       return
     }
+
     this.filePlaceholderName = CommonUtil.isBlank(file?.name) ? this.filePlaceholderName : file.name;
     this.uploadFileName = CommonUtil.getFileNameWithoutExtension(file?.name);
     this.uploadType = file?.type?.split('/')?.[1] ? file?.type?.split('/')?.[1] : CommonUtil.getFileExtension(file?.name);
 
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('fileType', this.uploadType);
+    let formData = new FormData();
+    formData.append('fileData', file);
+
+    // this.http.post<any>('http://localhost:8080/portal/webcomm/api/file/upload', formData).subscribe(response => {
+    //   console.log('File uploaded:', response);
+    // });
 
     // console.info('file', file)
     // console.info('uploadType', this.uploadType)
-    // console.info('formData', formData)
+    formData.forEach((value, key) => {
+      console.info(key, value);
+    });
 
     this.loadingService.open();
     this.fileService.uploadFileService(formData).pipe(
       catchError((err) => {
-        this.validateForm?.get('fileName')?.setErrors({ uploadFileMsg: '檔案上傳失敗' });
+        //console.info('err', err)
+        this.validateForm?.get('fileName')?.setErrors({ uploadFileMsg: err.message ? err.message : '檔案上傳失敗' });
         throw new Error(err.message);
       }),
       tap(res => {
@@ -458,12 +612,6 @@ export class TagAddComponent extends BaseComponent implements OnInit {
       const route = this.tagId ? [this.changeRouteName, this.tagId] : [];
       this.dialogService.alertAndBackToList(false, `${this.actionName}驗證失敗`, ['pages', 'tag-manage', 'tag-set', ...route]);
       return
-    }
-
-    if (this.isMock) {
-      this.dialogService.alertAndBackToList(true, `${this.actionName}成功`, ['pages', 'tag-manage', 'tag-list']);
-      this.loadingService.close();
-      return;
     }
 
     // 調用(新增or複製)或編輯

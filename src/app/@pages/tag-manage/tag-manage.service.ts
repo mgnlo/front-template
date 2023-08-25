@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ResponseModel } from "@api/models/base.model";
-import { TagSetting, TagSettingEditReq } from "@api/models/tag-manage.model";
+import { TagConditionChartLine, TagSetting, TagSettingEditReq } from "@api/models/tag-manage.model";
 import { ApiService } from "@api/services/api.service";
 import { Observable } from "rxjs";
 
@@ -8,6 +8,7 @@ import { Observable } from "rxjs";
 export class TagManageService {
 
   readonly tagFunc = 'tag-settings/';
+  readonly tagConditionFunc = 'tag-condition/'
 
   constructor(private service: ApiService) { }
 
@@ -27,4 +28,11 @@ export class TagManageService {
     return this.service.doPut(this.tagFunc + tagId, data);
   }
 
+  getTagConditionList(): Observable<ResponseModel<Array<TagConditionChartLine>>> {
+    return this.service.doGet(this.tagConditionFunc);
+  }
+
+  filterTagConditionList(data: TagConditionChartLine): Observable<ResponseModel<Array<TagConditionChartLine>>> {
+    return this.service.doGet(this.tagConditionFunc, data);
+  }
 }
