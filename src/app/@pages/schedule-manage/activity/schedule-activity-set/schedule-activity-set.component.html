@@ -24,8 +24,8 @@
             <div *ngIf="validateForm.get('executionFrequency').value?.toLowerCase() !== 'daily'" class="multi">
               <nb-select fullWidth placeholder="日" formControlName="daily">
                 <nb-option *ngFor="let val of daily" [value]="val">{{ val }}</nb-option>
-            </nb-select>
-            <span>：</span>
+              </nb-select>
+              <span>日</span>
               <nb-select fullWidth placeholder="時" formControlName="hour">
                   <nb-option *ngFor="let val of hour" [value]="val">{{ val }}</nb-option>
               </nb-select>
@@ -49,7 +49,7 @@
     </nb-card-header>
     <nb-card-body>
         <div class="rightBox">
-          <button nbButton status="primary" size="medium" (click)="add()">新增</button>
+          <button nbButton status="primary" size="medium" (click)="add()">新 增</button>
         </div>
         <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
         <paginator [source]="dataSource" [paginator]="paginator"></paginator>
@@ -57,8 +57,8 @@
   </nb-card>
   <div class="row">
       <div class="btnGroup">
-          <button nbButton status="basic" size="medium" (click)="cancel()">取消</button>
-          <button nbButton status="primary" size="medium" (click)="submit()" [disabled]="validateForm.invalid">送審</button>
+          <button nbButton status="basic" size="medium" (click)="cancel()">取 消</button>
+          <button nbButton status="primary" size="medium" (click)="submit()" [disabled]="validateForm.invalid">送 審</button>
       </div>
   </div>
 </div>

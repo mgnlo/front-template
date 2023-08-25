@@ -8,7 +8,7 @@
       </nb-card-header>
       <nb-card-body>
           <div class="rightBox">
-            <button nbButton status="primary" size="medium" (click)="add()">新增</button>
+            <button nbButton status="primary" size="medium" (click)="add()">新 增</button>
           </div>
           <ng2-smart-table *ngIf="!!restDataSource" [settings]="gridDefine" [source]="restDataSource"></ng2-smart-table>
           <paginator *ngIf="!!restDataSource" [source]="restDataSource" [paginator]="paginator"></paginator>

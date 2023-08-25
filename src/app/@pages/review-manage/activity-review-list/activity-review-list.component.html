@@ -16,8 +16,8 @@
     </nb-card>
     <div class="row">
         <div class="btnGroup">
-            <button nbButton status="basic" size="medium" (click)="reset()">清除</button>
-            <button nbButton status="primary" size="medium" (click)="search('search')" [disabled]="validateForm.invalid">查詢</button>
+            <button nbButton status="basic" size="medium" (click)="reset()">清 除</button>
+            <button nbButton status="primary" size="medium" (click)="search('search')" [disabled]="validateForm.invalid">查 詢</button>
         </div>
     </div>
     <hr/>
@@ -28,7 +28,7 @@
         <nb-card-body>
             <div class="noteText">
                 <nb-icon icon="info-outline"></nb-icon>
-                <p>本日已審查之項目將留存於列表內，並標註為「同意」案件;每日00:00批次更新列表內容，欲查看「同意」案件請移至「該客群名單」查詢相關歷程。</p>
+                <p>本日已審查之項目將留存於列表內，並標注為「同意」案件；每日 00:00 批次更新列表內容，欲查看「同意」案件請移至「該客群名單」查詢相關歷程。</p>
             </div>
             <ng2-smart-table *ngIf="!!restDataSource" [settings]="gridDefine" [source]="restDataSource"></ng2-smart-table>
             <paginator *ngIf="!!restDataSource" [source]="restDataSource" [paginator]="paginator"></paginator>
