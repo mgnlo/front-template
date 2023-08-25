@@ -25,7 +25,7 @@
               <nb-select fullWidth placeholder="日" formControlName="daily">
                 <nb-option *ngFor="let val of daily" [value]="val">{{ val }}</nb-option>
               </nb-select>
-              <span>日</span>
+              <span *ngIf="validateForm.get('executionFrequency').value?.toLowerCase() === 'monthly'">日</span>
               <nb-select fullWidth placeholder="時" formControlName="hour">
                   <nb-option *ngFor="let val of hour" [value]="val">{{ val }}</nb-option>
               </nb-select>
