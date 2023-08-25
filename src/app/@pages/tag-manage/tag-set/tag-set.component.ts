@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting } from '@api/models/activity-list.model';
@@ -8,7 +8,7 @@ import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
 import { MathSymbol, Status } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
-import { TagDimension, TagJoinValue, TagSetCondition, TagSubDimension, TagType } from '@common/enums/tag-enum';
+import { TagJoinValue, TagSetCondition, TagType } from '@common/enums/tag-enum';
 import { CommonUtil } from '@common/utils/common-util';
 import { RegExpUtil } from '@common/utils/reg-exp-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
@@ -23,6 +23,7 @@ import { FileService } from '@api/services/file.service';
 import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { ConfigService } from '@api/services/config.service';
+import { TagCategoryMock } from '@common/mock-data/tag-category-mock';
 
 @Component({
   selector: 'tag-set',
@@ -64,9 +65,10 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     .filter(([k, v]) => {
       return this.tagStatusList.includes(v);
     }).map(([k, v]) => ({ key: k, val: v }));
+
   //預設構面
-  categoryList: Array<{ key: string; val: string }> = Object.entries(TagDimension).map(([k, v]) => ({ key: k, val: v }))
-  subCategoryList: Array<{ key: string; val: string }> = Object.entries(TagSubDimension).map(([k, v]) => ({ key: k, val: v }))
+  categoryList: Array<{ key: string; val: string }> = new Array<{ key: string; val: string }>();
+  subCategoryList: Array<{ key: string; val: string }> = new Array<{ key: string; val: string }>();
 
   //預設數學符號
   tagMathSymbolList = [MathSymbol.$gt, MathSymbol.$lt, MathSymbol.$eq];
@@ -89,7 +91,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   joinValueList: Array<{ key: string; val: string }> = Object.entries(TagJoinValue).map(([k, v]) => ({ key: k, val: v }))
 
   //預設條件分佈級距
-  conditionDialogData: TagConditionChartLine;// = TagConditionChartLineMock
+  conditionDialogData: TagConditionChartLine;
 
   constructor(
     storageService: StorageService,
@@ -191,7 +193,39 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     //#region 抓取(主/子)標籤構面
-    // this.tagManageService.getTagConditionalDistribution()
+    this.categoryList = new Array<{ key: string; val: string }>();
+    this.subCategoryList = new Array<{ key: string; val: string }>();
+
+    this.tagManageService.getTagDimensionList().pipe(
+      catchError((err) => {
+        throw new Error(err.message);
+      }),
+      filter(res => res.code === RestStatus.SUCCESS),
+      tap((res) => {
+        const respData = JSON.parse(JSON.stringify(res.result));
+        if (!respData || respData?.length == 0) return
+
+        respData.forEach(category => {
+          this.categoryList.push({ key: category.categoryValue, val: category.categoryName });
+
+          category.tagTopic.forEach(subCategory => {
+            this.subCategoryList.push({ key: subCategory.tagTopicValue, val: subCategory.tagTopicName });
+          });
+        });
+      })
+    ).subscribe((res) => {
+      //console.info('res', res)
+    })
+
+    if (this.isMock) {
+      TagCategoryMock.forEach(category => {
+        this.categoryList.push({ key: category.categoryValue, val: category.categoryName });
+
+        category.tagTopic.forEach(subCategory => {
+          this.subCategoryList.push({ key: subCategory.tagTopicValue, val: subCategory.tagTopicName });
+        });
+      });
+    }
     //#endregion
 
     //#region 載入編輯資料

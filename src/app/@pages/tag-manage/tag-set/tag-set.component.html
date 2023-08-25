@@ -43,8 +43,8 @@
         </div>
         <date-range [form]="validateForm"></date-range>
         <div class="row">
-            <dropdown class="col-12 col-lg-6" title="標籤構面" [form]="validateForm" ctlName="tagDimension"></dropdown>
-            <dropdown class="col-12 col-lg-6" title="標籤子構面" [form]="validateForm" ctlName="tagSubDimension"></dropdown>
+            <dropdown class="col-12 col-lg-6" title="標籤構面" [form]="validateForm" [selectList]="{options: this.categoryList, key: 'key', val: 'val'}" ctlName="tagDimension"></dropdown>
+            <dropdown class="col-12 col-lg-6" title="標籤子構面" [form]="validateForm" [selectList]="{options: this.subCategoryList, key: 'key', val: 'val'}" ctlName="tagSubDimension"></dropdown>
         </div>
         <div class="row">
             <basic-input class="col-12 col-lg-6" title="描述說明" [form]="validateForm" ctlName="tagDescription"></basic-input>
