@@ -49,9 +49,9 @@ export class ServerSourceInitConfig {
 }
 
 export class CommonServerDataSource extends ServerDataSource {
-
+  private configService: ConfigService = ConfigService.getInstance();
   private initConf: ServerSourceInitConfig;
-  private prefixUrl = new ConfigService().getConfig().SERVER_URL + new ConfigService().getConfig().API_URL;
+  private prefixUrl = this.configService.getConfig().SERVER_URL + this.configService.getConfig().API_URL;
   private apiStatusSubject: BehaviorSubject<'init' | 'loading' | 'finish' | 'error'> = new BehaviorSubject('init');
 
   constructor(protected http: HttpClient, conf: CommonConf | {} = {}, initConf?: ServerSourceInitConfig) {
