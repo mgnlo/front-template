@@ -404,7 +404,6 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   //輸入查詢
   onConditionValueChange(event: any) {
-
     this.getTagConditionalDistribution();
 
     if (this.enterKeyHandled) {

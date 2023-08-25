@@ -53,7 +53,7 @@ export class ConditionChartLineComponent implements OnInit, AfterViewInit, OnDes
     );
     this.yAxisData = this.getMapKeyByValue('distributionValue', conditionDistributionSort)
     this.seriesData.push({
-      name: this.data.conditionValue,
+      name: this.data.conditionName,
       type: 'line',
       smooth: true,
       data: this.yAxisData,
