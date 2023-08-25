@@ -14,8 +14,8 @@ export class FileService {
 
   constructor(private service: ApiService) { }
 
-  uploadFileService(data: FormData): Observable<ResponseModel<any>> {
-    return this.service.doPost(this.fileUploadFunc, data);
+  uploadFileService(data: any): Observable<ResponseModel<any>> {
+    return this.service.doUpload(this.fileUploadFunc, data);
   }
 
   downloadFileService(id: string): Observable<ResponseModel<any>> {

@@ -37,7 +37,7 @@ export class ApiService {
   ) { }
 
   private doSend<T>(
-    method: 'post' | 'get' | 'put' | 'delete',
+    method: 'post' | 'get' | 'put' | 'delete' | 'upload',
     url: string,
     requestObj?: any,
     rqParams?: { [key: string]: any }): Observable<ResponseModel<T>> {
@@ -46,7 +46,7 @@ export class ApiService {
     const resultUrl = this.prefixUrl + url;
     // const requestModel = { requestObj };
 
-    if(this._jwtToken) {
+    if (this._jwtToken) {
       this.httpOptions.headers["Authorization"] = `Bearer ${this._jwtToken}`;
     }
 
@@ -62,6 +62,9 @@ export class ApiService {
         break;
       case 'delete':
         observable = this.http.delete<ResponseModel<T>>(resultUrl, { params: rqParams, ...this.httpOptions });
+        break;
+      case 'upload':
+        observable = this.http.post<ResponseModel<T>>(resultUrl, requestObj);
         break;
     }
 
@@ -99,6 +102,10 @@ export class ApiService {
 
   doDelete<T>(url: string, rqParams?: { [key: string]: any }): Observable<ResponseModel<T>> {
     return this.doSend('delete', url, null, rqParams);
+  }
+
+  doUpload<T>(url: string, requestObj: FormData): Observable<ResponseModel<T>> {
+    return this.doSend('upload', url, requestObj);
   }
 
   download(url: string, requestObj: any): void {

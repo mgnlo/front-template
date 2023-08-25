@@ -133,10 +133,14 @@ export class TagSettingEditReq {
 //#endregion
 
 //#region 條件級距線圖表
-export interface TagConditionChartLine {
+export class TagConditionChartLine {
   conditionValue: string;
   conditionName: string;
   conditionDistribution: Array<Conditiondistribution>
+
+  constructor(data: Partial<TagConditionChartLine>) {
+    Object.assign(this, data);
+  }
 }
 
 export class Conditiondistribution {
