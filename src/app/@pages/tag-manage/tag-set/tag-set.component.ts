@@ -58,6 +58,9 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   enterKeyHandled = false;
 
+  //偵測條件下拉
+  selectedConditionId: string = '';
+  selectedConditionValue: string = '';
 
   //預設狀態
   tagStatusList = [Status.enabled, Status.disabled];
@@ -69,6 +72,9 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   //預設構面
   categoryList: Array<{ key: string; val: string }> = new Array<{ key: string; val: string }>();
   subCategoryList: Array<{ key: string; val: string }> = new Array<{ key: string; val: string }>();
+
+  tempCategoryList: Array<{ key: string; val: string }> = new Array<{ key: string; val: string }>();
+  tempSubCategoryList: Array<{ key: string; val: string }> = new Array<{ key: string; val: string }>();
 
   //預設數學符號
   tagMathSymbolList = [MathSymbol.$gt, MathSymbol.$lt, MathSymbol.$eq];
@@ -195,6 +201,8 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     //#region 抓取(主/子)標籤構面
     this.categoryList = new Array<{ key: string; val: string }>();
     this.subCategoryList = new Array<{ key: string; val: string }>();
+    this.tempCategoryList = new Array<{ key: string; val: string }>();
+    this.tempSubCategoryList = new Array<{ key: string; val: string }>();
 
     this.tagManageService.getTagDimensionList().pipe(
       catchError((err) => {
@@ -212,12 +220,15 @@ export class TagSetComponent extends BaseComponent implements OnInit {
             this.subCategoryList.push({ key: subCategory.tagTopicValue, val: subCategory.tagTopicName });
           });
         });
+
+        this.tempCategoryList = [...this.categoryList]
+        this.tempSubCategoryList = [...this.subCategoryList]
       })
     ).subscribe((res) => {
       //console.info('res', res)
     })
 
-    if (this.isMock) {
+    if (true) {
       TagCategoryMock.forEach(category => {
         this.categoryList.push({ key: category.categoryValue, val: category.categoryName });
 
@@ -225,6 +236,9 @@ export class TagSetComponent extends BaseComponent implements OnInit {
           this.subCategoryList.push({ key: subCategory.tagTopicValue, val: subCategory.tagTopicName });
         });
       });
+
+      this.tempCategoryList = [...this.categoryList]
+      this.tempSubCategoryList = [...this.subCategoryList]
     }
     //#endregion
 
@@ -398,7 +412,6 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   //#endregion
 
   //#region 取得偵測條件下拉資料&&塞選查詢  //取得圖表資料
-
   //取得偵測條件下拉資料
   getConditionValueList(): void {
     if (this.conditionValueList.length > 0 &&
@@ -407,7 +420,6 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     this.conditionValueList = new Array<{ key: string; val: string }>();
     this.filterConditionValueList = new Array<{ key: string; val: string }>();
 
-    this.validateForm?.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '查詢偵測條件中' });
     this.tagManageService.getTagConditionList().pipe(
       catchError((err) => {
         this.filterConditionValueList = new Array<{ key: string; val: string }>();
@@ -417,14 +429,13 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     ).subscribe(res => {
       if (res.code === RestStatus.SUCCESS) {
         if (!res.result || res.result.length === 0) {
-          this.validateForm?.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '無偵測條件' });
+          this.validateForm?.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '查無偵測條件' });
           return
         }
         res.result.forEach(m => {
           this.conditionValueList.push({ key: m.conditionValue, val: m.conditionName });
         });
         this.filterConditionValueList = [...this.conditionValueList];
-        this.validateForm?.get('conditionValue')?.setErrors(null);
       }
     });
   }
@@ -436,12 +447,25 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     }
   }
 
+  onBlurConditionValueInput(): void {
+    if (this.validateForm.get('conditionValue')?.hasError('condition_valueErrMsg')) return
+
+    if (CommonUtil.isBlank(this.selectedConditionId)) {
+      this.validateForm.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '請點選一筆' });
+      return
+    }
+
+    this.validateForm.get('conditionValue')?.setErrors(null);
+  }
+
   //輸入查詢
   onConditionValueChange(event: any) {
-    this.getTagConditionalDistribution();
+    this.selectedConditionId = '';
+    this.conditionDialogData = undefined;
 
     if (this.enterKeyHandled) {
       this.enterKeyHandled = false;
+      this.validateForm.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '請點選一筆' });
       return;
     }
 
@@ -450,9 +474,17 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   //下拉選擇
   onConditionValueSelectChange(event: any) {
+    //console.info('event',event)
+    this.selectedConditionId = event.key;
+    this.selectedConditionValue = event.val;
+
+    console.log('Selected Value:', this.selectedConditionValue);
+
     this.getTagConditionalDistribution();
 
-    this.conditionValueFilter(event);
+    this.conditionValueFilter(this.selectedConditionValue);
+
+    this.validateForm.get('conditionValue').setValue(this.selectedConditionValue);
   }
 
   //塞選邏輯
@@ -466,7 +498,10 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       return
     }
 
-    this.validateForm?.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '查詢偵測條件中' });
+    if (!this.selectedConditionId){
+      this.validateForm?.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '請點選一筆' });
+    }
+
     this.tagManageService.filterTagConditionList(new TagConditionChartLine({ conditionName: value })).pipe(
       catchError((err) => {
         this.filterConditionValueList = new Array<{ key: string; val: string }>();
@@ -476,13 +511,15 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     ).subscribe(res => {
       if (res.code === RestStatus.SUCCESS) {
         if (!res.result || res.result.length === 0) {
-          this.validateForm?.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '無偵測條件' });
+          this.validateForm?.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '查無偵測條件' });
           return
         }
         res.result.forEach(m => {
           this.filterConditionValueList.push({ key: m.conditionValue, val: m.conditionName });
         });
-        this.validateForm?.get('conditionValue')?.setErrors(null);
+        if (this.selectedConditionId){
+          this.validateForm?.get('conditionValue')?.setErrors(null);
+        }
         console.info('this.filterConditionValueList', this.filterConditionValueList)
       }
     });
@@ -490,20 +527,19 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   //取得圖表資料
   getTagConditionalDistribution() {
-    const inputValue = this.validateForm.get('conditionValue')?.value ?? ''
-    const conditionValue = this.filterConditionValueList.find(item => item.val === inputValue)?.key
+    const conditionId = this.selectedConditionId
 
     if (this.isMock) {
       this.conditionDialogData = TagConditionChartLineMock as TagConditionChartLine;
       return
     }
 
-    if (!conditionValue) {
+    if (!conditionId) {
       this.conditionDialogData = undefined;
       return
     }
 
-    this.tagManageService.getTagConditionalDistribution(conditionValue).pipe(
+    this.tagManageService.getTagConditionalDistribution(conditionId).pipe(
       catchError((err) => {
         throw new Error(err.message);
       }),

@@ -43,8 +43,12 @@
         </div>
         <date-range [form]="validateForm"></date-range>
         <div class="row">
-            <dropdown class="col-12 col-lg-6" title="標籤構面" [form]="validateForm" [selectList]="{options: this.categoryList, key: 'key', val: 'val'}" ctlName="tagDimension"></dropdown>
-            <dropdown class="col-12 col-lg-6" title="標籤子構面" [form]="validateForm" [selectList]="{options: this.subCategoryList, key: 'key', val: 'val'}" ctlName="tagSubDimension"></dropdown>
+            <dropdown class="col-12 col-lg-6" title="標籤構面" [form]="validateForm"
+                      [selectList]="{options: this.tempCategoryList, key: 'key', val: 'val'}"
+                      ctlName="tagDimension"></dropdown>
+            <dropdown class="col-12 col-lg-6" title="標籤子構面" [form]="validateForm"
+                      [selectList]="{options: this.tempSubCategoryList, key: 'key', val: 'val'}"
+                       ctlName="tagSubDimension"></dropdown>
         </div>
         <div class="row">
             <basic-input class="col-12 col-lg-6" title="描述說明" [form]="validateForm" ctlName="tagDescription"></basic-input>
@@ -74,13 +78,16 @@
             <div class="fieldGroup essential col-12 col-lg-12" [ngClass]="{'error': condition_value?.errors?.condition_valueErrMsg }">
               <label>偵測條件</label>
               <div>
-                <input nbInput fullWidth type="text"  placeholder="請輸入或選擇"[nbAutocomplete]="auto"
+                <input nbInput fullWidth type="text"  placeholder="請輸入或選擇"
+                [nbAutocomplete]="auto"
                 [status]="condition_value?.errors?.condition_valueErrMsg  ? 'danger' : 'basic'"
+                (blur)="onBlurConditionValueInput()"
                 (click)="getConditionValueList()"
                 (keydown)="onKeyDown($event)"
-                (input)="onConditionValueChange($event)" formControlName="conditionValue"/>
+                (input)="onConditionValueChange($event)"
+                formControlName="conditionValue"/>
                 <nb-autocomplete #auto (selectedChange)="onConditionValueSelectChange($event)">
-                  <nb-option *ngFor="let conditionValue of filterConditionValueList" [value]="conditionValue.val" [id]="conditionValue.key">{{ conditionValue.val }}</nb-option>
+                  <nb-option *ngFor="let conditionValue of filterConditionValueList" [value]="conditionValue">{{ conditionValue.val }}</nb-option>
                 </nb-autocomplete>
               </div>
               <div class="note errorText">

@@ -34,7 +34,7 @@ export class DropdownComponent implements OnInit {
     }
     if(!!this.enumKey){
       switch (this.enumKey) {
-        case 'status': 
+        case 'status':
           Object.keys(Status).filter(status => status !== 'reviewing').forEach(key => { this.enumList.set(key, Status[key]) });
           break;
         default:
@@ -54,7 +54,7 @@ export class DropdownComponent implements OnInit {
       return false;
     }
   }
-  
+
   ngDoCheck(): void {
     // console.info(this.ctl.errors)
     if(!!this.ctl?.errors){
@@ -66,7 +66,7 @@ export class DropdownComponent implements OnInit {
   hasError(){
     return (this.ctl?.dirty || this.ctl?.touched) && this.ctl?.errors;
   }
-  
+
   valueChangeFn(param: any){
     this.valueChange.next(param);
   }
