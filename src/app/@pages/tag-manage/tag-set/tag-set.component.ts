@@ -72,7 +72,6 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   //預設構面
   beforeCategory: string = '';
-  beforeSubCategory: string = '';
 
   categoryList: Array<{ key: string; val: string }> = new Array<{ key: string; val: string }>();
   subCategoryList: Array<{ key: string; val: string }> = new Array<{ key: string; val: string }>();
@@ -232,7 +231,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       //console.info('res', res)
     })
 
-    if (true) {
+    if (this.isMock) {
       TagCategoryMock.forEach((category, index) => {
         this.categoryList.push({ key: category.categoryValue, val: category.categoryName });
         this.tempCategoryList.push({ groupId: index + 1, key: category.categoryValue, val: category.categoryName })
