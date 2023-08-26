@@ -363,7 +363,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   getTagSubDimensionList(): void {
     const tagSubDimension = this.validateForm.get('tagSubDimension')?.value;
     const snbGetGroupId = this.tempSubCategoryList.find(f => f.key.toLowerCase() === tagSubDimension?.toLowerCase())?.groupId
-    const getGroupId = this.tempCategoryList.find(f => f.key.toLowerCase() === this.validateForm.get('tagDimension').value.toLowerCase()).groupId
+    const getGroupId = this.tempCategoryList.find(f => f.key.toLowerCase() === this.validateForm.get('tagDimension').value.toLowerCase())?.groupId
 
     if ((CommonUtil.isNotBlank(this.beforeCategory) && !snbGetGroupId && getGroupId !== snbGetGroupId) ||
       (CommonUtil.isNotBlank(tagSubDimension) && getGroupId !== snbGetGroupId)) {
