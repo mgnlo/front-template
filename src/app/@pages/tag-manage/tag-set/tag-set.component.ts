@@ -506,7 +506,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     this.validateForm.get('conditionValue').setValue(this.selectedConditionValue);
   }
 
-  //塞選邏輯
+  //篩選邏輯
   conditionValueFilter(value: string): void {
     const filterValue = value?.toLowerCase();
 
