@@ -24,6 +24,7 @@ import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { ConfigService } from '@api/services/config.service';
 import { TagCategoryMock } from '@common/mock-data/tag-category-mock';
+import { FileResp } from '@api/models/file.model';
 
 @Component({
   selector: 'tag-set',
@@ -685,14 +686,15 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         throw new Error(err.message);
       }),
       tap(res => {
-        // console.info(res);
+        console.info(res);
       }),
       finalize(() => {
         this.loadingService.close();
       })
     ).subscribe(res => {
       if (res.code === RestStatus.SUCCESS) {
-        const fileId = res.result['Id'];
+        const result = JSON.parse(JSON.stringify(res.result)) as FileResp
+        const fileId = result.fileDataId;
         if (CommonUtil.isBlank(fileId)) {
           this.validateForm?.get('fileName')?.setErrors({ uploadFileMsg: '檔案上傳失敗(識別碼為空)' });
           return
@@ -701,7 +703,6 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         this.validateForm?.get('fileName')?.setErrors(null);
       }
     });
-    // this.validateForm?.get('fileName')?.setErrors(null);
   }
 
   fileValidator(file: File): { [key: string]: any } | null {
