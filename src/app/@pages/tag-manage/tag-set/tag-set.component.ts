@@ -124,7 +124,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       tagDimension: new FormControl(null, Validators.required),
       tagSubDimension: new FormControl(null, Validators.required),
       tagDescription: new FormControl(null),
-      conditionValue: new FormControl(null, this.existsInConditionValueList),
+      conditionValue: new FormControl(null, [Validators.required, this.existsInConditionValueList]),
       conditionSettingQuery: new FormControl(null, Validators.required),
       tagConditionSetting: new FormArray([]),
     }, [ValidatorsUtil.dateRange]);
@@ -468,6 +468,8 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     this.selectedConditionId = '';
     this.conditionDialogData = undefined;
 
+    this.validateForm.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '請選擇一筆' });
+
     if (this.enterKeyHandled) {
       this.enterKeyHandled = false;
       return;
@@ -475,7 +477,6 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
     if (this.backspaceKeyHandled) {
       this.backspaceKeyHandled = false;
-      this.validateForm.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '請選擇一筆' });
       if (this.filterConditionValueList?.length === 0) {
         this.conditionValueFilter(event.target.value);
       }
@@ -563,9 +564,10 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   // 檢查是否存在清單中
   existsInConditionValueList = (ctl: FormControl): { [key: string]: any } | null => {
+    console.info('ctl', ctl)
     if ((ctl.dirty || ctl.touched || ctl.valueChanges) && this.conditionValueList) {
       const filterValue = ctl.value?.toLowerCase();
-      if (!CommonUtil.isBlank(filterValue) && this.conditionValueList.filter(item => item.val?.toLowerCase() === filterValue).length === 0) {
+      if (!CommonUtil.isBlank(filterValue) && !this.conditionValueList.some(item => item.val?.toLowerCase() === filterValue)) {
         return { 'condition_valueErrMsg': '不存在偵測條件清單中' }; // 驗證失敗
       }
     }
