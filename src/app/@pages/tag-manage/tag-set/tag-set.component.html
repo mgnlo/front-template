@@ -81,10 +81,10 @@
                 <input nbInput fullWidth type="text"  placeholder="請輸入或選擇"
                 [nbAutocomplete]="auto"
                 [status]="condition_value?.errors?.condition_valueErrMsg  ? 'danger' : 'basic'"
-                (blur)="onBlurConditionValueInput()"
                 (click)="getConditionValueList()"
                 (keydown)="onKeyDown($event)"
                 (input)="onConditionValueChange($event)"
+                (blur)="onBlurConditionValueInput()"
                 formControlName="conditionValue"/>
                 <nb-autocomplete #auto (selectedChange)="onConditionValueSelectChange($event)">
                   <nb-option *ngFor="let conditionValue of filterConditionValueList" [value]="conditionValue">{{ conditionValue.val }}</nb-option>

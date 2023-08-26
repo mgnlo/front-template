@@ -57,6 +57,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
 
   enterKeyHandled = false;
+  backspaceKeyHandled = false;
 
   //偵測條件下拉
   selectedConditionId: string = '';
@@ -442,8 +443,12 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   //阻擋Enter
   onKeyDown(event: KeyboardEvent): void {
+    //console.info('eventeventevent', event)
     if (event.code === 'Enter') {
       this.enterKeyHandled = true;
+    }
+    if (event.code === 'Backspace') {
+      this.backspaceKeyHandled = true;
     }
   }
 
@@ -465,7 +470,15 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
     if (this.enterKeyHandled) {
       this.enterKeyHandled = false;
-      this.validateForm.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '請點選一筆' });
+      return;
+    }
+
+    if (this.backspaceKeyHandled) {
+      this.backspaceKeyHandled = false;
+      this.validateForm.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '請選擇一筆' });
+      if (this.filterConditionValueList?.length === 0) {
+        this.conditionValueFilter(event.target.value);
+      }
       return;
     }
 
@@ -475,9 +488,14 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   //下拉選擇
   onConditionValueSelectChange(event: any) {
     //console.info('event',event)
+    if (CommonUtil.isBlank(event.key) || CommonUtil.isBlank(event.val)) {
+      return
+    }
+
     this.selectedConditionId = event.key;
     this.selectedConditionValue = event.val;
 
+    console.log('selectedConditionId Value:', this.selectedConditionId);
     console.log('Selected Value:', this.selectedConditionValue);
 
     this.getTagConditionalDistribution();
@@ -498,10 +516,6 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       return
     }
 
-    if (!this.selectedConditionId){
-      this.validateForm?.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '請點選一筆' });
-    }
-
     this.tagManageService.filterTagConditionList(new TagConditionChartLine({ conditionName: value })).pipe(
       catchError((err) => {
         this.filterConditionValueList = new Array<{ key: string; val: string }>();
@@ -517,9 +531,6 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         res.result.forEach(m => {
           this.filterConditionValueList.push({ key: m.conditionValue, val: m.conditionName });
         });
-        if (this.selectedConditionId){
-          this.validateForm?.get('conditionValue')?.setErrors(null);
-        }
         console.info('this.filterConditionValueList', this.filterConditionValueList)
       }
     });
