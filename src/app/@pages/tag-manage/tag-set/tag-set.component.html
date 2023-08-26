@@ -25,7 +25,7 @@
               <label>名單上傳</label>
               <div>
                 <input nbInput fullWidth [status]="validateForm.get('fileName')?.errors?.uploadFileMsg ? 'danger' : 'basic'"
-                      type="text" formControlName="fileName" [placeholder] = "filePlaceholderName"/>
+                      type="text" formControlName="fileName" placeholder = "請上傳檔案"/>
                 <input nbInput fullWidth type="file"  [accept]="removeLastCharIfEquals(passFileArrayStr,',')" (change)="onFileSelected($event)" />
                 <button nbButton status="warning" size="tiny" class="iconBtn">
                     <nb-icon icon="folder-add-outline"></nb-icon>

@@ -46,7 +46,6 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   actionName: string;// 新增/編輯/複製
 
   maxSizeInMB: number = 5;//檔案大小
-  filePlaceholderName: string = '請上傳檔案';
   uploadFileName: string;
   fileData: string;
   uploadType: string;
@@ -272,6 +271,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         filter(res => res.code === RestStatus.SUCCESS),
         tap((res) => {
           this.detail = JSON.parse(JSON.stringify(res.result));
+          console.info('this.detail', this.detail)
           const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistoryAud', res.result as TagSetting); // 異動歷程處理
           Object.keys(res.result).forEach(key => {
             if (!!this.validateForm.controls[key]) {
@@ -381,7 +381,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   //#region 標籤類型 更動時切換驗證
   changeTagType(key: string) {
-    this.filePlaceholderName = '請上傳檔案';
+    this.validateForm.get('fileName').patchValue('');
     this.removeFieldIfExists('fileName');
     this.removeFieldIfExists('conditionSettingMethod');
     this.removeFieldIfExists('conditionSettingQuery');
@@ -395,6 +395,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         break;
       case 'document':
         this.addFieldIfNotExists('fileName', null, Validators.required);
+        this.validateForm.get('fileName').patchValue(this.detail?.fileName);
         this.validateForm?.patchValue({ 'tagType': 'document' });
         break;
     }
@@ -657,11 +658,11 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     const fileValidatorResult = this.fileValidator(file);
     if (fileValidatorResult !== null) {
       this.validateForm?.get('fileName')?.setErrors(fileValidatorResult);
-      this.filePlaceholderName = '請上傳檔案';
+      this.validateForm.get('fileName').patchValue('');
       return
     }
 
-    this.filePlaceholderName = CommonUtil.isBlank(file?.name) ? this.filePlaceholderName : file.name;
+    this.validateForm.get('fileName').patchValue(file?.name);
     this.uploadFileName = CommonUtil.getFileNameWithoutExtension(file?.name);
     this.uploadType = file?.type?.split('/')?.[1] ? file?.type?.split('/')?.[1] : CommonUtil.getFileExtension(file?.name);
 
