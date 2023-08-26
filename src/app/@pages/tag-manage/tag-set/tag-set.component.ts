@@ -71,11 +71,14 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     }).map(([k, v]) => ({ key: k, val: v }));
 
   //預設構面
+  beforeCategory: string = '';
+  beforeSubCategory: string = '';
+
   categoryList: Array<{ key: string; val: string }> = new Array<{ key: string; val: string }>();
   subCategoryList: Array<{ key: string; val: string }> = new Array<{ key: string; val: string }>();
 
-  tempCategoryList: Array<{ key: string; val: string }> = new Array<{ key: string; val: string }>();
-  tempSubCategoryList: Array<{ key: string; val: string }> = new Array<{ key: string; val: string }>();
+  tempCategoryList: Array<{ groupId: number; key: string; val: string }> = new Array<{ groupId: number; key: string; val: string }>();
+  tempSubCategoryList: Array<{ groupId: number; key: string; val: string }> = new Array<{ groupId: number; key: string; val: string }>();
 
   //預設數學符號
   tagMathSymbolList = [MathSymbol.$gt, MathSymbol.$lt, MathSymbol.$eq];
@@ -202,8 +205,8 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     //#region 抓取(主/子)標籤構面
     this.categoryList = new Array<{ key: string; val: string }>();
     this.subCategoryList = new Array<{ key: string; val: string }>();
-    this.tempCategoryList = new Array<{ key: string; val: string }>();
-    this.tempSubCategoryList = new Array<{ key: string; val: string }>();
+    this.tempCategoryList = new Array<{ groupId: number; key: string; val: string }>();
+    this.tempSubCategoryList = new Array<{ groupId: number; key: string; val: string }>();
 
     this.tagManageService.getTagDimensionList().pipe(
       catchError((err) => {
@@ -214,32 +217,35 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         const respData = JSON.parse(JSON.stringify(res.result));
         if (!respData || respData?.length == 0) return
 
-        respData.forEach(category => {
+        respData.forEach((category, index) => {
           this.categoryList.push({ key: category.categoryValue, val: category.categoryName });
+          this.tempCategoryList.push({ groupId: index + 1, key: category.categoryValue, val: category.categoryName })
 
           category.tagTopic.forEach(subCategory => {
             this.subCategoryList.push({ key: subCategory.tagTopicValue, val: subCategory.tagTopicName });
+            this.tempSubCategoryList.push({ groupId: index + 1, key: subCategory.tagTopicValue, val: subCategory.tagTopicName });
           });
         });
 
-        this.tempCategoryList = [...this.categoryList]
-        this.tempSubCategoryList = [...this.subCategoryList]
       })
     ).subscribe((res) => {
       //console.info('res', res)
     })
 
     if (true) {
-      TagCategoryMock.forEach(category => {
+      TagCategoryMock.forEach((category, index) => {
         this.categoryList.push({ key: category.categoryValue, val: category.categoryName });
+        this.tempCategoryList.push({ groupId: index + 1, key: category.categoryValue, val: category.categoryName })
 
         category.tagTopic.forEach(subCategory => {
           this.subCategoryList.push({ key: subCategory.tagTopicValue, val: subCategory.tagTopicName });
+          this.tempSubCategoryList.push({ groupId: index + 1, key: subCategory.tagTopicValue, val: subCategory.tagTopicName });
         });
       });
-
-      this.tempCategoryList = [...this.categoryList]
-      this.tempSubCategoryList = [...this.subCategoryList]
+      // console.info('this.categoryList', this.categoryList)
+      // console.info('this.tempCategoryList', this.tempCategoryList)
+      // console.info('this.subCategoryList', this.subCategoryList)
+      // console.info('this.tempSubCategoryList', this.tempSubCategoryList)
     }
     //#endregion
 
@@ -306,6 +312,8 @@ export class TagSetComponent extends BaseComponent implements OnInit {
               this.detail.historyGroupView = processedData.detail?.historyGroupView;
             }
           }
+        }),
+        finalize(() => {
           this.loadingService.close();
         })
       ).subscribe(res => {
@@ -343,7 +351,33 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   ngDoCheck() {
     // console.info('this.findInvalidControls()', this.findInvalidControls())
+    const tagDimension = this.validateForm.get('tagDimension')?.value;
+    if (CommonUtil.isNotBlank(tagDimension) && tagDimension != this.beforeCategory) {
+      this.beforeCategory = tagDimension;
+      // console.info('tagDimension', tagDimension)
+      this.getTagSubDimensionList();
+    }
   }
+
+  //#region 切換取得標籤構面List
+  getTagSubDimensionList(): void {
+    const tagSubDimension = this.validateForm.get('tagSubDimension')?.value;
+    const snbGetGroupId = this.tempSubCategoryList.find(f => f.key.toLowerCase() === tagSubDimension?.toLowerCase())?.groupId
+    const getGroupId = this.tempCategoryList.find(f => f.key.toLowerCase() === this.validateForm.get('tagDimension').value.toLowerCase()).groupId
+
+    if ((CommonUtil.isNotBlank(this.beforeCategory) && !snbGetGroupId && getGroupId !== snbGetGroupId) ||
+      (CommonUtil.isNotBlank(tagSubDimension) && getGroupId !== snbGetGroupId)) {
+      this.validateForm.get('tagSubDimension').patchValue('');
+      this.validateForm.get('tagSubDimension').setErrors({ 'tagSubDimensionErrMsg': '請重新選擇' });
+    }
+
+    if (!getGroupId) return
+    this.subCategoryList = new Array<{ key: string; val: string }>();
+    this.tempSubCategoryList.filter(f => f.groupId === getGroupId).forEach(f =>
+      this.subCategoryList.push({ key: f.key, val: f.val })
+    );
+  }
+  //#endregion
 
   //#region 標籤類型 更動時切換驗證
   changeTagType(key: string) {
@@ -443,7 +477,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   //阻擋Enter
   onKeyDown(event: KeyboardEvent): void {
-    //console.info('eventeventevent', event)
+    // console.info('eventeventevent', event)
     if (event.code === 'Enter') {
       this.enterKeyHandled = true;
     }
@@ -488,7 +522,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   //下拉選擇
   onConditionValueSelectChange(event: any) {
-    //console.info('event',event)
+    // console.info('event',event)
     if (CommonUtil.isBlank(event.key) || CommonUtil.isBlank(event.val)) {
       return
     }
@@ -496,8 +530,8 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     this.selectedConditionId = event.key;
     this.selectedConditionValue = event.val;
 
-    console.log('selectedConditionId Value:', this.selectedConditionId);
-    console.log('Selected Value:', this.selectedConditionValue);
+    // console.log('selectedConditionId Value:', this.selectedConditionId);
+    // console.log('Selected Value:', this.selectedConditionValue);
 
     this.getTagConditionalDistribution();
 
@@ -532,7 +566,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         res.result.forEach(m => {
           this.filterConditionValueList.push({ key: m.conditionValue, val: m.conditionName });
         });
-        console.info('this.filterConditionValueList', this.filterConditionValueList)
+        // console.info('this.filterConditionValueList', this.filterConditionValueList)
       }
     });
   }
@@ -564,7 +598,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   // 檢查是否存在清單中
   existsInConditionValueList = (ctl: FormControl): { [key: string]: any } | null => {
-    console.info('ctl', ctl)
+    // console.info('ctl', ctl)
     if ((ctl.dirty || ctl.touched || ctl.valueChanges) && this.conditionValueList) {
       const filterValue = ctl.value?.toLowerCase();
       if (!CommonUtil.isBlank(filterValue) && !this.conditionValueList.some(item => item.val?.toLowerCase() === filterValue)) {
@@ -653,7 +687,6 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       }),
       tap(res => {
         // console.info(res);
-        //this.loadingService.close();
       }),
       finalize(() => {
         this.loadingService.close();
@@ -754,6 +787,8 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       }),
       tap(res => {
         // console.info(res);
+      }),
+      finalize(() => {
         this.loadingService.close();
       })
     ).subscribe(res => {
