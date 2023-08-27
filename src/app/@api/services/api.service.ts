@@ -6,7 +6,7 @@ import { ApiLogicError } from './../error/api-logic-error';
 import { LoadingService } from './loading.service';
 import { ConfigService } from './config.service';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap, timeout } from 'rxjs/operators';
+import { catchError, tap, timeout, switchMap } from 'rxjs/operators';
 import { StorageService } from './storage.service';
 
 @Injectable({
@@ -37,7 +37,7 @@ export class ApiService {
   ) { }
 
   private doSend<T>(
-    method: 'post' | 'get' | 'put' | 'delete' | 'upload',
+    method: 'post' | 'get' | 'put' | 'delete' | 'upload' | 'download',
     url: string,
     requestObj?: any,
     rqParams?: { [key: string]: any }): Observable<ResponseModel<T>> {
@@ -106,6 +106,16 @@ export class ApiService {
 
   doUpload<T>(url: string, requestObj: FormData): Observable<ResponseModel<T>> {
     return this.doSend('upload', url, requestObj);
+  }
+
+  downloadFile(fileData: any): void {
+    const blob = new Blob([fileData], { type: 'application/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'downloaded_file.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 
   download(url: string, requestObj: any): void {

@@ -231,7 +231,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       //console.info('res', res)
     })
 
-    if (this.isMock) {
+    if (true) {
       TagCategoryMock.forEach((category, index) => {
         this.categoryList.push({ key: category.categoryValue, val: category.categoryName });
         this.tempCategoryList.push({ groupId: index + 1, key: category.categoryValue, val: category.categoryName })
@@ -257,8 +257,8 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         this.setData(mockData);
         this.loadingService.close();
         const formData = this.validateForm.getRawValue();
-        this.changeTagType(formData.tagType);
         this.changeConditionSettingMethod(formData.conditionSettingMethod);
+        this.changeTagType(formData.tagType);
         this.dataSource.load(ActivityListMock);
         return;
       }
@@ -320,8 +320,8 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         // console.info(res.result);
         //#region 設定欄位
         const formData = this.validateForm.getRawValue();
-        this.changeTagType(formData.tagType);
         this.changeConditionSettingMethod(formData.conditionSettingMethod);
+        this.changeTagType(formData.tagType);
         //#endregion
       });
 
@@ -339,8 +339,8 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     else {//新增
       //#region 設定欄位
       const formData = this.validateForm.getRawValue();
-      this.changeTagType(formData.tagType);
       this.changeConditionSettingMethod(formData.conditionSettingMethod);
+      this.changeTagType(formData.tagType);
       //#endregion
     }
   }
@@ -350,7 +350,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   }
 
   ngDoCheck() {
-    // console.info('this.findInvalidControls()', this.findInvalidControls())
+    console.info('this.findInvalidControls()', this.findInvalidControls())
     const tagDimension = this.validateForm.get('tagDimension')?.value;
     if (CommonUtil.isNotBlank(tagDimension) && tagDimension != this.beforeCategory) {
       this.beforeCategory = tagDimension;
@@ -651,7 +651,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   //#endregion
 
   //#region 檔案上傳並驗證
-  onFileSelected(event: any) {
+  onUploadFile(event: any) {
     console.log('event', event);
 
     const file: File = event.target.files[0];
@@ -839,7 +839,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
           }) : null,
     });
 
-    // console.info('reqData', reqData)
+     console.info('reqData', reqData)
     return reqData;
   }
 

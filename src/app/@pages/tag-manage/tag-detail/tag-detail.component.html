@@ -61,7 +61,8 @@
             </div>
             <div class="textGroup col-12 col-lg-4" *ngIf="detail?.tagType === 'document'">
                 <p class="text_bold">名單上傳：</p>
-                <a [href]="detail?.fileData" download>{{detail?.fileName}}</a>
+                <a style="color: #26DD84; cursor: pointer;" (click)="onDownloadFile()">{{detail?.fileName}}</a>
+                <!-- <a [href]="detail?.fileData" download>{{detail?.fileName}}</a> -->
             </div>
           </div>
           <div *ngIf="detail?.tagType !== 'document' &&

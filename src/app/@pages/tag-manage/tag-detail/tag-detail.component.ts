@@ -15,6 +15,9 @@ import { catchError, filter, tap } from 'rxjs/operators';
 import { TagManageService } from '../tag-manage.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { ConfigService } from '@api/services/config.service';
+import { FileService } from '@api/services/file.service';
+import { ApiService } from '@api/services/api.service';
+import { FileReq } from '@api/models/file.model';
 
 @Component({
   selector: 'tag-detail',
@@ -34,8 +37,10 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
     storageService: StorageService,
     configService: ConfigService,
     private router: Router,
+    private service: ApiService,
     private activatedRoute: ActivatedRoute,
     private tagManageService: TagManageService,
+    private fileService: FileService,
     private dialogService: DialogService,
     private loadingService: LoadingService,
     private tableService: Ng2SmartTableService,
@@ -132,6 +137,7 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
       filter(res => res.code === RestStatus.SUCCESS),
       tap((res) => {
         this.detail = JSON.parse(JSON.stringify(res.result));
+        console.info('this.detail', this.detail)
         const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistoryAud', res.result as TagSetting); // 異動歷程處理
         if (!!processedData) {
           this.isHistoryOpen = processedData.isHistoryOpen;
@@ -153,6 +159,29 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
     this.restDataSource = this.tableService.searchData(searchInfo);
     //#endregion
   }
+
+  //#region 檔案下載
+  onDownloadFile() {
+    this.detail.fileData = 'test';
+    if (CommonUtil.isBlank(this.detail?.fileData)) {
+      this.dialogService.alertAndBackToList(false, '檔案下載失敗(無識別碼)');
+      return
+    }
+
+    this.fileService.downloadFileService(new FileReq({ fileDataId: this.detail.fileData })).pipe(
+      catchError((err) => {
+        this.dialogService.alertAndBackToList(false, err.message ? err.message : '檔案下載失敗');
+        throw new Error(err.message);
+      }),
+      filter(res => res.code === RestStatus.SUCCESS),
+      tap(res => {
+        console.info('res', res)
+        // this.service.downloadFile(res);
+      })
+    ).subscribe();
+
+  }
+  //#endregion
 
   edit() {
     this.router.navigate(['pages', 'tag-manage', 'tag-set', 'edit', this.detail.tagId]);
