@@ -67,7 +67,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
         width: '30%',
         sort: false,
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
+          return `<p class="left">${!!cell ? cell : ''}</p>`;
         },
       },
       filterOptions: {

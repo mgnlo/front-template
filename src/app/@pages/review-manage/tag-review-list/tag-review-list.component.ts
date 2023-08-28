@@ -103,7 +103,7 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
         width: '20%',
         class: 'left',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
+          return `<p class="left">${!!cell ? cell : ''}</p>`;
         },
         sort: false,
       },

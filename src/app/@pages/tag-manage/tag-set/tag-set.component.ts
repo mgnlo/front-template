@@ -140,7 +140,7 @@ export class TagAddComponent extends BaseComponent implements OnInit {
         class: 'col-3 left',
         sort: false,
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
+          return `<p class="left">${!!cell ? cell : ''}</p>`;
         },
       },
       department: {

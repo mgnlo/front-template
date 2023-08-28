@@ -73,12 +73,12 @@
             </div>
             <div class="row">
               <div class="textGroup code col-12">
-                  <p class="text_bold">偵測條件：</p>
+                  <p class="text_bold" [ngClass]="changeClass('conditionSettingMethod') | enum: 'reviewCompareClass'">偵測條件：</p>
                   <span *ngIf="detail?.conditionSettingMethod === 'field'">{{detail?.tagConditionSetting?.[0]?.conditionValue}}</span>
                   <pre *ngIf="detail?.conditionSettingMethod === 'normal'">{{detail?.conditionSettingQuery}}</pre>
               </div>
               <!-- 灰底區塊 -->
-              <div class="colorArea col-12" *ngIf="detail?.conditionSettingMethod === 'field'">
+              <div class="colorArea col-12" *ngIf="detail?.conditionSettingMethod === 'field'" [ngClass]="changeClass('tagConditionSetting') | enum: 'bgClass'">
                 <div class="row">
                   <div *ngFor="let tagCondition of detail?.tagConditionSetting">
                     <div class="textGroup gather">

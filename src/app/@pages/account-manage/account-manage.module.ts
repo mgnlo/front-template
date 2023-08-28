@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule } from '@common/common.module';
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ComponentModule } from "@component/component.module";
@@ -21,8 +21,6 @@ export const NB_MODULES = [
     NbInputModule,
     NbButtonModule,
     NbSelectModule,
-    NbDatepickerModule,
-    NbDateFnsDateModule.forChild({ format: 'yyyy/MM/dd' }),
     NbDialogModule.forChild(),
     NbTagModule,
     NbAccordionModule,

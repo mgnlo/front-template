@@ -3,13 +3,14 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 @Component({
   selector: 'checkbox-column',
   template: `
-    <nb-checkbox *ngIf="showCheckbox()" status="info" [checked]="settings?.isChecked" (change)="onCheckboxChange()"></nb-checkbox>
+    <nb-checkbox *ngIf="showCheckbox()" status="info" [checked]="settings?.isChecked" (change)="onCheckboxChange()" [disabled]="settings?.disable"></nb-checkbox>
   `,
 })
 export class CheckboxColumnComponent {
   @Input() settings: {
     isChecked?: boolean;
-    isShowParam?: { key: string; answer: string[] };
+    disable?: boolean;
+    isShowParam?: { key: string; answer?: string[] };
     isCheckedParam?: { key: string };
     rowIdName?: string;
     selectedRows?: any[];
@@ -23,7 +24,8 @@ export class CheckboxColumnComponent {
 
   showCheckbox(): boolean {
     const isShowParam = this.settings?.isShowParam;//是否要顯示CheckBox框
-    const isShow = isShowParam?.answer && isShowParam.answer.some(answer => answer?.toLowerCase() === this.rowData[isShowParam.key]?.toLowerCase());
+    let isShow = !isShowParam.answer && !!isShowParam.key ? this.rowData.hasOwnProperty(isShowParam.key) :
+      isShowParam?.answer && isShowParam.answer.some(answer => answer?.toLowerCase() === this.rowData[isShowParam.key]?.toLowerCase());
     this.rowData['isShow'] = isShow;
     return isShow;
   }

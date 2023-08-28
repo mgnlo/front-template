@@ -1,0 +1,41 @@
+<div class="pageTitle">
+    <h1>權限管理</h1>
+</div>
+<div class="pageContent">
+    <nb-card>
+        <nb-card-header>
+            <h2>{{actionName}}權限</h2>
+        </nb-card-header>
+        <nb-card-body [formGroup]="validateForm">
+            <div class="row">
+                <basic-input class="col-12 col-lg-6" title="權限名稱" [form]="validateForm" ctlName="groupName" [maxlength]="20"></basic-input>
+                <radio class="col-12 col-lg-6" title="狀態" [form]="validateForm" ctlName="enable" enumName="filter"></radio>           
+            </div>
+            <div class="subTitle">
+                <p>權限內容</p>
+            </div>
+            <nb-card-body>     
+                <ng2-smart-table [settings]="gridDefine2" [source]="dataSource2"></ng2-smart-table>
+            </nb-card-body>
+        </nb-card-body>
+    </nb-card>
+    <nb-card *ngIf="changeRouteName !== undefined">
+        <nb-card-header>
+            <h2>已授權使用者列表</h2>
+        </nb-card-header>
+        <nb-card-body>
+            <div class="noteText">
+                <nb-icon icon="info-outline"></nb-icon>
+                <p>移除此權限後將該使用者權限預設為「一般使用者」。</p>
+            </div>
+            <ng2-smart-table [settings]="gridDefine" [source]="dataSource" (deleteConfirm)="onDeleteConfirm($event)"></ng2-smart-table>
+            <paginator [source]="dataSource" [paginator]="paginator"></paginator>
+        </nb-card-body>
+    </nb-card>
+    <div class="row">
+        <div class="btnGroup">
+            <button nbButton status="basic" size="medium" (click)="cancel()">取消</button>
+            <button nbButton status="primary" size="medium" (click)="send()" [disabled]="validateForm.invalid">新增</button>
+        </div>
+    </div>
+</div>

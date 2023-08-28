@@ -81,7 +81,7 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
         sort: false,
         width: '25%',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
+          return `<p class="left">${!!cell ? cell : ''}</p>`;
         },
       },
       filterOptions: {

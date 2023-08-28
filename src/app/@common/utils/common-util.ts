@@ -123,12 +123,35 @@ export const CommonUtil = {
     })
     return result;
   },
-  /** 將flat資料group */
-  groupBy<T>(datas: T[], key: string) {
+  /** 將flat資料group
+   * @param datas 要分類的data
+   * @param key group by的key
+   * @param keepKey 是否保留group by的key在裡面的item
+  */
+  groupBy<T>(datas: T[], key: string, keepKey?: boolean) {
+    let keep = keepKey === undefined ? true : keepKey;
     return datas.reduce(function (group, data) {
-      (group[data[key]] = group[data[key]] || []).push(data);
+      let tmpData = Object.assign({}, data);
+      if (!keep) { delete tmpData[key]; }
+      (group[data[key]] = group[data[key]] || []).push(tmpData);
       return group;
     }, {});
+  },
+  /** 將group好的資料flat
+   * @param datas 要flat的data
+   * @param keepName group的key名稱
+  */
+  flatGroupItem(datas: {}, keyName: string) {
+    let arr = [];
+    Object.keys(datas).forEach(key => {
+      let flatItem = datas[key].reduce(function (group, data) {
+        group[keyName] = key;
+        Object.entries(data).forEach(([k, v]) => (group[k] = v));
+        return group;
+      }, {})
+      arr.push(flatItem)
+    })
+    return arr;
   },
   /** 取得歷程資料 */
   getHistoryProcessData<T>(reviewHistory: string, data: T): any {

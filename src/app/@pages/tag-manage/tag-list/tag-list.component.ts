@@ -87,7 +87,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
         class: 'left',
         width: '24%',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
+          return `<p class="left">${!!cell ? cell : ''}</p>`;
         },
         sort: false,
       },

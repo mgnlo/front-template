@@ -9,51 +9,13 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class AccountManageService {
 
-    public readonly CONSOLE_GROUP_LIST_PATH = ['pages', 'account-manage', 'console-group-list'];
-    public readonly CONSOLE_GROUP_DETAIL_PATH = ['pages', 'account-manage', 'console-group-detail'];
-    public readonly CONSOLE_GROUP_EDIT_PATH = ['pages', 'account-manage', 'console-group-edit'];
-    public readonly CONSOLE_GROUP_ADD_PATH = ['pages', 'account-manage', 'console-group-add'];
-
     readonly consoleUserFunc = 'console-user/';
     readonly consoleGroupFunc = 'console-group/';
+    readonly CONSOLE_GROUP_LIST_PATH = ['pages', 'account-manage', 'console-group-list'];
+    readonly CONSOLE_GROUP_DETAIL_PATH = ['pages', 'account-manage', 'console-group-detail'];
+    readonly CONSOLE_GROUP_SET_PATH = ['pages', 'account-manage', 'console-group-set'];
 
-    //ConsoleGroupListCache，做為返回取消 cache 用途
-    private consoleGroupLiistCahce: string;
-
-    public setConsoleGroupListCache(cache: any) {
-        this.consoleGroupLiistCahce = JSON.stringify(cache);
-    }
-
-    public getConsoleGroupListCache() {
-        let cache = null;
-
-        if (this.consoleGroupLiistCahce) {
-            cache = JSON.parse(this.consoleGroupLiistCahce);
-            this.consoleGroupLiistCahce = null;
-        }
-
-        return cache;
-    }
-
-    //ConsoleGroupDetailCache
-    public consoleGroupDetailCache: string;
-
-    public setConsoleGroupDetailCache(cache: any) {
-        this.consoleGroupDetailCache = JSON.stringify(cache);
-    }
-
-    public getConsoleGroupDetailCache() {
-        let cache = null;
-
-        if (this.consoleGroupDetailCache) {
-            cache = JSON.parse(this.consoleGroupDetailCache);
-            this.consoleGroupDetailCache = null;
-        }
-
-        return cache;
-    }
-
-    public createDefaultScopeGridInnerCheckBoxs(): Array<GridInnerCheckBox> {
+    createDefaultScopeGridInnerCheckBoxs(): Array<GridInnerCheckBox> {
         return [
             { featureName: "dashboard", read: false },
             { featureName: "customer", read: false },
@@ -68,22 +30,18 @@ export class AccountManageService {
             { featureName: "console-group", read: false, create: false, update: false, delete: false }
         ];
     }
-
-
-    constructor(private service: ApiService, dialogService: DialogService) { }
-
-    // 6.1 取得所有使用者：GET /api/console-user
-    // List<ConsoleUser> with ConsoleGroup
-    // 用於當無任何查詢條件參數時使用
-    getAllConsoleUser(): Observable<ResponseModel<Array<ConsoleUser>>> {
-        return this.service.doGet(this.consoleUserFunc);
+    
+    updateCheckbox(target: GridInnerCheckBox[], source: GridInnerCheckBox[]) {
+        target.forEach(targetRow => {
+            let sourceRow = source.find(row => row.featureName === targetRow.featureName);
+            if (!sourceRow) { return; }
+            Object.keys(sourceRow).filter(key => key !== 'featureName').forEach(key => {
+                targetRow[key] = sourceRow[key];
+            });
+        });
     }
 
-    // 6.2 搜尋使用者：GET /api/console-user?filterField=filterValue
-    // List<ConsoleUser> with ConsoleGroup
-    getConsoleUser(reqData: ConsoleUserReq): Observable<ResponseModel<Array<ConsoleUser>>> {
-        return this.service.doGet(this.consoleUserFunc, reqData);
-    }
+    constructor(private service: ApiService) { }
 
     // 6.7 更新使用者：PUT /api/console-user/{userId}
     // reqBody ConsoleUser with ConsoleGroup
@@ -94,7 +52,7 @@ export class AccountManageService {
     // 7.1 取得所有群組：GET /api/console-group     
     // response List<ConsoleGroup>
     getConsoleGroupList(size?: number): Observable<ResponseModel<Array<ConsoleGroup>>> {
-        return !!size ? this.service.doGet(this.consoleGroupFunc, {size}) : this.service.doGet(this.consoleGroupFunc);
+        return !!size ? this.service.doGet(this.consoleGroupFunc, { size }) : this.service.doGet(this.consoleGroupFunc);
     }
 
     // 7.2 取得群組設定：GET /api/console-group/{groupId}

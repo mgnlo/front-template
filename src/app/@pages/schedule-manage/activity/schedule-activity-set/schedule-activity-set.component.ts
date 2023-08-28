@@ -102,7 +102,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'col-3 left',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
+          return `<p class="left">${!!cell ? cell : ''}</p>`;
         },
         sort: false,
       },

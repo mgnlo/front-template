@@ -8,6 +8,7 @@ import { Observable } from "rxjs";
 export class CustomerManageService {
 
     readonly activityFunc = 'activity-settings/';
+    readonly customerFunc = 'customer/';
 
     constructor(private service: ApiService) { }
 

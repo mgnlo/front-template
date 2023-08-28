@@ -16,7 +16,7 @@
     <div class="row">
         <div class="btnGroup">
             <button nbButton status="basic" size="medium" (click)="reset()">清除</button>
-            <button nbButton status="primary" size="medium" (click)="search()" [disabled]="validateForm.invalid">查詢</button>
+            <button nbButton status="primary" size="medium" (click)="search('search')" [disabled]="validateForm.invalid">查詢</button>
         </div>
     </div>
     <hr/>
@@ -25,8 +25,10 @@
             <h2>用戶列表</h2>
         </nb-card-header>
         <nb-card-body>
-            <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
-            <paginator [source]="dataSource" [paginator]="paginator"></paginator>
+            <ng2-smart-table *ngIf="!!restDataSource" [settings]="gridDefine" [source]="restDataSource"></ng2-smart-table>
+            <paginator *ngIf="!!restDataSource" [source]="restDataSource" [paginator]="paginator"></paginator>
+            <ng2-smart-table *ngIf="!!dataSource" [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
+            <paginator *ngIf="!!dataSource" [source]="dataSource" [paginator]="paginator"></paginator>
         </nb-card-body>
     </nb-card>
 </div>

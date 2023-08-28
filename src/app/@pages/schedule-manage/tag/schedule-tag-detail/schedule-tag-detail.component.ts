@@ -63,7 +63,7 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
         class: 'left',
         width: '27.5%',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
+          return `<p class="left">${!!cell ? cell : ''}</p>`;
         },
         sort: false,
       },

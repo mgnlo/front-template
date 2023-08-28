@@ -1,17 +1,21 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ConsoleGroup, GridInnerCheckBox } from '@api/models/console-group.model';
-import { ConsoleUser } from '@api/models/console-user.model';
-import { NbDateService } from '@nebular/theme';
-import { BaseComponent } from '@pages/base.component';
-import * as moment from 'moment';
-import { LocalDataSource } from 'ng2-smart-table';
-import { AccountManageService } from '../account.manage.service';
-import { BusinessUnit } from '@common/enums/console-user-enum';
+import { ConfigService } from '@api/services/config.service';
+import { DialogService } from '@api/services/dialog.service';
+import { LoadingService } from '@api/services/loading.service';
+import { LoginService } from '@api/services/login.service';
+import { Ng2SmartTableService } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { GroupScope } from '@common/enums/console-group-enum';
-import { ConfigService } from '@api/services/config.service';
-import { LoginService } from '@api/services/login.service';
+import { BusinessUnit } from '@common/enums/console-user-enum';
+import { RestStatus } from '@common/enums/rest-enum';
+import { CommonUtil } from '@common/utils/common-util';
+import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/checkbox.component';
+import { BaseComponent } from '@pages/base.component';
+import { LocalDataSource } from 'ng2-smart-table';
+import { catchError, filter, tap } from 'rxjs/operators';
+import { AccountManageService } from '../account.manage.service';
 
 @Component({
   selector: 'console-group-detail',
@@ -21,6 +25,8 @@ import { LoginService } from '@api/services/login.service';
 export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit {
   consoleGroupDetail: ConsoleGroup;
   consoleGroupScope: Array<GridInnerCheckBox> = this.accountManageService.createDefaultScopeGridInnerCheckBoxs();
+  groupId: string;
+  sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
 
   dataSource2: LocalDataSource;
   gridDefine2 = {
@@ -42,36 +48,44 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
         title: '查看',
         type: 'custom',
         class: 'col-1',
-        valuePrepareFunction: (cell, row: GridInnerCheckBox) => row.read,
-        renderComponent: ConsoleGroupDetailCheckboxComponent,
+        renderComponent: CheckboxColumnComponent,
+        onComponentInitFunction: (instance: CheckboxColumnComponent) => {
+          instance.settings = { isShowParam: { key: 'read' }, isCheckedParam: { key: 'read' }, disable: true };
+        },
         sort: false,
       },
       create: {
         title: '新增',
         type: 'custom',
         class: 'col-1',
-        valuePrepareFunction: (cell, row: GridInnerCheckBox) => row.create,
-        renderComponent: ConsoleGroupDetailCheckboxComponent,
+        renderComponent: CheckboxColumnComponent,
+        onComponentInitFunction: (instance: CheckboxColumnComponent) => {
+          instance.settings = { isShowParam: { key: 'create' }, isCheckedParam: { key: 'create' }, disable: true };
+        },
         sort: false,
       },
       update: {
         title: '編輯',
         type: 'custom',
         class: 'col-1',
-        valuePrepareFunction: (cell, row: GridInnerCheckBox) => row.update,
-        renderComponent: ConsoleGroupDetailCheckboxComponent,
+        renderComponent: CheckboxColumnComponent,
+        onComponentInitFunction: (instance: CheckboxColumnComponent) => {
+          instance.settings = { isShowParam: { key: 'update' }, isCheckedParam: { key: 'update' }, disable: true };
+        },
         sort: false,
       },
       delete: {
         title: '刪除',
         type: 'custom',
         class: 'col-1',
-        valuePrepareFunction: (cell, row: GridInnerCheckBox) => row.delete,
-        renderComponent: ConsoleGroupDetailCheckboxComponent,
+        renderComponent: CheckboxColumnComponent,
+        onComponentInitFunction: (instance: CheckboxColumnComponent) => {
+          instance.settings = { isShowParam: { key: 'delete' }, isCheckedParam: { key: 'delete' }, disable: true };
+        },
         sort: false,
       }
     },
-    hideSubHeader: false,
+    hideSubHeader: true,
     actions: {
       add: false,
       edit: false,
@@ -98,23 +112,23 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
         title: '姓名',
         type: 'string',
         class: 'col-2',
-        valuePrepareFunction: (cell, row: any) => cell,
         sort: false,
       },
       email: {
         title: '電子郵件',
-        type: 'string',
-        class: 'col-6',
-        valuePrepareFunction: (cell, row: any) => cell,
+        type: 'html',
+        class: 'col-6 left',
+        valuePrepareFunction: (cell: string) => {
+          return `<p class="left">${cell}</p>`;
+        },
         sort: false,
       },
       businessUnit: {
         title: '所屬單位',
-        type: 'html',
+        type: 'string',
         class: 'col-2',
-        // valuePrepareFunction: (cell, row: any) => cell,
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${BusinessUnit[cell]}</p>`;
+          return `${BusinessUnit[cell]}`;
         },
         sort: false,
       }
@@ -138,8 +152,10 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
     private router: Router,
     private loginService: LoginService,
     private accountManageService: AccountManageService,
-    private activatedRoute: ActivatedRoute,
-    private dateService: NbDateService<Date>) {
+    private loadingService: LoadingService,
+    private tableService: Ng2SmartTableService,
+    private dialogService: DialogService,
+    private activatedRoute: ActivatedRoute) {
     super(storageService, configService);
     this.dataSource = new LocalDataSource();
     this.dataSource2 = new LocalDataSource();
@@ -148,101 +164,44 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
   }
 
   ngOnInit(): void {
-    let cache = this.accountManageService.getConsoleGroupDetailCache();
-
-    if (this.activatedRoute.snapshot.queryParamMap.get("restore") && cache) {
-      // 返回頁面，需要 restore 資料與狀態
-      this.consoleGroupDetail = cache.consoleGroupDetail;
-
-      for (let scopeObj of this.consoleGroupScope) {
-        let keyList = Object.keys(scopeObj);
-
-        for (let idx = 1; idx < keyList.length; idx++) {
-          scopeObj[keyList[idx]] =
-            (this.consoleGroupDetail.consoleGroupScope.filter(item => item.scope == `${scopeObj[keyList[0]]}.${keyList[idx]}`).length > 0 ? true : false);
+    const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
+    this.groupId = !!this.activatedRoute.snapshot.params.groupId ? this.activatedRoute.snapshot.params.groupId : getSessionVal.groupId;
+    this.loadingService.open();
+    this.accountManageService.getConsoleGroup(this.groupId).pipe(
+      catchError((err) => {
+        this.loadingService.close();
+        this.dialogService.alertAndBackToList(false, `${err.message}，將為您導回權限管理列表`, this.accountManageService.CONSOLE_GROUP_LIST_PATH)
+        throw new Error(err.message);
+      }),
+      filter(res => res.code === RestStatus.SUCCESS),
+      tap(res => {
+        this.loadingService.close();
+      })).subscribe(res => {
+        if (!!res.result.consoleGroupScope) {
+          this.consoleGroupDetail = JSON.parse(JSON.stringify(res.result));
+          let scopeInfo = res.result.consoleGroupScope.map((groupScope) => {
+            let scope = groupScope.scope.split(".");
+            return { featureName: scope[0], [scope[1]]: true };
+          });
+          let scopeData = CommonUtil.groupBy(scopeInfo, 'featureName', false);
+          let scopeTableData = CommonUtil.flatGroupItem(scopeData, 'featureName');
+          this.accountManageService.updateCheckbox(this.consoleGroupScope, scopeTableData);
+          this.dataSource2.load(this.consoleGroupScope);
+          this.dataSource.load(this.consoleGroupDetail.consoleUser);
         }
-      }
-
-      this.dataSource.load(this.consoleGroupDetail.consoleUser);
-      this.dataSource2.load(this.consoleGroupScope);
-      requestAnimationFrame(() => {
-        this.dataSource.setPage(cache.page);
-        requestAnimationFrame(() => {
-          document.querySelector("nb-layout-column").scrollTo(0, cache.scrollPosition);
-        });
       });
-    } else {
-      this.consoleGroupDetail = JSON.parse(this.activatedRoute.snapshot.queryParamMap.get("consoleGroupDetail"));
-
-      if (!this.consoleGroupDetail) {
-        //防止瀏覽器 F5，重新導回 list
-        this.router.navigate(this.accountManageService.CONSOLE_GROUP_LIST_PATH).then((res) => {
-          if (res) {
-            window.history.replaceState({}, '', this.router.url.split("?")[0]);
-          };
-        });
-      }
-
-      for (let scopeObj of this.consoleGroupScope) {
-        let keyList = Object.keys(scopeObj);
-
-        for (let idx = 1; idx < keyList.length; idx++) {
-          scopeObj[keyList[idx]] =
-            (this.consoleGroupDetail.consoleGroupScope.filter(item => item.scope == `${scopeObj[keyList[0]]}.${keyList[idx]}`).length > 0 ? true : false);
-        }
-      }
-
-      // 這邊要發查電文取得 ConsoleGroupList 內容
-      this.dataSource.load(this.consoleGroupDetail.consoleUser);
-      this.dataSource2.load(this.consoleGroupScope);
-      document.querySelector("nb-layout-column").scrollTo(0, 0);
-    }
   }
 
   edit() {
-    let passData: NavigationExtras = {};
-
-    passData.queryParams = {
-      consoleGroupDetail: JSON.stringify(this.consoleGroupDetail)
-    };
-    this.router.navigate(this.accountManageService.CONSOLE_GROUP_EDIT_PATH, passData).then((res) => {
-      if (res) {
-        window.history.replaceState({}, '', this.router.url.split("?")[0]);
-        this.accountManageService.setConsoleGroupDetailCache({
-          scrollPosition: document.querySelector("nb-layout-column").scrollTop,
-          page: this.dataSource.getPaging().page,
-          consoleGroupDetail: this.consoleGroupDetail
-        });
-      };
-    });
+    this.router.navigate(['pages', 'account-manage', 'console-group-set', 'edit', this.groupId]);
   }
 
   copy() {
-    let passData: NavigationExtras = {};
-
-    passData.queryParams = {
-      mode: 'copy',
-      consoleGroupScope: JSON.stringify(this.consoleGroupScope)
-    };
-    this.router.navigate(this.accountManageService.CONSOLE_GROUP_ADD_PATH, passData).then((res) => {
-      if (res) {
-        window.history.replaceState({}, '', this.router.url.split("?")[0]);
-      };
-    });
+    this.router.navigate(['pages', 'account-manage', 'console-group-set', 'copy', this.groupId]);
   }
-}
 
-@Component({
-  selector: 'console-group-detail-checkbox',
-  template: '<nb-checkbox *ngIf="bool != undefined" [checked]="bool" disabled status="basic"></nb-checkbox>'
-})
-export class ConsoleGroupDetailCheckboxComponent implements OnInit {
-  @Input() value: boolean;
-  bool: boolean;
-
-  constructor() { }
-
-  ngOnInit(): void {
-    this.bool = this.value;
+  ngOnDestroy() {
+    let sessionData = { page: this.paginator.nowPage, groupId: this.groupId };
+    this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
 }
