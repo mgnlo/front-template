@@ -1,0 +1,9 @@
+.noteText{
+  flex-wrap: wrap;
+  p{
+    width: 90%;
+    &:not(:first-of-type){
+      padding-left: 2rem;
+    }
+  }
+}
