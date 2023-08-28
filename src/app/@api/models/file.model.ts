@@ -8,5 +8,4 @@ export class FileReq {
 
 export class FileResp {
   fileDataId: string;
-  fileData: string;
 }

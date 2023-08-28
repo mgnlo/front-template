@@ -381,7 +381,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   //#region 標籤類型 更動時切換驗證
   changeTagType(key: string) {
-    this.validateForm.get('fileName').patchValue('');
+    this.validateForm?.get('fileName')?.patchValue('');
     this.removeFieldIfExists('fileName');
     this.removeFieldIfExists('conditionSettingMethod');
     this.removeFieldIfExists('conditionSettingQuery');
@@ -658,11 +658,11 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     const fileValidatorResult = this.fileValidator(file);
     if (fileValidatorResult !== null) {
       this.validateForm?.get('fileName')?.setErrors(fileValidatorResult);
-      this.validateForm.get('fileName').patchValue('');
+      this.validateForm?.get('fileName')?.patchValue('');
       return
     }
 
-    this.validateForm.get('fileName').patchValue(file?.name);
+    this.validateForm?.get('fileName')?.patchValue(file?.name);
     this.uploadFileName = CommonUtil.getFileNameWithoutExtension(file?.name);
     this.uploadType = file?.type?.split('/')?.[1] ? file?.type?.split('/')?.[1] : CommonUtil.getFileExtension(file?.name);
 
