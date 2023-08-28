@@ -17,8 +17,8 @@
     </nb-card>
     <div class="row">
         <div class="btnGroup">
-            <button nbButton status="basic" size="medium" (click)="reset()">清除</button>
-            <button nbButton status="primary" size="medium" (click)="search('search')" [disabled]="validateForm.invalid">查詢</button>
+            <button nbButton status="basic" size="medium" (click)="reset()">清 除</button>
+            <button nbButton status="primary" size="medium" (click)="search('search')" [disabled]="validateForm.invalid">查 詢</button>
         </div>
     </div>
     <hr/>
@@ -27,7 +27,7 @@
             <h2>活動列表</h2>
         </nb-card-header>
         <nb-card-body>
-            <div class="rightBox"><button nbButton status="primary" size="medium" (click)="add()">新增</button></div>
+            <div class="rightBox"><button nbButton status="primary" size="medium" (click)="add()">新 增</button></div>
             <ng2-smart-table *ngIf="!!restDataSource" [settings]="gridDefine" [source]="restDataSource"></ng2-smart-table>
             <paginator *ngIf="!!restDataSource" [source]="restDataSource" [paginator]="paginator"></paginator>
             <ng2-smart-table *ngIf="!!dataSource" [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>

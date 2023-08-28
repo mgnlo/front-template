@@ -37,8 +37,8 @@
       <div>
         <div class="rightBox" *ngIf="!this?.gridDefine?.columns?.['isChecked']"><button nbButton status="primary" size="medium" (click)="setGridDefineInit()">手動更新</button></div>
         <div class="rightBox" *ngIf="this?.gridDefine?.columns?.['isChecked']">
-          <button nbButton status="basic" size="medium" (click)="setGridDefineInit()">取消</button>
-          <button nbButton status="primary" size="medium" (click)="submitRefresh()">確定</button>
+          <button nbButton status="basic" size="medium" (click)="setGridDefineInit()">取 消</button>
+          <button nbButton status="primary" size="medium" (click)="submitRefresh()">確 定</button>
         </div>
         <div class="tableContainer">
           <div class="selectAll" *ngIf="this?.gridDefine?.columns?.['isChecked']">
@@ -83,7 +83,7 @@
   </nb-card>
   <div class="row">
       <div class="btnGroup">
-          <button nbButton status="basic" size="medium" (click)="cancel()">返回</button>
+          <button nbButton status="basic" size="medium" (click)="cancel()">返 回</button>
       </div>
   </div>
 </div>
