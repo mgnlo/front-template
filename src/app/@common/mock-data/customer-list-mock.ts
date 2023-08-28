@@ -1,20 +1,20 @@
-import { CustomerList } from "@api/models/customer-list.model";
+import { Customer } from "@api/models/customer-list.model";
 
-export const CustomerListMock: Array<CustomerList> = [
+export const CustomerListMock: Array<Customer> = [
   {
     customerId: 'A130864804',
     userName: '唐XX',
     mobile: '0916169386',
-    userTag: [
-      {tagTitle:'近一個月_基金定期定額手續費-高', tagRule:'近一個基金交易手續費大於等於3,000'},
-      {tagTitle:'近三個月_基金手續費-低', tagRule: '近三個月基金交易手續費小於100'},
-      {tagTitle:'已婚', tagRule: '已婚'},
-      {tagTitle:'近一個月_基金定期定額手續費-高', tagRule:'近一個基金交易手續費大於等於3,000'},
-      {tagTitle:'近三個月_基金手續費-低', tagRule: '近三個月基金交易手續費小於100'},
-      {tagTitle:'已婚', tagRule: '已婚'},
-      {tagTitle:'近一個月_基金定期定額手續費-高', tagRule:'近一個基金交易手續費大於等於3,000'},
-      {tagTitle:'近三個月_基金手續費-低', tagRule: '近三個月基金交易手續費小於100'},
-      {tagTitle:'已婚', tagRule: '已婚'},
+    tagSetting: [
+      {tagName:'近一個月_基金定期定額手續費-高', tagDescription:'近一個基金交易手續費大於等於3,000'},
+      {tagName:'近三個月_基金手續費-低', tagDescription: '近三個月基金交易手續費小於100'},
+      {tagName:'已婚', tagDescription: '已婚'},
+      {tagName:'近一個月_基金定期定額手續費-高', tagDescription:'近一個基金交易手續費大於等於3,000'},
+      {tagName:'近三個月_基金手續費-低', tagDescription: '近三個月基金交易手續費小於100'},
+      {tagName:'已婚', tagDescription: '已婚'},
+      {tagName:'近一個月_基金定期定額手續費-高', tagDescription:'近一個基金交易手續費大於等於3,000'},
+      {tagName:'近三個月_基金手續費-低', tagDescription: '近三個月基金交易手續費小於100'},
+      {tagName:'已婚', tagDescription: '已婚'},
     ],
     birthday: '1990-03-15',
     gender: 'F',
@@ -27,15 +27,15 @@ export const CustomerListMock: Array<CustomerList> = [
     customerId: 'A135041919',
     userName: '王XX',
     mobile: '0935547517',
-    userTag: [
-      {tagTitle:'近一個月_換匯_交易金額-高', tagRule:'近三個月換匯交易金額大於等於5,000'},
-      {tagTitle:'近三個月_基金_交易金額-低', tagRule:'近三個月基金交易金額小於等於1,000'},
-      {tagTitle:'已婚', tagRule: '已婚'},
-      {tagTitle:'居住地-北部', tagRule:'現居地址位於北部'},
-      {tagTitle:'近一個月_換匯_交易金額-高', tagRule:'近三個月換匯交易金額大於等於5,000'},
-      {tagTitle:'近三個月_基金_交易金額-低', tagRule:'近三個月基金交易金額小於等於1,000'},
-      {tagTitle:'已婚', tagRule: '已婚'},
-      {tagTitle:'居住地-北部', tagRule:'現居地址位於北部'}
+    tagSetting: [
+      {tagName:'近一個月_換匯_交易金額-高', tagDescription:'近三個月換匯交易金額大於等於5,000'},
+      {tagName:'近三個月_基金_交易金額-低', tagDescription:'近三個月基金交易金額小於等於1,000'},
+      {tagName:'已婚', tagDescription: '已婚'},
+      {tagName:'居住地-北部', tagDescription:'現居地址位於北部'},
+      {tagName:'近一個月_換匯_交易金額-高', tagDescription:'近三個月換匯交易金額大於等於5,000'},
+      {tagName:'近三個月_基金_交易金額-低', tagDescription:'近三個月基金交易金額小於等於1,000'},
+      {tagName:'已婚', tagDescription: '已婚'},
+      {tagName:'居住地-北部', tagDescription:'現居地址位於北部'}
     ],
     birthday: '1985-06-03',
     gender: 'M',
@@ -48,11 +48,11 @@ export const CustomerListMock: Array<CustomerList> = [
     customerId: 'A195295988',
     userName: '康XX',
     mobile: '0969265172',
-    userTag: [
-      {tagTitle:'交易黏著度-高', tagRule:'近三個月換匯交易金額大於等於5,000'},
-      {tagTitle:'交易黏著度-高', tagRule:'近三個月基金交易金額小於等於1,000'},
-      {tagTitle:'居住地-中部', tagRule: '現居地址位於中部'},
-      {tagTitle:'美食愛好者', tagRule:'於各大運送平台(ex: UberEat、Food Panda) 刷卡訂餐5次以上'}
+    tagSetting: [
+      {tagName:'交易黏著度-高', tagDescription:'近三個月換匯交易金額大於等於5,000'},
+      {tagName:'交易黏著度-高', tagDescription:'近三個月基金交易金額小於等於1,000'},
+      {tagName:'居住地-中部', tagDescription: '現居地址位於中部'},
+      {tagName:'美食愛好者', tagDescription:'於各大運送平台(ex: UberEat、Food Panda) 刷卡訂餐5次以上'}
     ],
     birthday: '1995-10-27',
     gender: 'F',
@@ -65,10 +65,10 @@ export const CustomerListMock: Array<CustomerList> = [
     customerId: 'B109170244',
     userName: '鄧XX',
     mobile: '0987967806',
-    userTag: [
-      {tagTitle:'循環信用額度-高', tagRule:'近三個月循環金額大於等於3,000'},
-      {tagTitle:'非信用卡客戶', tagRule:'未於本公司申辦信用卡之用戶'},
-      {tagTitle:'美食愛好者', tagRule:'於各大運送平台(ex: UberEat、Food Panda) 刷卡訂餐5次以上'}
+    tagSetting: [
+      {tagName:'循環信用額度-高', tagDescription:'近三個月循環金額大於等於3,000'},
+      {tagName:'非信用卡客戶', tagDescription:'未於本公司申辦信用卡之用戶'},
+      {tagName:'美食愛好者', tagDescription:'於各大運送平台(ex: UberEat、Food Panda) 刷卡訂餐5次以上'}
     ],
     birthday: '1996-04-19',
     gender: 'F',
@@ -81,11 +81,11 @@ export const CustomerListMock: Array<CustomerList> = [
     customerId: 'B185810128',
     userName: '何XX',
     mobile: '0989381191',
-    userTag: [
-      {tagTitle:'美食愛好者', tagRule:'於各大運送平台(ex: UberEat、Food Panda) 刷卡訂餐5次以上'},
-      {tagTitle:'居住地-南部', tagRule:'現居地址位於南部'},
-      {tagTitle:'交易黏著度-高', tagRule:'近三個月換匯交易金額大於等於5,000'},
-      {tagTitle:'男性', tagRule:'性別為男性'}
+    tagSetting: [
+      {tagName:'美食愛好者', tagDescription:'於各大運送平台(ex: UberEat、Food Panda) 刷卡訂餐5次以上'},
+      {tagName:'居住地-南部', tagDescription:'現居地址位於南部'},
+      {tagName:'交易黏著度-高', tagDescription:'近三個月換匯交易金額大於等於5,000'},
+      {tagName:'男性', tagDescription:'性別為男性'}
     ],
     birthday: '1983-11-01',
     gender: 'M',
@@ -98,11 +98,11 @@ export const CustomerListMock: Array<CustomerList> = [
     customerId: 'C112946963',
     userName: '熊XX',
     mobile: '0929064856',
-    userTag: [
-      {tagTitle:'男性', tagRule:'性別為男性'},
-      {tagTitle:'循環信用額度-高', tagRule:'近三個月循環金額大於等於3,000'},
-      {tagTitle:'居住地-南部', tagRule:'現居地址位於南部'},
-      {tagTitle:'已婚', tagRule: '已婚'},
+    tagSetting: [
+      {tagName:'男性', tagDescription:'性別為男性'},
+      {tagName:'循環信用額度-高', tagDescription:'近三個月循環金額大於等於3,000'},
+      {tagName:'居住地-南部', tagDescription:'現居地址位於南部'},
+      {tagName:'已婚', tagDescription: '已婚'},
     ],
     birthday: '1965-09-22',
     gender: 'M',
@@ -115,11 +115,11 @@ export const CustomerListMock: Array<CustomerList> = [
     customerId: 'C113154540',
     userName: '譚XX',
     mobile: '0922997916',
-    userTag: [
-      {tagTitle:'女性', tagRule:'性別為女性'},
-      {tagTitle:'居住地-北部', tagRule:'現居地址位於北部'},
-      {tagTitle:'非信用卡客戶', tagRule:'未於本公司申辦信用卡之用戶'},
-      {tagTitle:'未婚', tagRule: '未婚'},
+    tagSetting: [
+      {tagName:'女性', tagDescription:'性別為女性'},
+      {tagName:'居住地-北部', tagDescription:'現居地址位於北部'},
+      {tagName:'非信用卡客戶', tagDescription:'未於本公司申辦信用卡之用戶'},
+      {tagName:'未婚', tagDescription: '未婚'},
     ],
     birthday: '1958-03-19',
     gender: 'F',
@@ -132,10 +132,10 @@ export const CustomerListMock: Array<CustomerList> = [
     customerId: 'C119866018',
     userName: '孫XX',
     mobile: '0912345678',
-    userTag: [
-      {tagTitle:'非信用卡客戶', tagRule:'未於本公司申辦信用卡之用戶'},
-      {tagTitle:'美食愛好者', tagRule:'於各大運送平台(ex: UberEat、Food Panda) 刷卡訂餐5次以上'},
-      {tagTitle:'信用狀況-良好', tagRule: '無借貸紀錄或無欠繳紀錄'},
+    tagSetting: [
+      {tagName:'非信用卡客戶', tagDescription:'未於本公司申辦信用卡之用戶'},
+      {tagName:'美食愛好者', tagDescription:'於各大運送平台(ex: UberEat、Food Panda) 刷卡訂餐5次以上'},
+      {tagName:'信用狀況-良好', tagDescription: '無借貸紀錄或無欠繳紀錄'},
     ],
     birthday: '1966-12-25',
     gender: 'M',
@@ -148,10 +148,10 @@ export const CustomerListMock: Array<CustomerList> = [
     customerId: 'C150528007',
     userName: '羅XX',
     mobile: '0978500452',
-    userTag: [
-      {tagTitle:'循環信用額度-低', tagRule:'近三個月循環金額小於3,000'},
-      {tagTitle:'已婚', tagRule:'已婚'},
-      {tagTitle:'消費能力-高', tagRule: '近三個月刷卡累計金額大於等於10,000'},
+    tagSetting: [
+      {tagName:'循環信用額度-低', tagDescription:'近三個月循環金額小於3,000'},
+      {tagName:'已婚', tagDescription:'已婚'},
+      {tagName:'消費能力-高', tagDescription: '近三個月刷卡累計金額大於等於10,000'},
     ],
     birthday: '1980-01-18',
     gender: 'M',
@@ -164,10 +164,10 @@ export const CustomerListMock: Array<CustomerList> = [
     customerId: 'C164346864',
     userName: '趙XX',
     mobile: '0978937402',
-    userTag: [
-      {tagTitle:'未婚', tagRule:'未婚'},
-      {tagTitle:'男性', tagRule:'性別為男性'},
-      {tagTitle:'消費能力-高', tagRule: '近三個月刷卡累計金額大於等於10,000'},
+    tagSetting: [
+      {tagName:'未婚', tagDescription:'未婚'},
+      {tagName:'男性', tagDescription:'性別為男性'},
+      {tagName:'消費能力-高', tagDescription: '近三個月刷卡累計金額大於等於10,000'},
     ],
     birthday: '1994-02-07',
     gender: 'M',
@@ -180,9 +180,9 @@ export const CustomerListMock: Array<CustomerList> = [
     customerId: 'A123456789',
     userName: '高XX',
     mobile: '0912345678',
-    userTag: [
-      {tagTitle:'近三個月_基金定期定額手續費-高', tagRule:'近三個月基金交易手續費大於等於9,000'},
-      {tagTitle:'未婚', tagRule:'未婚'},
+    tagSetting: [
+      {tagName:'近三個月_基金定期定額手續費-高', tagDescription:'近三個月基金交易手續費大於等於9,000'},
+      {tagName:'未婚', tagDescription:'未婚'},
     ],
     birthday: '1978-06-30',
     gender: 'F',
@@ -195,10 +195,10 @@ export const CustomerListMock: Array<CustomerList> = [
     customerId: 'F124491189',
     userName: '胡XX',
     mobile: '0931235217',
-    userTag: [
-      {tagTitle:'近一個月_換匯交易額-高', tagRule:'近三個月換匯交易金額大於等於5,000'},
-      {tagTitle:'近三個月_基金交易金額-低', tagRule:'近三個月基金交易金額小於5,000'},
-      {tagTitle:'居住地-北部', tagRule:'現居地址位於北部'},
+    tagSetting: [
+      {tagName:'近一個月_換匯交易額-高', tagDescription:'近三個月換匯交易金額大於等於5,000'},
+      {tagName:'近三個月_基金交易金額-低', tagDescription:'近三個月基金交易金額小於5,000'},
+      {tagName:'居住地-北部', tagDescription:'現居地址位於北部'},
     ],
     birthday: '1984-07-27',
     gender: 'F',
@@ -211,11 +211,11 @@ export const CustomerListMock: Array<CustomerList> = [
     customerId: 'A126400921',
     userName: '許XX',
     mobile: '0969265172',
-    userTag: [
-      {tagTitle:'交易黏著度-高', tagRule:'近三個月換匯交易金額大於等於5,000'},
-      {tagTitle:'交易黏著度-高', tagRule:'近三個月基金交易金額小於等於1,000'},
-      {tagTitle:'居住地-中部', tagRule:'現居地址位於中部'},
-      {tagTitle:'美食愛好者', tagRule:'於各大運送平台(ex: UberEat、Food Panda) 刷卡訂餐5次以上'},
+    tagSetting: [
+      {tagName:'交易黏著度-高', tagDescription:'近三個月換匯交易金額大於等於5,000'},
+      {tagName:'交易黏著度-高', tagDescription:'近三個月基金交易金額小於等於1,000'},
+      {tagName:'居住地-中部', tagDescription:'現居地址位於中部'},
+      {tagName:'美食愛好者', tagDescription:'於各大運送平台(ex: UberEat、Food Panda) 刷卡訂餐5次以上'},
     ],
     birthday: '1997-08-09',
     gender: 'F',
@@ -228,10 +228,10 @@ export const CustomerListMock: Array<CustomerList> = [
     customerId: 'A237772047',
     userName: '陳XX',
     mobile: '0982614686',
-    userTag: [
-      {tagTitle:'循環信用額度-高', tagRule:'近三個月循環金額大於等於3,000'},
-      {tagTitle:'非信用卡客戶', tagRule:'未於本公司申辦信用卡之用戶'},
-      {tagTitle:'美食愛好者', tagRule:'於各大運送平台(ex: UberEat、Food Panda) 刷卡訂餐5次以上'},
+    tagSetting: [
+      {tagName:'循環信用額度-高', tagDescription:'近三個月循環金額大於等於3,000'},
+      {tagName:'非信用卡客戶', tagDescription:'未於本公司申辦信用卡之用戶'},
+      {tagName:'美食愛好者', tagDescription:'於各大運送平台(ex: UberEat、Food Panda) 刷卡訂餐5次以上'},
     ],
     birthday: '1999-05-14',
     gender: 'F',

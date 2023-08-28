@@ -29,7 +29,7 @@ export class TagConditionSetting {
   version: string;
   groupId: number
   detectionCondition: string;
-  conditionValue: string;
+  conditionKey: string;
   thresholdValue: string;
   joinValue?: string;
 
@@ -69,13 +69,13 @@ export class TagReviewHistory {
 
 //#region 標籤構面
 export class TagCategory {
-  categoryValue: string;
+  categoryKey: string;
   categoryName: string;
   tagTopic: Array<TagTopic>;
 }
 
 export class TagTopic {
-  tagTopicValue: string;
+  tagTopicKey: string;
   tagTopicName: string;
 }
 //#endregion
@@ -147,7 +147,7 @@ export class TagSettingEditReq {
 
 //#region 條件級距線圖表
 export class TagConditionChartLine {
-  conditionValue: string;
+  conditionKey: string;
   conditionName: string;
   conditionDistribution: Array<Conditiondistribution>
 

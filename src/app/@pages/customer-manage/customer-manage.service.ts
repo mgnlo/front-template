@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { ActivitySetting, ActivitySettingEditReq } from "@api/models/activity-list.model";
 import { ResData, ResponseModel } from "@api/models/base.model";
+import { Customer } from "@api/models/customer-list.model";
 import { ApiService } from "@api/services/api.service";
 import { Observable } from "rxjs";
 
@@ -11,6 +12,10 @@ export class CustomerManageService {
     readonly customerFunc = 'customer/';
 
     constructor(private service: ApiService) { }
+
+    getCustomerRow(customerId): Observable<ResponseModel<ResData<Customer>>> {
+        return this.service.doGet(this.customerFunc + customerId);
+    }
 
     getActivitySettingList(): Observable<ResponseModel<ResData<Array<ActivitySetting>>>> {
         return this.service.doGet(this.activityFunc);

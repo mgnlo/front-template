@@ -2,7 +2,7 @@ import { TagConditionChartLine } from "@api/models/tag-manage.model";
 
 export const TagConditionChartLineMock: TagConditionChartLine =
 {
-  "conditionValue": "人數",
+  "conditionKey": "人數",
   "conditionName": "刷卡消費金額",
   "conditionDistribution": [
     {

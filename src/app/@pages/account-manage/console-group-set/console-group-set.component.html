@@ -35,7 +35,7 @@
     <div class="row">
         <div class="btnGroup">
             <button nbButton status="basic" size="medium" (click)="cancel()">取 消</button>
-            <button nbButton status="primary" size="medium" (click)="send()" [disabled]="validateForm.invalid">新 增</button>
+            <button nbButton status="primary" size="medium" (click)="send()" [disabled]="validateForm.invalid">{{btnName}}</button>
         </div>
     </div>
 </div>

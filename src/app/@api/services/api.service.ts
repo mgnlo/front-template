@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ResponseModel } from '@api/models/base.model';
 import { RestStatus } from '@common/enums/rest-enum';
@@ -37,12 +37,13 @@ export class ApiService {
   ) { }
 
   private doSend<T>(
-    method: 'post' | 'get' | 'put' | 'delete' | 'upload' | 'download',
+    method: 'post' | 'get' | 'put' | 'delete' | 'upload',
     url: string,
     requestObj?: any,
     rqParams?: { [key: string]: any }): Observable<ResponseModel<T>> {
 
     let observable: Observable<ResponseModel<T>>;
+
     const resultUrl = this.prefixUrl + url;
     // const requestModel = { requestObj };
 
@@ -67,6 +68,7 @@ export class ApiService {
         observable = this.http.post<ResponseModel<T>>(resultUrl, requestObj);
         break;
     }
+
 
     return observable.pipe(
       timeout(30000),
@@ -106,16 +108,6 @@ export class ApiService {
 
   doUpload<T>(url: string, requestObj: FormData): Observable<ResponseModel<T>> {
     return this.doSend('upload', url, requestObj);
-  }
-
-  downloadFile(fileData: any): void {
-    const blob = new Blob([fileData], { type: 'application/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'downloaded_file.csv';
-    a.click();
-    window.URL.revokeObjectURL(url);
   }
 
   download(url: string, requestObj: any): void {

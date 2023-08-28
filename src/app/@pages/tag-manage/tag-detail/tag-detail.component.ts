@@ -11,13 +11,14 @@ import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
-import { catchError, filter, tap } from 'rxjs/operators';
+import { catchError, filter, tap, finalize } from 'rxjs/operators';
 import { TagManageService } from '../tag-manage.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { ConfigService } from '@api/services/config.service';
 import { FileService } from '@api/services/file.service';
 import { ApiService } from '@api/services/api.service';
-import { FileReq } from '@api/models/file.model';
+import { FileReq, FileResp, FileRespWithBlob } from '@api/models/file.model';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'tag-detail',
@@ -37,6 +38,7 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
     storageService: StorageService,
     configService: ConfigService,
     private router: Router,
+    private http: HttpClient,
     private service: ApiService,
     private activatedRoute: ActivatedRoute,
     private tagManageService: TagManageService,
@@ -162,24 +164,54 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
 
   //#region 檔案下載
   onDownloadFile() {
-    this.detail.fileData = 'test';
+    this.detail.fileData = '7097afed-8fe3-488e-a31d-a7b1bc7c3e5c';
     if (CommonUtil.isBlank(this.detail?.fileData)) {
       this.dialogService.alertAndBackToList(false, '檔案下載失敗(無識別碼)');
       return
     }
 
-    this.fileService.downloadFileService(new FileReq({ fileDataId: this.detail.fileData })).pipe(
-      catchError((err) => {
-        this.dialogService.alertAndBackToList(false, err.message ? err.message : '檔案下載失敗');
-        throw new Error(err.message);
-      }),
-      filter(res => res.code === RestStatus.SUCCESS),
-      tap(res => {
-        console.info('res', res)
-        // this.service.downloadFile(res);
-      })
-    ).subscribe();
+    this.downloadFile(this.detail.fileData)
+  }
+  private httpOptions = {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
+  };
+  downloadFile(fileDataId: string): void {
+    const apiUrl = `http://localhost:8080/portal/webcomm/api/file/download/${fileDataId}`;
 
+    // 發送 GET 請求以下載檔案
+    this.http.get(apiUrl, {
+      responseType: 'blob', // 指定返回類型為 Blob
+      observe: 'response', // 指定觀察完整的 HTTP 響應
+      ...this.httpOptions
+    }).subscribe(
+      (response: any) => {
+        console.info('response', response)
+        debugger
+        const contentDispositionHeader = response.headers.get('Content-Disposition');
+        console.info('contentDispositionHeader', contentDispositionHeader)
+        const fileName = contentDispositionHeader
+          ? contentDispositionHeader.split(';')[1].split('=')[1]
+          : 'downloaded_file';
+
+        const blob = new Blob([response.body], { type: 'application/octet-stream' });
+
+        this.downloadFromBlob(blob, fileName);
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
+
+  private downloadFromBlob(blob: Blob, fileName: string): void {
+    const blobUrl = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(blobUrl);
   }
   //#endregion
 
