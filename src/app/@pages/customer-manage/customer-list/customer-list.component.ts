@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { CustomerList } from '@api/models/customer-list.model';
+import { Customer } from '@api/models/customer-list.model';
 import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
@@ -12,7 +12,6 @@ import { ValidatorsUtil } from '@common/utils/validators-util';
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
-import { LocalDataSource } from 'ng2-smart-table';
 import { CustomerManageService } from '../customer-manage.service';
 import { DetailDialogComponent } from './detail-dialog/detail.dialog.component';
 
@@ -36,11 +35,12 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
     this.validateForm = new FormGroup({
       customerId: new FormControl('', [ValidatorsUtil.searchCustId]),
       mobile: new FormControl('', ValidatorsUtil.number),
+      tagKeyword: new FormControl(''),
     });
     this.sessionKey = this.activatedRoute.snapshot.routeConfig.path;
   }
 
-  mockData: Array<CustomerList> = CustomerListMock;
+  mockData: Array<Customer> = CustomerListMock;
   updateTime: string = moment(new Date()).format('YYYY/MM/DD');
   isSearch: boolean = false;
 
@@ -76,6 +76,7 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
         title: `用戶標籤 (更新時間: ${this.updateTime})`,
         type: 'custom',
         width: '55%',
+        valuePrepareFunction: (cell, row: Customer) => row.tagSetting,
         renderComponent: CustomerListTagComponent,
         sort: false,
       },
@@ -88,7 +89,7 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
           instance.emitter.subscribe((res) => {
             this.dialogService.open(DetailDialogComponent, {
               title: `${res['customerId']}`,
-              dataList: res,
+              datas: res,
             });
           })
         },
@@ -160,16 +161,8 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
 
 @Component({
   selector: 'customer-tag',
-  template: '<div class="tag left"><nb-tag status="info" appearance="filled" size="large" *ngFor="let tag of tags" [text]="tag.tagTitle"></nb-tag></div>'
+  template: '<div class="tag left"><nb-tag status="info" appearance="filled" size="large" *ngFor="let tag of value" [text]="tag.tagName"></nb-tag></div>'
 })
-export class CustomerListTagComponent implements OnInit {
-
-  constructor() { }
-  renderValue: string;
-  @Input() value: Array<string>;
-  tags: { tagTitle: string, tagRule: string }[];
-
-  ngOnInit() {
-    this.tags = JSON.parse(JSON.stringify(this.value));
-  }
+export class CustomerListTagComponent {
+  @Input() value: { tagName: string, tagDescription: string }[];
 }

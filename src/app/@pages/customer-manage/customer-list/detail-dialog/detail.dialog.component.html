@@ -39,18 +39,14 @@
     <div class="rightBox">
       <div class="tagFilter">
         <nb-select placeholder="請選擇標籤所屬單位" [selected]="datas.department" size="small" shape="round" hero>
-            <nb-option [value]="datas.department">標籤所屬單位：{{datas.department}}</nb-option>
-            <nb-option value="1">標籤所屬單位：數位金融處</nb-option>
-            <nb-option value="2">標籤所屬單位：消金業務處</nb-option>
-            <nb-option value="3">標籤所屬單位：財富管理處</nb-option>
-            <nb-option value="4">標籤所屬單位：信用卡暨支付處</nb-option>
+            <nb-option *ngFor="let department of departmentList" [value]="department">標籤所屬單位：{{department}}</nb-option>
         </nb-select>
-    </div>
+      </div>
     </div>
     <div class="tagBlock row">
-      <div class="tagItem col-6 col-lg-6" *ngFor="let tag of datas.userTag">
-          <nb-tag status="info" appearance="filled" [text]="tag.tagTitle"></nb-tag>
-          <p class="tagContent">{{tag.tagRule}}</p>
+      <div class="tagItem col-6 col-lg-6" *ngFor="let tag of datas.tagSetting">
+          <nb-tag status="info" appearance="filled" [text]="tag.tagName"></nb-tag>
+          <p class="tagContent">{{tag.tagDescription}}</p>
       </div>
     </div>
     <div class="subTitle">

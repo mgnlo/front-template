@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CustomerList } from '@api/models/customer-list.model';
+import { Customer } from '@api/models/customer-list.model';
 import { NbDialogRef } from '@nebular/theme';
 
 @Component({
@@ -11,16 +11,16 @@ import { NbDialogRef } from '@nebular/theme';
 export class DetailDialogComponent implements OnInit {
 
   @Input() title: string;
-  @Input() dataList: Array<string>;
+  @Input() datas: Customer;
 
-  datas: CustomerList;
+  departmentList: Array<string>;
+
   constructor(
     protected ref: NbDialogRef<DetailDialogComponent>,
     ) {}
 
   ngOnInit() {
-    this.datas = JSON.parse(JSON.stringify(this.dataList));
-    console.info(this.datas);
+    this.departmentList = this.datas.tagSetting.map(tag => tag.department)
   }
 
   close() {
