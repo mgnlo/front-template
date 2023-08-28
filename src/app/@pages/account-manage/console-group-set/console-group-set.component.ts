@@ -10,6 +10,7 @@ import { GroupScope } from '@common/enums/console-group-enum';
 import { BusinessUnit } from '@common/enums/console-user-enum';
 import { RestStatus } from '@common/enums/rest-enum';
 import { CommonUtil } from '@common/utils/common-util';
+import { ValidatorsUtil } from '@common/utils/validators-util';
 import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/checkbox.component';
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
@@ -41,7 +42,7 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
     super(storageService, configService);
 
     this.validateForm = new FormGroup({
-      groupName: new FormControl(null, Validators.required),
+      groupName: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
       enable: new FormControl('', Validators.required)
     });
   }

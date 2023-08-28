@@ -6,6 +6,11 @@
   </ng-container>
 </div>
 <div class="pageContent">
+  <div class="noteText" [ngClass]="{'alert': reviewStatus === 'rejected'}" *ngIf="reviewStatus !== 'reviewing'">
+      <nb-icon icon="info-outline"></nb-icon>
+      <p>審核結果：{{reviewStatus | enum:'reviewStatus'}}</p><br/>
+      <p *ngIf="reviewStatus === 'rejected'">原因：{{reviewComment}}</p>
+  </div>
   <nb-card>
     <nb-card-body>
       <div class="row">
