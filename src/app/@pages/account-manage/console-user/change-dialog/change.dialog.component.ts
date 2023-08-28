@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ConsoleGroup } from '@api/models/console-group.model';
 import { ConsoleUser } from '@api/models/console-user.model';
 import { DialogService } from '@api/services/dialog.service';
@@ -17,7 +17,7 @@ import { catchError, tap } from 'rxjs/operators';
 export class ChangeDialogComponent implements OnInit {
   @Input() consoleUser: ConsoleUser;
   @Input() consoleGroupList: Array<ConsoleGroup>;
-  groupId: string = '';
+  groupId: string;
 
   constructor(
     protected ref: NbDialogRef<ChangeDialogComponent>,
@@ -30,13 +30,14 @@ export class ChangeDialogComponent implements OnInit {
     // document.querySelector(".option-list").scrollTop = 0;
 
     requestAnimationFrame(() => {
-      this.groupId = this.consoleUser?.consoleGroup.groupId;
+      this.groupId = !!this.consoleUser.consoleGroup?.groupId ? this.consoleUser.consoleGroup.groupId : '';
     });
   }
 
   save() {
     // 需要發送 6.7 電文進行更新
-    this.consoleUser.consoleGroup.groupId = this.groupId;
+    this.consoleUser.consoleGroup = !this.consoleUser.consoleGroup?.groupId ? new ConsoleGroup() : this.consoleUser.consoleGroup;
+    this.consoleUser.consoleGroup['groupId'] = this.groupId;
     this.consoleGroupList.filter((consoleGroup: ConsoleGroup) => {
       if (consoleGroup.groupId == this.groupId) {
         this.consoleUser.consoleGroup = consoleGroup;
@@ -46,6 +47,7 @@ export class ChangeDialogComponent implements OnInit {
     this.accountManageService.updateConsoleUser(this.consoleUser.userId, this.consoleUser).pipe(
       catchError((err) => {
         this.loadingService.close();
+        this.dialogService.alertAndBackToList(false, `${this.consoleUser.account} 權限變更失敗`);
         throw new Error(err.message);
       }),
       tap(res => {

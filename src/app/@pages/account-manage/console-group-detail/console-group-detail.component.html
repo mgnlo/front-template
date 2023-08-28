@@ -7,26 +7,27 @@
         <nb-icon icon="copy-outline"></nb-icon>
     </button>
 </div>
-<div class="pageContent">    
+<div class="pageContent">
     <nb-card>
-        <!-- <nb-card-header>
-            <h2>已授權使用者列表</h2>
-        </nb-card-header> -->
-        
         <nb-card-body>
             <div class="row">
                 <div class="textGroup col-12 col-lg-4">
                     <p>權限名稱：</p>
-                    <span>{{ consoleGroupDetail.groupName }}</span>
+                    <span>{{ consoleGroupDetail?.groupName }}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p>權限狀態：</p>
-                    <span>{{ consoleGroupDetail.enable ? '啟用' : '停用' }}</span>
+                    <span>{{ consoleGroupDetail?.enable + '' | enum:'filter' }}</span>
+                </div>
+                <div class="textGroup col-12 col-lg-4">
+                    <p>異動日期：</p>
+                    <span>{{ consoleGroupDetail?.modificationTime | date:dateFormat }}</span>
                 </div>
             </div>
-            <div class="textGroup col-12 col-lg-4">
-                <p>權限內容：</p>
-                <span></span>
+            <div class="row">
+                <div class="textGroup col-12 col-lg-4">
+                    <p>權限內容：</p>
+                </div>
             </div>
             <ng2-smart-table [settings]="gridDefine2" [source]="dataSource2"></ng2-smart-table>
         </nb-card-body>
@@ -35,8 +36,7 @@
         <nb-card-header>
             <h2>已授權使用者列表</h2>
         </nb-card-header>
-        
-        <nb-card-body>            
+        <nb-card-body>
             <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
             <paginator [source]="dataSource" [paginator]="paginator"></paginator>
         </nb-card-body>

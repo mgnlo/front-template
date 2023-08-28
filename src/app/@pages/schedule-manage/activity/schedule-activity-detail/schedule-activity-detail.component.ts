@@ -71,7 +71,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         class: 'left',
         width: '25%',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
+          return `<p class="left">${!!cell ? cell : ''}</p>`;
         },
         sort: false,
       },

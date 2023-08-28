@@ -6,6 +6,11 @@
   </ng-container>
 </div>
 <div class="pageContent">
+  <div class="noteText" [ngClass]="{'alert': reviewStatus === 'rejected'}" *ngIf="reviewStatus !== 'reviewing'">
+      <nb-icon icon="info-outline"></nb-icon>
+      <p>審核結果：{{reviewStatus | enum:'reviewStatus'}}</p><br/>
+      <p *ngIf="reviewStatus === 'rejected'">原因：{{reviewComment}}</p>
+  </div>
   <nb-card>
     <nb-card-body>
       <div class="row">
@@ -53,14 +58,14 @@
   </nb-card>
   <div class="row" *ngIf="reviewStatus!=='reviewing'">
       <div class="btnGroup">
-          <button nbButton status="basic" size="medium" (click)="cancel()">返回</button>
+          <button nbButton status="basic" size="medium" (click)="cancel()">返 回</button>
       </div>
   </div>
   <div class="row" *ngIf="reviewStatus==='reviewing'">
     <div class="btnGroup">
-        <button nbButton status="basic" size="medium" (click)="cancel()">返回</button>
+        <button nbButton status="basic" size="medium" (click)="cancel()">返 回</button>
         <button nbButton status="danger" size="medium" (click)="send('rejected')">不同意</button>
-        <button nbButton status="info" size="medium" (click)="send('approved')">同意</button>
+        <button nbButton status="primary" size="medium" (click)="send('approved')">同 意</button>
     </div>
   </div>
   <nb-card *ngIf="historyGroupView">

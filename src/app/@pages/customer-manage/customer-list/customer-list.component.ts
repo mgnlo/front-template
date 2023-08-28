@@ -1,15 +1,19 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { CustomerList } from '@api/models/customer-list.model';
 import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
+import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { CustomerListMock } from '@common/mock-data/customer-list-mock';
+import { CommonUtil } from '@common/utils/common-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
+import { CustomerManageService } from '../customer-manage.service';
 import { DetailDialogComponent } from './detail-dialog/detail.dialog.component';
 
 @Component({
@@ -19,21 +23,29 @@ import { DetailDialogComponent } from './detail-dialog/detail.dialog.component';
 })
 export class CustomerListComponent extends BaseComponent implements OnInit {
 
-  constructor(storageService: StorageService, configService: ConfigService, private dialogService: DialogService) {
+  constructor(
+    storageService: StorageService,
+    configService: ConfigService,
+    private dialogService: DialogService,
+    private customerManageService: CustomerManageService,
+    private tableService: Ng2SmartTableService,
+    private activatedRoute: ActivatedRoute,
+  ) {
     super(storageService, configService);
     // 篩選條件
     this.validateForm = new FormGroup({
       customerId: new FormControl('', [ValidatorsUtil.searchCustId]),
       mobile: new FormControl('', ValidatorsUtil.number),
     });
+    this.sessionKey = this.activatedRoute.snapshot.routeConfig.path;
   }
 
   mockData: Array<CustomerList> = CustomerListMock;
   updateTime: string = moment(new Date()).format('YYYY/MM/DD');
+  isSearch: boolean = false;
 
   ngOnInit(): void {
-    this.dataSource = new LocalDataSource();
-    this.dataSource.load(this.mockData);
+    this.search();
   }
 
   gridDefine = {
@@ -92,17 +104,57 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
   };
 
   reset() {
-    this.dataSource.reset();
     this.validateForm.reset({ customerId: '', mobile: '' });
+    this.isSearch = true;
+    this.paginator.nowPage = 1;
+    this.setSessionData();
+    this.search('reset');
   }
 
-  search() {
-    this.dataSource.reset();
-    let filter = this.validateForm.getRawValue();
-    for (const [k, v] of Object.entries(filter).filter(([key, val]) => !!val)) {
-      this.dataSource.addFilter({ field: k, filter: undefined, search: v });
-      this.updateTime = moment(new Date()).format('YYYY/MM/DD');
+  setSessionData() {
+    const filterVal = this.isSearch ? this.validateForm.getRawValue() :
+      this.storageService.getSessionVal(this.sessionKey)?.filter ?? this.validateForm.getRawValue();
+
+    this.setSessionVal({ page: this.paginator.nowPage, filter: filterVal });
+  }
+
+  search(key?: string) {
+
+    if (this.isMock) {
+      this.dataSource.reset();
+      let filter = this.validateForm.getRawValue();
+      for (const [k, v] of Object.entries(filter).filter(([key, val]) => !!val)) {
+        this.dataSource.addFilter({ field: k, filter: undefined, search: v });
+        this.updateTime = moment(new Date()).format('YYYY/MM/DD');
+      }
+      this.dataSource.load(this.mockData);
+      return;
     }
+
+    const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
+
+    this.isSearch = false;
+    if (key === 'search') this.isSearch = true;
+
+    if (['search', 'reset'].includes(key)) this.paginator.nowPage = 1;
+
+    let page = this.paginator.nowPage;
+
+    if (key !== 'search' && !!getSessionVal?.filter) {
+      page = getSessionVal.page;
+      CommonUtil.initializeFormWithSessionData(this.validateForm, getSessionVal);
+    }
+
+    if (key !== 'reset') this.setSessionData();
+
+    let searchInfo: SearchInfo = {
+      apiUrl: this.customerManageService.customerFunc,
+      nowPage: page,
+      filters: this.validateForm.getRawValue(),
+      errMsg: '用戶列表查無資料',
+    }
+
+    this.restDataSource = this.tableService.searchData(searchInfo);
   }
 }
 

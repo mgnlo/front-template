@@ -13,9 +13,18 @@ $scrollbar: #BBC1C5;
 .color_red { color: nb-theme(color-danger-500) !important; }
 .color_green { color: nb-theme(color-success-500) !important; }
 .color_orange { color: nb-theme(color-warning-500) !important; }
-.color_gray { color: #82878B !important; }
+.color_gray { color: $option-color !important; }
 
-.and { margin: 0 5px; }
+// background 
+.bg_blue { background: nb-theme(color-primary-500) !important; }
+.bg_skyBlue { background: nb-theme(color-info-500) !important; }
+.bg_red { background: nb-theme(color-danger-500) !important; }
+.bg_green { background: nb-theme(color-success-500) !important; }
+.bg_orange { background: nb-theme(color-warning-500) !important; }
+.bg_gray { background: $option-color !important; }
+
+
+.and { margin: 0 5px 0 10px; }
 
 // 捲軸樣式
 .nb-theme-default nb-sidebar .scrollable {
@@ -146,6 +155,7 @@ $scrollbar: #BBC1C5;
 .nb-theme-default {
     nb-layout {
         .layout {
+            background-color: #FAFAFA;
             nb-layout-column {
                 position: relative;
                 overflow-y: scroll;
@@ -170,6 +180,7 @@ $scrollbar: #BBC1C5;
         &:hover { color: nb-theme(color-primary-500); }
     }
     nb-card {
+        border: 0;
         nb-card-header, nb-card-body {
             position: relative;
             .row {
@@ -348,13 +359,12 @@ $scrollbar: #BBC1C5;
                     color: $option-color;
                 }
                 &:checked {
-                    ~ .outer-circle {
-                        border-color: nb-theme(color-info-500);
+                    ~ .outer-circle { border-color: nb-theme(color-info-500); }
+                    ~ .inner-circle { background-color: nb-theme(color-info-500); }
+                    ~ .text {
+                        font-weight: bold;
+                        color: nb-theme(color-info-500);
                     }
-                    ~ .inner-circle {
-                        background-color: nb-theme(color-info-500);
-                    }
-                    ~ .text {  color: nb-theme(color-info-500); }
                 }
             }
             .native-input:disabled {
@@ -511,8 +521,10 @@ $scrollbar: #BBC1C5;
                     font-weight: normal;
                     padding: 1rem;
                 }
-                &.active {
+                .tab-text { color: $option-color; }
+                &.active .tab-text {
                     font-weight: bold;
+                    color: nb-theme(color-primary-500);
                 }
             }
         }
@@ -561,8 +573,15 @@ $scrollbar: #BBC1C5;
             font-size: $f14;
             font-weight: bold;
             line-height: 1.2;
-            padding: 0.1875rem 0.75rem;
             margin: 5px;
+            padding: 0.1875rem 0.75rem;
+        }
+        &.size-large {
+            font-size: $f15;
+            font-weight: bold;
+            line-height: 1.2;
+            margin: 5px;
+            padding: 0.375rem 0.9375rem;
         }
         &.appearance-filled.status-basic {
             color: #FFFFFF;
@@ -717,15 +736,12 @@ ul {
     padding: 1.25rem 2rem;
     h1 {
         font-size: $f19;
-        color: nb-theme(color-primary-500);
+        color: nb-theme(color-primary-600);
         line-height: initial;
         margin: 0;
         margin-right: 0.75rem;
     }
-    [nbButton] {
-        margin: 0;
-        &:not(:nth-last-of-type(1)) { margin-right: 0.5rem; }
-    }
+    [nbButton] { margin: 0; }
 }
 .subTitle {
     display: flex;
@@ -1075,16 +1091,14 @@ ul {
             align-items: center;
             button {
                 display: none;
-                nb-icon {
-                    transition: transform 0.3s;
-                }
+                nb-icon { transition: transform 0.3s; }
             }
         }
         h4 {
             position: relative;
             font-size: $f15;
             line-height: initial;
-            color: rgba($color: nb-theme(color-primary-hover), $alpha: 0.6);
+            color: rgba($color: nb-theme(color-info-500), $alpha: 0.6);
             margin: 0;
             padding-left: calc(0.5rem + 20px);
             &:before {
@@ -1107,7 +1121,7 @@ ul {
                 left: calc(0.5rem + 6px);
                 width: 2px;
                 z-index: 0;
-                background: nb-theme(color-primary-hover);
+                background: nb-theme(color-info-500);
             }
         }
         .subItem {
@@ -1118,7 +1132,7 @@ ul {
             padding: 10px 0 0;
             div {
                 p {
-                    color: $option-color;
+                    color: #5D5D5D;
                     line-height: initial;
                 }
                 &:nth-of-type(1) {
@@ -1134,7 +1148,7 @@ ul {
                         top: calc((100% - 8px)/2);
                         z-index: 1;
                         border-radius: 8px;
-                        background: nb-theme(color-primary-hover);
+                        background: nb-theme(color-info-500);
                     }
                 }
                 &:nth-of-type(2) {
@@ -1152,15 +1166,15 @@ ul {
                 left: calc((-0.5rem - 20px)/2);
                 width: 2px;
                 z-index: 0;
-                background: nb-theme(color-primary-hover);
+                background: nb-theme(color-info-500);
             }
         }
         &.active {
             h4 {
-                color: nb-theme(color-primary-hover);
+                color: nb-theme(color-info-500);
                 &:before {
-                    outline: 2.5px solid rgba($color: nb-theme(color-primary-hover), $alpha: 0.3);
-                    background: nb-theme(color-primary-hover);
+                    outline: 2.5px solid rgba($color: nb-theme(color-info-500), $alpha: 0.3);
+                    background: nb-theme(color-info-500);
                 }
             }
         }
@@ -1179,10 +1193,7 @@ ul {
             }
         }
         &:nth-last-of-type(1) {
-            h4 {
-                &:after { bottom: 8px; }
-
-            }
+            h4:after { bottom: 8px; }
             .mainItem {
                 ~ .subItem {
                     &::after { top: -8px; }
@@ -1669,6 +1680,30 @@ table {
         }
     }
 }
+
+// 圖例 樣式
+.legend {
+    display: flex;
+    justify-content: end;
+    margin: 0;
+    padding: 0.5rem;
+    div {
+        display: flex;
+        align-items: center;
+        &:not(:last-child) { margin-right: 10px; }
+        span {
+            width: 1.5rem;
+            height: 0.625rem;
+            border-radius: 2px;
+            margin-right: 5px;
+        }
+        p {
+            font-size: $f10;
+            color: $label-color;
+        }
+    }
+}
+
 // Dialog 樣式
 .dialogCard {
     min-width: 320px;
@@ -1692,7 +1727,7 @@ table {
             font-weight: bold;
         }
     }
-    p { margin-bottom: 0.5rem; }
+    // p { margin-bottom: 0.5rem; }
     @media all and (max-width: 575px) {
         &.small, &.medium, &.large {
             width: 90vw;

@@ -21,6 +21,7 @@ export class DetailButtonComponent<T> implements OnInit {
         case 'historyId':
         case 'scheduleId':
         case 'tagId':
+        case 'groupId':
           return this.value[val];
         default:
           return null;

@@ -116,11 +116,11 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   ) {
     super(storageService, configService);
     this.validateForm = new FormGroup({
-      tagName: new FormControl(null, Validators.required),
+      tagName: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
       status: new FormControl('enabled', Validators.required),
       tagType: new FormControl('normal', Validators.required),
       conditionSettingMethod: new FormControl('normal', Validators.required),
-      fileName: new FormControl(null, Validators.required),
+      fileName: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
       startDate: new FormControl(new Date(), [ValidatorsUtil.dateFmt, Validators.required]),
       endDate: new FormControl(moment(new Date()).add(3, 'months').toDate(), [ValidatorsUtil.dateFmt, Validators.required]),
       tagDimension: new FormControl(null, Validators.required),
@@ -158,7 +158,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         class: 'col-3 left',
         sort: false,
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
+          return `<p class="left">${!!cell ? cell : ''}</p>`;
         },
       },
       department: {

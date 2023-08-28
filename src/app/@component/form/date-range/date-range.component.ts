@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
 import { RegExpUtil } from '@common/utils/reg-exp-util';
 
@@ -14,9 +14,12 @@ export class DateRangeComponent {
   sCtl: FormControl;
   eCtl: FormControl;
 
+  constructor(private cdRef:ChangeDetectorRef){}
+
   ngOnChanges(changes: SimpleChanges) {
     this.sCtl = changes.form.currentValue.get('startDate') as FormControl;
     this.eCtl = changes.form.currentValue.get('endDate') as FormControl;
+    this.cdRef.detectChanges();
   }
 
   getRequired(ctlName: string) {

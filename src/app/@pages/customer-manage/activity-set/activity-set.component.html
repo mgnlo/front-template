@@ -9,14 +9,14 @@
         <nb-card-body [formGroup]="validateForm">
             <div class="row">
                 <basic-input class="col-12 col-lg-6" title="活動名稱" [form]="validateForm" ctlName="activityName"></basic-input>
-                <radio class="col-12 col-lg-6" title="狀態" [form]="validateForm" ctlName="status"></radio>
+                <radio class="col-12 col-lg-6" title="狀態" [form]="validateForm" ctlName="status" status="info"></radio>
             </div>
             <div class="row">
                 <basic-input class="col-12 col-lg-6" title="名單上限" [form]="validateForm" ctlName="listLimit"></basic-input>
                 <div class="fieldGroup col-12 col-lg-6">
                     <label>名單差異過濾</label>
                     <div>
-                        <nb-checkbox status="basic" formControlName="filterOptions">啟用</nb-checkbox>
+                        <nb-checkbox status="basic" formControlName="filterOptions" status="info">啟用</nb-checkbox>
                     </div>
                     <!-- 欄位錯誤訊息 -->
                     <div class="note errorText">
@@ -48,12 +48,12 @@
                                 <nb-option [value]="con.value" [id]="con.key">{{con.value}}</nb-option>
                                 <nb-option value="item2">item2</nb-option>
                             </nb-select>
-                            <span class="and color_green">and</span>
-                            <button nbButton status="danger" *ngIf="!first2 || first2 !== last2" size="tiny" class="iconBtn" (click)="and(i, 'remove', +con.key)">
-                                <nb-icon icon="trash-2-outline"></nb-icon>
-                            </button>
+                            <span class="and" [ngClass]="{'color_red': !first2 || first2 !== last2, 'color_green': last2}">and</span>
                             <button nbButton status="success" *ngIf="last2" size="tiny" class="iconBtn" (click)="and(i, 'add', +con.key)">
                                 <nb-icon icon="plus-outline"></nb-icon>
+                            </button>
+                            <button nbButton status="danger" *ngIf="!first2 || first2 !== last2" size="tiny" class="iconBtn" (click)="and(i, 'remove', +con.key)">
+                                <nb-icon icon="trash-2-outline"></nb-icon>
                             </button>
                         </div>
                         <div class="note errorText">
@@ -67,9 +67,9 @@
     </nb-card>
     <div class="row">
         <div class="btnGroup">
-            <button nbButton status="basic" size="medium" (click)="cancel()">取消</button>
+            <button nbButton status="basic" size="medium" (click)="cancel()">取 消</button>
             <button nbButton status="info" size="medium" (click)="preview()">預覽名單</button>
-            <button nbButton status="primary" size="medium" (click)="submit()" [disabled]="validateForm.invalid">送審</button>
+            <button nbButton status="primary" size="medium" (click)="submit()" [disabled]="validateForm.invalid">送 審</button>
         </div>
     </div>
 </div>

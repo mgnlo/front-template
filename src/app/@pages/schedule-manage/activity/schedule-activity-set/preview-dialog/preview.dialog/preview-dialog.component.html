@@ -30,11 +30,11 @@
   </nb-card-body>
   <nb-card-footer>
     <div class="btnGroup">
-      <button nbButton status="basic" size="medium" (click)="close()">關閉</button>
+      <button nbButton status="basic" size="medium" (click)="close()">關 閉</button>
       <button nbButton status="info" size="medium" (click)="submit()"
               [disabled]="!this.selectedActivityId ||
               validateForm.get('activityName')?.hasError('activityErrMsg') ||
-              validateForm.get('activityName')?.value === ''">送出</button>
+              validateForm.get('activityName')?.value === ''">送 出</button>
     </div>
   </nb-card-footer>
 </nb-card>
