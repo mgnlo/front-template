@@ -48,11 +48,9 @@
     <nb-card-header>
         <h2>排程紀錄</h2>
     </nb-card-header>
-    <nb-card-body>
-        <ng2-smart-table *ngIf="!!restDataSource" [settings]="gridDefine" [source]="restDataSource"></ng2-smart-table>
-        <paginator *ngIf="!!restDataSource" [source]="restDataSource" [paginator]="paginator"></paginator>
-        <ng2-smart-table *ngIf="!!dataSource" [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
-        <paginator *ngIf="!!dataSource" [source]="dataSource" [paginator]="paginator"></paginator>
+    <nb-card-body *ngIf="restDataSource || dataSource as source">
+        <ng2-smart-table [settings]="gridDefine" [source]="source"></ng2-smart-table>
+        <paginator [source]="source" [paginator]="paginator"></paginator>
     </nb-card-body>
   </nb-card>
   <div class="row">
