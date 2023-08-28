@@ -8,11 +8,11 @@ export const TagCategoryMock: Array<TagCategory> = [
     "tagTopic": [
       {
         "tagTopicValue": "topic_value_1_1",
-        "tagTopicName": "子構面1"
+        "tagTopicName": "子構面1_1"
       },
       {
         "tagTopicValue": "topic_value_1_2",
-        "tagTopicName": "子構面2"
+        "tagTopicName": "子構面1_2"
       }
     ]
   },
@@ -22,11 +22,11 @@ export const TagCategoryMock: Array<TagCategory> = [
     "tagTopic": [
       {
         "tagTopicValue": "topic_value_2_1",
-        "tagTopicName": "子構面1"
+        "tagTopicName": "子構面2_1"
       },
       {
         "tagTopicValue": "topic_value_2_2",
-        "tagTopicName": "子構面2"
+        "tagTopicName": "子構面2_2"
       }
     ]
   }

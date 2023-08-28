@@ -669,10 +669,6 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     let formData = new FormData();
     formData.append('fileData', file);
 
-    // this.http.post<any>('http://localhost:8080/portal/webcomm/api/file/upload', formData).subscribe(response => {
-    //   console.log('File uploaded:', response);
-    // });
-
     // console.info('file', file)
     // console.info('uploadType', this.uploadType)
     formData.forEach((value, key) => {
@@ -686,14 +682,8 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         this.validateForm?.get('fileName')?.setErrors({ uploadFileMsg: err.message ? err.message : '檔案上傳失敗' });
         throw new Error(err.message);
       }),
+      filter(res => res.code === RestStatus.SUCCESS),
       tap(res => {
-        console.info(res);
-      }),
-      finalize(() => {
-        this.loadingService.close();
-      })
-    ).subscribe(res => {
-      if (res.code === RestStatus.SUCCESS) {
         const result = JSON.parse(JSON.stringify(res.result)) as FileResp
         const fileId = result.fileDataId;
         if (CommonUtil.isBlank(fileId)) {
@@ -702,8 +692,11 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         }
         this.fileData = fileId;
         this.validateForm?.get('fileName')?.setErrors(null);
-      }
-    });
+      }),
+      finalize(() => {
+        this.loadingService.close();
+      })
+    ).subscribe();
   }
 
   fileValidator(file: File): { [key: string]: any } | null {
@@ -839,7 +832,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
           }) : null,
     });
 
-     console.info('reqData', reqData)
+    console.info('reqData', reqData)
     return reqData;
   }
 
