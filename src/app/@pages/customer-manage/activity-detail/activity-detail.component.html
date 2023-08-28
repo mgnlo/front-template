@@ -1,6 +1,6 @@
 <div class="pageTitle" *ngIf="detail">
     <h1>客群活動名單</h1>
-    <button nbButton [status]="detail.status === 'reviewing' ? 'basic': 'info'" size="tiny" class="iconBtn" (click)="edit()" [disabled]="detail.status === 'reviewing'">
+    <button nbButton [status]="detail.status === 'reviewing' ? 'basic': 'primary'" size="tiny" class="iconBtn" (click)="edit()" [disabled]="detail.status === 'reviewing'">
         <nb-icon icon="edit-outline"></nb-icon>
     </button>
 </div>
@@ -77,7 +77,7 @@
                     <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
                         <div class="mainItem">
                             <h4 (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">{{history.type}}</h4>
-                            <button nbButton ghost status="primary" size="tiny" class="iconBtn" (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">
+                            <button nbButton ghost status="info" size="tiny" class="iconBtn" (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">
                                 <nb-icon icon="arrow-ios-forward"></nb-icon>
                             </button>
                         </div>
@@ -98,7 +98,7 @@
     </nb-card>
     <div class="row">
         <div class="btnGroup">
-            <button nbButton status="basic" size="medium" (click)="cancel()">取 消</button>
+            <button nbButton status="basic" size="medium" (click)="cancel()">返 回</button>
         </div>
     </div>
 </div>

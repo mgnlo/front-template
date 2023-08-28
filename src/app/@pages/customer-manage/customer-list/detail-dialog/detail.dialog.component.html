@@ -1,6 +1,6 @@
 <nb-card class="dialogCard large">
   <nb-card-header>
-    <p>用戶明細資訊-{{title}}</p>
+    <h2>用戶明細資訊-{{title}}</h2>
   </nb-card-header>
   <nb-card-body>
     <div class="row">
@@ -56,11 +56,15 @@
     <div class="subTitle">
       <p>標籤歷程</p>
     </div>
+    <div class="legend">
+      <div><span class="bg_skyBlue"></span><p>規則標籤</p></div>
+      <div><span class="bg_orange"></span><p>名單標籤</p></div>
+    </div>
     <ngx-echarts-timeline-multi-range></ngx-echarts-timeline-multi-range>
   </nb-card-body>
   <nb-card-footer>
       <div class="btnGroup">
-          <button nbButton status="basic" (click)="close()">關閉</button>
+          <button nbButton status="basic" (click)="close()">關 閉</button>
       </div>
   </nb-card-footer>
 </nb-card>

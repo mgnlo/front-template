@@ -1,6 +1,6 @@
 <div class="pageTitle" *ngIf="this.detail">
   <h1>排程管理</h1>
-  <button nbButton [status]="this.detail.status === 'reviewing' ? 'basic' : 'info'" size="tiny" class="iconBtn" (click)="edit()" [disabled]="this.detail.status === 'reviewing'">
+  <button nbButton [status]="this.detail.status === 'reviewing' ? 'basic' : 'primary'" size="tiny" class="iconBtn" (click)="edit()" [disabled]="this.detail.status === 'reviewing'">
       <nb-icon icon="edit-outline"></nb-icon>
   </button>
 </div>
@@ -31,7 +31,7 @@
   </nb-card>
   <nb-card>
     <nb-card-header>
-        <h2>名單紀錄</h2>
+        <h2>名單列表</h2>
     </nb-card-header>
     <nb-card-body>
       <div>
