@@ -29,6 +29,7 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
   consoleGroupScope: Array<GridInnerCheckBox> = this.accountManageService.createDefaultScopeGridInnerCheckBoxs();
   changeRouteName: string;
   actionName: string;// 新增/編輯/複製
+  btnName: string;// 新 增/編 輯/複 製
   groupId: string;
 
   constructor(
@@ -50,6 +51,7 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.changeRouteName = this.activatedRoute.snapshot.params?.changeRoute;
     this.actionName = CommonUtil.getActionName(this.changeRouteName);
+    this.btnName = CommonUtil.getActionName(this.changeRouteName).split('').join(' ');
     this.groupId = this.activatedRoute.snapshot.params.groupId;
     this.dataSource = new LocalDataSource();
     this.dataSource2 = new LocalDataSource(this.consoleGroupScope);
@@ -58,6 +60,7 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
     this.accountManageService.getConsoleGroup(this.groupId).pipe(
       catchError((err) => {
         this.loadingService.close();
+        this.dialogService.alertAndBackToList(false, `${err.message}，將為您導回權限管理列表`, this.accountManageService.CONSOLE_GROUP_LIST_PATH);
         throw new Error(err.message);
       }),
       filter(res => res.code === RestStatus.SUCCESS),
@@ -104,6 +107,7 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
         renderComponent: CheckboxColumnComponent,
         onComponentInitFunction: (instance: CheckboxColumnComponent) => {
           instance.settings = { isShowParam: { key: 'read' }, isCheckedParam: { key: 'read' } };
+          instance.emitter.subscribe((res) => { res.read = res.isSelected });
         },
         sort: false,
       },
@@ -114,6 +118,7 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
         renderComponent: CheckboxColumnComponent,
         onComponentInitFunction: (instance: CheckboxColumnComponent) => {
           instance.settings = { isShowParam: { key: 'create' }, isCheckedParam: { key: 'create' } };
+          instance.emitter.subscribe((res) => { res.create = res.isSelected });
         },
         sort: false,
       },
@@ -124,6 +129,7 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
         renderComponent: CheckboxColumnComponent,
         onComponentInitFunction: (instance: CheckboxColumnComponent) => {
           instance.settings = { isShowParam: { key: 'update' }, isCheckedParam: { key: 'update' } };
+          instance.emitter.subscribe((res) => { res.update = res.isSelected });
         },
         sort: false,
       },
@@ -134,6 +140,7 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
         renderComponent: CheckboxColumnComponent,
         onComponentInitFunction: (instance: CheckboxColumnComponent) => {
           instance.settings = { isShowParam: { key: 'delete' }, isCheckedParam: { key: 'delete' } };
+          instance.emitter.subscribe((res) => { res.delete = res.isSelected });
         },
         sort: false,
       }
@@ -216,8 +223,7 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
       this.consoleGroupDetail.enable = req.enable === 'true' ? true : false;
 
       for (let scopeObj of this.dataSource2['data']) {
-        let keyList = Object.keys(scopeObj);
-
+        let keyList = Object.keys(scopeObj).filter(key => key !== 'isSelected' && key !== 'isShow');
         for (let idx = 1; idx < keyList.length; idx++) {
           if (scopeObj[keyList[idx]]) {
             this.consoleGroupDetail.consoleGroupScope.push({
