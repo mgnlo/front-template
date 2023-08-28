@@ -29,7 +29,7 @@ export const TagSettingMock: Array<TagSetting> = [
         "version": "uuid-zzzz",
         "groupId": 1,
         "detectionCondition": "偵測條件1",
-        "conditionValue": "條件值1",
+        "conditionKey": "條件值1",
         "thresholdValue": "門檻值1",
         "joinValue": "and",
       },
@@ -39,7 +39,7 @@ export const TagSettingMock: Array<TagSetting> = [
         "version": "uuid-zzzz",
         "groupId": 1,
         "detectionCondition": "偵測條件2",
-        "conditionValue": "條件值2",
+        "conditionKey": "條件值2",
         "thresholdValue": "門檻值2",
         "joinValue": "or",
       },
@@ -49,7 +49,7 @@ export const TagSettingMock: Array<TagSetting> = [
         "version": "uuid-zzzz",
         "groupId": 2,
         "detectionCondition": "偵測條件3",
-        "conditionValue": "條件值3",
+        "conditionKey": "條件值3",
         "thresholdValue": "門檻值3",
       }
     ],
@@ -147,7 +147,7 @@ export const TagSettingMock: Array<TagSetting> = [
         "version": "uuid-zzzz",
         "groupId": 1,
         "detectionCondition": "偵測條件1",
-        "conditionValue": "條件值1",
+        "conditionKey": "條件值1",
         "thresholdValue": "門檻值1"
       },
       {
@@ -156,7 +156,7 @@ export const TagSettingMock: Array<TagSetting> = [
         "version": "uuid-zzzz",
         "groupId": 1,
         "detectionCondition": "偵測條件2",
-        "conditionValue": "條件值2",
+        "conditionKey": "條件值2",
         "thresholdValue": "門檻值2"
       },
       {
@@ -165,7 +165,7 @@ export const TagSettingMock: Array<TagSetting> = [
         "version": "uuid-zzzz",
         "groupId": 2,
         "detectionCondition": "偵測條件3",
-        "conditionValue": "條件值3",
+        "conditionKey": "條件值3",
         "thresholdValue": "門檻值3"
       }
     ],

@@ -30,7 +30,7 @@ export class TagConditionSetting {
   version: string;
   groupId: number
   detectionCondition: string;
-  conditionValue: string;
+  conditionKey: string;
   thresholdValue: string;
   joinValue?: string;
 

@@ -73,7 +73,7 @@ export class TagConditionSetting {
   conditionId: string;
   groupId: number;
   detectionCondition: string;
-  conditionValue: string;
+  conditionKey: string;
   thresholdValue: string;
 }
 

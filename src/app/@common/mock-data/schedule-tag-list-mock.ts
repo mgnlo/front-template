@@ -24,7 +24,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值1",
+        "conditionKey": "條件值1",
         "thresholdValue": "門檻值1"
       },
       {
@@ -34,7 +34,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值2",
+        "conditionKey": "條件值2",
         "thresholdValue": "門檻值2"
       },
       {
@@ -44,7 +44,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 2,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值3",
+        "conditionKey": "條件值3",
         "thresholdValue": "門檻值3"
       }
     ],
@@ -105,7 +105,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值1",
+        "conditionKey": "條件值1",
         "thresholdValue": "門檻值1"
       },
       {
@@ -115,7 +115,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值2",
+        "conditionKey": "條件值2",
         "thresholdValue": "門檻值2"
       },
       {
@@ -125,7 +125,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 2,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值3",
+        "conditionKey": "條件值3",
         "thresholdValue": "門檻值3"
       }
     ],
@@ -178,7 +178,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值1",
+        "conditionKey": "條件值1",
         "thresholdValue": "門檻值1"
       },
       {
@@ -188,7 +188,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值2",
+        "conditionKey": "條件值2",
         "thresholdValue": "門檻值2"
       },
       {
@@ -198,7 +198,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 2,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值3",
+        "conditionKey": "條件值3",
         "thresholdValue": "門檻值3"
       }
     ],
@@ -251,7 +251,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值1",
+        "conditionKey": "條件值1",
         "thresholdValue": "門檻值1"
       },
       {
@@ -261,7 +261,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值2",
+        "conditionKey": "條件值2",
         "thresholdValue": "門檻值2"
       },
       {
@@ -271,7 +271,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 2,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值3",
+        "conditionKey": "條件值3",
         "thresholdValue": "門檻值3"
       }
     ],
@@ -324,7 +324,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值1",
+        "conditionKey": "條件值1",
         "thresholdValue": "門檻值1"
       },
       {
@@ -334,7 +334,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值2",
+        "conditionKey": "條件值2",
         "thresholdValue": "門檻值2"
       },
       {
@@ -344,7 +344,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 2,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值3",
+        "conditionKey": "條件值3",
         "thresholdValue": "門檻值3"
       }
     ],
@@ -397,7 +397,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值1",
+        "conditionKey": "條件值1",
         "thresholdValue": "門檻值1"
       },
       {
@@ -407,7 +407,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值2",
+        "conditionKey": "條件值2",
         "thresholdValue": "門檻值2"
       },
       {
@@ -417,7 +417,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 2,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值3",
+        "conditionKey": "條件值3",
         "thresholdValue": "門檻值3"
       }
     ],
@@ -470,7 +470,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值1",
+        "conditionKey": "條件值1",
         "thresholdValue": "門檻值1"
       },
       {
@@ -480,7 +480,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值2",
+        "conditionKey": "條件值2",
         "thresholdValue": "門檻值2"
       },
       {
@@ -490,7 +490,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 2,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值3",
+        "conditionKey": "條件值3",
         "thresholdValue": "門檻值3"
       }
     ],
@@ -543,7 +543,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值1",
+        "conditionKey": "條件值1",
         "thresholdValue": "門檻值1"
       },
       {
@@ -553,7 +553,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值2",
+        "conditionKey": "條件值2",
         "thresholdValue": "門檻值2"
       },
       {
@@ -563,7 +563,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 2,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值3",
+        "conditionKey": "條件值3",
         "thresholdValue": "門檻值3"
       }
     ],
@@ -616,7 +616,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值1",
+        "conditionKey": "條件值1",
         "thresholdValue": "門檻值1"
       },
       {
@@ -626,7 +626,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值2",
+        "conditionKey": "條件值2",
         "thresholdValue": "門檻值2"
       },
       {
@@ -636,7 +636,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 2,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值3",
+        "conditionKey": "條件值3",
         "thresholdValue": "門檻值3"
       }
     ],
@@ -689,7 +689,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值1",
+        "conditionKey": "條件值1",
         "thresholdValue": "門檻值1"
       },
       {
@@ -699,7 +699,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值2",
+        "conditionKey": "條件值2",
         "thresholdValue": "門檻值2"
       },
       {
@@ -709,7 +709,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 2,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值3",
+        "conditionKey": "條件值3",
         "thresholdValue": "門檻值3"
       }
     ],
@@ -763,7 +763,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值1",
+        "conditionKey": "條件值1",
         "thresholdValue": "門檻值1"
       },
       {
@@ -773,7 +773,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值2",
+        "conditionKey": "條件值2",
         "thresholdValue": "門檻值2"
       },
       {
@@ -783,7 +783,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 2,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值3",
+        "conditionKey": "條件值3",
         "thresholdValue": "門檻值3"
       }
     ],
@@ -836,7 +836,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值1",
+        "conditionKey": "條件值1",
         "thresholdValue": "門檻值1"
       },
       {
@@ -846,7 +846,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值2",
+        "conditionKey": "條件值2",
         "thresholdValue": "門檻值2"
       },
       {
@@ -856,7 +856,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 2,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值3",
+        "conditionKey": "條件值3",
         "thresholdValue": "門檻值3"
       }
     ],
@@ -909,7 +909,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值1",
+        "conditionKey": "條件值1",
         "thresholdValue": "門檻值1"
       },
       {
@@ -919,7 +919,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值2",
+        "conditionKey": "條件值2",
         "thresholdValue": "門檻值2"
       },
       {
@@ -929,7 +929,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 2,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值3",
+        "conditionKey": "條件值3",
         "thresholdValue": "門檻值3"
       }
     ],
@@ -982,7 +982,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值1",
+        "conditionKey": "條件值1",
         "thresholdValue": "門檻值1"
       },
       {
@@ -992,7 +992,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值2",
+        "conditionKey": "條件值2",
         "thresholdValue": "門檻值2"
       },
       {
@@ -1002,7 +1002,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 2,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值3",
+        "conditionKey": "條件值3",
         "thresholdValue": "門檻值3"
       }
     ],
@@ -1055,7 +1055,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值1",
+        "conditionKey": "條件值1",
         "thresholdValue": "門檻值1"
       },
       {
@@ -1065,7 +1065,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值2",
+        "conditionKey": "條件值2",
         "thresholdValue": "門檻值2"
       },
       {
@@ -1075,7 +1075,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 2,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值3",
+        "conditionKey": "條件值3",
         "thresholdValue": "門檻值3"
       }
     ],
@@ -1128,7 +1128,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值1",
+        "conditionKey": "條件值1",
         "thresholdValue": "門檻值1"
       },
       {
@@ -1138,7 +1138,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值2",
+        "conditionKey": "條件值2",
         "thresholdValue": "門檻值2"
       },
       {
@@ -1148,7 +1148,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 2,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值3",
+        "conditionKey": "條件值3",
         "thresholdValue": "門檻值3"
       }
     ],
@@ -1202,7 +1202,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值1",
+        "conditionKey": "條件值1",
         "thresholdValue": "門檻值1"
       },
       {
@@ -1212,7 +1212,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 1,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值2",
+        "conditionKey": "條件值2",
         "thresholdValue": "門檻值2"
       },
       {
@@ -1222,7 +1222,7 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "groupId": 2,
         "detectionCondition": "$eq",
         "joinValue": "and",
-        "conditionValue": "條件值3",
+        "conditionKey": "條件值3",
         "thresholdValue": "門檻值3"
       }
     ],

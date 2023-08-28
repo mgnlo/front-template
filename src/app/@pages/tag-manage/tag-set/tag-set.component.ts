@@ -61,7 +61,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   //偵測條件下拉
   selectedConditionId: string = '';
-  selectedConditionValue: string = '';
+  selectedConditionKey: string = '';
 
   //預設狀態
   tagStatusList = [Status.enabled, Status.disabled];
@@ -93,8 +93,8 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   tagSetConditionList: Array<{ key: string; val: string }> = Object.entries(TagSetCondition).map(([k, v]) => ({ key: k, val: v }))
 
   //預設偵測條件
-  conditionValueList: Array<{ key: string; val: string }> = new Array<{ key: string; val: string }>();
-  filterConditionValueList: Array<{ key: string; val: string }> = new Array<{ key: string; val: string }>();
+  conditionKeyList: Array<{ key: string; val: string }> = new Array<{ key: string; val: string }>();
+  filterConditionKeyList: Array<{ key: string; val: string }> = new Array<{ key: string; val: string }>();
 
   //預設集合方式
   joinValueList: Array<{ key: string; val: string }> = Object.entries(TagJoinValue).map(([k, v]) => ({ key: k, val: v }))
@@ -126,7 +126,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       tagDimension: new FormControl(null, Validators.required),
       tagSubDimension: new FormControl(null, Validators.required),
       tagDescription: new FormControl(null),
-      conditionValue: new FormControl(null, [Validators.required, this.existsInConditionValueList]),
+      conditionKey: new FormControl(null, [Validators.required, this.existsInConditionKeyList]),
       conditionSettingQuery: new FormControl(null, Validators.required),
       tagConditionSetting: new FormArray([]),
     }, [ValidatorsUtil.dateRange]);
@@ -217,12 +217,12 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         if (!respData || respData?.length == 0) return
 
         respData.forEach((category, index) => {
-          this.categoryList.push({ key: category.categoryValue, val: category.categoryName });
-          this.tempCategoryList.push({ groupId: index + 1, key: category.categoryValue, val: category.categoryName })
+          this.categoryList.push({ key: category.categoryKey, val: category.categoryName });
+          this.tempCategoryList.push({ groupId: index + 1, key: category.categoryKey, val: category.categoryName })
 
           category.tagTopic.forEach(subCategory => {
-            this.subCategoryList.push({ key: subCategory.tagTopicValue, val: subCategory.tagTopicName });
-            this.tempSubCategoryList.push({ groupId: index + 1, key: subCategory.tagTopicValue, val: subCategory.tagTopicName });
+            this.subCategoryList.push({ key: subCategory.tagTopicKey, val: subCategory.tagTopicName });
+            this.tempSubCategoryList.push({ groupId: index + 1, key: subCategory.tagTopicKey, val: subCategory.tagTopicName });
           });
         });
 
@@ -233,12 +233,12 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
     if (true) {
       TagCategoryMock.forEach((category, index) => {
-        this.categoryList.push({ key: category.categoryValue, val: category.categoryName });
-        this.tempCategoryList.push({ groupId: index + 1, key: category.categoryValue, val: category.categoryName })
+        this.categoryList.push({ key: category.categoryKey, val: category.categoryName });
+        this.tempCategoryList.push({ groupId: index + 1, key: category.categoryKey, val: category.categoryName })
 
         category.tagTopic.forEach(subCategory => {
-          this.subCategoryList.push({ key: subCategory.tagTopicValue, val: subCategory.tagTopicName });
-          this.tempSubCategoryList.push({ groupId: index + 1, key: subCategory.tagTopicValue, val: subCategory.tagTopicName });
+          this.subCategoryList.push({ key: subCategory.tagTopicKey, val: subCategory.tagTopicName });
+          this.tempSubCategoryList.push({ groupId: index + 1, key: subCategory.tagTopicKey, val: subCategory.tagTopicName });
         });
       });
       // console.info('this.categoryList', this.categoryList)
@@ -404,7 +404,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   //#region 條件設定方式 更動時切換驗證
   changeConditionSettingMethod(key: string) {
-    this.removeFieldIfExists('conditionValue');
+    this.removeFieldIfExists('conditionKey');
     this.removeFieldIfExists('tagConditionSetting');
     this.removeFieldIfExists('conditionSettingQuery');
 
@@ -417,7 +417,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         if (!this.validateForm.contains('tagConditionSetting')) {
           this.validateForm.addControl('tagConditionSetting', new FormArray([]));
         }
-        this.addFieldIfNotExists('conditionValue', null, Validators.required);
+        this.addFieldIfNotExists('conditionKey', null, Validators.required);
         if (this.conditions?.getRawValue()?.length === 0) {
           this.conditions.push(new FormGroup({
             id: new FormControl(0),
@@ -449,29 +449,29 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   //#region 取得偵測條件下拉資料&&塞選查詢  //取得圖表資料
   //取得偵測條件下拉資料
-  getConditionValueList(): void {
-    if (this.conditionValueList.length > 0 &&
-      this.conditionValueList.some(s => s.val === this.validateForm?.get('conditionValue')?.value)) return
+  getConditionKeyList(): void {
+    if (this.conditionKeyList.length > 0 &&
+      this.conditionKeyList.some(s => s.val === this.validateForm?.get('conditionKey')?.value)) return
 
-    this.conditionValueList = new Array<{ key: string; val: string }>();
-    this.filterConditionValueList = new Array<{ key: string; val: string }>();
+    this.conditionKeyList = new Array<{ key: string; val: string }>();
+    this.filterConditionKeyList = new Array<{ key: string; val: string }>();
 
     this.tagManageService.getTagConditionList().pipe(
       catchError((err) => {
-        this.filterConditionValueList = new Array<{ key: string; val: string }>();
-        this.validateForm?.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '查詢偵測條件失敗' });
+        this.filterConditionKeyList = new Array<{ key: string; val: string }>();
+        this.validateForm?.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': '查詢偵測條件失敗' });
         throw new Error(err.message);
       }),
     ).subscribe(res => {
       if (res.code === RestStatus.SUCCESS) {
         if (!res.result || res.result.length === 0) {
-          this.validateForm?.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '查無偵測條件' });
+          this.validateForm?.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': '查無偵測條件' });
           return
         }
         res.result.forEach(m => {
-          this.conditionValueList.push({ key: m.conditionValue, val: m.conditionName });
+          this.conditionKeyList.push({ key: m.conditionKey, val: m.conditionName });
         });
-        this.filterConditionValueList = [...this.conditionValueList];
+        this.filterConditionKeyList = [...this.conditionKeyList];
       }
     });
   }
@@ -487,23 +487,23 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     }
   }
 
-  onBlurConditionValueInput(): void {
-    if (this.validateForm.get('conditionValue')?.hasError('condition_valueErrMsg')) return
+  onBlurConditionKeyInput(): void {
+    if (this.validateForm.get('conditionKey')?.hasError('condition_valueErrMsg')) return
 
     if (CommonUtil.isBlank(this.selectedConditionId)) {
-      this.validateForm.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '請點選一筆' });
+      this.validateForm.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': '請點選一筆' });
       return
     }
 
-    this.validateForm.get('conditionValue')?.setErrors(null);
+    this.validateForm.get('conditionKey')?.setErrors(null);
   }
 
   //輸入查詢
-  onConditionValueChange(event: any) {
+  onConditionKeyChange(event: any) {
     this.selectedConditionId = '';
     this.conditionDialogData = undefined;
 
-    this.validateForm.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '請選擇一筆' });
+    this.validateForm.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': '請選擇一筆' });
 
     if (this.enterKeyHandled) {
       this.enterKeyHandled = false;
@@ -512,62 +512,62 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
     if (this.backspaceKeyHandled) {
       this.backspaceKeyHandled = false;
-      if (this.filterConditionValueList?.length === 0) {
-        this.conditionValueFilter(event.target.value);
+      if (this.filterConditionKeyList?.length === 0) {
+        this.conditionKeyFilter(event.target.value);
       }
       return;
     }
 
-    this.conditionValueFilter(event.target.value);
+    this.conditionKeyFilter(event.target.value);
   }
 
   //下拉選擇
-  onConditionValueSelectChange(event: any) {
+  onConditionKeySelectChange(event: any) {
     // console.info('event',event)
     if (CommonUtil.isBlank(event.key) || CommonUtil.isBlank(event.val)) {
       return
     }
 
     this.selectedConditionId = event.key;
-    this.selectedConditionValue = event.val;
+    this.selectedConditionKey = event.val;
 
     // console.log('selectedConditionId Value:', this.selectedConditionId);
-    // console.log('Selected Value:', this.selectedConditionValue);
+    // console.log('Selected Value:', this.selectedConditionKey);
 
     this.getTagConditionalDistribution();
 
-    this.conditionValueFilter(this.selectedConditionValue);
+    this.conditionKeyFilter(this.selectedConditionKey);
 
-    this.validateForm.get('conditionValue').setValue(this.selectedConditionValue);
+    this.validateForm.get('conditionKey').setValue(this.selectedConditionKey);
   }
 
   //篩選邏輯
-  conditionValueFilter(value: string): void {
+  conditionKeyFilter(value: string): void {
     const filterValue = value?.toLowerCase();
 
-    this.filterConditionValueList = new Array<{ key: string; val: string }>();
+    this.filterConditionKeyList = new Array<{ key: string; val: string }>();
 
     if (CommonUtil.isBlank(filterValue)) {
-      this.filterConditionValueList = this.conditionValueList
+      this.filterConditionKeyList = this.conditionKeyList
       return
     }
 
     this.tagManageService.filterTagConditionList(new TagConditionChartLine({ conditionName: value })).pipe(
       catchError((err) => {
-        this.filterConditionValueList = new Array<{ key: string; val: string }>();
-        this.validateForm?.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '查詢偵測條件失敗' });
+        this.filterConditionKeyList = new Array<{ key: string; val: string }>();
+        this.validateForm?.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': '查詢偵測條件失敗' });
         throw new Error(err.message);
       }),
     ).subscribe(res => {
       if (res.code === RestStatus.SUCCESS) {
         if (!res.result || res.result.length === 0) {
-          this.validateForm?.get('conditionValue')?.setErrors({ 'condition_valueErrMsg': '查無偵測條件' });
+          this.validateForm?.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': '查無偵測條件' });
           return
         }
         res.result.forEach(m => {
-          this.filterConditionValueList.push({ key: m.conditionValue, val: m.conditionName });
+          this.filterConditionKeyList.push({ key: m.conditionKey, val: m.conditionName });
         });
-        // console.info('this.filterConditionValueList', this.filterConditionValueList)
+        // console.info('this.filterConditionKeyList', this.filterConditionKeyList)
       }
     });
   }
@@ -598,11 +598,11 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   }
 
   // 檢查是否存在清單中
-  existsInConditionValueList = (ctl: FormControl): { [key: string]: any } | null => {
+  existsInConditionKeyList = (ctl: FormControl): { [key: string]: any } | null => {
     // console.info('ctl', ctl)
-    if ((ctl.dirty || ctl.touched || ctl.valueChanges) && this.conditionValueList) {
+    if ((ctl.dirty || ctl.touched || ctl.valueChanges) && this.conditionKeyList) {
       const filterValue = ctl.value?.toLowerCase();
-      if (!CommonUtil.isBlank(filterValue) && !this.conditionValueList.some(item => item.val?.toLowerCase() === filterValue)) {
+      if (!CommonUtil.isBlank(filterValue) && !this.conditionKeyList.some(item => item.val?.toLowerCase() === filterValue)) {
         return { 'condition_valueErrMsg': '不存在偵測條件清單中' }; // 驗證失敗
       }
     }
@@ -824,7 +824,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
             return new TagConditionSetting({
               tagId: this.tagId,
               groupId: 1,//因只有一個，固定為1
-              conditionValue: this.filterConditionValueList.find(item => item.val === formData.conditionValue)?.key,
+              conditionKey: this.filterConditionKeyList.find(item => item.val === formData.conditionKey)?.key,
               detectionCondition: m['detectionCondition_' + id],
               thresholdValue: m['thresholdValue_' + id],
               joinValue: m['joinValue_' + id],

@@ -76,7 +76,7 @@ export class ConditionChartLineComponent implements OnInit, AfterViewInit, OnDes
         },
         legend: {
           left: 'left',
-          data: this.data?.conditionValue,
+          data: this.data?.conditionKey,
           textStyle: {
             color: echarts.textColor,
           },
