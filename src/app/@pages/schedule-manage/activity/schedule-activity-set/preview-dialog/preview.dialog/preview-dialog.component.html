@@ -11,11 +11,14 @@
       <div class="fieldGroup essential col-12 col-lg-12" [ngClass]="{'error': validateForm.invalid}">
         <label>名單列表</label>
         <div>
-          <input nbInput fullWidth type="text"  placeholder="請輸入或選擇"[nbAutocomplete]="auto"
+          <input nbInput fullWidth type="text"  placeholder="請輸入或選擇"
+          [nbAutocomplete]="auto"
           [status]="validateForm.invalid ? 'danger' : 'basic'"
-          (input)="onActivityChange($event)" formControlName="activityName"/>
+          (blur)="onBlurActivityInput()"
+          (input)="onActivityChange($event)"
+           formControlName="activityName"/>
           <nb-autocomplete #auto (selectedChange)="onActivitySelectChange($event)">
-            <nb-option *ngFor="let activity of filterDataList" [value]="activity.val" [id]="activity.key">{{ activity.val }}</nb-option>
+            <nb-option *ngFor="let activity of filterDataList" [value]="activity">{{ activity.val }}</nb-option>
           </nb-autocomplete>
         </div>
         <div class="note errorText">
@@ -29,7 +32,9 @@
     <div class="btnGroup">
       <button nbButton status="basic" size="medium" (click)="close()">關閉</button>
       <button nbButton status="info" size="medium" (click)="submit()"
-      [disabled]="validateForm.get('activityName')?.value??''===''||validateForm.invalid">送出</button>
+              [disabled]="!this.selectedActivityId ||
+              validateForm.get('activityName')?.hasError('activityErrMsg') ||
+              validateForm.get('activityName')?.value === ''">送出</button>
     </div>
   </nb-card-footer>
 </nb-card>

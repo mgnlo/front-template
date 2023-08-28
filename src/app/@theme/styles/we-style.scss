@@ -751,7 +751,7 @@ ul {
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    margin: 0 -0.5rem 1rem; 
+    margin: 0 -0.5rem 1rem;
     [nbButton] { margin: 0.25rem 0.5rem; }
     @media all and (max-width: 768px) {
         [nbButton] {
@@ -908,7 +908,7 @@ ul {
                 align-items: center;
                 align-self: flex-start;
                 [nbInput], nb-select { flex: 1; }
-                .note { 
+                .note {
                     width: 100%;
                     margin-top: 0.5rem;
                 }
@@ -1181,7 +1181,7 @@ ul {
         &:nth-last-of-type(1) {
             h4 {
                 &:after { bottom: 8px; }
-                
+
             }
             .mainItem {
                 ~ .subItem {
@@ -1509,7 +1509,7 @@ table {
                     }
                 }
             }
-            &.collapsed { 
+            &.collapsed {
                 display: none !important;
             }
         }
@@ -1634,7 +1634,7 @@ table {
                 display: flex !important;
                 padding: 0;
             }
-        } 
+        }
         nb-radio {
             display: flex;
             align-items: center;

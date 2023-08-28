@@ -12,13 +12,3 @@ export enum TagJoinValue {
   and = 'and',
   or = 'or',
 }
-
-export enum TagDimension {
-  A = '主構面A',
-  B = '主構面B'
-}
-
-export enum TagSubDimension {
-  A = '子構面AAA',
-  B = '子構面BBB'
-}

@@ -25,8 +25,8 @@
               <label>名單上傳</label>
               <div>
                 <input nbInput fullWidth [status]="validateForm.get('fileName')?.errors?.uploadFileMsg ? 'danger' : 'basic'"
-                      type="text" formControlName="fileName" [placeholder] = "filePlaceholderName"/>
-                <input nbInput fullWidth type="file"  [accept]="removeLastCharIfEquals(passFileArrayStr,',')" (change)="onFileSelected($event)" />
+                      type="text" formControlName="fileName" placeholder = "請上傳檔案"/>
+                <input nbInput fullWidth type="file"  [accept]="removeLastCharIfEquals(passFileArrayStr,',')" (change)="onUploadFile($event)" />
                 <button nbButton status="warning" size="tiny" class="iconBtn">
                     <nb-icon icon="folder-add-outline"></nb-icon>
                 </button>
@@ -43,8 +43,14 @@
         </div>
         <date-range [form]="validateForm"></date-range>
         <div class="row">
-            <dropdown class="col-12 col-lg-6" title="標籤構面" [form]="validateForm" ctlName="tagDimension"></dropdown>
-            <dropdown class="col-12 col-lg-6" title="標籤子構面" [form]="validateForm" ctlName="tagSubDimension"></dropdown>
+            <dropdown class="col-12 col-lg-6" title="標籤構面" [form]="validateForm"
+                      [selectList]="{options: this.categoryList, key: 'key', val: 'val'}"
+                      ctlName="tagDimension">
+            </dropdown>
+            <dropdown class="col-12 col-lg-6" title="標籤子構面" [form]="validateForm"
+                      [selectList]="{options: this.subCategoryList, key: 'key', val: 'val'}"
+                       ctlName="tagSubDimension">
+            </dropdown>
         </div>
         <div class="row">
             <basic-input class="col-12 col-lg-6" title="描述說明" [form]="validateForm" ctlName="tagDescription"></basic-input>
@@ -69,12 +75,33 @@
           <div class="subTitle">
               <p>條件設定</p>
           </div>
-          <div class="row">
-            <dropdown class="col-12 col-lg-12" title="偵測條件" [form]="validateForm" [selectList]="{options: condition_valueList, key: 'key', val: 'val'}" ctlName="conditionValue"></dropdown>
+          <div class="row" *ngIf="validateForm.get('conditionValue')as condition_value">
+            <!-- <dropdown class="col-12 col-lg-12" title="偵測條件" [form]="validateForm" [selectList]="{options: condition_valueList, key: 'key', val: 'val'}" ctlName="conditionValue"></dropdown> -->
+            <div class="fieldGroup essential col-12 col-lg-12" [ngClass]="{'error': condition_value?.errors?.condition_valueErrMsg }">
+              <label>偵測條件</label>
+              <div>
+                <input nbInput fullWidth type="text"  placeholder="請輸入或選擇"
+                [nbAutocomplete]="auto"
+                [status]="condition_value?.errors?.condition_valueErrMsg  ? 'danger' : 'basic'"
+                (click)="getConditionValueList()"
+                (keydown)="onKeyDown($event)"
+                (input)="onConditionValueChange($event)"
+                (blur)="onBlurConditionValueInput()"
+                formControlName="conditionValue"/>
+                <nb-autocomplete #auto (selectedChange)="onConditionValueSelectChange($event)">
+                  <nb-option *ngFor="let conditionValue of filterConditionValueList" [value]="conditionValue">{{ conditionValue.val }}</nb-option>
+                </nb-autocomplete>
+              </div>
+              <div class="note errorText">
+                <nb-icon icon="alert-triangle"></nb-icon>
+                <p>{{condition_value?.errors?.condition_valueErrMsg }}</p>
+              </div>
+            </div>
           </div>
           <div class="row rightBox">
             <div class="fieldBtn col-12 col-lg-2">
-                <button nbButton status="control" (click)="conditionDialog()">
+                <button nbButton [status]="!this.conditionDialogData?.conditionValue?'basic':'control'"
+                        (click)="conditionDialog()" [disabled]="!this.conditionDialogData?.conditionValue">
                     <nb-icon icon="bar-chart-outline"></nb-icon>條件分佈級距
                 </button>
             </div>
@@ -130,11 +157,9 @@
                 </ng-container>
               </div>
             </nb-tab>
-            <nb-tab tabTitle="標籤使用範圍" *ngIf="!!restDataSource || !!dataSource">
-                <ng2-smart-table *ngIf="!!restDataSource" [settings]="gridDefine" [source]="restDataSource"></ng2-smart-table>
-                <paginator *ngIf="!!restDataSource" [source]="restDataSource" [paginator]="paginator"></paginator>
-                <ng2-smart-table *ngIf="!!dataSource" [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
-                <paginator *ngIf="!!dataSource" [source]="dataSource" [paginator]="paginator"></paginator>
+            <nb-tab tabTitle="標籤使用範圍" *ngIf="!!restDataSource">
+                <ng2-smart-table [settings]="gridDefine" [source]="restDataSource"></ng2-smart-table>
+                <paginator [source]="restDataSource" [paginator]="paginator"></paginator>
             </nb-tab>
         </nb-tabset>
     </nb-card-body>

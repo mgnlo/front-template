@@ -67,6 +67,19 @@ export class TagReviewHistory {
   filePath?: string;
 }
 
+//#region 標籤構面
+export class TagCategory {
+  categoryValue: string;
+  categoryName: string;
+  tagTopic: Array<TagTopic>;
+}
+
+export class TagTopic {
+  tagTopicValue: string;
+  tagTopicName: string;
+}
+//#endregion
+
 //#region 異動歷程/紀錄
 //for HTML diaplay ViewModel
 export interface TagDetailView {
@@ -133,10 +146,14 @@ export class TagSettingEditReq {
 //#endregion
 
 //#region 條件級距線圖表
-export interface TagConditionChartLine {
+export class TagConditionChartLine {
   conditionValue: string;
   conditionName: string;
   conditionDistribution: Array<Conditiondistribution>
+
+  constructor(data: Partial<TagConditionChartLine>) {
+    Object.assign(this, data);
+  }
 }
 
 export class Conditiondistribution {

@@ -24,8 +24,8 @@ export class ConditionChartLineComponent implements OnInit, AfterViewInit, OnDes
   // 排序
   sortConditionDistribution(array: any[], keyExtractor: (item: any) => string, sortExtractor: (item: any) => string): any[] {
     return array.sort((a, b) => {
-      const sortA = parseInt(sortExtractor(a).replace(RegExpUtil.removeChinese, ""));
-      const sortB = parseInt(sortExtractor(b).replace(RegExpUtil.removeChinese, ""));
+      const sortA = parseInt(sortExtractor(a).replace(RegExpUtil.chinese, ""));
+      const sortB = parseInt(sortExtractor(b).replace(RegExpUtil.chinese, ""));
       if (sortA < 0 && sortB < 0) {
         return sortB - sortA;
       } else {
@@ -53,7 +53,7 @@ export class ConditionChartLineComponent implements OnInit, AfterViewInit, OnDes
     );
     this.yAxisData = this.getMapKeyByValue('distributionValue', conditionDistributionSort)
     this.seriesData.push({
-      name: this.data.conditionValue,
+      name: this.data.conditionName,
       type: 'line',
       smooth: true,
       data: this.yAxisData,

@@ -2,7 +2,7 @@ import { NgModule } from "@angular/core"
 import { RouterModule, Routes } from "@angular/router"
 import { TagManageComponent } from "./tag-manage.component"
 import { TagListComponent } from "./tag-list/tag-list.component"
-import { TagAddComponent } from "./tag-set/tag-set.component"
+import { TagSetComponent } from "./tag-set/tag-set.component"
 import { TagDetailComponent } from "./tag-detail/tag-detail.component"
 import { TagConditionDialogComponent } from "./tag-set/condition-dialog/condition-dialog.component"
 import { ConditionChartLineComponent } from "./tag-set/condition-chart-line/condition-chart-line.component"
@@ -15,8 +15,8 @@ const routes: Routes = [
       { path: '', redirectTo: 'tag-list', pathMatch: 'full' },
       { path: "tag-list", component: TagListComponent, data: { keepSession: true } },
       { path: 'tag-detail/:tagId', component: TagDetailComponent, data: { keepSession: true } },
-      { path: 'tag-set', component: TagAddComponent },
-      { path: 'tag-set/:changeRoute/:tagId', component: TagAddComponent }, //編輯 or 複製
+      { path: 'tag-set', component: TagSetComponent },
+      { path: 'tag-set/:changeRoute/:tagId', component: TagSetComponent }, //編輯 or 複製
     ]
   }
 ]
@@ -31,7 +31,7 @@ export class TagManageRoutingModule { }
 export const routedComponents = [
   TagManageComponent,
   TagListComponent,
-  TagAddComponent,
+  TagSetComponent,
   TagDetailComponent,
   TagConditionDialogComponent,
   ConditionChartLineComponent,
