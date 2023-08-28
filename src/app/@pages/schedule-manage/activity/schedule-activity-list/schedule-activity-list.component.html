@@ -10,10 +10,10 @@
           <div class="rightBox">
             <button nbButton status="primary" size="medium" (click)="add()">新 增</button>
           </div>
-          <ng2-smart-table *ngIf="!!restDataSource" [settings]="gridDefine" [source]="restDataSource"></ng2-smart-table>
-          <paginator *ngIf="!!restDataSource" [source]="restDataSource" [paginator]="paginator"></paginator>
-          <ng2-smart-table *ngIf="!!dataSource" [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
-          <paginator *ngIf="!!dataSource" [source]="dataSource" [paginator]="paginator"></paginator>
+          <ng-container *ngIf="restDataSource || dataSource as source" >
+            <ng2-smart-table [settings]="gridDefine" [source]="source"></ng2-smart-table>
+            <paginator [source]="source" [paginator]="paginator"></paginator>
+          </ng-container>
       </nb-card-body>
   </nb-card>
 </div>

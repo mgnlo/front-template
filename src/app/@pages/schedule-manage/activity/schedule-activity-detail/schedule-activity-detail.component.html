@@ -42,12 +42,12 @@
         </div>
         <div class="tableContainer">
           <div class="selectAll" *ngIf="this?.gridDefine?.columns?.['isChecked']">
-              <nb-checkbox status="info" [checked]="isAllSelected" (change)="onSelectAllChange(true)"></nb-checkbox>
+            <nb-checkbox status="info" [checked]="isAllSelected" (change)="onSelectAllChange(true)"></nb-checkbox>
           </div>
-          <ng2-smart-table *ngIf="!!restDataSource" [settings]="gridDefine" [source]="restDataSource"></ng2-smart-table>
-          <paginator *ngIf="!!restDataSource" [source]="restDataSource" [paginator]="paginator"></paginator>
-          <ng2-smart-table *ngIf="!!dataSource" [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
-          <paginator *ngIf="!!dataSource" [source]="dataSource" [paginator]="paginator"></paginator>
+          <ng-container *ngIf="restDataSource || dataSource as source" >
+            <ng2-smart-table [settings]="gridDefine" [source]="source"></ng2-smart-table>
+            <paginator [source]="source" [paginator]="paginator"></paginator>
+          </ng-container>
         </div>
       </div>
     </nb-card-body>

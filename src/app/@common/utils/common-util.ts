@@ -205,9 +205,9 @@ export const CommonUtil = {
     if (!!getSessionVal?.filter) {
       Object.keys(getSessionVal.filter).forEach(key => {
         const control = validateForm.controls[key];
-        if (control) {
-          control.patchValue(getSessionVal.filter[key]);
-        }
+        let val = !!getSessionVal.filter[key] && (key === 'startDate' || key === 'endDate') ?
+          new Date(getSessionVal.filter[key]) : getSessionVal.filter[key];
+        if (control) { control.patchValue(val); }
       });
     }
   },
