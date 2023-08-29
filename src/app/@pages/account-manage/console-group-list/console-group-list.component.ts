@@ -32,7 +32,7 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
     private tableService: Ng2SmartTableService
   ) {
     super(storageService, configService);
-    this.hasConsoleGroupCreate = this.loginService.checkUserScope("console-group.create");
+    this.hasConsoleGroupCreate = this.loginService.checkUserScope('console-group','create');
   }
 
   ngOnInit(): void {

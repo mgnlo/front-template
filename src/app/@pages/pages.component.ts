@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ConsoleGroup, ConsoleGroupScope } from '@api/models/console-group.model';
 import { LoginService } from '@api/services/login.service';
 import { NbMenuItem } from '@nebular/theme';
 
@@ -51,7 +50,7 @@ export class PagesComponent implements OnInit {
     ];
 
     // 是否有儀表板權限
-    if (this.loginSerivce.checkUserScope("dashboard.read")) {
+    if (this.loginSerivce.checkUserScope('dashboard','read')) {
       this.basicMenu.push({
         title: "儀表板",
         icon: "pie-chart-outline",
@@ -60,8 +59,8 @@ export class PagesComponent implements OnInit {
     }
 
     // 是否有使用者列表、客群活動名單權限
-    let hasCustomerRead = this.loginSerivce.checkUserScope("customer.read");
-    let hasActivityRead = this.loginSerivce.checkUserScope("activity.read");
+    let hasCustomerRead = this.loginSerivce.checkUserScope('customer','read');
+    let hasActivityRead = this.loginSerivce.checkUserScope('activity','read');
 
     if (hasCustomerRead || hasActivityRead) {
       let subMenuItrm = {
@@ -88,7 +87,7 @@ export class PagesComponent implements OnInit {
     }
 
     // 是否有標籤權限
-    if (this.loginSerivce.checkUserScope("tag.read")) {
+    if (this.loginSerivce.checkUserScope('tag','read')) {
       this.basicMenu.push({
         title: "標籤管理",
         icon: "pricetags-outline",
@@ -97,9 +96,9 @@ export class PagesComponent implements OnInit {
     }
 
     // 是否有使用者列表、客群活動名單權限
-    let hasTagReview = this.loginSerivce.checkUserScope("review-tag.read");
-    let hasActivityReview = this.loginSerivce.checkUserScope("review-activity.read");
-    let hasScheduleReview = this.loginSerivce.checkUserScope("review-schedule.read");
+    let hasTagReview = this.loginSerivce.checkUserScope('review-tag','read');
+    let hasActivityReview = this.loginSerivce.checkUserScope('review-activity','read');
+    let hasScheduleReview = this.loginSerivce.checkUserScope('review-schedule','read');
 
     if (hasTagReview || hasActivityReview || hasScheduleReview) {
       let subMenuItrm = {
@@ -133,8 +132,8 @@ export class PagesComponent implements OnInit {
     }
 
     // 是否有排程權限
-    let hasScheduleTag = this.loginSerivce.checkUserScope("schedule-tag.read");
-    let hasScheduleActivity = this.loginSerivce.checkUserScope("schedule-activity.read");
+    let hasScheduleTag = this.loginSerivce.checkUserScope('schedule-tag','read');
+    let hasScheduleActivity = this.loginSerivce.checkUserScope('schedule-activity','read');
 
     if (hasScheduleTag || hasScheduleActivity) {
       let subMenuItrm = {
@@ -161,8 +160,8 @@ export class PagesComponent implements OnInit {
     }
 
     //是否有使用者管理、權限管理
-    let hasConsoleUserRead = this.loginSerivce.checkUserScope("console-user.read");
-    let hasConsoleGroupRead = this.loginSerivce.checkUserScope("console-group.read");
+    let hasConsoleUserRead = this.loginSerivce.checkUserScope('console-user','read');
+    let hasConsoleGroupRead = this.loginSerivce.checkUserScope('console-group','read');
 
     if (hasConsoleUserRead || hasConsoleGroupRead) {
       let subMenuItrm = {
