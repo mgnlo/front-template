@@ -71,7 +71,12 @@ export class TagReviewHistory {
 export class TagCategory {
   categoryKey: string;
   categoryName: string;
-  tagTopic: Array<TagTopic>;
+}
+
+export class TagSubCategory {
+  categoryKey: string;
+  categoryName: string;
+  tagTopic?: Array<TagTopic>;
 }
 
 export class TagTopic {
