@@ -308,6 +308,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       this.beforeCategoryVal = tagDimensionVal;
       // console.info('tagDimension', tagDimension)
       this.getTagSubCategoryList(tagDimensionVal);
+
       if (CommonUtil.isBlank(this.validateForm.get('tagSubDimension')?.value)) return
 
       this.validateForm?.get('tagSubDimension')?.patchValue('');
@@ -328,7 +329,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
     this.tagManageService.getTagCategoryList().pipe(
       catchError((err) => {
-        this.dialogService.alertAndBackToList(false, err.message ? err.message : '查詢標籤構面失敗');
+        this.dialogService.alertAndBackToList(false, '查詢標籤構面失敗');
         this.validateForm?.get('tagDimension')?.setErrors({ 'tagDimensionErrMsg': err.message ? err.message : '查詢標籤構面失敗' });
         throw new Error(err.message);
       }),
@@ -361,7 +362,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
     this.tagManageService.getTagSubCategory(tagDimensionVal).pipe(
       catchError((err) => {
-        this.dialogService.alertAndBackToList(false, err.message ? err.message : '查詢子標籤構面失敗');
+        this.dialogService.alertAndBackToList(false, '查詢子標籤構面失敗');
         this.validateForm?.get('tagSubDimension')?.setErrors({ 'tagSubDimensionErrMsg': err.message ? err.message : '查詢子標籤構面失敗' });
         throw new Error(err.message);
       }),
@@ -458,7 +459,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
     this.tagManageService.getTagConditionList().pipe(
       catchError((err) => {
-        this.dialogService.alertAndBackToList(false, err.message ? err.message : '查詢偵測條件失敗');
+        this.dialogService.alertAndBackToList(false, '查詢偵測條件失敗');
         this.validateForm?.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': err.message ? err.message : '查詢偵測條件失敗' });
         throw new Error(err.message);
       }),
@@ -556,7 +557,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
     this.tagManageService.filterTagConditionList(new TagConditionChartLine({ conditionName: value })).pipe(
       catchError((err) => {
-        this.dialogService.alertAndBackToList(false, err.message ? err.message : '查詢偵測條件失敗');
+        this.dialogService.alertAndBackToList(false, '查詢偵測條件失敗');
         this.validateForm?.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': err.message ? err.message : '查詢偵測條件失敗' });
         throw new Error(err.message);
       }),
