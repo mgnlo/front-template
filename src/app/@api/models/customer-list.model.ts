@@ -1,8 +1,8 @@
-export interface CustomerList {
+export interface Customer {
     customerId: string
     userName: string
     mobile: string
-    userTag: Array<{tagTitle: string, tagRule: string}>
+    tagSetting: Array<{tagName: string, tagDescription: string, department?: string, startDate?: string, endDate?: string}>
     department?: string
     birthday?: string
     gender?: string
