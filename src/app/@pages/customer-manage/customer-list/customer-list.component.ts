@@ -86,10 +86,9 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
         width: '5%',
         renderComponent: ColumnButtonComponent,
         onComponentInitFunction: (instance: ColumnButtonComponent) => {
-          instance.emitter.subscribe((res) => {
+          instance.emitter.subscribe((res: Customer) => {
             this.dialogService.open(DetailDialogComponent, {
-              title: `${res['customerId']}`,
-              datas: res,
+              customerId: res.customerId
             });
           })
         },
@@ -105,18 +104,10 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
   };
 
   reset() {
-    this.validateForm.reset({ customerId: '', mobile: '' });
+    this.validateForm.reset({ customerId: '', mobile: '', tagKeyword: '' });
     this.isSearch = true;
     this.paginator.nowPage = 1;
-    this.setSessionData();
     this.search('reset');
-  }
-
-  setSessionData() {
-    const filterVal = this.isSearch ? this.validateForm.getRawValue() :
-      this.storageService.getSessionVal(this.sessionKey)?.filter ?? this.validateForm.getRawValue();
-
-    this.setSessionVal({ page: this.paginator.nowPage, filter: filterVal });
   }
 
   search(key?: string) {
@@ -132,21 +123,12 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
       return;
     }
 
-    const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
-
     this.isSearch = false;
     if (key === 'search') this.isSearch = true;
 
     if (['search', 'reset'].includes(key)) this.paginator.nowPage = 1;
 
     let page = this.paginator.nowPage;
-
-    if (key !== 'search' && !!getSessionVal?.filter) {
-      page = getSessionVal.page;
-      CommonUtil.initializeFormWithSessionData(this.validateForm, getSessionVal);
-    }
-
-    if (key !== 'reset') this.setSessionData();
 
     let searchInfo: SearchInfo = {
       apiUrl: this.customerManageService.customerFunc,

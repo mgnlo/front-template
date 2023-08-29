@@ -1,36 +1,36 @@
-<nb-card class="dialogCard large">
+<nb-card class="dialogCard large" *ngIf="!!datas">
   <nb-card-header>
-    <h2>用戶明細資訊-{{title}}</h2>
+    <h2>用戶明細資訊-{{customerId}}</h2>
   </nb-card-header>
   <nb-card-body>
     <div class="row">
       <div class="textGroup col-4 col-lg-4">
           <p class="text_bold">姓名：</p>
-          <span>{{datas.userName}}</span>
+          <span>{{datas?.userName}}</span>
       </div>
       <div class="textGroup col-4 col-lg-4">
           <p class="text_bold">手機號碼：</p>
-          <span>{{datas.mobile}}</span>
+          <span>{{datas?.mobile}}</span>
       </div>
       <div class="textGroup col-4 col-lg-4">
           <p class="text_bold">生日：</p>
-          <span>{{datas.birthday}}</span>
+          <span>{{datas?.birthday}}</span>
       </div>
       <div class="textGroup col-4 col-lg-4">
           <p class="text_bold">性別：</p>
-          <span>{{datas.gender | enum:'gender'}}</span>
+          <span>{{datas?.gender | enum:'gender'}}</span>
       </div>
       <div class="textGroup col-4 col-lg-4">
           <p class="text_bold">交易總金額：</p>
-          <span>{{datas.totalTxAmount | number: '1.0-3'}}</span>
+          <span>{{datas?.totalTxAmount | number: '1.0-3'}}</span>
       </div>
       <div class="textGroup col-4 col-lg-4">
           <p class="text_bold">開戶分行：</p>
-          <span>{{datas.branchName}}</span>
+          <span>{{datas?.branchName}}</span>
       </div>
       <div class="textGroup col-12 col-lg-12">
           <p class="text_bold">地址：</p>
-          <span>{{datas.address}}</span>
+          <span>{{datas?.address}}</span>
       </div>
     </div>
     <div class="subTitle">
@@ -38,15 +38,15 @@
     </div>
     <div class="rightBox">
       <div class="tagFilter">
-        <nb-select placeholder="請選擇標籤所屬單位" [selected]="datas.department" size="small" shape="round" hero>
-            <nb-option *ngFor="let department of departmentList" [value]="department">標籤所屬單位：{{department}}</nb-option>
+        <nb-select placeholder="請選擇標籤所屬單位" [(selected)]="selectedDepartment" size="small" shape="round" hero >
+          <nb-option *ngFor="let department of departments" [value]="department">標籤所屬單位：{{department}}</nb-option>
         </nb-select>
       </div>
     </div>
     <div class="tagBlock row">
-      <div class="tagItem col-6 col-lg-6" *ngFor="let tag of datas.tagSetting">
-          <nb-tag status="info" appearance="filled" [text]="tag.tagName"></nb-tag>
-          <p class="tagContent">{{tag.tagDescription}}</p>
+      <div class="tagItem col-6 col-lg-6" *ngFor="let tag of departmentTag[selectedDepartment]">
+          <nb-tag status="info" appearance="filled" [text]="tag?.tagName"></nb-tag>
+          <p class="tagContent">{{tag?.tagDescription}}</p>
       </div>
     </div>
     <div class="subTitle">
@@ -56,7 +56,7 @@
       <div><span class="bg_skyBlue"></span><p>規則標籤</p></div>
       <div><span class="bg_orange"></span><p>名單標籤</p></div>
     </div>
-    <ngx-echarts-timeline-multi-range></ngx-echarts-timeline-multi-range>
+    <ngx-echarts-timeline-multi-range [datas]="departmentTag[selectedDepartment]"></ngx-echarts-timeline-multi-range>
   </nb-card-body>
   <nb-card-footer>
       <div class="btnGroup">

@@ -6,7 +6,7 @@ import { ApiLogicError } from './../error/api-logic-error';
 import { LoadingService } from './loading.service';
 import { ConfigService } from './config.service';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap, timeout, switchMap } from 'rxjs/operators';
+import { catchError, tap, timeout } from 'rxjs/operators';
 import { StorageService } from './storage.service';
 
 @Injectable({
@@ -28,6 +28,7 @@ export class ApiService {
   };
   private prefixUrl = this.configService.getConfig().SERVER_URL + this.configService.getConfig().API_URL;
   // private prefixUrl = "http://console-api-webcomm-c360.apps.ocp.webcomm.com.tw/api/";
+  
 
   constructor(
     private http: HttpClient,
