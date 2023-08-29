@@ -308,6 +308,10 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       this.beforeCategoryVal = tagDimensionVal;
       // console.info('tagDimension', tagDimension)
       this.getTagSubCategoryList(tagDimensionVal);
+      if (CommonUtil.isBlank(this.validateForm.get('tagSubDimension')?.value)) return
+
+      this.validateForm?.get('tagSubDimension')?.patchValue('');
+      this.validateForm?.get('tagSubDimension')?.setErrors({ 'tagSubDimensionErrMsg': '請重新選擇' });
     }
   }
 
