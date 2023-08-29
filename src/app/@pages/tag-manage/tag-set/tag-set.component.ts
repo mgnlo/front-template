@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting } from '@api/models/activity-list.model';
-import { TagCategory, TagConditionChartLine, TagConditionSetting, TagDetailView, TagSetting, TagSettingEditReq, TagSubCategory } from '@api/models/tag-manage.model';
+import { TagCategory, TagCondition, TagConditionChartLine, TagConditionSetting, TagDetailView, TagSetting, TagSettingEditReq, TagSubCategory } from '@api/models/tag-manage.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
@@ -342,7 +342,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
           this.validateForm?.get('tagDimension')?.setErrors({ 'tagDimensionErrMsg': '查無標籤構面' });
           return
         }
-        result?.forEach((category) => this.categoryList.push({ key: category.categoryKey, val: category.categoryName }))
+        result.forEach((category) => this.categoryList.push({ key: category.categoryKey, val: category.categoryName }))
       })
     ).subscribe()
   }
@@ -465,12 +465,13 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       }),
       filter(res => res.code === RestStatus.SUCCESS),
       tap(res => {
-        if (!res.result || res.result.length === 0) {
+        const result = JSON.parse(JSON.stringify(res.result)) as Array<TagCondition>
+        if (!result || result.length === 0) {
           this.dialogService.alertAndBackToList(false, '查無偵測條件');
           this.validateForm?.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': '查無偵測條件' });
           return
         }
-        res.result.forEach(m => {
+        result.forEach(m => {
           this.conditionKeyList.push({ key: m.conditionKey, val: m.conditionName });
         });
         this.filterConditionKeyList = [...this.conditionKeyList];
@@ -563,12 +564,13 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       }),
       filter(res => res.code === RestStatus.SUCCESS),
       tap(res => {
-        if (!res.result || res.result.length === 0) {
+        const result = JSON.parse(JSON.stringify(res.result)) as Array<TagCondition>
+        if (!result || result.length === 0) {
           this.dialogService.alertAndBackToList(false, '查無偵測條件');
           this.validateForm?.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': '查無偵測條件' });
           return
         }
-        res.result.forEach(m => {
+        result.forEach(m => {
           this.filterConditionKeyList.push({ key: m.conditionKey, val: m.conditionName });
         });
         // console.info('this.filterConditionKeyList', this.filterConditionKeyList)
