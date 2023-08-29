@@ -6,7 +6,7 @@ import { ApiLogicError } from './../error/api-logic-error';
 import { LoadingService } from './loading.service';
 import { ConfigService } from './config.service';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap, timeout } from 'rxjs/operators';
+import { catchError, tap, timeout, switchMap, finalize } from 'rxjs/operators';
 import { StorageService } from './storage.service';
 
 @Injectable({
@@ -70,7 +70,6 @@ export class ApiService {
         break;
     }
 
-
     return observable.pipe(
       timeout(30000),
       catchError((error: HttpErrorResponse) => {
@@ -109,6 +108,55 @@ export class ApiService {
 
   doUpload<T>(url: string, requestObj: FormData): Observable<ResponseModel<T>> {
     return this.doSend('upload', url, requestObj);
+  }
+
+  doGetDownload(url: string, rqParams?: { [key: string]: any }) {
+    this.loadingService.open();
+    if (this._jwtToken) {
+      this.httpOptions.headers["Authorization"] = `Bearer ${this._jwtToken}`;
+    }
+
+    const resultUrl = this.prefixUrl + url;
+    this.http.get(resultUrl, {
+      // params: rqParams,
+      responseType: 'blob' as 'json',
+      observe: 'response',
+      ...this.httpOptions
+    }).pipe(
+      timeout(30000),
+      catchError((err: HttpErrorResponse) => {
+        return throwError(err.message);
+      }),
+      tap((res: any) => {
+        if (res && res.status?.toString() !== RestStatus.SUCCESS) {
+          throw new ApiLogicError(res.statusText, res.status?.toString());
+        }
+
+        if (res.body.type === 'application/json') { // 有邏輯錯誤 => 回傳json => 拋出logic error
+          throw new ApiLogicError('不可為json', res.status?.toString());
+        }
+
+        const contentDispositionHeader = res.headers.get('Content-Disposition');
+        let fileName = rqParams?.fileName + rqParams?.uploadType; // 預設的文件名
+
+        if (contentDispositionHeader) {
+          const matches = contentDispositionHeader.match(/filename\*?=['"]?(?:UTF-8['"])?([^;\r\n"']*)['"]?;/);
+          if (matches && matches.length > 1) {
+            fileName = decodeURIComponent(matches[1]);
+          }
+        }
+
+        const blob = new Blob([res.body], { type: 'application/octet-stream' });
+
+        const blobUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = fileName;
+        a.click();
+        window.URL.revokeObjectURL(blobUrl);
+      }),
+      finalize(() => this.loadingService.close())
+    ).subscribe()
   }
 
   download(url: string, requestObj: any): void {

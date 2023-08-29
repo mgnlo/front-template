@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FileReq } from '@api/models/file.model';
 import { Schedule_Batch_History } from '@api/models/schedule-activity.model';
 import { ScheduleTagSetting } from '@api/models/schedule-tag.model';
 import { ConfigService } from '@api/services/config.service';
+import { DialogService } from '@api/services/dialog.service';
+import { FileService } from '@api/services/file.service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, StatusResult } from '@common/enums/common-enum';
 import { ScheduleTagSettingMock } from '@common/mock-data/schedule-tag-list-mock';
@@ -28,6 +31,8 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
     configService: ConfigService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private fileService: FileService,
+    private dialogService: DialogService,
   ) {
     super(storageService, configService);
     this.params = this.activatedRoute.snapshot.params;
@@ -100,6 +105,22 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
       delete: false,
     },
   };
+
+  //#region 檔案下載
+  onDownloadFile() {
+    //this.detail.fileData = 'fd79b9b3-e71e-441d-91b3-43594462d3c8';
+    if (CommonUtil.isBlank(this.detail?.fileData)) {
+      this.dialogService.alertAndBackToList(false, '檔案下載失敗(無識別碼)');
+      return
+    }
+
+    this.fileService.downloadFileService(new FileReq({
+      fileDataId: this.detail.fileData,
+      fileName: this.detail?.fileName,
+      uploadType: this.detail?.uploadType
+    }));
+  }
+  //#endregion
 
   ngOnInit(): void {
     this.dataSource = new LocalDataSource();
