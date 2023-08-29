@@ -2,7 +2,7 @@ export interface Customer {
     customerId: string
     userName: string
     mobile: string
-    tagSetting: Array<{tagName: string, tagDescription: string, department?: string, startDate?: string, endDate?: string}>
+    tagSetting: Array<Tag>
     department?: string
     birthday?: string
     gender?: string
@@ -14,9 +14,11 @@ export interface Customer {
 }
 
 export interface Tag {
-    tagId: number;
+    tagId?: number;
     tagName: string;
-    tagType: string;
-    tagStartDate: string;
-    tagEndDate: string;
+    tagDescription: string;
+    department?: string;
+    tagType?: string;
+    startDate?: string;
+    endDate?: string;
 }

@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 @Component({
   selector: 'checkbox-column',
   template: `
-    <nb-checkbox *ngIf="showCheckbox()" status="info" [checked]="settings?.isChecked" (change)="onCheckboxChange()" [disabled]="settings?.disable"></nb-checkbox>
+    <nb-checkbox *ngIf="showCheckbox()" status="info" [checked]="settings?.isChecked" (change)="onCheckboxChange($event)" [disabled]="settings?.disable"></nb-checkbox>
   `,
 })
 export class CheckboxColumnComponent {
@@ -47,9 +47,9 @@ export class CheckboxColumnComponent {
     this.rowData['isSelected'] = this.settings?.isChecked;
   }
 
-  onCheckboxChange() {
-    this.rowData['isSelected'] = !this.rowData['isSelected'];
-
+  onCheckboxChange(event) {
+    this.rowData['isSelected'] = event.target.checked;
+    this.rowData['isChecked'] = event.target.checked;
     this.emitter.emit(this.rowData);
   }
 }

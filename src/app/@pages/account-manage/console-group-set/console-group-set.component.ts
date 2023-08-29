@@ -107,7 +107,7 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
         renderComponent: CheckboxColumnComponent,
         onComponentInitFunction: (instance: CheckboxColumnComponent) => {
           instance.settings = { isShowParam: { key: 'read' }, isCheckedParam: { key: 'read' } };
-          instance.emitter.subscribe((res) => { res.read = res.isSelected });
+          instance.emitter.subscribe((res) => { res.read = res.isChecked });
         },
         sort: false,
       },
@@ -223,7 +223,7 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
       this.consoleGroupDetail.enable = req.enable === 'true' ? true : false;
 
       for (let scopeObj of this.dataSource2['data']) {
-        let keyList = Object.keys(scopeObj).filter(key => key !== 'isSelected' && key !== 'isShow');
+        let keyList = Object.keys(scopeObj).filter(key => key !== 'isSelected' && key !== 'isShow' && key !== 'isChecked');
         for (let idx = 1; idx < keyList.length; idx++) {
           if (scopeObj[keyList[idx]]) {
             this.consoleGroupDetail.consoleGroupScope.push({

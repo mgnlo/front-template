@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy } from '@angular/core';
+import { CustomerTagHistory } from '@common/mock-data/customer-tag-history-mock';
 import { NbThemeService } from '@nebular/theme';
 
 import * as echarts from 'echarts';
@@ -10,7 +11,8 @@ import * as echarts from 'echarts';
     <div echarts [options]="options" class="echart"></div>
   `,
 })
-export class EchartsTimelineMultiRangeComponent implements AfterViewInit, OnDestroy {
+export class EchartsTimelineMultiRangeComponent<T> implements AfterViewInit, OnDestroy {
+  @Input() datas: T;
   options: any = {};
   themeSubscription: any;
 
@@ -18,70 +20,14 @@ export class EchartsTimelineMultiRangeComponent implements AfterViewInit, OnDest
   endTime;
 
   //主機提供資料
-  mockData = [{
-    tagName: "淨流出", //標籤名稱
-    tagType: 'normal',
-    tracks: [
-      { startDate: '2021-06-27', endDate: '2021-12-04' },   //起始日、結束日
-      { startDate: '2022-07-27', endDate: '2023-02-29' },
-      { startDate: '2023-09-07', endDate: '2023-09-29' }
-    ]
-  }, {
-    tagName: "淨流入",
-    tagType: 'normal',
-    tracks: [
-      { startDate: '2022-05-23', endDate: '2023-07-14' },
-      { startDate: '2023-07-21', endDate: '2023-08-29' }
-    ]
-  }, {
-    tagName: "產品持有－JCB白",
-    tagType: 'document',
-    tracks: [
-      { startDate: '2021-04-23', endDate: '2022-12-14' },
-      { startDate: '2023-07-11', endDate: '2023-09-29' }
-    ]
-  }, {
-    tagName: "轉入金額－多",
-    tagType: 'normal',
-    tracks: [
-      { startDate: '2021-02-23', endDate: '2021-08-14' },
-      { startDate: '2022-07-11', endDate: '2023-09-29' }
-    ]
-  }, {
-    tagName: "忠誠戶",
-    tagType: 'document',
-    tracks: [
-      { startDate: '2021-07-23', endDate: '2022-02-14' },
-      { startDate: '2022-03-23', endDate: '2022-11-14' },
-      { startDate: '2023-07-11', endDate: '2023-09-29' }
-    ]
-  }, {
-    tagName: "透支金額－少",
-    tagType: 'normal',
-    tracks: [
-      { startDate: '2020-04-23', endDate: '2021-05-14' },
-      { startDate: '2022-03-23', endDate: '2023-11-14' }
-    ]
-  }, {
-    tagName: "官網平均停留時間－長",
-    tagType: 'document',
-    tracks: [
-      { startDate: '2023-05-13', endDate: '2023-06-14' },
-      { startDate: '2022-10-21', endDate: '2023-11-29' }
-    ]
-  }];
-
-
+  mockData = CustomerTagHistory;
 
   // TODO 此款圖示顏色對應 標籤類型(TagType)，其值與色票對應如下：
   // "normal" = 規則標籤  -> #29A7E6
   // "document" = 名單標籤 -> #FFAA00
 
   // 標籤索引陣列對應顏色
-  colors = {
-    normal: "#29A7E6",
-    document: "#FFAA00"
-  };
+  colors = { normal: "#29A7E6", document: "#FFAA00" };
 
   //標籤名稱陣列
   categories = [];
@@ -90,10 +36,11 @@ export class EchartsTimelineMultiRangeComponent implements AfterViewInit, OnDest
   data = [];
 
   constructor(private theme: NbThemeService) {
-    for(let idx = 0; idx < this.mockData.length; idx++){
-      this.categories.push(this.mockData[idx].tagName);
+    let sourceData = !this.datas ? this.mockData : this.data;
+    for (let idx = 0; idx < sourceData.length; idx++) {
+      this.categories.push(sourceData[idx].tagName);
 
-      for(let offset = 0; offset < this.mockData[idx].tracks.length; offset++){
+      for (let offset = 0; offset < sourceData[idx].tracks.length; offset++) {
         let item = {
           name: "",
           value: [],
@@ -101,13 +48,13 @@ export class EchartsTimelineMultiRangeComponent implements AfterViewInit, OnDest
             color: ""
           }
         }
-        
-        item.name = this.mockData[idx].tagName;
+
+        item.name = sourceData[idx].tagName;
         item.value = [];
         item.value.push(idx);
-        item.value.push(new Date(this.mockData[idx].tracks[offset].startDate).getTime());
-        item.value.push(new Date(this.mockData[idx].tracks[offset].endDate).getTime());
-        item.itemStyle.color = this.colors[this.mockData[idx].tagType];
+        item.value.push(new Date(sourceData[idx].tracks[offset].startDate).getTime());
+        item.value.push(new Date(sourceData[idx].tracks[offset].endDate).getTime());
+        item.itemStyle.color = this.colors[sourceData[idx].tagType];
 
         this.data.push(item);
       }
@@ -116,7 +63,7 @@ export class EchartsTimelineMultiRangeComponent implements AfterViewInit, OnDest
     //最小起始日期，以資料流內容最小值為準 - 86400000 * 2, //最小起始日往前兩天，這個可以調整
     this.startTime = this.data.reduce((agg, d) => Math.min(agg, d.value[1]), Infinity) - 86400000 * 2;
     //最大結束日期，以資料流內容最大值為準 + 86400000 * 2, //最大結束日往後兩天，這個可以調整
-    this.endTime = this.data.reduce((agg, d) => Math.max(agg, d.value[2]), 0) + 86400000 * 2;    
+    this.endTime = this.data.reduce((agg, d) => Math.max(agg, d.value[2]), 0) + 86400000 * 2;
   }
 
   //自定義 render 邏輯，主要在繪製線圖
