@@ -71,7 +71,7 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
         width: '15%',
         sort: false,
       },
-      userTag: {
+      tagKeyword: {
         title: `用戶標籤 (更新時間: ${this.updateTime})`,
         type: 'custom',
         width: '55%',
@@ -116,6 +116,7 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
       let filter = this.validateForm.getRawValue();
       for (const [k, v] of Object.entries(filter).filter(([key, val]) => !!val)) {
         this.dataSource.addFilter({ field: k, filter: undefined, search: v });
+        console.info(this.dataSource.getFilter())
         this.updateTime = moment(new Date()).format('YYYY/MM/DD');
       }
       this.dataSource.load(this.mockData);

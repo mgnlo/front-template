@@ -238,7 +238,7 @@ $scrollbar: #BBC1C5;
         &.colorArea { padding: 0; }
     }
     nb-accordion {
-        border: 0.0625rem solid #e4e9f2;
+        border: 0.0625rem solid #E4E9F2;
         border-radius: 0.25rem;
         box-shadow: none;
         margin-bottom: 1.875rem;
@@ -512,7 +512,7 @@ $scrollbar: #BBC1C5;
     nb-tabset {
         .tabset {
             border-width: 1.5px;
-            border-color: #e4e9f2;
+            border-color: #E4E9F2;
             margin-bottom: 1rem !important;
             .tab {
                 .tab-link {
@@ -666,7 +666,7 @@ $scrollbar: #BBC1C5;
     .nb-tag-input {
         color: #121A23;
         border-radius: 0.25rem;
-        border: 1px solid #e4e9f2;
+        border: 1px solid #E4E9F2;
         background-color: #FAFAFA;
         padding: 0.4375rem 1rem !important;
         &:disabled {
@@ -838,7 +838,7 @@ ul {
 .fieldGroup {
     display: flex;
     flex-direction: column;
-    padding: 0.5rem 0.625rem !important;
+    padding: 0.5rem !important;
     > label {
         position: relative;
         width: fit-content;
@@ -1250,7 +1250,7 @@ ul {
                 .custom-drag {
                     max-width: unset !important;
                     background: #EDF1F7 !important;
-                    border: 2px dashed #cfcfcf !important;
+                    border: 2px dashed #CFCFCF !important;
                     padding: 2rem 0 !important;
                     .content { visibility: hidden; }
                 }
@@ -1395,6 +1395,67 @@ ul {
         z-index: 1;
     }
 }
+// 表格頁籤
+.tablePager {
+    display: flex;
+    justify-content: space-between;
+    ul.pagination {
+        width: auto;
+        display: flex;
+        border: #DBDEE1 solid 1px;
+        border-radius: 0.25rem;
+        margin: 1.25rem 0 1.25rem auto;
+        padding: 0;
+        .pageItem {
+            overflow: hidden;
+            display: inline;
+            margin-bottom: 0;
+            a {
+                display: block;
+                cursor: pointer;
+                font-size: 0.875rem;
+                text-decoration: none;
+                line-height: 1rem;
+                border: none;
+                background-color: transparent;
+                color: #2A6191;
+                padding: 0.75rem 1.25rem;
+                span {
+                    font-size: inherit;
+                    line-height: inherit;
+                    color: inherit;
+                }
+            }
+            &:not(:nth-last-of-type(1)) { border-right: 1px solid #DBDEE1; }
+            &:nth-child(1) {
+                border-top-left-radius: 0.25rem;
+                border-bottom-left-radius: 0.25rem;
+            }
+            &:nth-last-child(1) {
+                border-top-right-radius: 0.25rem;
+                border-bottom-right-radius: 0.25rem;
+            }
+            &.disable {
+                a {
+                    cursor: auto;
+                    pointer-events: none;
+                    background: transparent;
+                    color: rgba(143, 155, 179, 0.48);
+                }
+            }
+            &.active {
+                color: #FFFFFF;
+                background-color: #2A6191;
+                a {
+                    cursor: auto;
+                    pointer-events: none;
+                    color: #FFFFFF;
+                    background-color: #2A6191;
+                }
+            }
+        }
+    }
+}
 table {
     position: relative;
     width: 100%;
@@ -1405,10 +1466,8 @@ table {
         font-weight: normal;
         color: #121A23;
         border: 1px solid #DBDEE1;
-        padding: 0.875rem 1.25rem;
-        &.center {
-            text-align: center;
-        }
+        padding: 0.875rem 1.25rem !important;
+        &.center { text-align: center; }
     }
     th {
         &.w100 { width: 100px;}
@@ -1525,77 +1584,31 @@ table {
             }
         }
     }
-    // 表格頁籤
-    .tablePager {
-        display: flex;
-        justify-content: space-between;
-        ul.pagination {
-            width: auto;
-            display: flex;
-            border: #DBDEE1 solid 1px;
-            border-radius: 0.25rem;
-            margin: 1.25rem 0 1.25rem auto;
-            padding: 0;
-            .pageItem {
-                overflow: hidden;
-                display: inline;
-                margin-bottom: 0;
-                a {
-                    display: block;
-                    cursor: pointer;
-                    font-size: 0.875rem;
-                    text-decoration: none;
-                    line-height: 1rem;
-                    border: none;
-                    background-color: transparent;
-                    color: #2A6191;
-                    padding: 0.75rem 1.25rem;
-                    span {
-                        font-size: inherit;
-                        line-height: inherit;
-                        color: inherit;
-                    }
-                }
-                &:not(:nth-last-of-type(1)) { border-right: 1px solid #DBDEE1; }
-                &:nth-child(1) {
-                    border-top-left-radius: 0.25rem;
-                    border-bottom-left-radius: 0.25rem;
-                }
-                &:nth-last-child(1) {
-                    border-top-right-radius: 0.25rem;
-                    border-bottom-right-radius: 0.25rem;
-                }
-                &.disable {
-                    a {
-                        cursor: auto;
-                        pointer-events: none;
-                        background: transparent;
-                        color: rgba(143, 155, 179, 0.48);
-                    }
-                }
-                &.active {
-                    background-color: #2A6191;
-                    color: #ffffff;
-                    a {
-                        cursor: auto;
-                        pointer-events: none;
-                        background-color: #2A6191;
-                        color: #ffffff;
-                    }
-                }
-            }
-        }
-    }
 }
 .nb-theme-default ng2-smart-table {
     table {
-        th {
-            padding: 0.875rem 1.25rem !important;
+        tr {
+            th {
+                font-weight: bold;
+                color: $label-color;
+                padding: 0.875rem 1.25rem;
+                p, a, span {
+                    font-weight: inherit;
+                    color: inherit !important;
+                }
+            }
+            td {
+                font-size: $f14;
+                p, a, span { font-size: inherit; }
+            }
+        }
+        tbody tr {
+            &:nth-child(odd),&:nth-child(odd).select { background-color: #FAFAFA !important; }
+            &:nth-child(even),&:nth-child(even).select { background-color: #FFFFFF !important; }
+            &:hover { background-color: #F2F1F1 !important; }
         }
         // 篩選功能
-        .ng2-smart-filters th {
-            padding: 6px 8px !important;
-        }
+        .ng2-smart-filters th { padding: 6px 8px !important; }
         // 操作按鈕
         .ng2-smart-actions {
             width: calc(3rem + 3rem + 1px);
@@ -1645,7 +1658,7 @@ table {
                 display: flex !important;
                 padding: 0;
             }
-        }
+        } 
         nb-radio {
             display: flex;
             align-items: center;
@@ -1660,9 +1673,7 @@ table {
             display: flex;
             align-items: center;
             justify-content: center;
-            .toggle-label {
-                margin-bottom: 0;
-            }
+            .toggle-label { margin-bottom: 0; }
         }
         .ng2-smart-action-multiple-select {
             text-align: center;
@@ -1670,13 +1681,36 @@ table {
             width: 3rem;
         }
     }
-    ng2-smart-table-pager{
+    ng2-smart-table-pager {
         display: flex;
         nav.ng2-smart-pagination-nav {
             margin: auto;
             margin-top: 1.25rem;
             margin-right: 0;
             .ng2-smart-page-item { margin-bottom: 0; }
+            .pagination {
+                border-color: #DBDEE1;
+                margin: 0;
+                li {
+                    a, span { color: #0078B2; }
+                    &:not(:last-child) { border-color: #DBDEE1 !important; }
+                    &.active {
+                        a, a:hover, a:focus, > span { background-color: #0078B2; }
+                    }
+                    &.disabled a span { color: rgba(143, 155, 179, 0.48);}
+                }
+            }
+            @media all and (max-width: 960px) {
+                margin-top: 2.5rem;
+            }
+        }
+    }
+    ~ .tablePager {
+        position: absolute;
+        bottom: 3.25rem;
+        @media all and (max-width: 960px) {
+            right: 0;
+            bottom: 5.75rem;
         }
     }
 }
