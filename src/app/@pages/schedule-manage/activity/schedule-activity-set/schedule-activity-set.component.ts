@@ -45,10 +45,10 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   monthDailyList: Array<{ key: string; val: string }> = Array.from(
     { length: 31 },
     (_, index) => ({ key: (index + 1).toString(), val: (index + 1).toString() })
-  ).concat({ key: this.getLastDayOfMonth(), val: this.chineseEndMonth });
+  ).concat({ key: '999', val: this.chineseEndMonth });
 
   hourList: Array<{ key: string; val: string }> = Array.from(
-    { length: 12 },
+    { length: 24 },
     (_, index) => ({ key: index.toString().padStart(2, '0'), val: index.toString().padStart(2, '0') })
   );
   minuteList: Array<{ key: string; val: string }> = Array.from(
