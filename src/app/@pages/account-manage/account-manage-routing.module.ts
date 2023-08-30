@@ -11,12 +11,12 @@ const routes: Routes = [
     {
         path: "", component: AccountManageComponent,
         children: [
-            { path: '', redirectTo: 'account-manage', pathMatch: 'full' },
-            { path: "console-group-list", component: ConsoleGroupListComponent, data: { keepSession: true } },
-            { path: "console-group-detail/:groupId", component: ConsoleGroupDetailComponent, data: { keepSession: true }},
-            { path: 'console-group-set', component: ConsoleGroupSetComponent }, //add
-            { path: 'console-group-set/:changeRoute/:groupId', component: ConsoleGroupSetComponent }, //edit or copy
-            { path: "console-user", component: ConsoleUserComponent }
+            { path: '', redirectTo: 'console-group-list', pathMatch: 'full' },
+            { path: "console-group-list", component: ConsoleGroupListComponent, data: { schema: 'console-group', keepSession: true}},
+            { path: "console-group-detail/:groupId", component: ConsoleGroupDetailComponent, data: { schema: 'console-group', keepSession: true}},
+            { path: 'console-group-set', component: ConsoleGroupSetComponent, data: {schema: 'console-group'}}, //add
+            { path: 'console-group-set/:changeRoute/:groupId', component: ConsoleGroupSetComponent, data: {schema: 'console-group'}}, //edit or copy
+            { path: "console-user", component: ConsoleUserComponent, data: {schema: 'console-user'}}
         ]
     }
 ]

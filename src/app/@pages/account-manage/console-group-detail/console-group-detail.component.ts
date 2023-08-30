@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConsoleGroup, GridInnerCheckBox } from '@api/models/console-group.model';
 import { ConfigService } from '@api/services/config.service';
@@ -10,6 +10,7 @@ import { StorageService } from '@api/services/storage.service';
 import { GroupScope } from '@common/enums/console-group-enum';
 import { BusinessUnit } from '@common/enums/console-user-enum';
 import { RestStatus } from '@common/enums/rest-enum';
+import { ConsoleGroupDetailMock } from '@common/mock-data/console-group-detail-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/checkbox.component';
 import { BaseComponent } from '@pages/base.component';
@@ -159,14 +160,28 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
     super(storageService, configService);
     this.dataSource = new LocalDataSource();
     this.dataSource2 = new LocalDataSource();
-    this.hasConsoleGroupCreate = this.loginService.checkUserScope("console-group.create");
-    this.hasConsoleGroupUpdate = this.loginService.checkUserScope("console-group.update");
+    this.hasConsoleGroupCreate = this.loginService.checkUserScope('console-group','create');
+    this.hasConsoleGroupUpdate = this.loginService.checkUserScope('console-group','update');
   }
 
   ngOnInit(): void {
     const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
     this.groupId = !!this.activatedRoute.snapshot.params.groupId ? this.activatedRoute.snapshot.params.groupId : getSessionVal.groupId;
     this.loadingService.open();
+    if (this.isMock) {
+      this.consoleGroupDetail = ConsoleGroupDetailMock;
+      let scopeInfo = this.consoleGroupDetail.consoleGroupScope.map((groupScope) => {
+        let scope = groupScope.scope.split(".");
+        return { featureName: scope[0], [scope[1]]: true };
+      });
+      let scopeData = CommonUtil.groupBy(scopeInfo, 'featureName', false);
+      let scopeTableData = CommonUtil.flatGroupItem(scopeData, 'featureName');
+      this.accountManageService.updateCheckbox(this.consoleGroupScope, scopeTableData);
+      this.dataSource2.load(this.consoleGroupScope);
+      this.dataSource.load(this.consoleGroupDetail.consoleUser);
+      this.loadingService.close();
+      return;
+    }
     this.accountManageService.getConsoleGroup(this.groupId).pipe(
       catchError((err) => {
         this.loadingService.close();

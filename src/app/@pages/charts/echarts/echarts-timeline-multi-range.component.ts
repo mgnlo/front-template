@@ -1,9 +1,7 @@
-import { AfterViewInit, Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, SimpleChanges } from '@angular/core';
 import { CustomerTagHistory } from '@common/mock-data/customer-tag-history-mock';
 import { NbThemeService } from '@nebular/theme';
-
 import * as echarts from 'echarts';
-
 
 @Component({
   selector: 'ngx-echarts-timeline-multi-range',
@@ -11,8 +9,8 @@ import * as echarts from 'echarts';
     <div echarts [options]="options" class="echart"></div>
   `,
 })
-export class EchartsTimelineMultiRangeComponent<T> implements AfterViewInit, OnDestroy {
-  @Input() datas: T;
+export class EchartsTimelineMultiRangeComponent<T> implements OnDestroy {
+  @Input() datas: Array<T>;
   options: any = {};
   themeSubscription: any;
 
@@ -35,8 +33,23 @@ export class EchartsTimelineMultiRangeComponent<T> implements AfterViewInit, OnD
   //資料流
   data = [];
 
-  constructor(private theme: NbThemeService) {
-    let sourceData = !this.datas ? this.mockData : this.data;
+  constructor(private theme: NbThemeService) { }
+
+  ngOnChanges(changes: SimpleChanges) {
+    let sourceData = !changes.datas.currentValue ? this.mockData : [];
+    if (changes.datas.previousValue !== changes.datas.currentValue) {
+      sourceData = [];
+      this.data = [];
+      this.categories = [];
+      changes.datas.currentValue.forEach(tag => {
+        sourceData.push({
+          tagName: tag['tagName'],
+          tagType: tag['tagType'],
+          tracks: [{ startDate: tag['startDate'], endDate: tag['endDate'] }]
+        });
+      });
+    }
+
     for (let idx = 0; idx < sourceData.length; idx++) {
       this.categories.push(sourceData[idx].tagName);
 
@@ -64,6 +77,7 @@ export class EchartsTimelineMultiRangeComponent<T> implements AfterViewInit, OnD
     this.startTime = this.data.reduce((agg, d) => Math.min(agg, d.value[1]), Infinity) - 86400000 * 2;
     //最大結束日期，以資料流內容最大值為準 + 86400000 * 2, //最大結束日往後兩天，這個可以調整
     this.endTime = this.data.reduce((agg, d) => Math.max(agg, d.value[2]), 0) + 86400000 * 2;
+    this.render();
   }
 
   //自定義 render 邏輯，主要在繪製線圖
@@ -98,7 +112,7 @@ export class EchartsTimelineMultiRangeComponent<T> implements AfterViewInit, OnD
     );
   }
 
-  ngAfterViewInit() {
+  render() {
     this.themeSubscription = this.theme.getJsTheme().subscribe(config => {
       // const colors: any = config.variables;
       // const echarts: any = config.variables.echarts;

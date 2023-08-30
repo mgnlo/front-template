@@ -18,7 +18,7 @@ export interface TagSetting {
   fileName: string;
   filePath: string;
   fileData: string;
-  version: string
+  version: string;
   tagConditionSetting: Array<TagConditionSetting>;
   tagReviewHistoryAud: Array<TagReviewHistory>;
 }
@@ -65,6 +65,14 @@ export class TagReviewHistory {
   scheduleSettings?: string;
   uploadType?: string;
   filePath?: string;
+  tagConditionSetting?: Array<TagConditionSetting>;
+  tagReviewHistoryAud?: Array<TagReviewHistory>;
+  reviewTime?: string;
+  createTime?: string;
+  timestamp?: string;
+  revisionType?: number;
+  revisionId?: number;
+  version?: string;
 }
 
 //#region 偵測條件

@@ -4,9 +4,18 @@
       <input nbInput fullWidth [status]="hasError() ? 'danger':'basic'" [type]="type"
         [placeholder]="placeholder" [formControlName]="ctlName" [maxlength]="maxlength"/>
   </div>
+  <div class="note" *ngIf="linkInfo">
+    <a [href]="linkInfo.link">{{linkInfo.title}}</a>
+  </div>
+  <ng-container *ngIf="infos">
+    <div class="note" *ngFor="let info of infos">
+      <nb-icon icon="alert-circle"></nb-icon>
+      <p>{{info}}</p>
+    </div>
+  </ng-container>
   <div class="note errorText">
-      <nb-icon icon="alert-triangle"></nb-icon>
-      <p *ngIf=" (ctl?.dirty || ctl?.touched) && ctl?.errors?.required; else otherErr">此為必填欄位</p>
-      <ng-template #otherErr><p>{{firstErr}}</p></ng-template>
+    <nb-icon icon="alert-triangle"></nb-icon>
+    <p *ngIf=" (ctl?.dirty || ctl?.touched) && ctl?.errors?.required; else otherErr">此為必填欄位</p>
+    <ng-template #otherErr><p>{{firstErr}}</p></ng-template>
   </div>
 </div>

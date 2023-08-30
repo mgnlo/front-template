@@ -1,10 +1,10 @@
-<nb-card class="dialogCard statusDialog large">
+<nb-card class="dialogCard large">
   <nb-card-header>
     <h2>預覽名單</h2>
   </nb-card-header>
   <nb-card-body>
     <div class="row">
-      <basic-input class="col-4 col-lg-4" title="名單上限" [form]="validateForm" ctlName="listLimit"></basic-input>
+      <basic-input class="col-4 col-lg-4" title="名單上限" [form]="validateForm" ctlName="listLimit" [infos]="infos" type="number"></basic-input>
       <dropdown class="col-4 col-lg-4" title="資料排序方式" [form]="validateForm" ctlName="orderBy"
         [selectList]="{options: orderByList | keyvalue, key: 'key', val: 'value'}"></dropdown>
       <radio class="col-4 col-lg-4" title="排序順序" [form]="validateForm" ctlName="sortType"

@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ResponseModel } from '@api/models/base.model';
 import { ConsoleGroup, GridInnerCheckBox } from '@api/models/console-group.model';
-import { ConsoleUser, ConsoleUserReq } from '@api/models/console-user.model';
+import { ConsoleUser } from '@api/models/console-user.model';
 import { ApiService } from '@api/services/api.service';
-import { DialogService } from '@api/services/dialog.service';
 import { Observable } from 'rxjs';
 
 @Injectable()

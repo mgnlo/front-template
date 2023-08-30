@@ -32,7 +32,7 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
     private tableService: Ng2SmartTableService
   ) {
     super(storageService, configService);
-    this.hasConsoleGroupCreate = this.loginService.checkUserScope("console-group.create");
+    this.hasConsoleGroupCreate = this.loginService.checkUserScope('console-group','create');
   }
 
   ngOnInit(): void {
@@ -42,6 +42,7 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
     if (this.isMock) {
       this.dataSource.reset();
       this.dataSource.load(ConsoleGroupListMock);
+      this.loadingService.close();
       return;
     }
 

@@ -120,7 +120,7 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
       groupId: new FormControl(''),
     });
 
-    if (!this.loginService.checkUserScope("console-user.update")) {
+    if (!this.loginService.checkUserScope('console-user', 'update')) {
       delete this.gridDefine.columns.action;
     }
   }
@@ -138,8 +138,15 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
       this.dataSource.reset();
       let filter = this.validateForm.getRawValue();
       for (const [k, v] of Object.entries(filter).filter(([key, val]) => !!val)) {
-        this.dataSource.addFilter({ field: k, filter: undefined, search: v });
+        if (k === 'businessUnit') {
+          Object.entries(v).filter(([key, val]) => val === true).map(([key, val]) => key).forEach(unit => {
+            this.dataSource.addFilter({ field: k, filter: undefined, search: unit });
+          })
+        } else {
+          this.dataSource.addFilter({ field: k, filter: undefined, search: v });
+        }
       }
+      console.info(this.dataSource.getFilter())
       this.dataSource.load(ConsoleUserListMock);
       return;
     }
@@ -170,6 +177,7 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
 
     if (this.isMock) {
       this.dataSource.load(ConsoleGroupListMock);
+      this.consoleGroupList = ConsoleGroupListMock;
       this.loadingService.close();
       return;
     }

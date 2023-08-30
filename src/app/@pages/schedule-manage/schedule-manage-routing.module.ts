@@ -13,17 +13,17 @@ const routes: Routes = [
   {
     path: "", component: ScheduleManageComponent,
     children: [
-      { path: '', redirectTo: 'schedule-manage', pathMatch: 'full' },
+      { path: '', redirectTo: 'schedule-activity-list', pathMatch: 'full' },
       //活動列表
-      { path: "schedule-activity-list", component: ScheduleListComponent, data: {keepSession: true, keepFrom: ['schedule-activity-detail/']}},
-      { path: 'schedule-activity-detail/:scheduleId', component: ScheduleDetailComponent, data: {keepSession: true, keepFrom: ['schedule-activity-export-detail/']}},
-      { path: 'schedule-activity-set', component: ScheduleAddComponent },
-      { path: 'schedule-activity-set/:changeRoute/:scheduleId', component: ScheduleAddComponent}, //編輯
-      { path: 'schedule-activity-export-detail/:scheduleId/:referenceId', component: ActivityExportDetailComponent, data: {keepSession: true}}, //名單查看
+      { path: "schedule-activity-list", component: ScheduleListComponent, data:{ schema: 'schedule-activity', keepSession: true, keepFrom: ['schedule-activity-detail/']}},
+      { path: 'schedule-activity-detail/:scheduleId', component: ScheduleDetailComponent, data:{ schema: 'schedule-activity', keepSession: true, keepFrom: ['schedule-activity-export-detail/']}},
+      { path: 'schedule-activity-set', component: ScheduleAddComponent, data:{ schema: 'schedule-activity'}},
+      { path: 'schedule-activity-set/:changeRoute/:scheduleId', component: ScheduleAddComponent, data:{ schema: 'schedule-activity' }}, //編輯
+      { path: 'schedule-activity-export-detail/:scheduleId/:referenceId', component: ActivityExportDetailComponent, data:{ schema: 'schedule-activity', keepSession: true}}, //名單查看
 
       //標籤列表
-      { path: "schedule-tag-detail", component: ScheduleTagDetailComponent, data: {keepSession: true, keepFrom: ['schedule-tag-export-detail/']}},
-      { path: "schedule-tag-export-detail/:tagId", component: ScheduleTagExportDetailComponent, data: {keepSession: true}},
+      { path: "schedule-tag-detail", component: ScheduleTagDetailComponent, data:{ schema: 'schedule-tag', keepSession: true, keepFrom: ['schedule-tag-export-detail/']}},
+      { path: "schedule-tag-export-detail/:tagId", component: ScheduleTagExportDetailComponent, data:{ schema: 'schedule-tag', keepSession: true}},
     ]
   }
 ]
