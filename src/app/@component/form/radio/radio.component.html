@@ -9,7 +9,7 @@
       </nb-radio-group>
   </div>
   <!-- 欄位錯誤訊息 -->
-  <div class="note errorText">
+  <div class="note errorText" *ngIf="errorTextBoolen">
     <nb-icon icon="alert-triangle"></nb-icon>
     <p *ngIf=" (ctl?.dirty ) && ctl?.errors?.required; else otherErr">此為必填欄位</p>
     <ng-template #otherErr><p>{{firstErr}}</p></ng-template>

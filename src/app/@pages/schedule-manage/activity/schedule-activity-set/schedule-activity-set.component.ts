@@ -35,7 +35,8 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   actionName: string;// 新增/編輯/複製
 
   //預設下拉時間日期
-  daily = Array.from({ length: 32 }, (_, index) => index.toString().padStart(2, '0'));
+  weekDaily = Array.from({ length: 8 }, (_, index) => index.toString().padStart(2, '0'));
+  monthDaily = Array.from({ length: 32 }, (_, index) => index.toString().padStart(2, '0'));
   hour = Array.from({ length: 13 }, (_, index) => index.toString().padStart(2, '0'));
   minute = Array.from({ length: 61 }, (_, index) => index.toString().padStart(2, '0'));
 
@@ -76,8 +77,8 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       jobName: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
       status: new FormControl(null, Validators.required),
       executionFrequency: new FormControl('daily', Validators.required),
-      hour: new FormControl(null, Validators.required),
-      minute: new FormControl(null, Validators.required),
+      hour: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
+      minute: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
       filePath: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
     });
 
@@ -161,16 +162,23 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   //#region 頻率切換
   changeFrequencyType(key: string) {
-    this.validateForm.patchValue({ 'hour': '', 'minute': '' });
+    console.log(key)
+    this.removeFieldIfExists('daily');
+    this.removeFieldIfExists('hour');
+    this.removeFieldIfExists('minute');
     switch (key) {
       case 'daily':
-        this.removeFieldIfExists('daily');
+        this.addFieldIfNotExists('hour', null, [Validators.required, ValidatorsUtil.blank]);
+        this.addFieldIfNotExists('minute', null, [Validators.required, ValidatorsUtil.blank]);
         break;
       case 'weekly':
       case 'monthly':
-        this.addFieldIfNotExists('daily', null, Validators.required);
+        this.addFieldIfNotExists('daily', null, [Validators.required, ValidatorsUtil.blank]);
+        this.addFieldIfNotExists('hour', null, [Validators.required, ValidatorsUtil.blank]);
+        this.addFieldIfNotExists('minute', null, [Validators.required, ValidatorsUtil.blank]);
         break;
     }
+    this.changeDetectorRef.detectChanges();
   }
   //#endregion
 
@@ -268,7 +276,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   //#endregion
 
-  //塞選不重複資料
+  //#region 塞選不重複資料
   refreshFilterActivityList() {
     if (this.activityListTemp && this.activityListTemp.length > 0) {
       this.filterActivityList = [...this.activityListTemp, ...this.activityList]
@@ -333,7 +341,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       this.dialogService.alertAndBackToList(false, `${this.actionName}驗證失敗`, ['pages', 'schedule-manage', 'schedule-activity-set', ...route]);
       return
     }
-    
+
     if (this.isMock) {
       this.dialogService.alertAndBackToList(true, `${this.actionName}成功`, ['pages', 'schedule-manage', 'schedule-activity-list']);
       this.loadingService.close();

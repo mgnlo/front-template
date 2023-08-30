@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ConfigService } from '@api/services/config.service';
 import { StorageService } from '@api/services/storage.service';
 import { CommonUtil } from '@common/utils/common-util';
@@ -80,7 +80,6 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
 
   // 檢查條件區是否存在清單中
   existsInActivityList = (ctl: FormControl): { [key: string]: any } | null => {
-
     let filterValue = '';
     if (ctl?.value instanceof Object && 'key' in ctl?.value && 'val' in ctl?.value) {
       filterValue = ctl?.value?.val?.toLowerCase()
@@ -89,8 +88,8 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
     }
 
     if ((ctl.dirty || ctl.touched || ctl.valueChanges) && this.dataList) {
-      console.info('this.dataList', this.dataList)
-      console.info('filterValue', filterValue)
+      // console.info('this.dataList', this.dataList)
+      // console.info('filterValue', filterValue)
       if (!CommonUtil.isBlank(filterValue) && this.dataList.filter(item => item?.val?.toLowerCase() === filterValue).length === 0) {
         return { 'activityErrMsg': '不存在活動清單中' }; // 驗證失敗
       }

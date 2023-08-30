@@ -83,8 +83,6 @@
                 <input nbInput fullWidth type="text"  placeholder="請輸入或選擇"
                 [nbAutocomplete]="auto"
                 [status]="condition_key?.errors?.condition_valueErrMsg  ? 'danger' : 'basic'"
-                (click)="getConditionKeyList()"
-                (keydown)="onKeyDown($event)"
                 (input)="onConditionKeyChange($event)"
                 (blur)="onBlurConditionKeyInput()"
                 formControlName="conditionKey"/>

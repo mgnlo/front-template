@@ -75,6 +75,13 @@ export class TagReviewHistory {
   version?: string;
 }
 
+//#region 偵測條件
+export class TagCondition{
+  conditionKey: string;
+  conditionName: string;
+}
+//#endregion
+
 //#region 標籤構面
 export class TagCategory {
   categoryKey: string;
