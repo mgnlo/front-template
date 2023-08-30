@@ -5,7 +5,7 @@ import { ScheduleActivitySetting } from '@api/models/schedule-activity.model';
 import { ConfigService } from '@api/services/config.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
-import { Frequency, Status } from '@common/enums/common-enum';
+import { Frequency, Status, chineseWeekDayValues } from '@common/enums/common-enum';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { BaseComponent } from '@pages/base.component';
@@ -61,7 +61,18 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
         type: 'html',
         width: '25%',
         valuePrepareFunction: (cell: string, row: ScheduleActivitySetting) => {
-          return Frequency[cell?.toLowerCase()] + " " + row.frequencyTime;
+          const frequencyTime = row.frequencyTime;
+          const frequencyTimeArray = frequencyTime.split(/[:：]/);
+          switch (cell?.toLowerCase()) {
+            case 'daily':
+              return `${Frequency[cell?.toLowerCase()]} ${frequencyTimeArray[0]} 時 ${frequencyTimeArray[1]} 分`;
+            case 'weekly':
+              return `${Frequency[cell?.toLowerCase()]} ${chineseWeekDayValues[parseInt(frequencyTimeArray[0])]} ${frequencyTimeArray[1]} 時 ${frequencyTimeArray[2]} 分`;
+            case 'monthly':
+              return `${Frequency[cell?.toLowerCase()]} ${frequencyTimeArray[0] === '999' ? '月底' : frequencyTimeArray[0]}日 ${frequencyTimeArray[1]} 時 ${frequencyTimeArray[2]} 分`;
+            default:
+              return `${Frequency[cell?.toLowerCase()]} ${frequencyTime}`;
+          }
         },
         sort: false,
       },
