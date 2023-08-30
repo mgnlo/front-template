@@ -13,7 +13,7 @@ const routes: Routes = [
   {
     path: "", component: ScheduleManageComponent,
     children: [
-      { path: '', redirectTo: 'schedule-manage', pathMatch: 'full' },
+      { path: '', redirectTo: 'schedule-activity-list', pathMatch: 'full' },
       //活動列表
       { path: "schedule-activity-list", component: ScheduleListComponent, data:{ schema: 'schedule-activity', keepSession: true, keepFrom: ['schedule-activity-detail/']}},
       { path: 'schedule-activity-detail/:scheduleId', component: ScheduleDetailComponent, data:{ schema: 'schedule-activity', keepSession: true, keepFrom: ['schedule-activity-export-detail/']}},

@@ -9,6 +9,7 @@ import { StorageService } from '@api/services/storage.service';
 import { GroupScope } from '@common/enums/console-group-enum';
 import { BusinessUnit } from '@common/enums/console-user-enum';
 import { RestStatus } from '@common/enums/rest-enum';
+import { ConsoleGroupDetailMock } from '@common/mock-data/console-group-detail-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/checkbox.component';
@@ -57,6 +58,22 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
     this.dataSource2 = new LocalDataSource(this.consoleGroupScope);
     if (this.changeRouteName === undefined) { return; }
     this.loadingService.open();
+    if (this.isMock) {
+      this.consoleGroupDetail = ConsoleGroupDetailMock;
+      this.validateForm.get('groupName').setValue(this.consoleGroupDetail.groupName);
+      this.validateForm.get('enable').setValue(this.consoleGroupDetail.enable.toString());
+      let scopeInfo = this.consoleGroupDetail.consoleGroupScope.map((groupScope) => {
+        let scope = groupScope.scope.split(".");
+        return { featureName: scope[0], [scope[1]]: true };
+      });
+      let scopeData = CommonUtil.groupBy(scopeInfo, 'featureName', false);
+      let scopeTableData = CommonUtil.flatGroupItem(scopeData, 'featureName');
+      this.accountManageService.updateCheckbox(this.consoleGroupScope, scopeTableData);
+      this.dataSource2.load(this.consoleGroupScope);
+      this.dataSource.load(this.consoleGroupDetail.consoleUser);
+      this.loadingService.close();
+      return;
+    }
     this.accountManageService.getConsoleGroup(this.groupId).pipe(
       catchError((err) => {
         this.loadingService.close();

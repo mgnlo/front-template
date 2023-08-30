@@ -42,6 +42,7 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
     if (this.isMock) {
       this.dataSource.reset();
       this.dataSource.load(ConsoleGroupListMock);
+      this.loadingService.close();
       return;
     }
 

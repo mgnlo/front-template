@@ -11,7 +11,7 @@ const routes: Routes = [
     {
         path: "", component: AccountManageComponent,
         children: [
-            { path: '', redirectTo: 'account-manage', pathMatch: 'full' },
+            { path: '', redirectTo: 'console-group-list', pathMatch: 'full' },
             { path: "console-group-list", component: ConsoleGroupListComponent, data: { schema: 'console-group', keepSession: true}},
             { path: "console-group-detail/:groupId", component: ConsoleGroupDetailComponent, data: { schema: 'console-group', keepSession: true}},
             { path: 'console-group-set', component: ConsoleGroupSetComponent, data: {schema: 'console-group'}}, //add

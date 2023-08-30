@@ -15,7 +15,7 @@ export class RadioComponent implements OnInit {
   @Input() ctlName: string;
   @Input() selectList: {options: any, key: string|number, val: string};
   @Input() enumName?: string;
-  @Input() placeholder?: string = '全部';
+  @Input() status?: string = 'info';
   @Output() valueChange? = new EventEmitter<any>();
 
   firstErr: string;

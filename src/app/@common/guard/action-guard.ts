@@ -12,12 +12,10 @@ export class ActionGuard implements CanActivateChild {
   canActivateChild(
     childRoute: ActivatedRouteSnapshot,
   ): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-    let currentPath = childRoute.routeConfig.path;
+    const currentPath = childRoute.routeConfig.path;
     const children = childRoute.routeConfig.children;
-
-    if (currentPath == '' && !!children) {
-      currentPath = children.find(child => child.path === currentPath).redirectTo;
-      let schema = children.find(route => route.path === currentPath).data.schema;
+    if(!!currentPath && !children){
+      let schema = childRoute.routeConfig.data?.schema;
       this.loginService.setSchema(schema);
       return this.loginService.checkUserScope(schema, 'read');
     }

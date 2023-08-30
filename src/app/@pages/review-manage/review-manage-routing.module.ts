@@ -12,7 +12,7 @@ const routes: Routes = [
     {
         path: "", component: ReviewManageComponent,
         children: [
-            { path: '', redirectTo: 'tag-review', pathMatch: 'full' },
+            { path: '', redirectTo: 'tag-review-list', pathMatch: 'full' },
             { path: 'tag-review-list', component: TagReviewListComponent, data:{ schema: 'review-tag', keepSession: true, keepFrom: ['tag-review-detail/']}},
             { path: 'tag-review-detail/:historyId', component: TagReviewDetailComponent, data:{ schema: 'review-tag', keepSession: true } },
             { path: 'activity-review-list', component: ActivityReviewListComponent, data:{ schema: 'review-activity', keepSession: true, keepFrom: ['activity-review-detail/']}},

@@ -16,7 +16,7 @@ export class DetailDialogComponent implements OnInit {
 
   @Input() customerId: string;
 
-  departmentTag: {[x: number]: Tag[]};
+  departmentTag: { [x: number]: Tag[] };
   departments: Array<string> = [];
   datas: Customer;
   selectedDepartment: string;

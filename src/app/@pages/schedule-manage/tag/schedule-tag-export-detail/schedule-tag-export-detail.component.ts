@@ -91,8 +91,11 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
         renderComponent: ColumnButtonComponent,
         onComponentInitFunction: (instance: ColumnButtonComponent) => {
           instance.settings = { btnStatus: 'success', btnIcon: 'cloud-download-outline' }
+          instance.getRow.subscribe((res: Schedule_Batch_History) => {
+            instance.isShow = res.batchResult.toLowerCase() === 'success';
+          });
           instance.emitter.subscribe((res: Schedule_Batch_History) => {
-            // TODO: download
+            // TODO: download API
           })
         },
         sort: false,
