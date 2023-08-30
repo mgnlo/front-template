@@ -304,7 +304,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   }
 
   ngDoCheck() {
-    console.info('this.findInvalidControls()', this.findInvalidControls())
+    // console.info('this.findInvalidControls()', this.findInvalidControls())
     const tagDimensionVal = this.validateForm.get('tagDimension')?.value;
     if (CommonUtil.isNotBlank(tagDimensionVal) && tagDimensionVal != this.beforeCategoryVal) {
       this.beforeCategoryVal = tagDimensionVal;
@@ -337,7 +337,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       }),
       filter(res => res.code === RestStatus.SUCCESS),
       tap((res) => {
-        console.info('res', res)
+        // console.info('res', res)
         const result = JSON.parse(JSON.stringify(res.result)) as Array<TagCategory>
         if (!result || result.length === 0) {
           this.dialogService.alertAndBackToList(false, '查無標籤構面');
@@ -420,7 +420,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         if (!this.validateForm.contains('tagConditionSetting')) {
           this.validateForm.addControl('tagConditionSetting', new FormArray([]));
         }
-        this.addFieldIfNotExists('conditionKey', null, Validators.required);
+        this.addFieldIfNotExists('conditionKey', null, [Validators.required, this.existsInConditionKeyList]);
         if (this.conditions?.getRawValue()?.length === 0) {
           this.conditions.push(new FormGroup({
             id: new FormControl(0),
@@ -458,6 +458,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
     if (this.isMock) {
       TagConditionMock.forEach((condition) => this.conditionKeyList.push({ key: condition.conditionKey, val: condition.conditionName }))
+      this.filterConditionKeyList = [...this.conditionKeyList];
       return
     }
 
@@ -500,7 +501,11 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     this.selectedConditionId = '';
     this.conditionDialogData = undefined;
 
-    this.validateForm.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': '請選擇一筆' });
+    if (this.validateForm.get('conditionKey')?.hasError('condition_valueErrMsg')) return
+
+    if (CommonUtil.isBlank(this.selectedConditionId)) {
+      this.validateForm.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': '請點選一筆' });
+    }
 
     this.conditionKeyFilter(event.target.value);
   }
@@ -558,7 +563,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
     this.tagManageService.getTagConditionalDistribution(conditionId).pipe(
       catchError((err) => {
-        this.dialogService.alertAndBackToList(false, err.message ? err.message : '取得圖表資料失敗');
+        this.dialogService.alertAndBackToList(false, '取得圖表資料失敗');
         throw new Error(err.message);
       }),
       filter(res => res.code === RestStatus.SUCCESS),
@@ -570,7 +575,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   // 檢查是否存在清單中
   existsInConditionKeyList = (ctl: FormControl): { [key: string]: any } | null => {
-    // console.info('ctl', ctl)
+    //console.info('ctl', ctl)
     if ((ctl.dirty || ctl.touched || ctl.valueChanges) && this.conditionKeyList) {
       const filterValue = ctl.value?.toLowerCase();
       if (!CommonUtil.isBlank(filterValue) && !this.conditionKeyList.some(item => item.val?.toLowerCase() === filterValue)) {
@@ -643,7 +648,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     this.loadingService.open();
     this.fileService.uploadFileService(formData).pipe(
       catchError((err) => {
-        this.dialogService.alertAndBackToList(false, err.message ? err.message : '檔案上傳失敗');
+        this.dialogService.alertAndBackToList(false, '檔案上傳失敗');
         this.validateForm?.get('fileName')?.setErrors({ uploadFileMsg: err.message ? err.message : '檔案上傳失敗' });
         throw new Error(err.message);
       }),

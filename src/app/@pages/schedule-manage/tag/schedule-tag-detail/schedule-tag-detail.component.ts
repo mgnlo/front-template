@@ -234,8 +234,8 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
                 const hasActionFieldCNT = res.filter((f) => f.isShow).length;
                 const wasSelected = res.filter((f) => f.isShow && f.isSelected).length;
 
+                this.isAllSelected = false;
                 if (wasSelected === hasActionFieldCNT) this.isAllSelected = true;
-                if (wasSelected === 0) this.isAllSelected = false;
 
                 this.tempPageIsAllSelected = CommonUtil.onSetTempPageIsAllSelected(this.tempPageIsAllSelected, this.paginator.nowPage, this.isAllSelected)
                 this.setSessionVal(
