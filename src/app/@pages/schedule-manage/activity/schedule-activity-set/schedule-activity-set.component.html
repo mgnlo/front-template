@@ -27,45 +27,45 @@
             <div *ngIf="validateForm.get('executionFrequency').value?.toLowerCase() === 'daily'" class="multi">
               <nb-select fullWidth placeholder="時" formControlName="hour"
                          [status]="validateForm.get('hour')?.touched && validateForm.get('hour')?.invalid? 'danger' : 'basic'">
-                  <nb-option *ngFor="let val of hour" [value]="val">{{ val }}</nb-option>
+              <nb-option *ngFor="let hour of hourList" [value]="hour.key">{{ hour.val }}</nb-option>
               </nb-select>
               <span>：</span>
               <nb-select fullWidth placeholder="分" formControlName="minute"
                          [status]="validateForm.get('minute')?.touched && validateForm.get('minute')?.invalid? 'danger' : 'basic'">
-                <nb-option *ngFor="let val of minute" [value]="val">{{ val }}</nb-option>
+              <nb-option *ngFor="let minute of minuteList" [value]="minute.key">{{ minute.val }}</nb-option>
               </nb-select>
             </div>
 
             <div *ngIf="validateForm.get('executionFrequency').value?.toLowerCase() === 'weekly'" class="multi">
               <nb-select  fullWidth placeholder="日" formControlName="daily"
                           [status]="validateForm.get('daily')?.touched && validateForm.get('daily')?.invalid? 'danger' : 'basic'">
-                <nb-option *ngFor="let val of weekDaily" [value]="val">{{ val }}</nb-option>
+              <nb-option *ngFor="let daily of weekDailyList" [value]="daily.key">{{ daily.val }}</nb-option>
               </nb-select>
               <nb-select  fullWidth placeholder="時" formControlName="hour"
                           [status]="validateForm.get('hour')?.touched && validateForm.get('hour')?.invalid? 'danger' : 'basic'">
-                  <nb-option *ngFor="let val of hour" [value]="val">{{ val }}</nb-option>
+              <nb-option *ngFor="let hour of hourList" [value]="hour.key">{{ hour.val }}</nb-option>
               </nb-select>
               <span>：</span>
               <nb-select  fullWidth placeholder="分" formControlName="minute"
                           [status]="validateForm.get('minute')?.touched && validateForm.get('minute')?.invalid? 'danger' : 'basic'">
-                <nb-option *ngFor="let val of minute" [value]="val">{{ val }}</nb-option>
+              <nb-option *ngFor="let minute of minuteList" [value]="minute.key">{{ minute.val }}</nb-option>
               </nb-select>
             </div>
 
             <div *ngIf="validateForm.get('executionFrequency').value?.toLowerCase() === 'monthly'" class="multi">
               <nb-select  fullWidth placeholder="日" formControlName="daily"
                           [status]="validateForm.get('daily')?.touched && validateForm.get('daily')?.invalid? 'danger' : 'basic'">
-                <nb-option *ngFor="let val of monthDaily" [value]="val">{{ val }}</nb-option>
+              <nb-option *ngFor="let daily of monthDailyList" [value]="daily.key">{{ daily.val }}</nb-option>
               </nb-select>
               <span>日</span>
               <nb-select  fullWidth placeholder="時" formControlName="hour"
                           [status]="validateForm.get('hour')?.touched && validateForm.get('hour')?.invalid? 'danger' : 'basic'">
-                  <nb-option *ngFor="let val of hour" [value]="val">{{ val }}</nb-option>
+              <nb-option *ngFor="let hour of hourList" [value]="hour.key">{{ hour.val }}</nb-option>
               </nb-select>
               <span>：</span>
               <nb-select  fullWidth placeholder="分" formControlName="minute"
                           [status]="validateForm.get('minute')?.touched && validateForm.get('minute')?.invalid? 'danger' : 'basic'">
-                <nb-option *ngFor="let val of minute" [value]="val">{{ val }}</nb-option>
+              <nb-option *ngFor="let minute of minuteList" [value]="minute.key">{{ minute.val }}</nb-option>
               </nb-select>
             </div>
 

@@ -13,7 +13,7 @@ import { ColumnButtonComponent } from '@component/table/column-button/column-but
 import { BaseComponent } from '@pages/base.component';
 import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
 import { LocalDataSource } from 'ng2-smart-table';
-import { catchError, filter, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, finalize, tap } from 'rxjs/operators';
 import { PreviewDialogComponent } from './preview-dialog/preview.dialog/preview-dialog.component';
 import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
 import { of } from 'rxjs';
@@ -35,10 +35,26 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   actionName: string;// 新增/編輯/複製
 
   //預設下拉時間日期
-  weekDaily = Array.from({ length: 8 }, (_, index) => index.toString().padStart(2, '0'));
-  monthDaily = Array.from({ length: 32 }, (_, index) => index.toString().padStart(2, '0'));
-  hour = Array.from({ length: 13 }, (_, index) => index.toString().padStart(2, '0'));
-  minute = Array.from({ length: 61 }, (_, index) => index.toString().padStart(2, '0'));
+  chineseWeekDays = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'];
+  weekDailyList: Array<{ key: string; val: string }> = Array.from(
+    { length: 7 },
+    (_, index) => ({ key: (index + 1).toString(), val: this.chineseWeekDays[index] })
+  );
+
+  chineseEndMonth = '月底';
+  monthDailyList: Array<{ key: string; val: string }> = Array.from(
+    { length: 31 },
+    (_, index) => ({ key: (index + 1).toString(), val: (index + 1).toString() })
+  ).concat({ key: this.getLastDayOfMonth(), val: this.chineseEndMonth });
+
+  hourList: Array<{ key: string; val: string }> = Array.from(
+    { length: 12 },
+    (_, index) => ({ key: index.toString().padStart(2, '0'), val: index.toString().padStart(2, '0') })
+  );
+  minuteList: Array<{ key: string; val: string }> = Array.from(
+    { length: 60 },
+    (_, index) => ({ key: index.toString().padStart(2, '0'), val: index.toString().padStart(2, '0') })
+  );
 
   //預設排程頻率
   scheduleFrequencyList = [Frequency.daily, Frequency.weekly, Frequency.monthly];
@@ -287,6 +303,14 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   }
   //#endregion
 
+  //#region 撈取月底
+  getLastDayOfMonth() {
+    const now = new Date();
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    return lastDay.toString().padStart(2, '0');
+  }
+  //#endregion
+
   ngOnInit(): void {
     this.params = this.activatedRoute.snapshot.params;
     this.changeRouteName = this.params['changeRoute'] ?? "";
@@ -364,15 +388,13 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         this.dialogService.alertAndBackToList(false, `${this.actionName}失敗 ${err}`, ['pages', 'schedule-manage', 'schedule-activity-set', ...route]);
         throw new Error(err.message);
       }),
+      filter((res) => res.code === RestStatus.SUCCESS),
       tap(res => {
         // console.info(res);
-        this.loadingService.close();
-      })
-    ).subscribe(res => {
-      if (res.code === RestStatus.SUCCESS) {
         this.dialogService.alertAndBackToList(true, `${this.actionName}成功`, ['pages', 'schedule-manage', 'schedule-activity-list']);
-      }
-    });
+      }),
+      finalize(() => this.loadingService.close())
+    ).subscribe();
   }
 
   getRequestData(): ScheduleActivitySettingEditReq {
