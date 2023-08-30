@@ -63,16 +63,29 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
         valuePrepareFunction: (cell: string, row: ScheduleActivitySetting) => {
           const frequencyTime = row.frequencyTime;
           const frequencyTimeArray = frequencyTime.split(/[:：]/);
-          switch (cell?.toLowerCase()) {
+          const cellLow = cell?.toLowerCase();
+
+          let result = '';
+
+          switch (cellLow) {
             case 'daily':
-              return `${Frequency[cell?.toLowerCase()]} ${frequencyTimeArray[0]} 時 ${frequencyTimeArray[1]} 分`;
+              result = `${Frequency[cellLow]} ${frequencyTimeArray[0] ?? ''} 時 ${frequencyTimeArray[1] ?? ''} 分`;
+              break;
             case 'weekly':
-              return `${Frequency[cell?.toLowerCase()]} ${chineseWeekDayValues[parseInt(frequencyTimeArray[0])]} ${frequencyTimeArray[1]} 時 ${frequencyTimeArray[2]} 分`;
+              const dayOfWeek = parseInt(frequencyTimeArray[0] ?? '0');
+              const weekDayName = chineseWeekDayValues[dayOfWeek - 1] || '';
+              result = `${Frequency[cellLow]} ${weekDayName} ${frequencyTimeArray[1] ?? ''} 時 ${frequencyTimeArray[2] ?? ''} 分`;
+              break;
             case 'monthly':
-              return `${Frequency[cell?.toLowerCase()]} ${frequencyTimeArray[0] === '999' ? '月底' : frequencyTimeArray[0]}日 ${frequencyTimeArray[1]} 時 ${frequencyTimeArray[2]} 分`;
+              const dayOfMonth = frequencyTimeArray?.[0] === '999' ? '月底' : frequencyTimeArray[0] ?? '';
+              result = `${Frequency[cellLow]} ${dayOfMonth}日 ${frequencyTimeArray[1] ?? ''} 時 ${frequencyTimeArray[2] ?? ''} 分`;
+              break;
             default:
-              return `${Frequency[cell?.toLowerCase()]} ${frequencyTime}`;
+              result = `${Frequency[cellLow]} ${frequencyTime}`;
+              break;
           }
+
+          return result;
         },
         sort: false,
       },
