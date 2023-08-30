@@ -38,13 +38,13 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   chineseWeekDays = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'];
   weekDailyList: Array<{ key: string; val: string }> = Array.from(
     { length: 7 },
-    (_, index) => ({ key: (index + 1).toString(), val: this.chineseWeekDays[index] })
+    (_, index) => ({ key: (index + 1).toString().padStart(2, '0'), val: this.chineseWeekDays[index] })
   );
 
   chineseEndMonth = '月底';
   monthDailyList: Array<{ key: string; val: string }> = Array.from(
     { length: 31 },
-    (_, index) => ({ key: (index + 1).toString(), val: (index + 1).toString() })
+    (_, index) => ({ key: (index + 1).toString().padStart(2, '0'), val: (index + 1).toString().padStart(2, '0') })
   ).concat({ key: '999', val: this.chineseEndMonth });
 
   hourList: Array<{ key: string; val: string }> = Array.from(
