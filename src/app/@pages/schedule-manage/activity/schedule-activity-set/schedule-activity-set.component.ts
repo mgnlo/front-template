@@ -178,7 +178,6 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         this.addFieldIfNotExists('minute', null, [Validators.required, ValidatorsUtil.blank]);
         break;
     }
-    this.changeDetectorRef.detectChanges();
   }
   //#endregion
 
