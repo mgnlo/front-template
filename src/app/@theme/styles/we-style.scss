@@ -1015,7 +1015,7 @@ ul {
             color: #00D68F !important;
             border: 0;
             background-color: transparent !important;
-            padding: 0.5rem 1rem 0.5rem 0 !important;
+            padding: 0.5rem 0 !important;
         }
     }
 }
@@ -1102,25 +1102,25 @@ ul {
             margin: 0;
             padding-left: calc(0.5rem + 20px);
             &:before {
-                position: absolute;
                 content: '';
-                width: 8px;
-                height: 8px;
+                position: absolute;
                 left: calc(0.5rem + 3px);
                 top: calc((100% - 8px)/2);
                 z-index: 1;
+                width: 8px;
+                height: 8px;
                 border-radius: 8px;
-                outline: 2.5px solid #e6e6e6;
                 background: #FFFFFF;
+                outline: 2.5px solid #e6e6e6;
             }
             &:after {
-                position: absolute;
                 content: '';
+                position: absolute;
                 top: -20px;
                 bottom: -16px;
                 left: calc(0.5rem + 6px);
-                width: 2px;
                 z-index: 0;
+                width: 2px;
                 background: nb-theme(color-info-500);
             }
         }
@@ -1130,7 +1130,7 @@ ul {
             align-items: baseline;
             margin: 0 0 0 calc(0.5rem + 20px);
             padding: 10px 0 0;
-            div {
+            > div {
                 p {
                     color: #5D5D5D;
                     line-height: initial;
@@ -1140,32 +1140,30 @@ ul {
                     margin-right: 1rem;
                     p { font-size: $f12; }
                     &:before {
-                        position: absolute;
                         content: '';
-                        width: 8px;
-                        height: 8px;
+                        position: absolute;
                         left: calc((-20px - 0.5rem - 6px)/2);
                         top: calc((100% - 8px)/2);
                         z-index: 1;
+                        width: 8px;
+                        height: 8px;
                         border-radius: 8px;
                         background: nb-theme(color-info-500);
                     }
                 }
-                &:nth-of-type(2) {
-                    p {
-                        font-size: $f14;
-                        &:nth-of-type(1) { font-weight: bold; }
-                    }
+                &:nth-of-type(2) p {
+                    font-size: $f14;
+                    &:nth-of-type(1) { font-weight: bold; }
                 }
             }
             &:after {
-                position: absolute;
                 content: '';
+                position: absolute;
                 top: 0;
                 bottom: -8px;
+                z-index: 0;
                 left: calc((-0.5rem - 20px)/2);
                 width: 2px;
-                z-index: 0;
                 background: nb-theme(color-info-500);
             }
         }
@@ -1186,19 +1184,12 @@ ul {
             &.closeSubItem .mainItem button nb-icon { transform: rotate(90deg); }
         }
         &:not(:nth-of-type(1)) { padding-top: 1.25rem; }
-        &:nth-of-type(1) {
-            h4:after { top: 8px; }
-            .subItem {
-                div:nth-of-type(1):before { display: none; }
-            }
-        }
+        &:nth-of-type(1) h4:after { top: 8px; }
         &:nth-last-of-type(1) {
             h4:after { bottom: 8px; }
-            .mainItem {
-                ~ .subItem {
-                    &::after { top: -8px; }
-                    &:nth-last-of-type(1)::after { bottom: 20px; }
-                }
+            .mainItem ~ .subItem {
+                &::after { top: -8px; }
+                &:nth-last-of-type(1)::after { bottom: 20px; }
             }
         }
     }
@@ -1675,6 +1666,7 @@ table {
             justify-content: center;
             .toggle-label { margin-bottom: 0; }
         }
+        nb-tag { margin: 2.5px !important; }
         .ng2-smart-action-multiple-select {
             text-align: center;
             padding: 0.875rem 1.25rem;
@@ -1763,8 +1755,9 @@ table {
     }
     // p { margin-bottom: 0.5rem; }
     @media all and (max-width: 575px) {
-        &.small, &.medium, &.large {
-            width: 90vw;
-        }
+        &.small, &.medium, &.large { width: 90vw; }
     }
 }
+
+// for CDP 使用，為了符合設計稿
+.tagList { margin: -10px; }

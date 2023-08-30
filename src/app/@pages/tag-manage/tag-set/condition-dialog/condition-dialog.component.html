@@ -1,30 +1,24 @@
-<nb-card class="list-card" nbSpinnerStatus="info" nbSpinnerSize="giant" size="large">
-  <nb-card-header class="text-h-center">
-    <p>{{title}}</p>
-  </nb-card-header>
-  <nb-card-body>
-    <div>
-      <div class="noteText">
-        <nb-icon icon="info-outline"></nb-icon>
-        <p>此條件人數級距如下，若有多重件組合，則需多重對照以利貼合活動預算與人數需求。</p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="textGroup col-12 col-lg-12">
-          <p class="text_bold">{{data?.conditionName}}人數級距</p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12 col-lg-12">
-        <nb-card>
-			  	<nb-card-body>
-			  		<condition-chart-line [data]="data"></condition-chart-line>
-			  	</nb-card-body>
-			  </nb-card>
-      </div>
-    </div>
-  </nb-card-body>
-  <nb-card-footer>
-    <button nbButton status="basic" size="medium" (click)="close()">關 閉</button>
-  </nb-card-footer>
+<nb-card class="dialogCard medium">
+	<nb-card-header class="text-h-center">
+		<h2>{{title}}</h2>
+	</nb-card-header>
+	<nb-card-body>
+		<div class="noteText">
+			<nb-icon icon="info-outline"></nb-icon>
+			<p>此條件人數級距如下，若有多重件組合，則需多重對照以利貼合活動預算與人數需求。</p>
+		</div>
+		<div class="row">
+			<div class="textGroup col-12 col-lg-12">
+				<p class="text_bold">{{data?.conditionName}}人數級距</p>
+			</div>
+			<div class="col-12 col-lg-12">
+				<condition-chart-line [data]="data"></condition-chart-line>
+			</div>
+		</div>
+	</nb-card-body>
+	<nb-card-footer>
+		<div class="btnGroup">
+			<button nbButton status="basic" size="medium" (click)="close()">關 閉</button>
+		</div>
+	</nb-card-footer>
 </nb-card>
