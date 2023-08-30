@@ -25,6 +25,7 @@ import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { ConfigService } from '@api/services/config.service';
 import { TagCategoryMock, TagSubCategoryMock } from '@common/mock-data/tag-category-mock';
 import { FileResp } from '@api/models/file.model';
+import { TagConditionMock } from '@common/mock-data/tag-condition-mock';
 
 @Component({
   selector: 'tag-set',
@@ -55,9 +56,6 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   //#endregion
 
   isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
-
-  enterKeyHandled = false;
-  backspaceKeyHandled = false;
 
   //偵測條件下拉
   selectedConditionId: string = '';
@@ -200,6 +198,10 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     //#region 抓取(主)標籤構面
     this.getTagCategoryList();
+    //#endregion
+
+    //#region 抓取偵測條件
+    this.getConditionKeyList();
     //#endregion
 
     //#region 載入編輯資料
@@ -451,11 +453,13 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   //#region 取得偵測條件下拉資料&&塞選查詢  //取得圖表資料
   //取得偵測條件下拉資料
   getConditionKeyList(): void {
-    if (this.conditionKeyList.length > 0 &&
-      this.conditionKeyList.some(s => s.val === this.validateForm?.get('conditionKey')?.value)) return
-
     this.conditionKeyList = new Array<{ key: string; val: string }>();
     this.filterConditionKeyList = new Array<{ key: string; val: string }>();
+
+    if (this.isMock) {
+      TagConditionMock.forEach((condition) => this.conditionKeyList.push({ key: condition.conditionKey, val: condition.conditionName }))
+      return
+    }
 
     this.tagManageService.getTagConditionList().pipe(
       catchError((err) => {
@@ -480,17 +484,6 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     ).subscribe();
   }
 
-  //阻擋Enter
-  onKeyDown(event: KeyboardEvent): void {
-    // console.info('eventeventevent', event)
-    if (event.code === 'Enter') {
-      this.enterKeyHandled = true;
-    }
-    if (event.code === 'Backspace') {
-      this.backspaceKeyHandled = true;
-    }
-  }
-
   onBlurConditionKeyInput(): void {
     if (this.validateForm.get('conditionKey')?.hasError('condition_valueErrMsg')) return
 
@@ -508,19 +501,6 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     this.conditionDialogData = undefined;
 
     this.validateForm.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': '請選擇一筆' });
-
-    if (this.enterKeyHandled) {
-      this.enterKeyHandled = false;
-      return;
-    }
-
-    if (this.backspaceKeyHandled) {
-      this.backspaceKeyHandled = false;
-      if (this.filterConditionKeyList?.length === 0) {
-        this.conditionKeyFilter(event.target.value);
-      }
-      return;
-    }
 
     this.conditionKeyFilter(event.target.value);
   }
@@ -552,30 +532,14 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     this.filterConditionKeyList = new Array<{ key: string; val: string }>();
 
     if (CommonUtil.isBlank(filterValue)) {
-      this.filterConditionKeyList = this.conditionKeyList
+      this.filterConditionKeyList = [...this.conditionKeyList];
       return
     }
 
-    this.tagManageService.filterTagConditionList(new TagConditionChartLine({ conditionName: value })).pipe(
-      catchError((err) => {
-        this.dialogService.alertAndBackToList(false, '查詢偵測條件失敗');
-        this.validateForm?.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': err.message ? err.message : '查詢偵測條件失敗' });
-        throw new Error(err.message);
-      }),
-      filter(res => res.code === RestStatus.SUCCESS),
-      tap(res => {
-        const result = JSON.parse(JSON.stringify(res.result)) as Array<TagCondition>
-        if (!result || result.length === 0) {
-          this.dialogService.alertAndBackToList(false, '查無偵測條件');
-          this.validateForm?.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': '查無偵測條件' });
-          return
-        }
-        result.forEach(m => {
-          this.filterConditionKeyList.push({ key: m.conditionKey, val: m.conditionName });
-        });
-        // console.info('this.filterConditionKeyList', this.filterConditionKeyList)
-      })
-    ).subscribe();
+    if (CommonUtil.isBlank(filterValue)) this.filterConditionKeyList = [...this.conditionKeyList];
+    this.filterConditionKeyList = this.conditionKeyList.filter((f) => {
+      return f.val?.toLowerCase()?.includes(filterValue);
+    })
   }
 
   //取得圖表資料

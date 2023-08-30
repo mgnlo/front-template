@@ -16,6 +16,8 @@ export class RadioComponent implements OnInit {
   @Input() selectList: {options: any, key: string|number, val: string};
   @Input() enumName?: string;
   @Input() placeholder?: string = '全部';
+  @Input() errorTextBoolen?: boolean = true;
+
   @Output() valueChange? = new EventEmitter<any>();
 
   firstErr: string;
@@ -33,7 +35,7 @@ export class RadioComponent implements OnInit {
     }
     if(!!this.enumKey){
       switch (this.enumKey) {
-        case 'status': 
+        case 'status':
           Object.keys(Status).filter(status => status !== 'reviewing').forEach(key => { this.enumList.set(key, Status[key]) });
           break;
         default:
@@ -53,7 +55,7 @@ export class RadioComponent implements OnInit {
       return false;
     }
   }
-  
+
   ngDoCheck(): void {
     // console.info(this.ctl.errors)
     if(!!this.ctl?.errors){
