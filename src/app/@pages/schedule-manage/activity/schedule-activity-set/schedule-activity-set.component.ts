@@ -122,6 +122,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'col-2',
         valuePrepareFunction: (cell: string) => {
+          if (!cell) { return '' }
           const datepipe: DatePipe = new DatePipe('en-US');
           return `<p class="date">${datepipe.transform(cell, this.dateFormat)}</p>`;
         },

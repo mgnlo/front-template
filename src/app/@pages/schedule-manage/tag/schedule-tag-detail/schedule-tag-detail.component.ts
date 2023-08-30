@@ -11,7 +11,6 @@ import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/che
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
-import { filter, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'schedule-tag-detail',
