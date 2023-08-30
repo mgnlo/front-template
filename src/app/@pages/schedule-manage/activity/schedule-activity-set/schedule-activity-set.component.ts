@@ -162,7 +162,6 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   //#region 頻率切換
   changeFrequencyType(key: string) {
-    console.log(key)
     this.removeFieldIfExists('daily');
     this.removeFieldIfExists('hour');
     this.removeFieldIfExists('minute');
@@ -178,7 +177,6 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         this.addFieldIfNotExists('minute', null, [Validators.required, ValidatorsUtil.blank]);
         break;
     }
-    this.changeDetectorRef.detectChanges();
   }
   //#endregion
 
