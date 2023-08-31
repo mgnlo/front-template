@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ResponseModel } from '@api/models/base.model';
-import { ConsoleUser } from '@api/models/console-user.model';
+import { ConsoleUserList } from '@api/models/console-user.model';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Observable } from 'rxjs/internal/Observable';
 import { ApiService } from './api.service';
@@ -31,13 +31,13 @@ export class LoginService {
         this.storageService.putSessionVal("jwtToken", jwt);
     };
 
-    private _userProfile: ConsoleUser;
+    private _userProfile: ConsoleUserList;
 
     public getUserProfileSubject() {
         return this.userProfileSubject.asObservable();
     }
 
-    public userProfileSubject: BehaviorSubject<ConsoleUser> = new BehaviorSubject<ConsoleUser>(null);
+    public userProfileSubject: BehaviorSubject<ConsoleUserList> = new BehaviorSubject<ConsoleUserList>(null);
 
     constructor(
         private service: ApiService,
@@ -50,7 +50,7 @@ export class LoginService {
     }
 
     // SSO 登入：GET /api/ssoLogin?lightID=
-    // response JWT PAYLOAD： ConsoleUser with ConsoleGroup with ConsoleGroupScope
+    // response JWT PAYLOAD： ConsoleUserList with ConsoleGroup with ConsoleGroupScope
     singleSignOn(lightID: string): Observable<ResponseModel<string>> {
         return this.service.doGet(this.ssoLoginFunc, {
             lightID: lightID

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ResponseModel } from '@api/models/base.model';
 import { ConsoleGroup, GridInnerCheckBox } from '@api/models/console-group.model';
-import { ConsoleUser } from '@api/models/console-user.model';
+import { ConsoleUserList } from '@api/models/console-user.model';
 import { ApiService } from '@api/services/api.service';
 import { ScopeList } from '@pages/pages.component';
 import { Observable } from 'rxjs';
@@ -35,9 +35,9 @@ export class AccountManageService {
 
     constructor(private service: ApiService) { }
 
-    // 6.7 更新使用者：PUT /api/console-user/{userId}
-    // reqBody ConsoleUser with ConsoleGroup
-    updateConsoleUser(userId: string, reqData: ConsoleUser): Observable<ResponseModel<any>> {
+    // 6.7 更新使用者：PUT /api/console-user-list/{userId}
+    // reqBody ConsoleUserList with ConsoleGroup
+    updateConsoleUserList(userId: string, reqData: ConsoleUserList): Observable<ResponseModel<any>> {
         return this.service.doPut(this.consoleUserFunc + userId, reqData);
     }
 
@@ -48,7 +48,7 @@ export class AccountManageService {
     }
 
     // 7.2 取得群組設定：GET /api/console-group/{groupId}
-    // response ConsoleGroup with ConsoleGroupScope with ConsoleUser
+    // response ConsoleGroup with ConsoleGroupScope with ConsoleUserList
     getConsoleGroup(groupId: string): Observable<ResponseModel<ConsoleGroup>> {
         return this.service.doGet(`${this.consoleGroupFunc}${groupId}`);
     }
@@ -60,7 +60,7 @@ export class AccountManageService {
     }
 
     // 7.4 更新群組設定：PUT /api/console-group/{groupId}
-    // reqBody ConsoleGroup with ConsoleGroupScope with ConsoleUser
+    // reqBody ConsoleGroup with ConsoleGroupScope with ConsoleUserList
     updateConsoleGroup(groupId: string, reqData: ConsoleGroup): Observable<ResponseModel<any>> {
         return this.service.doPut(`${this.consoleGroupFunc}${groupId}`, reqData);
     }

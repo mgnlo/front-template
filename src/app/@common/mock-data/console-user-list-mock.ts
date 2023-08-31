@@ -1,6 +1,6 @@
-import { ConsoleUser } from "@api/models/console-user.model";
+import { ConsoleUserList } from "@api/models/console-user.model";
 
-export const ConsoleUserListMock: Array<ConsoleUser> = [
+export const ConsoleUserListMock: Array<ConsoleUserList> = [
     {
         userId: "U66972ba05c34190a5bfd576dad10493",
         account: "admin1",

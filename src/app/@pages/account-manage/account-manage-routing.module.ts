@@ -4,8 +4,8 @@ import { AccountManageComponent } from "./account-manage.component";
 import { ConsoleGroupDetailComponent } from "./console-group-detail/console-group-detail.component";
 import { ConsoleGroupListComponent } from "./console-group-list/console-group-list.component";
 import { ConsoleGroupSetComponent } from "./console-group-set/console-group-set.component";
-import { ChangeDialogComponent } from "./console-user/change-dialog/change.dialog.component";
-import { ConsoleUserComponent } from "./console-user/console-user.component";
+import { ChangeDialogComponent } from "./console-user-list/change-dialog/change.dialog.component";
+import { ConsoleUserListComponent } from "./console-user-list/console-user-list.component";
 
 const routes: Routes = [
     {
@@ -16,7 +16,7 @@ const routes: Routes = [
             { path: 'console-group-detail/:groupId', component: ConsoleGroupDetailComponent, data: { keepSession: true}},
             { path: 'console-group-set', component: ConsoleGroupSetComponent}, //add
             { path: 'console-group-set/:changeRoute/:groupId', component: ConsoleGroupSetComponent}, //edit or copy
-            { path: "console-user", component: ConsoleUserComponent}
+            { path: "console-user-list", component: ConsoleUserListComponent}
         ]
     }
 ]
@@ -32,6 +32,6 @@ export const routedComponents = [
     ConsoleGroupListComponent,
     ConsoleGroupDetailComponent,
     ConsoleGroupSetComponent,
-    ConsoleUserComponent,
+    ConsoleUserListComponent,
     ChangeDialogComponent
 ];

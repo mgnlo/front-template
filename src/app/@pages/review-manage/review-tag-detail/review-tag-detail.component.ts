@@ -12,7 +12,7 @@ import { Status } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { TagSettingMock } from '@common/mock-data/tag-list-mock';
-import { TagReviewListMock } from '@common/mock-data/tag-review-mock';
+import { ReviewTagListMock } from '@common/mock-data/tag-review-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
 import { TagManageService } from '@pages/tag-manage/tag-manage.service';
@@ -20,11 +20,11 @@ import { catchError, filter, takeUntil, tap } from 'rxjs/operators';
 import { ReviewManageService } from '../review-manage.service';
 
 @Component({
-  selector: 'tag-review-detail',
-  templateUrl: './tag-review-detail.component.html',
-  styleUrls: ['./tag-review-detail.component.scss'],
+  selector: 'review-tag-detail',
+  templateUrl: './review-tag-detail.component.html',
+  styleUrls: ['./review-tag-detail.component.scss'],
 })
-export class TagReviewDetailComponent extends BaseComponent implements OnInit {
+export class ReviewTagDetailComponent extends BaseComponent implements OnInit {
 
   navigation: Navigation;
   oldDetail: TagDetailView;
@@ -61,7 +61,7 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
     this.loadingService.open();
 
     if (this.isMock) {
-      let newMockData = TagReviewListMock.find(tag => tag.historyId === this.historyId);
+      let newMockData = ReviewTagListMock.find(tag => tag.historyId === this.historyId);
       this.newDetail = JSON.parse(JSON.stringify(newMockData));
       console.info(this.newDetail);
       this.detail = this.newDetail;
@@ -86,7 +86,7 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
     this.reviewManageService.getTagReviewRow(this.historyId).pipe(
       filter(res => res.code === RestStatus.SUCCESS),
       catchError(err => {
-        this.dialogService.alertAndBackToList(false, `${err.message}，將為您導回標籤審核列表`, ['pages', 'review-manage', 'tag-review-list']);
+        this.dialogService.alertAndBackToList(false, `${err.message}，將為您導回標籤審核列表`, ['pages', 'review-manage', 'review-tag-list']);
         throw new Error(err.message);
       }),
       takeUntil(this.unsubscribe$),
@@ -217,7 +217,7 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
     if (this.isMock) {
       this.dialogService.openReview(dialogOption).componentRef.instance.emit.subscribe(mockInfo => {
         this.dialogService.openReview(dialogOption).close();
-        this.router.navigate(['pages', 'review-manage', 'tag-review-list']);
+        this.router.navigate(['pages', 'review-manage', 'review-tag-list']);
       });
       return;
     }
@@ -231,12 +231,12 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
           throw new Error(err.message);
         }),
         takeUntil(this.unsubscribe$),
-        tap(res => this.router.navigate(['pages', 'review-manage', 'tag-review-list']))
+        tap(res => this.router.navigate(['pages', 'review-manage', 'review-tag-list']))
       ).subscribe();
     })
   }
 
   cancel() {
-    this.router.navigate(['pages', 'review-manage', 'tag-review-list']);
+    this.router.navigate(['pages', 'review-manage', 'review-tag-list']);
   }
 }

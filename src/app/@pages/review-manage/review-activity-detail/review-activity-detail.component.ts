@@ -8,18 +8,18 @@ import { LoginService } from '@api/services/login.service';
 import { StorageService } from '@api/services/storage.service';
 import { RestStatus } from '@common/enums/rest-enum';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
-import { ActivityReviewListMock } from '@common/mock-data/activity-review-mock';
+import { ReviewActivityListMock } from '@common/mock-data/activity-review-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
 import { catchError, filter, takeUntil, tap } from 'rxjs/operators';
 import { ReviewManageService } from '../review-manage.service';
 
 @Component({
-  selector: 'activity-review-detail',
-  templateUrl: './activity-review-detail.component.html',
-  styleUrls: ['./activity-review-detail.component.scss'],
+  selector: 'review-activity-detail',
+  templateUrl: './review-activity-detail.component.html',
+  styleUrls: ['./review-activity-detail.component.scss'],
 })
-export class ActivityReviewDetailComponent extends BaseComponent implements OnInit {
+export class ReviewActivityDetailComponent extends BaseComponent implements OnInit {
 
   navigation: Navigation;
   oldDetail: ActivityDetail;
@@ -57,7 +57,7 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
     this.loadingService.open();
 
     if (this.isMock) {
-      let newMockData = ActivityReviewListMock.find(activity => activity.historyId === this.historyId);
+      let newMockData = ReviewActivityListMock.find(activity => activity.historyId === this.historyId);
       this.newDetail = JSON.parse(JSON.stringify(newMockData));
       this.newReview = JSON.parse(JSON.stringify(newMockData));
       this.reviewStatus = newMockData.reviewStatus;
@@ -186,7 +186,7 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
     if (this.isMock) {
       this.dialogService.openReview(dialogOption).componentRef.instance.emit.subscribe(mockInfo => {
         this.dialogService.openReview(dialogOption).close();
-        this.router.navigate(['pages', 'review-manage', 'activity-review-list']);
+        this.router.navigate(['pages', 'review-manage', 'review-activity-list']);
       });
       return;
     }
@@ -200,12 +200,12 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
           throw new Error(err.message);
         }),
         takeUntil(this.unsubscribe$),
-        tap(res => this.router.navigate(['pages', 'review-manage', 'activity-review-list']))
+        tap(res => this.router.navigate(['pages', 'review-manage', 'review-activity-list']))
       ).subscribe();
     })
   }
 
   cancel() {
-    this.router.navigate(['pages', 'review-manage', 'activity-review-list']);
+    this.router.navigate(['pages', 'review-manage', 'review-activity-list']);
   }
 }

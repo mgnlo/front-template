@@ -11,16 +11,24 @@ export class CrudGuard implements CanActivateChild {
 
   canActivateChild(
     childRoute: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
+    state: RouterStateSnapshot,
   ): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
     const currentPath = childRoute.routeConfig.path;
     const children = childRoute.routeConfig.children;
+    const parentRoute = '/' + childRoute.pathFromRoot.filter(v => v.url.length > 0).filter((v, i) => i < 2)
+      .map(v => v.url).map(segment => segment.toString()).join('/') + '/';
     if (currentPath && !children) {
-      let schema = Object.entries(ScopeList).find(([k, v]) => v.menu.link === state.url);
-      if(schema !== undefined) {
-        let schemaName = schema[0];
+      let schemaName = currentPath.slice(0, currentPath.lastIndexOf('-'));
+      let schema = Object.entries(ScopeList).find(([k, v]) => k === schemaName);
+      if (schema !== undefined) {
         this.loginService.setSchema(schemaName);
-        return this.loginService.checkUserScope(schemaName);
+        if (currentPath.includes('set/:') || state.url.includes('/edit/')) {
+          return this.loginService.checkUserScope(schemaName, 'update'); //編輯頁檢查update權限
+        } else if (currentPath.includes('set') || state.url.includes('/copy/')) {
+          return this.loginService.checkUserScope(schemaName, 'create'); //新增頁檢查create權限
+        } else {
+          return this.loginService.checkUserScope(schemaName, 'read'); //查詢頁檢查read權限
+        }
       }
     }
     return true;

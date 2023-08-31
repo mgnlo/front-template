@@ -1,6 +1,6 @@
 import { ConsoleGroup } from "@api/models/console-group.model";
 
-// 7.2 取得群組設定：GET /api/console-group/{groupId} response ConsoleGroup with ConsoleGroupScope with ConsoleUser
+// 7.2 取得群組設定：GET /api/console-group/{groupId} response ConsoleGroup with ConsoleGroupScope with ConsoleUserList
 export const ConsoleGroupDetailMock: ConsoleGroup = {
     groupId: "uuid-1",
     groupName: "系統管理員",
@@ -111,11 +111,11 @@ export const ConsoleGroupDetailMock: ConsoleGroup = {
         },
         {
            "groupId":"uuid-1",
-           "scope":"console-user.read"
+           "scope":"console-user-list.read"
         },
         {
            "groupId":"uuid-1",
-           "scope":"console-user.update"
+           "scope":"console-user-list.update"
         },
         {
            "groupId":"uuid-1",

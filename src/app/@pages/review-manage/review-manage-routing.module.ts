@@ -1,24 +1,24 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { ActivityReviewDetailComponent } from "./activity-review-detail/activity-review-detail.component";
-import { ActivityReviewListComponent } from "./activity-review-list/activity-review-list.component";
+import { ReviewActivityDetailComponent } from "./review-activity-detail/review-activity-detail.component";
+import { ReviewActivityListComponent } from "./review-activity-list/review-activity-list.component";
 import { ReviewManageComponent } from "./review-manage.component";
-import { TagReviewDetailComponent } from "./tag-review-detail/tag-review-detail.component";
-import { TagReviewListComponent } from "./tag-review-list/tag-review-list.component";
-import { ScheduleReviewListComponent } from "./schedule-review-list/schedule-review-list.component";
-import { ScheduleReviewDetailComponent } from "./schedule-review-detail/schedule-review-detail.component";
+import { ReviewTagDetailComponent } from "./review-tag-detail/review-tag-detail.component";
+import { ReviewTagListComponent } from "./review-tag-list/review-tag-list.component";
+import { ReviewScheduleListComponent } from "./review-schedule-list/review-schedule-list.component";
+import { ReviewScheduleDetailComponent } from "./review-schedule-detail/review-schedule-detail.component";
 
 const routes: Routes = [
     {
         path: "", component: ReviewManageComponent,
         children: [
-            { path: '', redirectTo: 'tag-review-list', pathMatch: 'full' },
-            { path: 'tag-review-list', component: TagReviewListComponent, data:{ keepSession: true, keepFrom: ['tag-review-detail/']}},
-            { path: 'tag-review-detail/:historyId', component: TagReviewDetailComponent, data:{ keepSession: true } },
-            { path: 'activity-review-list', component: ActivityReviewListComponent, data:{ keepSession: true, keepFrom: ['activity-review-detail/']}},
-            { path: 'activity-review-detail/:historyId', component: ActivityReviewDetailComponent, data:{ keepSession: true }},
-            { path: 'schedule-review-list', component: ScheduleReviewListComponent, data:{ keepSession: true, keepFrom: ['schedule-review-detail/']}},
-            { path: 'schedule-review-detail/:historyId', component: ScheduleReviewDetailComponent, data:{ keepSession: true }},
+            { path: '', redirectTo: 'review-tag-list', pathMatch: 'full' },
+            { path: 'review-tag-list', component: ReviewTagListComponent, data:{ keepSession: true, keepFrom: ['review-tag-detail/']}},
+            { path: 'review-tag-detail/:historyId', component: ReviewTagDetailComponent, data:{ keepSession: true } },
+            { path: 'review-activity-list', component: ReviewActivityListComponent, data:{ keepSession: true, keepFrom: ['review-activity-detail/']}},
+            { path: 'review-activity-detail/:historyId', component: ReviewActivityDetailComponent, data:{ keepSession: true }},
+            { path: 'review-schedule-list', component: ReviewScheduleListComponent, data:{ keepSession: true, keepFrom: ['review-schedule-detail/']}},
+            { path: 'review-schedule-detail/:historyId', component: ReviewScheduleDetailComponent, data:{ keepSession: true }},
         ]
     }
 ]
@@ -31,10 +31,10 @@ export class ReviewManageRoutingModule { }
 
 export const routedComponents = [
     ReviewManageComponent,
-    TagReviewListComponent,
-    TagReviewDetailComponent,
-    ActivityReviewListComponent,
-    ActivityReviewDetailComponent,
-    ScheduleReviewListComponent,
-    ScheduleReviewDetailComponent,
+    ReviewTagListComponent,
+    ReviewTagDetailComponent,
+    ReviewActivityListComponent,
+    ReviewActivityDetailComponent,
+    ReviewScheduleListComponent,
+    ReviewScheduleDetailComponent,
 ];

@@ -1,6 +1,6 @@
 import { ConsoleGroup } from "./console-group.model";
 
-export class ConsoleUser {
+export class ConsoleUserList {
     userId: string;
     account: string;
     name: string;
@@ -11,7 +11,7 @@ export class ConsoleUser {
     consoleGroup?: ConsoleGroup;
 }
 
-export class ConsoleUserReq {
+export class ConsoleUserListReq {
     account?: string;
     name?: string;
     email?: string;

@@ -6,7 +6,7 @@ import { ScheduleListComponent } from "./activity/schedule-activity-list/schedul
 import { PreviewDialogComponent } from "./activity/schedule-activity-set/preview-dialog/preview.dialog/preview-dialog.component"
 import { ScheduleAddComponent } from "./activity/schedule-activity-set/schedule-activity-set.component"
 import { ScheduleManageComponent } from "./schedule-manage.component"
-import { ScheduleTagDetailComponent } from "./tag/schedule-tag-detail/schedule-tag-detail.component"
+import { ScheduleTagListComponent } from "./tag/schedule-tag-list/schedule-tag-list.component"
 import { ScheduleTagExportDetailComponent } from "./tag/schedule-tag-export-detail/schedule-tag-export-detail.component"
 
 const routes: Routes = [
@@ -22,7 +22,7 @@ const routes: Routes = [
       { path: 'schedule-activity-export-detail/:scheduleId/:referenceId', component: ActivityExportDetailComponent, data:{ keepSession: true}}, //名單查看
 
       //標籤列表
-      { path: 'schedule-tag-detail', component: ScheduleTagDetailComponent, data:{ keepSession: true, keepFrom: ['schedule-tag-export-detail/']}},
+      { path: 'schedule-tag-list', component: ScheduleTagListComponent, data:{ keepSession: true, keepFrom: ['schedule-tag-export-detail/']}},
       { path: 'schedule-tag-export-detail/:tagId', component: ScheduleTagExportDetailComponent, data:{ keepSession: true}},
     ]
   }
@@ -41,6 +41,6 @@ export const routedComponents = [
   ScheduleDetailComponent,
   ActivityExportDetailComponent,
   PreviewDialogComponent,
-  ScheduleTagDetailComponent,
+  ScheduleTagListComponent,
   ScheduleTagExportDetailComponent,
 ];

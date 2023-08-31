@@ -184,7 +184,7 @@ export class Conditiondistribution {
 //#endregion
 
 //#region 活動標籤顯示
-export interface TagReviewListResp {
+export interface ReviewTagListResp {
   data: Array<TagReviewHistory>;
 }
 

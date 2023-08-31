@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { ConsoleGroup } from '@api/models/console-group.model';
-import { ConsoleUser } from '@api/models/console-user.model';
+import { ConsoleUserList } from '@api/models/console-user.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { RestStatus } from '@common/enums/rest-enum';
@@ -15,7 +15,7 @@ import { catchError, tap } from 'rxjs/operators';
   providers: [AccountManageService]
 })
 export class ChangeDialogComponent {
-  @Input() consoleUser: ConsoleUser;
+  @Input() consoleUser: ConsoleUserList;
   @Input() consoleGroupList: Array<ConsoleGroup>;
   groupId: string;
 
@@ -42,7 +42,7 @@ export class ChangeDialogComponent {
       }
     });
     this.loadingService.open();
-    this.accountManageService.updateConsoleUser(this.consoleUser.userId, this.consoleUser).pipe(
+    this.accountManageService.updateConsoleUserList(this.consoleUser.userId, this.consoleUser).pipe(
       catchError((err) => {
         this.loadingService.close();
         this.dialogService.alertAndBackToList(false, `${this.consoleUser.account} 權限變更失敗`);

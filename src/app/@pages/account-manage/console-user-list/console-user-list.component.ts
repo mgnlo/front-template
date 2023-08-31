@@ -19,11 +19,11 @@ import { ConsoleGroupListMock } from '@common/mock-data/console-group-list-mock'
 import { ConsoleUserListMock } from '@common/mock-data/console-user-list-mock';
 
 @Component({
-  selector: 'console-user',
-  templateUrl: './console-user.component.html',
-  styleUrls: ['./console-user.component.scss'],
+  selector: 'console-user-list',
+  templateUrl: './console-user-list.component.html',
+  styleUrls: ['./console-user-list.component.scss'],
 })
-export class ConsoleUserComponent extends BaseComponent implements OnInit {
+export class ConsoleUserListComponent extends BaseComponent implements OnInit {
   consoleGroupList: Array<ConsoleGroup>;
   businessUnit: Array<{ key: string; val: string }> = Object.entries(BusinessUnit).map(([k, v]) => ({ key: k, val: v }));
   isSearch: boolean = false;

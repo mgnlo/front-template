@@ -13,11 +13,11 @@ import { BaseComponent } from '@pages/base.component';
 import { ReviewManageService } from '../review-manage.service';
 
 @Component({
-  selector: 'app-schedule-review-list',
-  templateUrl: './schedule-review-list.component.html',
-  styleUrls: ['./schedule-review-list.component.scss']
+  selector: 'app-review-schedule-list',
+  templateUrl: './review-schedule-list.component.html',
+  styleUrls: ['./review-schedule-list.component.scss']
 })
-export class ScheduleReviewListComponent extends BaseComponent implements OnInit {
+export class ReviewScheduleListComponent extends BaseComponent implements OnInit {
 
   mockData: Array<ScheduleReviewHistory> = ScheduleReviewHistoryMock;
 

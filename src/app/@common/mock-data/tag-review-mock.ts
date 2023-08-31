@@ -1,6 +1,6 @@
 import { TagReviewHistory } from "@api/models/tag-manage.model";
 
-export const TagReviewListMock: Array<TagReviewHistory> = [
+export const ReviewTagListMock: Array<TagReviewHistory> = [
   {
     historyId: "hh123461",
     referenceId: "cccccc123456",
