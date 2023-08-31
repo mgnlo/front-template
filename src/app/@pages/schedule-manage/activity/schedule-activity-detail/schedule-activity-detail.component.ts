@@ -157,11 +157,6 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         // console.info('this.detailRes', detailRes)
         // console.info('this.gridRes', gridRes)
         this.dataSource.load(scheduleActivityGrid);
-        //以下這段要測
-        if (storage?.page) {
-          this.dataSource.setPage(storage.page);
-          this.dataSource.setPaging(storage.page, this.dataSource.getPaging().perPage);
-        }
       }),
       finalize(() => {
         this.loadingService.close();
