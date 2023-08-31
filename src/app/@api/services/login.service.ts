@@ -86,7 +86,7 @@ export class LoginService {
             if (!features[scope[0]]) { features[scope[0]] = [] };
             features[scope[0]].push(scope[1]);
         });
-        if (!features[currentSchema]) { throw new Error(`${currentSchema}無對應的schema權限設定`) }
-        return features[currentSchema].includes(action);
+        // if(!features[currentSchema]){ console.warn('schemaName:', currentSchema, '無對應的權限設定')}
+        return !features[currentSchema] ? false : features[currentSchema].includes(action);
     }
 }
