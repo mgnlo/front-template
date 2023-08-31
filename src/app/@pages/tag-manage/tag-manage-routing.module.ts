@@ -13,10 +13,10 @@ const routes: Routes = [
     path: "", component: TagManageComponent,
     children: [
       { path: '', redirectTo: 'tag-list', pathMatch: 'full' },
-      { path: 'tag-list', component: TagListComponent, data:{ schema: 'tag', keepSession: true }},
-      { path: 'tag-detail/:tagId', component: TagDetailComponent, data:{ schema: 'tag', keepSession: true }},
-      { path: 'tag-set', component: TagSetComponent, data:{ schema: 'tag' }},
-      { path: 'tag-set/:changeRoute/:tagId', component: TagSetComponent, data:{ schema: 'tag' }}, //編輯 or 複製
+      { path: 'tag-list', component: TagListComponent, data:{ keepSession: true }},
+      { path: 'tag-detail/:tagId', component: TagDetailComponent, data:{ keepSession: true }},
+      { path: 'tag-set', component: TagSetComponent},
+      { path: 'tag-set/:changeRoute/:tagId', component: TagSetComponent}, //編輯 or 複製
     ]
   }
 ]

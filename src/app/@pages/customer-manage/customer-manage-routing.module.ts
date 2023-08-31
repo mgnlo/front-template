@@ -12,12 +12,12 @@ const routes: Routes = [
     {
         path: "", component: CustomerManageComponent,
         children: [
-            { path: '', redirectTo: 'customer-list', pathMatch: 'full'},
-            { path: 'customer-list', component: CustomerListComponent, data:{ schema: 'customer' }},
-            { path: 'activity-list', component: ActivityListComponent, data:{ schema: 'activity', keepSession: true }},
-            { path: 'activity-detail/:activityId', component: ActivityDetailComponent, data:{ schema: 'activity', keepSession: true }},
-            { path: 'activity-set', component: ActivitySetComponent, data:{ schema: 'activity' }}, //新增
-            { path: 'activity-set/:activityId', component: ActivitySetComponent, data:{ schema: 'activity' }}, //編輯
+            { path: '', redirectTo: 'customer-list', pathMatch: 'full' },
+            { path: 'customer-list', component: CustomerListComponent },
+            { path: 'activity-list', component: ActivityListComponent, data: { keepSession: true } },
+            { path: 'activity-detail/:activityId', component: ActivityDetailComponent, data: { keepSession: true } },
+            { path: 'activity-set', component: ActivitySetComponent }, //新增
+            { path: 'activity-set/:activityId', component: ActivitySetComponent }, //編輯
         ]
     }
 ]

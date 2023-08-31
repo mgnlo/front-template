@@ -11,10 +11,10 @@ import { StorageService } from './storage.service';
 })
 export class LoginService {
     readonly ssoLoginFunc = 'ssoLogin/';
-    nowSchema: string = '';
+    schemaName: string = '';
 
     setSchema(schema: string) {
-        this.nowSchema = schema;
+        this.schemaName = schema;
     }
 
     private _jwtToken: string = null;
@@ -77,10 +77,10 @@ export class LoginService {
      * @param schema 傳入設定在各xxx-routing.moudule.ts path的schema
      * @param action 操作權限(未傳入預設取是否有read)
     */
-    public checkUserScope(schema?: string, action?: 'read' | 'create' | 'update' | 'delete') {
+    public checkUserScope(schema?: string, action?: 'read' | 'create' | 'update' | 'delete' | string): boolean {
         action = !action ? 'read' : action;
         let features: { [key: string]: string[] } = {};
-        let currentSchema = !schema ? this.nowSchema : schema;
+        let currentSchema = !schema ? this.schemaName : schema;
         this._userProfile.consoleGroup.consoleGroupScope.forEach((groupScope) => {
             let scope = groupScope.scope.split(".");
             if (!features[scope[0]]) { features[scope[0]] = [] };

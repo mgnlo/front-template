@@ -4,6 +4,7 @@ import { ActivityDetail, ActivityReviewHistory, ActivitySetting, HistoryGroupVie
 import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
+import { LoginService } from '@api/services/login.service';
 import { StorageService } from '@api/services/storage.service';
 import { RestStatus } from '@common/enums/rest-enum';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
@@ -40,13 +41,14 @@ export class ActivityReviewDetailComponent extends BaseComponent implements OnIn
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private router: Router,
     private dialogService: DialogService,
     private activatedRoute: ActivatedRoute,
     private loadingService: LoadingService,
     private reviewManageService: ReviewManageService,
   ) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
   }
 
   ngOnInit(): void {

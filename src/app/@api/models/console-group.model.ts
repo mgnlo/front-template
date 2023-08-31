@@ -22,7 +22,7 @@ export class ConsoleGroupScope {
 // 用於 Grid 中權限內容
 export class GridInnerCheckBox {
     featureName: string;
-    read: boolean;
+    read?: boolean;
     create?: boolean;
     update?: boolean;
     delete?: boolean;

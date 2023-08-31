@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ActionGuard } from '@common/guard/action-guard';
+import { CrudGuard } from '@common/guard/crud-guard';
 import { CleanSessionGuard } from '@common/guard/clean-session-guard';
 import { PagesComponent } from './pages.component';
 
@@ -44,7 +44,7 @@ const routes: Routes = [
           import('@pages/dashboard/dashboard.module').then(
             (m) => m.DashboardModule
           ),
-        canActivateChild: [CleanSessionGuard, ActionGuard]
+        canActivateChild: [CleanSessionGuard, CrudGuard]
       },
       {
         path: 'customer-manage',
@@ -52,7 +52,7 @@ const routes: Routes = [
           import('@pages/customer-manage/customer-manage.module').then(
             (m) => m.CustomerManageModule
           ),
-        canActivateChild: [CleanSessionGuard, ActionGuard]
+        canActivateChild: [CleanSessionGuard, CrudGuard]
       },
       {
         path: 'tag-manage',
@@ -60,7 +60,7 @@ const routes: Routes = [
           import('@pages/tag-manage/tag-manage.module').then(
             (m) => m.TagManageModule
           ),
-        canActivateChild: [CleanSessionGuard, ActionGuard]
+        canActivateChild: [CleanSessionGuard, CrudGuard]
       },
       {
         path: 'review-manage',
@@ -68,7 +68,7 @@ const routes: Routes = [
           import('@pages/review-manage/review-manage.module').then(
             (m) => m.ReviewManageModule
           ),
-        canActivateChild: [CleanSessionGuard, ActionGuard]
+        canActivateChild: [CleanSessionGuard, CrudGuard]
       },
       {
         path: 'account-manage',
@@ -76,7 +76,7 @@ const routes: Routes = [
           import('@pages/account-manage/account-manage.module').then(
             (m) => m.AccountManageModule
           ),
-        canActivateChild: [CleanSessionGuard, ActionGuard]
+        canActivateChild: [CleanSessionGuard, CrudGuard]
       },
       {
         path: 'schedule-manage',
@@ -84,7 +84,7 @@ const routes: Routes = [
           import('@pages/schedule-manage/schedule-manage.module').then(
             (m) => m.ScheduleManageModule
           ),
-        canActivateChild: [CleanSessionGuard, ActionGuard]
+        canActivateChild: [CleanSessionGuard, CrudGuard]
       },
       {
         path: 'charts',

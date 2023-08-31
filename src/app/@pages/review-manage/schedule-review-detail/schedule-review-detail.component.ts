@@ -4,6 +4,7 @@ import { HistoryGroupView, ScheduleDetailView, ScheduleReviewHistory } from '@ap
 import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
+import { LoginService } from '@api/services/login.service';
 import { StorageService } from '@api/services/storage.service';
 import { RestStatus } from '@common/enums/rest-enum';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
@@ -36,13 +37,14 @@ export class ScheduleReviewDetailComponent extends BaseComponent implements OnIn
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private loadingService: LoadingService,
     private reviewManageService: ReviewManageService,
     private dialogService: DialogService,
   ) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
   }
 
   ngOnInit(): void {

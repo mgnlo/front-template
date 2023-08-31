@@ -5,6 +5,7 @@ import { HistoryGroupView, TagDetailView } from '@api/models/tag-manage.model';
 import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
+import { LoginService } from '@api/services/login.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { Status } from '@common/enums/common-enum';
@@ -42,6 +43,7 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private dialogService: DialogService,
@@ -50,7 +52,7 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
     private loadingService: LoadingService,
     private tagManageService: TagManageService,
   ) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
   }
 
   ngOnInit(): void {

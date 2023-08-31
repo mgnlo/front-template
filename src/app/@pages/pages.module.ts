@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { ActionGuard } from '@common/guard/action-guard';
+import { CrudGuard } from '@common/guard/crud-guard';
 import { CleanSessionGuard } from '@common/guard/clean-session-guard';
 import { NbMenuModule } from '@nebular/theme';
 import { ThemeModule } from '@theme/theme.module';
@@ -8,7 +8,7 @@ import { PagesComponent } from './pages.component';
 
 @NgModule({
   declarations: [PagesComponent],
-  providers: [CleanSessionGuard, ActionGuard],
+  providers: [CleanSessionGuard, CrudGuard],
   imports: [ThemeModule, PagesRoutingModule, NbMenuModule],
 })
 export class PagesModule {}

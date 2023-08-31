@@ -5,6 +5,7 @@ import { ActivitySetting, ScheduleActivitySetting, Schedule_Batch_History } from
 import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
+import { LoginService } from '@api/services/login.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, StatusResult } from '@common/enums/common-enum';
@@ -35,6 +36,7 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private scheduleManageService: ScheduleManageService,
@@ -43,7 +45,7 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
     private dialogService: DialogService,
     private tableService: Ng2SmartTableService,
   ) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
     this.params = this.activatedRoute.snapshot.params;
   }
 

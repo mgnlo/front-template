@@ -6,6 +6,7 @@ import { ScheduleTagSetting } from '@api/models/schedule-tag.model';
 import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
 import { FileService } from '@api/services/file.service';
+import { LoginService } from '@api/services/login.service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, StatusResult } from '@common/enums/common-enum';
 import { ScheduleTagSettingMock } from '@common/mock-data/schedule-tag-list-mock';
@@ -29,12 +30,13 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private fileService: FileService,
     private dialogService: DialogService,
   ) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
     this.params = this.activatedRoute.snapshot.params;
   }
 

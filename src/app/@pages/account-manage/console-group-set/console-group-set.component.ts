@@ -5,6 +5,7 @@ import { ConsoleGroup, GridInnerCheckBox } from '@api/models/console-group.model
 import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
+import { LoginService } from '@api/services/login.service';
 import { StorageService } from '@api/services/storage.service';
 import { GroupScope } from '@common/enums/console-group-enum';
 import { BusinessUnit } from '@common/enums/console-user-enum';
@@ -36,12 +37,13 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private router: Router,
     private accountManageService: AccountManageService,
     private activatedRoute: ActivatedRoute,
     private loadingService: LoadingService,
     private dialogService: DialogService,) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
 
     this.validateForm = new FormGroup({
       groupName: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),

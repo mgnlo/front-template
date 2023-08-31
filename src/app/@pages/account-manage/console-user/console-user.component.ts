@@ -105,13 +105,13 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private loadingService: LoadingService,
     private accountManageService: AccountManageService,
     private dialogService: DialogService,
     private tableService: Ng2SmartTableService,
-    private loginService: LoginService,
   ) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
     this.validateForm = new FormGroup({
       account: new FormControl(null),
       name: new FormControl(null),
@@ -120,9 +120,7 @@ export class ConsoleUserComponent extends BaseComponent implements OnInit {
       groupId: new FormControl(''),
     });
 
-    if (!this.loginService.checkUserScope('console-user', 'update')) {
-      delete this.gridDefine.columns.action;
-    }
+    if (!this.isCrud['update']) { delete this.gridDefine.columns.action; }
   }
 
   ngOnInit(): void {
