@@ -28,7 +28,7 @@ export class ApiService {
   };
   private prefixUrl = this.configService.getConfig().SERVER_URL + this.configService.getConfig().API_URL;
   // private prefixUrl = "http://console-api-webcomm-c360.apps.ocp.webcomm.com.tw/api/";
-  
+
 
   constructor(
     private http: HttpClient,
@@ -117,7 +117,7 @@ export class ApiService {
     }
 
     const resultUrl = this.prefixUrl + url;
-    this.http.get(resultUrl, {
+    this.http.get<Blob>(resultUrl, {
       // params: rqParams,
       responseType: 'blob' as 'json',
       observe: 'response',
@@ -125,9 +125,15 @@ export class ApiService {
     }).pipe(
       timeout(30000),
       catchError((err: HttpErrorResponse) => {
+        if (err.status === 403) {
+          // JWT 失效主機發送 403 錯誤，這邊需要導頁回兆豐登入頁，待補(需要確認導頁網址與相關參數)
+          this.storageService.removeSessionVal("jwtToken");
+        }
+
         return throwError(err.message);
       }),
-      tap((res: any) => {
+      tap((res: HttpResponse<Blob>) => {
+        // console.info('res',res)
         if (res && res.status?.toString() !== RestStatus.SUCCESS) {
           throw new ApiLogicError(res.statusText, res.status?.toString());
         }
@@ -141,9 +147,7 @@ export class ApiService {
 
         if (contentDispositionHeader) {
           const matches = contentDispositionHeader.match(/filename\*?=['"]?(?:UTF-8['"])?([^;\r\n"']*)['"]?;/);
-          if (matches && matches.length > 1) {
-            fileName = decodeURIComponent(matches[1]);
-          }
+          if (matches && matches.length > 1) fileName = decodeURIComponent(matches[1]);
         }
 
         const blob = new Blob([res.body], { type: 'application/octet-stream' });
