@@ -144,7 +144,6 @@ export class ConsoleUserListComponent extends BaseComponent implements OnInit {
           this.dataSource.addFilter({ field: k, filter: undefined, search: v });
         }
       }
-      console.info(this.dataSource.getFilter())
       this.dataSource.load(ConsoleUserListMock);
       return;
     }
