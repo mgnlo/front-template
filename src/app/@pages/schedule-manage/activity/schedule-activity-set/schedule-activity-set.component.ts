@@ -6,7 +6,7 @@ import { ActivitySetting as scheduleActivitySetting, ScheduleActivitySetting, Sc
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
-import { ColumnClass, Frequency, Status, StatusResult } from '@common/enums/common-enum';
+import { ColumnClass, Frequency, Status, StatusResult, chineseWeekDayValues } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
 import { CommonUtil } from '@common/utils/common-util';
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
@@ -36,13 +36,12 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   actionName: string;// 新增/編輯/複製
 
   //預設下拉時間日期
-  chineseWeekDays = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'];
   weekDailyList: Array<{ key: string; val: string }> = Array.from(
     { length: 7 },
-    (_, index) => ({ key: (index + 1).toString().padStart(2, '0'), val: this.chineseWeekDays[index] })
+    (_, index) => ({ key: (index + 1).toString().padStart(2, '0'), val: chineseWeekDayValues[index] })
   );
 
-  chineseEndMonth = '月底';
+  chineseEndMonth: string = '月底';
   monthDailyList: Array<{ key: string; val: string }> = Array.from(
     { length: 31 },
     (_, index) => ({ key: (index + 1).toString().padStart(2, '0'), val: (index + 1).toString().padStart(2, '0') })
@@ -65,15 +64,15 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     }).map(([k, v]) => ({ key: k, val: v }));
 
   //預設pup-up活動名單
-  activityList: Array<{ key: string; val: string }> = new Array;
-  filterActivityList: Array<{ key: string; val: string }> = new Array;
-  activityListTemp: Array<{ key: string; val: string }> = new Array;
+  activityList: Array<{ key: string; val: string }> = new Array<{ key: string; val: string }>();
+  filterActivityList: Array<{ key: string; val: string }> = new Array<{ key: string; val: string }>();
+  activityListTemp: Array<{ key: string; val: string }> = new Array<{ key: string; val: string }>();
 
   //預設名單列表
-  scheduleActivitySettingGrid: Array<scheduleActivitySetting> = new Array;
+  scheduleActivitySettingGrid: Array<scheduleActivitySetting> = new Array<scheduleActivitySetting>();
 
   //全活動名單
-  ActivitySettingArray: Array<scheduleActivitySetting> = new Array;
+  ActivitySettingArray: Array<scheduleActivitySetting> = new Array<scheduleActivitySetting>();
 
   scheduleId: string;
 
@@ -303,14 +302,6 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       !this.scheduleActivitySettingGrid.some(setting => setting.activityId === item.key)
       && CommonUtil.isNotBlank(item.key) && CommonUtil.isNotBlank(item.val)
     );
-  }
-  //#endregion
-
-  //#region 撈取月底
-  getLastDayOfMonth() {
-    const now = new Date();
-    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-    return lastDay.toString().padStart(2, '0');
   }
   //#endregion
 

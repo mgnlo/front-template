@@ -81,3 +81,23 @@ export enum toastTitle {
   info = '訊息',
   primary = '通知'
 }
+
+export enum ChineseWeekDays {
+  Monday = '星期一',
+  Tuesday = '星期二',
+  Wednesday = '星期三',
+  Thursday = '星期四',
+  Friday = '星期五',
+  Saturday = '星期六',
+  Sunday = '星期日',
+}
+
+export const chineseWeekDayValues = [
+  ChineseWeekDays.Monday,
+  ChineseWeekDays.Tuesday,
+  ChineseWeekDays.Wednesday,
+  ChineseWeekDays.Thursday,
+  ChineseWeekDays.Friday,
+  ChineseWeekDays.Saturday,
+  ChineseWeekDays.Sunday
+];
