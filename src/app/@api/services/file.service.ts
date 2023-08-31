@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { ResponseModel } from '@api/models/base.model';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
-import { FileReq, FileResp, FileRespWithBlob } from '@api/models/file.model';
-import { HttpResponse } from '@angular/common/http';
+import { FileReq, FileResp } from '@api/models/file.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +11,7 @@ export class FileService {
 
   readonly fileFunc = 'file';
   readonly fileUploadFunc = `${this.fileFunc}/upload`;
-  readonly fileDownloadFunc = `${this.fileFunc}/download`;
+  readonly fileDownloadFunc = `${this.fileFunc}/download/`;
 
   constructor(private service: ApiService) { }
 
@@ -20,5 +19,7 @@ export class FileService {
     return this.service.doUpload(this.fileUploadFunc, data);
   }
 
-
+  downloadFileService(data: FileReq): void {
+    this.service.doGetDownload(this.fileDownloadFunc + data.fileDataId, data);
+  }
 }

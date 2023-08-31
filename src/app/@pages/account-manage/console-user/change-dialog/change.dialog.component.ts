@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { ConsoleGroup } from '@api/models/console-group.model';
 import { ConsoleUser } from '@api/models/console-user.model';
 import { DialogService } from '@api/services/dialog.service';
@@ -14,7 +14,7 @@ import { catchError, tap } from 'rxjs/operators';
   styleUrls: ['./change.dialog.component.scss'],
   providers: [AccountManageService]
 })
-export class ChangeDialogComponent implements OnInit {
+export class ChangeDialogComponent {
   @Input() consoleUser: ConsoleUser;
   @Input() consoleGroupList: Array<ConsoleGroup>;
   groupId: string;
@@ -24,14 +24,12 @@ export class ChangeDialogComponent implements OnInit {
     private loadingService: LoadingService,
     private accountManageService: AccountManageService,
     private dialogService: DialogService,
-  ) {}
+  ) { }
 
-  ngOnInit() {
-    // document.querySelector(".option-list").scrollTop = 0;
-
-    requestAnimationFrame(() => {
-      this.groupId = !!this.consoleUser.consoleGroup?.groupId ? this.consoleUser.consoleGroup.groupId : '';
-    });
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.consoleUser.currentValue != changes.consoleUser.previousValue) {
+      this.groupId = changes.consoleUser.currentValue.consoleGroup?.groupId ? changes.consoleUser.currentValue.consoleGroup.groupId : '';
+    }
   }
 
   save() {

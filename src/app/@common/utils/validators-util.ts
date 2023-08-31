@@ -138,7 +138,7 @@ export const ValidatorsUtil = {
     }
     return null;
   },
-  /** 檢查FormGroup至少要幾個FormControl為true (用於multi checkbox) */
+  /** 至少要幾個FormControl為true (用於checkbox-group) */
   atLeast: (num: number): ValidatorFn => {
     return (fg: FormGroup) => {
       if (!!fg.controls && (fg.dirty || fg.touched) && Object.keys(fg.controls).filter(ctl => fg.get(ctl).value == true).length < num) {

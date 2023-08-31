@@ -16,9 +16,8 @@ import { TagManageService } from '../tag-manage.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { ConfigService } from '@api/services/config.service';
 import { FileService } from '@api/services/file.service';
-import { ApiService } from '@api/services/api.service';
-import { FileReq, FileResp, FileRespWithBlob } from '@api/models/file.model';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { FileReq } from '@api/models/file.model';
+import { LoginService } from '@api/services/login.service';
 
 @Component({
   selector: 'tag-detail',
@@ -37,17 +36,16 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private router: Router,
-    private http: HttpClient,
-    private service: ApiService,
+    private fileService: FileService,
     private activatedRoute: ActivatedRoute,
     private tagManageService: TagManageService,
-    private fileService: FileService,
     private dialogService: DialogService,
     private loadingService: LoadingService,
     private tableService: Ng2SmartTableService,
   ) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
   }
 
   gridDefine = {
@@ -145,9 +143,8 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
           this.isHistoryOpen = processedData.isHistoryOpen;
           this.detail.historyGroupView = processedData.detail?.historyGroupView;
         }
-
-        this.loadingService.close();
       }),
+      finalize(() => this.loadingService.close())
     ).subscribe();
     //#endregion
 
@@ -164,54 +161,17 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
 
   //#region 檔案下載
   onDownloadFile() {
-    this.detail.fileData = '7097afed-8fe3-488e-a31d-a7b1bc7c3e5c';
+    //this.detail.fileData = 'fd79b9b3-e71e-441d-91b3-43594462d3c8';
     if (CommonUtil.isBlank(this.detail?.fileData)) {
       this.dialogService.alertAndBackToList(false, '檔案下載失敗(無識別碼)');
       return
     }
 
-    this.downloadFile(this.detail.fileData)
-  }
-  private httpOptions = {
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-    },
-  };
-  downloadFile(fileDataId: string): void {
-    const apiUrl = `http://localhost:8080/portal/webcomm/api/file/download/${fileDataId}`;
-
-    // 發送 GET 請求以下載檔案
-    this.http.get(apiUrl, {
-      responseType: 'blob', // 指定返回類型為 Blob
-      observe: 'response', // 指定觀察完整的 HTTP 響應
-      ...this.httpOptions
-    }).subscribe(
-      (response: any) => {
-        console.info('response', response)
-        debugger
-        const contentDispositionHeader = response.headers.get('Content-Disposition');
-        console.info('contentDispositionHeader', contentDispositionHeader)
-        const fileName = contentDispositionHeader
-          ? contentDispositionHeader.split(';')[1].split('=')[1]
-          : 'downloaded_file';
-
-        const blob = new Blob([response.body], { type: 'application/octet-stream' });
-
-        this.downloadFromBlob(blob, fileName);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }
-
-  private downloadFromBlob(blob: Blob, fileName: string): void {
-    const blobUrl = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = blobUrl;
-    a.download = fileName;
-    a.click();
-    window.URL.revokeObjectURL(blobUrl);
+    this.fileService.downloadFileService(new FileReq({
+      fileDataId: this.detail.fileData,
+      fileName: this.detail?.fileName,
+      uploadType: this.detail?.uploadType
+    }));
   }
   //#endregion
 

@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ScheduleTagSetting, ScheduleTagSettingView } from '@api/models/schedule-tag.model';
 import { ConfigService } from '@api/services/config.service';
+import { LoginService } from '@api/services/login.service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, Status, StatusResult } from '@common/enums/common-enum';
 import { ScheduleTagSettingMock } from '@common/mock-data/schedule-tag-list-mock';
@@ -11,7 +12,6 @@ import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/che
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
-import { filter, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'schedule-tag-detail',
@@ -33,10 +33,11 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
   ) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
   }
 
   gridDefine = {
@@ -235,8 +236,8 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
                 const hasActionFieldCNT = res.filter((f) => f.isShow).length;
                 const wasSelected = res.filter((f) => f.isShow && f.isSelected).length;
 
+                this.isAllSelected = false;
                 if (wasSelected === hasActionFieldCNT) this.isAllSelected = true;
-                if (wasSelected === 0) this.isAllSelected = false;
 
                 this.tempPageIsAllSelected = CommonUtil.onSetTempPageIsAllSelected(this.tempPageIsAllSelected, this.paginator.nowPage, this.isAllSelected)
                 this.setSessionVal(

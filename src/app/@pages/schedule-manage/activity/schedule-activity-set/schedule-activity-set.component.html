@@ -10,33 +10,68 @@
         <div class="row">
           <basic-input class="col-12 col-lg-6" title="排程名稱" [form]="validateForm" ctlName="jobName"></basic-input>
           <dropdown class="col-12 col-lg-6" title="狀態" [form]="validateForm" ctlName="status"></dropdown>
-          <div class="fieldGroup essential col-12 col-lg-6">
-            <radio title="排程頻率" [form]="validateForm" ctlName="executionFrequency" [selectList]="{options: frequencyList, key: 'key', val: 'val'}" (valueChange)="changeFrequencyType($event)"></radio>
+          <div class="fieldGroup essential col-12 col-lg-6"
+          [ngClass]="
+          {
+            'error':
+            (
+              (validateForm.get('daily')?.touched && validateForm.get('daily')?.invalid)||
+              (validateForm.get('minute')?.touched && validateForm.get('minute')?.invalid)||
+              (validateForm.get('hour')?.touched && validateForm.get('hour')?.invalid)
+            )
+          }">
+          <radio title="排程頻率" [form]="validateForm" ctlName="executionFrequency"
+                 [selectList]="{options: frequencyList, key: 'key', val: 'val'}"
+                 (valueChange)="changeFrequencyType($event)"
+                 [errorTextBoolen]="false"></radio>
             <div *ngIf="validateForm.get('executionFrequency').value?.toLowerCase() === 'daily'" class="multi">
-              <nb-select fullWidth placeholder="時" formControlName="hour">
-                  <nb-option *ngFor="let val of hour" [value]="val">{{ val }}</nb-option>
+              <nb-select fullWidth placeholder="時" formControlName="hour"
+                         [status]="validateForm.get('hour')?.touched && validateForm.get('hour')?.invalid? 'danger' : 'basic'">
+              <nb-option *ngFor="let hour of hourList" [value]="hour.key">{{ hour.val }}</nb-option>
               </nb-select>
               <span>：</span>
-              <nb-select fullWidth placeholder="分" formControlName="minute">
-                <nb-option *ngFor="let val of minute" [value]="val">{{ val }}</nb-option>
+              <nb-select fullWidth placeholder="分" formControlName="minute"
+                         [status]="validateForm.get('minute')?.touched && validateForm.get('minute')?.invalid? 'danger' : 'basic'">
+              <nb-option *ngFor="let minute of minuteList" [value]="minute.key">{{ minute.val }}</nb-option>
               </nb-select>
             </div>
-            <div *ngIf="validateForm.get('executionFrequency').value?.toLowerCase() !== 'daily'" class="multi">
-              <nb-select fullWidth placeholder="日" formControlName="daily">
-                <nb-option *ngFor="let val of daily" [value]="val">{{ val }}</nb-option>
+
+            <div *ngIf="validateForm.get('executionFrequency').value?.toLowerCase() === 'weekly'" class="multi">
+              <nb-select  fullWidth placeholder="日" formControlName="daily"
+                          [status]="validateForm.get('daily')?.touched && validateForm.get('daily')?.invalid? 'danger' : 'basic'">
+              <nb-option *ngFor="let daily of weekDailyList" [value]="daily.key">{{ daily.val }}</nb-option>
               </nb-select>
-              <span *ngIf="validateForm.get('executionFrequency').value?.toLowerCase() === 'monthly'">日</span>
-              <nb-select fullWidth placeholder="時" formControlName="hour">
-                  <nb-option *ngFor="let val of hour" [value]="val">{{ val }}</nb-option>
+              <nb-select  fullWidth placeholder="時" formControlName="hour"
+                          [status]="validateForm.get('hour')?.touched && validateForm.get('hour')?.invalid? 'danger' : 'basic'">
+              <nb-option *ngFor="let hour of hourList" [value]="hour.key">{{ hour.val }}</nb-option>
               </nb-select>
               <span>：</span>
-              <nb-select fullWidth placeholder="分" formControlName="minute">
-                <nb-option *ngFor="let val of minute" [value]="val">{{ val }}</nb-option>
+              <nb-select  fullWidth placeholder="分" formControlName="minute"
+                          [status]="validateForm.get('minute')?.touched && validateForm.get('minute')?.invalid? 'danger' : 'basic'">
+              <nb-option *ngFor="let minute of minuteList" [value]="minute.key">{{ minute.val }}</nb-option>
               </nb-select>
             </div>
+
+            <div *ngIf="validateForm.get('executionFrequency').value?.toLowerCase() === 'monthly'" class="multi">
+              <nb-select  fullWidth placeholder="日" formControlName="daily"
+                          [status]="validateForm.get('daily')?.touched && validateForm.get('daily')?.invalid? 'danger' : 'basic'">
+              <nb-option *ngFor="let daily of monthDailyList" [value]="daily.key">{{ daily.val }}</nb-option>
+              </nb-select>
+              <span>日</span>
+              <nb-select  fullWidth placeholder="時" formControlName="hour"
+                          [status]="validateForm.get('hour')?.touched && validateForm.get('hour')?.invalid? 'danger' : 'basic'">
+              <nb-option *ngFor="let hour of hourList" [value]="hour.key">{{ hour.val }}</nb-option>
+              </nb-select>
+              <span>：</span>
+              <nb-select  fullWidth placeholder="分" formControlName="minute"
+                          [status]="validateForm.get('minute')?.touched && validateForm.get('minute')?.invalid? 'danger' : 'basic'">
+              <nb-option *ngFor="let minute of minuteList" [value]="minute.key">{{ minute.val }}</nb-option>
+              </nb-select>
+            </div>
+
             <div class="note errorText">
                 <nb-icon icon="alert-triangle"></nb-icon>
-                <p>欄位錯誤訊息</p>
+                <p>此為必填欄位</p>
             </div>
           </div>
           <basic-input class="col-12 col-lg-6" title="檔案存放地方" [form]="validateForm" ctlName="filePath"></basic-input>

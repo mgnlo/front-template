@@ -6,20 +6,21 @@ import { ActivitySetting as scheduleActivitySetting, ScheduleActivitySetting, Sc
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
-import { ColumnClass, Frequency, Status, StatusResult } from '@common/enums/common-enum';
+import { ColumnClass, Frequency, Status, StatusResult, chineseWeekDayValues } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
 import { CommonUtil } from '@common/utils/common-util';
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
 import { LocalDataSource } from 'ng2-smart-table';
-import { catchError, filter, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, finalize, tap } from 'rxjs/operators';
 import { PreviewDialogComponent } from './preview-dialog/preview.dialog/preview-dialog.component';
 import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
 import { of } from 'rxjs';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { ConfigService } from '@api/services/config.service';
 import { ValidatorsUtil } from '@common/utils/validators-util';
+import { LoginService } from '@api/services/login.service';
 
 @Component({
   selector: 'schedule-activity-set',
@@ -35,9 +36,25 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   actionName: string;// 新增/編輯/複製
 
   //預設下拉時間日期
-  daily = Array.from({ length: 32 }, (_, index) => index.toString().padStart(2, '0'));
-  hour = Array.from({ length: 13 }, (_, index) => index.toString().padStart(2, '0'));
-  minute = Array.from({ length: 61 }, (_, index) => index.toString().padStart(2, '0'));
+  weekDailyList: Array<{ key: string; val: string }> = Array.from(
+    { length: 7 },
+    (_, index) => ({ key: (index + 1).toString().padStart(2, '0'), val: chineseWeekDayValues[index] })
+  );
+
+  chineseEndMonth: string = '月底';
+  monthDailyList: Array<{ key: string; val: string }> = Array.from(
+    { length: 31 },
+    (_, index) => ({ key: (index + 1).toString().padStart(2, '0'), val: (index + 1).toString().padStart(2, '0') })
+  ).concat({ key: '999', val: this.chineseEndMonth });
+
+  hourList: Array<{ key: string; val: string }> = Array.from(
+    { length: 24 },
+    (_, index) => ({ key: index.toString().padStart(2, '0'), val: index.toString().padStart(2, '0') })
+  );
+  minuteList: Array<{ key: string; val: string }> = Array.from(
+    { length: 60 },
+    (_, index) => ({ key: index.toString().padStart(2, '0'), val: index.toString().padStart(2, '0') })
+  );
 
   //預設排程頻率
   scheduleFrequencyList = [Frequency.daily, Frequency.weekly, Frequency.monthly];
@@ -47,21 +64,22 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     }).map(([k, v]) => ({ key: k, val: v }));
 
   //預設pup-up活動名單
-  activityList: Array<{ key: string; val: string }> = new Array;
-  filterActivityList: Array<{ key: string; val: string }> = new Array;
-  activityListTemp: Array<{ key: string; val: string }> = new Array;
+  activityList: Array<{ key: string; val: string }> = new Array<{ key: string; val: string }>();
+  filterActivityList: Array<{ key: string; val: string }> = new Array<{ key: string; val: string }>();
+  activityListTemp: Array<{ key: string; val: string }> = new Array<{ key: string; val: string }>();
 
   //預設名單列表
-  scheduleActivitySettingGrid: Array<scheduleActivitySetting> = new Array;
+  scheduleActivitySettingGrid: Array<scheduleActivitySetting> = new Array<scheduleActivitySetting>();
 
   //全活動名單
-  ActivitySettingArray: Array<scheduleActivitySetting> = new Array;
+  ActivitySettingArray: Array<scheduleActivitySetting> = new Array<scheduleActivitySetting>();
 
   scheduleId: string;
 
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private dialogService: DialogService,
@@ -70,14 +88,14 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     private loadingService: LoadingService,
     private readonly changeDetectorRef: ChangeDetectorRef,
   ) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
 
     this.validateForm = new FormGroup({
       jobName: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
       status: new FormControl(null, Validators.required),
       executionFrequency: new FormControl('daily', Validators.required),
-      hour: new FormControl(null, Validators.required),
-      minute: new FormControl(null, Validators.required),
+      hour: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
+      minute: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
       filePath: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
     });
 
@@ -121,6 +139,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'col-2',
         valuePrepareFunction: (cell: string) => {
+          if (!cell) { return '' }
           const datepipe: DatePipe = new DatePipe('en-US');
           return `<p class="date">${datepipe.transform(cell, this.dateFormat)}</p>`;
         },
@@ -161,14 +180,19 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   //#region 頻率切換
   changeFrequencyType(key: string) {
-    this.validateForm.patchValue({ 'hour': '', 'minute': '' });
+    this.removeFieldIfExists('daily');
+    this.removeFieldIfExists('hour');
+    this.removeFieldIfExists('minute');
     switch (key) {
       case 'daily':
-        this.removeFieldIfExists('daily');
+        this.addFieldIfNotExists('hour', null, [Validators.required, ValidatorsUtil.blank]);
+        this.addFieldIfNotExists('minute', null, [Validators.required, ValidatorsUtil.blank]);
         break;
       case 'weekly':
       case 'monthly':
-        this.addFieldIfNotExists('daily', null, Validators.required);
+        this.addFieldIfNotExists('daily', null, [Validators.required, ValidatorsUtil.blank]);
+        this.addFieldIfNotExists('hour', null, [Validators.required, ValidatorsUtil.blank]);
+        this.addFieldIfNotExists('minute', null, [Validators.required, ValidatorsUtil.blank]);
         break;
     }
   }
@@ -268,7 +292,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
   //#endregion
 
-  //塞選不重複資料
+  //#region 塞選不重複資料
   refreshFilterActivityList() {
     if (this.activityListTemp && this.activityListTemp.length > 0) {
       this.filterActivityList = [...this.activityListTemp, ...this.activityList]
@@ -333,7 +357,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       this.dialogService.alertAndBackToList(false, `${this.actionName}驗證失敗`, ['pages', 'schedule-manage', 'schedule-activity-set', ...route]);
       return
     }
-    
+
     if (this.isMock) {
       this.dialogService.alertAndBackToList(true, `${this.actionName}成功`, ['pages', 'schedule-manage', 'schedule-activity-list']);
       this.loadingService.close();
@@ -358,15 +382,13 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         this.dialogService.alertAndBackToList(false, `${this.actionName}失敗 ${err}`, ['pages', 'schedule-manage', 'schedule-activity-set', ...route]);
         throw new Error(err.message);
       }),
+      filter((res) => res.code === RestStatus.SUCCESS),
       tap(res => {
         // console.info(res);
-        this.loadingService.close();
-      })
-    ).subscribe(res => {
-      if (res.code === RestStatus.SUCCESS) {
         this.dialogService.alertAndBackToList(true, `${this.actionName}成功`, ['pages', 'schedule-manage', 'schedule-activity-list']);
-      }
-    });
+      }),
+      finalize(() => this.loadingService.close())
+    ).subscribe();
   }
 
   getRequestData(): ScheduleActivitySettingEditReq {

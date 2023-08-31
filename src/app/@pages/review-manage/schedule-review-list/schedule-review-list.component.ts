@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ScheduleReviewHistory } from '@api/models/schedule-activity.model';
 import { ConfigService } from '@api/services/config.service';
+import { LoginService } from '@api/services/login.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, Frequency } from '@common/enums/common-enum';
@@ -23,11 +24,12 @@ export class ScheduleReviewListComponent extends BaseComponent implements OnInit
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private activatedRoute: ActivatedRoute,
     private reviewManageService: ReviewManageService,
     private tableService: Ng2SmartTableService,
   ) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
     this.sessionKey = this.activatedRoute.snapshot.routeConfig.path;
   }
 

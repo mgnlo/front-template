@@ -4,10 +4,10 @@ import { ActivatedRoute } from '@angular/router';
 import { Customer } from '@api/models/customer-list.model';
 import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
+import { LoginService } from '@api/services/login.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { CustomerListMock } from '@common/mock-data/customer-list-mock';
-import { CommonUtil } from '@common/utils/common-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
@@ -25,12 +25,13 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private dialogService: DialogService,
     private customerManageService: CustomerManageService,
     private tableService: Ng2SmartTableService,
     private activatedRoute: ActivatedRoute,
   ) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
     // 篩選條件
     this.validateForm = new FormGroup({
       customerId: new FormControl('', [ValidatorsUtil.searchCustId]),
@@ -72,7 +73,7 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
         width: '15%',
         sort: false,
       },
-      userTag: {
+      tagKeyword: {
         title: `用戶標籤 (更新時間: ${this.updateTime})`,
         type: 'custom',
         width: '55%',
@@ -86,10 +87,9 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
         width: '5%',
         renderComponent: ColumnButtonComponent,
         onComponentInitFunction: (instance: ColumnButtonComponent) => {
-          instance.emitter.subscribe((res) => {
+          instance.emitter.subscribe((res: Customer) => {
             this.dialogService.open(DetailDialogComponent, {
-              title: `${res['customerId']}`,
-              datas: res,
+              customerId: res.customerId
             });
           })
         },
@@ -105,18 +105,10 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
   };
 
   reset() {
-    this.validateForm.reset({ customerId: '', mobile: '' });
+    this.validateForm.reset({ customerId: '', mobile: '', tagKeyword: '' });
     this.isSearch = true;
     this.paginator.nowPage = 1;
-    this.setSessionData();
     this.search('reset');
-  }
-
-  setSessionData() {
-    const filterVal = this.isSearch ? this.validateForm.getRawValue() :
-      this.storageService.getSessionVal(this.sessionKey)?.filter ?? this.validateForm.getRawValue();
-
-    this.setSessionVal({ page: this.paginator.nowPage, filter: filterVal });
   }
 
   search(key?: string) {
@@ -126,13 +118,12 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
       let filter = this.validateForm.getRawValue();
       for (const [k, v] of Object.entries(filter).filter(([key, val]) => !!val)) {
         this.dataSource.addFilter({ field: k, filter: undefined, search: v });
+        console.info(this.dataSource.getFilter())
         this.updateTime = moment(new Date()).format('YYYY/MM/DD');
       }
       this.dataSource.load(this.mockData);
       return;
     }
-
-    const getSessionVal = this.storageService.getSessionVal(this.sessionKey);
 
     this.isSearch = false;
     if (key === 'search') this.isSearch = true;
@@ -140,13 +131,6 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
     if (['search', 'reset'].includes(key)) this.paginator.nowPage = 1;
 
     let page = this.paginator.nowPage;
-
-    if (key !== 'search' && !!getSessionVal?.filter) {
-      page = getSessionVal.page;
-      CommonUtil.initializeFormWithSessionData(this.validateForm, getSessionVal);
-    }
-
-    if (key !== 'reset') this.setSessionData();
 
     let searchInfo: SearchInfo = {
       apiUrl: this.customerManageService.customerFunc,

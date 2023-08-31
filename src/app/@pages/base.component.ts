@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { ConfigService } from '@api/services/config.service';
+import { LoginService } from '@api/services/login.service';
 import { StorageService } from '@api/services/storage.service';
 import { CommonServerDataSource } from '@common/ng2-smart-table/common-server-data-source';
 import { Paginator } from '@component/table/paginator/paginator.component';
@@ -8,6 +9,7 @@ import { LocalDataSource } from 'ng2-smart-table';
 // import { OAuth2BaseComponent, OAuth2Service } from '@module/oauth2';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
+import { ScopeList } from './pages.component';
 
 @Injectable()
 export class BaseComponent implements OnDestroy {
@@ -23,10 +25,15 @@ export class BaseComponent implements OnDestroy {
   tmpCtrl: AbstractControl;    // 多層次使用
   sessionKey: string;
   isMock: boolean = false;
+  isCrud: { [action: string]: boolean } = {}; //頁面的CRUD權限
 
-  constructor(protected storageService: StorageService, protected configService: ConfigService) {
+  constructor(protected storageService: StorageService, protected configService: ConfigService, protected loginService: LoginService) {
     this.isMock = configService.getConfig().IS_MOCK;
     if (this.isMock) { this.dataSource = new LocalDataSource(); }
+    ScopeList[loginService.schemaName].crud.forEach(actionType => {
+      this.isCrud[actionType] = loginService.checkUserScope(loginService.schemaName, actionType);
+    })
+    console.log('schemaName:', loginService.schemaName, 'isCrud:', this.isCrud)
   }
 
   ngOnDestroy(): void {

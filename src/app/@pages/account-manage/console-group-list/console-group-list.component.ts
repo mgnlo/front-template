@@ -24,15 +24,14 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private router: Router,
-    private loginService: LoginService,
     private loadingService: LoadingService,
     private activatedRoute: ActivatedRoute,
     private accountManageService: AccountManageService,
     private tableService: Ng2SmartTableService
   ) {
-    super(storageService, configService);
-    this.hasConsoleGroupCreate = this.loginService.checkUserScope("console-group.create");
+    super(storageService, configService, loginService);
   }
 
   ngOnInit(): void {
@@ -42,6 +41,7 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
     if (this.isMock) {
       this.dataSource.reset();
       this.dataSource.load(ConsoleGroupListMock);
+      this.loadingService.close();
       return;
     }
 
@@ -112,8 +112,6 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
       delete: false,
     }
   };
-
-  hasConsoleGroupCreate: boolean;
 
   add() {
     this.router.navigate(this.accountManageService.CONSOLE_GROUP_SET_PATH);

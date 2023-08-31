@@ -16,6 +16,7 @@ export class CheckboxGroupComponent implements OnInit {
   @Input() selectList?: {options: any, key: string|number, val: string};
   /** 有enumName就會以此做enum的對應, 沒enumName就會用ctlName做對應 */
   @Input() enumName?: string;
+  @Input() status?: string = 'info';
   @Output() valueChange? = new EventEmitter<any>();
 
   firstErr: string;

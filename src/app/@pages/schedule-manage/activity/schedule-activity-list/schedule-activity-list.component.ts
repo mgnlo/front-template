@@ -3,9 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ScheduleActivitySetting } from '@api/models/schedule-activity.model';
 import { ConfigService } from '@api/services/config.service';
+import { LoginService } from '@api/services/login.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
-import { Frequency, Status } from '@common/enums/common-enum';
+import { Frequency, Status, chineseWeekDayValues } from '@common/enums/common-enum';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { BaseComponent } from '@pages/base.component';
@@ -23,12 +24,13 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private scheduleManageService: ScheduleManageService,
     private tableService: Ng2SmartTableService,
   ) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
   }
 
   gridDefine = {
@@ -61,7 +63,31 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
         type: 'html',
         width: '25%',
         valuePrepareFunction: (cell: string, row: ScheduleActivitySetting) => {
-          return Frequency[cell?.toLowerCase()] + " " + row.frequencyTime;
+          const frequencyTime = row.frequencyTime;
+          const frequencyTimeArray = frequencyTime.split(/[:：]/);
+          const cellLow = cell?.toLowerCase();
+
+          let result = '';
+
+          switch (cellLow) {
+            case 'daily':
+              result = `${Frequency[cellLow]} ${frequencyTimeArray[0] ?? ''} 時 ${frequencyTimeArray[1] ?? ''} 分`;
+              break;
+            case 'weekly':
+              const dayOfWeek = parseInt(frequencyTimeArray[0] ?? '0');
+              const weekDayName = chineseWeekDayValues[dayOfWeek - 1] || '';
+              result = `${Frequency[cellLow]} ${weekDayName} ${frequencyTimeArray[1] ?? ''} 時 ${frequencyTimeArray[2] ?? ''} 分`;
+              break;
+            case 'monthly':
+              const dayOfMonth = frequencyTimeArray?.[0] === '999' ? '月底' : frequencyTimeArray[0] ?? '';
+              result = `${Frequency[cellLow]} ${dayOfMonth}日 ${frequencyTimeArray[1] ?? ''} 時 ${frequencyTimeArray[2] ?? ''} 分`;
+              break;
+            default:
+              result = `${Frequency[cellLow]} ${frequencyTime}`;
+              break;
+          }
+
+          return result;
         },
         sort: false,
       },

@@ -2,10 +2,10 @@
   <label>{{title}}</label>
   <div class="checkboxGroup" [formGroupName]="formGroupName">
     <ng-container *ngIf="!!selectList?.options">
-        <nb-checkbox status="basic" *ngFor="let option of selectList.options" [formControlName]="option.key">{{ option.val }}</nb-checkbox>
+        <nb-checkbox [status]="hasError() ? 'danger' : status" *ngFor="let option of selectList.options" [formControlName]="option.key">{{ option.val }}</nb-checkbox>
     </ng-container>
     <ng-container *ngIf="!selectList?.options">
-        <nb-checkbox status="basic" *ngFor="let enum of enumList |keyvalue" [formControlName]="enum.key">{{ enum.value }}</nb-checkbox>
+        <nb-checkbox [status]="hasError() ? 'danger' : status" *ngFor="let enum of enumList |keyvalue" [formControlName]="enum.key">{{ enum.value }}</nb-checkbox>
     </ng-container>
   </div>
   <div class="note errorText">

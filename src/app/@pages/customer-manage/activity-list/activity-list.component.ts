@@ -13,6 +13,7 @@ import { BaseComponent } from '@pages/base.component';
 import { CustomerManageService } from '../customer-manage.service';
 import { CommonUtil } from '@common/utils/common-util';
 import { ConfigService } from '@api/services/config.service';
+import { LoginService } from '@api/services/login.service';
 
 @Component({
   selector: 'activity-list',
@@ -25,12 +26,13 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private customerManageService: CustomerManageService,
     private tableService: Ng2SmartTableService,
   ) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
     // 篩選條件
     this.validateForm = new FormGroup({
       activityName: new FormControl(''),

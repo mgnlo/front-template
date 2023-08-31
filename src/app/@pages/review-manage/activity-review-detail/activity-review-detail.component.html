@@ -44,17 +44,17 @@
                     <span>{{detail?.modificationTime | date:dateFormat}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="text_bold" [ngClass]="changeClass('scheduleSettings') | enum: 'reviewCompareClass'">排成設定：</p>
+                    <p class="text_bold" [ngClass]="changeClass('scheduleSettings') | enum: 'reviewCompareClass'">排程設定：</p>
                     <span>{{detail?.scheduleSettings | enum:'schedule'}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="text_bold" [ngClass]="changeClass('batchUpdateTime') | enum: 'reviewCompareClass'">排成更新時間：</p>
+                    <p class="text_bold" [ngClass]="changeClass('batchUpdateTime') | enum: 'reviewCompareClass'">排程更新時間：</p>
                     <span>{{detail?.batchUpdateTime}}</span>
                 </div>
             </div>
             <ng-container *ngFor="let tag of detail?.tagGroupView | keyvalue; let i = index;">
                 <div class="subTitle">
-                    <p>活動名單條件{{tag.key}}</p>
+                    <p [ngClass]="getConditionClass(i) | enum: 'reviewCompareClass'">活動名單條件{{tag.key}}</p>
                     <button nbButton [status]="isConditionOpen[tag.key] ? 'info' : 'basic'" size="small" class="iconBtn btnSwitch"
                         [ngClass]="isConditionOpen[tag.key] ? 'btnClick' : ''" (click)="isConditionOpen[tag.key] = !isConditionOpen[tag.key]">
                         <nb-icon icon="arrow-ios-forward"></nb-icon>

@@ -1,5 +1,7 @@
 export class FileReq {
   fileDataId: string;
+  fileName: string;
+  uploadType: string;
 
   constructor(data: Partial<FileReq>) {
     Object.assign(this, data);
@@ -17,11 +19,11 @@ export class FileResp {
   }
 }
 
-export class FileRespWithBlob {
-  fileResp: FileResp;
-  blob: Blob;
+// export class FileRespWithBlob {
+//   fileResp: FileResp;
+//   blob: Blob;
 
-  constructor(data: Partial<FileRespWithBlob>) {
-    Object.assign(this, data);
-  }
-}
+//   constructor(data: Partial<FileRespWithBlob>) {
+//     Object.assign(this, data);
+//   }
+// }

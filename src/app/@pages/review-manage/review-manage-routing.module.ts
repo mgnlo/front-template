@@ -12,13 +12,13 @@ const routes: Routes = [
     {
         path: "", component: ReviewManageComponent,
         children: [
-            { path: '', redirectTo: 'tag-review', pathMatch: 'full'},
-            { path: 'tag-review-list', component: TagReviewListComponent, data: { keepSession: true, keepFrom: ['tag-review-detail/'] }},
-            { path: 'tag-review-detail/:historyId', component: TagReviewDetailComponent, data: { keepSession: true }},
-            { path: 'activity-review-list', component: ActivityReviewListComponent, data: { keepSession: true, keepFrom: ['activity-review-detail/'] }},
-            { path: 'activity-review-detail/:historyId', component: ActivityReviewDetailComponent, data: { keepSession: true }},
-            { path: 'schedule-review-list', component: ScheduleReviewListComponent, data: { keepSession: true, keepFrom: ['schedule-review-detail/'] }},
-            { path: 'schedule-review-detail/:historyId', component: ScheduleReviewDetailComponent, data: { keepSession: true }},
+            { path: '', redirectTo: 'tag-review-list', pathMatch: 'full' },
+            { path: 'tag-review-list', component: TagReviewListComponent, data:{ keepSession: true, keepFrom: ['tag-review-detail/']}},
+            { path: 'tag-review-detail/:historyId', component: TagReviewDetailComponent, data:{ keepSession: true } },
+            { path: 'activity-review-list', component: ActivityReviewListComponent, data:{ keepSession: true, keepFrom: ['activity-review-detail/']}},
+            { path: 'activity-review-detail/:historyId', component: ActivityReviewDetailComponent, data:{ keepSession: true }},
+            { path: 'schedule-review-list', component: ScheduleReviewListComponent, data:{ keepSession: true, keepFrom: ['schedule-review-detail/']}},
+            { path: 'schedule-review-detail/:historyId', component: ScheduleReviewDetailComponent, data:{ keepSession: true }},
         ]
     }
 ]
@@ -30,11 +30,11 @@ const routes: Routes = [
 export class ReviewManageRoutingModule { }
 
 export const routedComponents = [
-  ReviewManageComponent,
-  TagReviewListComponent,
-  TagReviewDetailComponent,
-  ActivityReviewListComponent,
-  ActivityReviewDetailComponent,
-  ScheduleReviewListComponent,
-  ScheduleReviewDetailComponent,
+    ReviewManageComponent,
+    TagReviewListComponent,
+    TagReviewDetailComponent,
+    ActivityReviewListComponent,
+    ActivityReviewDetailComponent,
+    ScheduleReviewListComponent,
+    ScheduleReviewDetailComponent,
 ];

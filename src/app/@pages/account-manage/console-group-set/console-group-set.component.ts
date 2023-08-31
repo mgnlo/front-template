@@ -5,10 +5,12 @@ import { ConsoleGroup, GridInnerCheckBox } from '@api/models/console-group.model
 import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
+import { LoginService } from '@api/services/login.service';
 import { StorageService } from '@api/services/storage.service';
 import { GroupScope } from '@common/enums/console-group-enum';
 import { BusinessUnit } from '@common/enums/console-user-enum';
 import { RestStatus } from '@common/enums/rest-enum';
+import { ConsoleGroupDetailMock } from '@common/mock-data/console-group-detail-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/checkbox.component';
@@ -35,12 +37,13 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private router: Router,
     private accountManageService: AccountManageService,
     private activatedRoute: ActivatedRoute,
     private loadingService: LoadingService,
     private dialogService: DialogService,) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
 
     this.validateForm = new FormGroup({
       groupName: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
@@ -57,6 +60,22 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
     this.dataSource2 = new LocalDataSource(this.consoleGroupScope);
     if (this.changeRouteName === undefined) { return; }
     this.loadingService.open();
+    if (this.isMock) {
+      this.consoleGroupDetail = ConsoleGroupDetailMock;
+      this.validateForm.get('groupName').setValue(this.consoleGroupDetail.groupName);
+      this.validateForm.get('enable').setValue(this.consoleGroupDetail.enable.toString());
+      let scopeInfo = this.consoleGroupDetail.consoleGroupScope.map((groupScope) => {
+        let scope = groupScope.scope.split(".");
+        return { featureName: scope[0], [scope[1]]: true };
+      });
+      let scopeData = CommonUtil.groupBy(scopeInfo, 'featureName', false);
+      let scopeTableData = CommonUtil.flatGroupItem(scopeData, 'featureName');
+      this.accountManageService.updateCheckbox(this.consoleGroupScope, scopeTableData);
+      this.dataSource2.load(this.consoleGroupScope);
+      this.dataSource.load(this.consoleGroupDetail.consoleUser);
+      this.loadingService.close();
+      return;
+    }
     this.accountManageService.getConsoleGroup(this.groupId).pipe(
       catchError((err) => {
         this.loadingService.close();
@@ -107,7 +126,7 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
         renderComponent: CheckboxColumnComponent,
         onComponentInitFunction: (instance: CheckboxColumnComponent) => {
           instance.settings = { isShowParam: { key: 'read' }, isCheckedParam: { key: 'read' } };
-          instance.emitter.subscribe((res) => { res.read = res.isSelected });
+          instance.emitter.subscribe((res) => { res.read = res.isChecked });
         },
         sort: false,
       },
@@ -223,7 +242,7 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
       this.consoleGroupDetail.enable = req.enable === 'true' ? true : false;
 
       for (let scopeObj of this.dataSource2['data']) {
-        let keyList = Object.keys(scopeObj).filter(key => key !== 'isSelected' && key !== 'isShow');
+        let keyList = Object.keys(scopeObj).filter(key => key !== 'isSelected' && key !== 'isShow' && key !== 'isChecked');
         for (let idx = 1; idx < keyList.length; idx++) {
           if (scopeObj[keyList[idx]]) {
             this.consoleGroupDetail.consoleGroupScope.push({

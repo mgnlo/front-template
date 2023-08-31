@@ -1,8 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfigService } from '@api/services/config.service';
+import { LoginService } from '@api/services/login.service';
 import { StorageService } from '@api/services/storage.service';
 import { CustomerListMock } from '@common/mock-data/customer-list-mock';
+import { ValidatorsUtil } from '@common/utils/validators-util';
 import { NbDialogRef } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource } from 'ng2-smart-table';
@@ -37,21 +39,25 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private ref: NbDialogRef<PreviewDialogComponent>,
   ) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
     this.validateForm = new FormGroup({
-      listLimit: new FormControl('150', Validators.required),
-      orderBy: new FormControl(110),
+      listLimit: new FormControl('150', [Validators.required, ValidatorsUtil.notZero]),
+      orderBy: new FormControl(110, Validators.required),
       sortType: new FormControl('asc', Validators.required),
     });
   }
+  limit: number = 100;
+  infos = [`名單預計可抓取共 ${this.limit} 位名單資料，若有預算上考量請設定名單上限與資料排序方式。`];
 
   ngOnInit() {
     this.dataSource = new LocalDataSource();
     this.dataSource.load(CustomerListMock);
     if (!!this.dataList['listLimit']) {
       this.validateForm.get('listLimit').setValue(this.dataList['listLimit']);
+      this.limit = this.dataList['listLimit']+100; //TODO: 待加上取值邏輯
     }
     console.info(this.dataList);
   }

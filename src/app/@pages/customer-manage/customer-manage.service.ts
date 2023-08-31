@@ -13,7 +13,7 @@ export class CustomerManageService {
 
     constructor(private service: ApiService) { }
 
-    getCustomerRow(customerId): Observable<ResponseModel<ResData<Customer>>> {
+    getCustomerRow(customerId): Observable<ResponseModel<Customer>> {
         return this.service.doGet(this.customerFunc + customerId);
     }
 

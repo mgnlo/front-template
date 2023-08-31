@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/
 @Component({
   selector: 'app-column-button',
   template: `
-  <div class="btnCol">
+  <div class="btnCol" *ngIf="this.isShow">
     <button nbButton ghost [status]="this.settings.btnStatus" size="large" (click)="emit()" [disabled]="this.settings.disabled">
       <nb-icon [icon]="this.settings.btnIcon"></nb-icon>
     </button>
@@ -11,7 +11,8 @@ import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/
 })
 export class ColumnButtonComponent {
 
-  @Input() rowData: any;
+  @Input() rowData: object;
+  @Input() isShow: boolean = true;
   /**
    * 按鈕參數 ex: { btnStatus: 'info', btnIcon: 'search', clickable: true, disabled: false}
   */
@@ -19,10 +20,16 @@ export class ColumnButtonComponent {
     btnStatus: 'info', btnIcon: 'search', clickable: true, disabled: false
   }
   @Output() emitter = new EventEmitter();
+  @Output() getRow = new EventEmitter();
 
   clickable: boolean = true;
+  
   ngOnChanges(changes: SimpleChanges): void {
     this.clickable = changes.settings.currentValue?.clickable;
+  }
+
+  ngOnInit(): void {
+    this.getRow.next(this.rowData);
   }
 
   emit() {

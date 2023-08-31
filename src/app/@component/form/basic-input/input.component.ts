@@ -14,6 +14,8 @@ export class BasicInputComponent implements OnInit {
   @Input() type?: 'text' | 'password' | 'number' = 'text';
   @Input() placeholder?: string = '請輸入';
   @Input() maxlength?: number = null;
+  @Input() infos?: string[]; //欄位提示文字
+  @Input() linkInfo?: {link: string, title: string}; //連結文字
 
   firstErr: string;
   ctl: FormControl;

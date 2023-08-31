@@ -1,16 +1,21 @@
 import { Injectable } from '@angular/core';
-import { ConsoleUser } from '@api/models/console-user.model';
-import { ApiService } from './api.service';
-import { Observable } from 'rxjs/internal/Observable';
 import { ResponseModel } from '@api/models/base.model';
-import { StorageService } from './storage.service';
+import { ConsoleUser } from '@api/models/console-user.model';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { Observable } from 'rxjs/internal/Observable';
+import { ApiService } from './api.service';
+import { StorageService } from './storage.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class LoginService {
     readonly ssoLoginFunc = 'ssoLogin/';
+    schemaName: string = '';
+
+    setSchema(schema: string) {
+        this.schemaName = schema;
+    }
 
     private _jwtToken: string = null;
 
@@ -22,7 +27,7 @@ export class LoginService {
         this._jwtToken = jwt;
         this.service.jwtToken = this._jwtToken;
         this._userProfile = this.parseJwtPayload();
-        this.userProfileSubject.next({...this._userProfile});
+        this.userProfileSubject.next({ ...this._userProfile });
         this.storageService.putSessionVal("jwtToken", jwt);
     };
 
@@ -39,8 +44,8 @@ export class LoginService {
         private storageService: StorageService) {
         let storageJwt = this.storageService.getSessionVal("jwtToken");
 
-        if(storageJwt) {
-          this.jwtToken = storageJwt;
+        if (storageJwt) {
+            this.jwtToken = storageJwt;
         }
     }
 
@@ -54,7 +59,7 @@ export class LoginService {
 
     // 解析 patload 取得 userProfit
     private parseJwtPayload() {
-        if(this._jwtToken){
+        if (this._jwtToken) {
             var base64Url = this._jwtToken.split('.')[1];
             var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
             var jsonPayload = decodeURIComponent(window.atob(base64).split('').map((c) => {
@@ -67,9 +72,21 @@ export class LoginService {
         }
     }
 
-    public checkUserScope(scope: string) {
-        let index = this._userProfile.consoleGroup.consoleGroupScope.findIndex(e => e.scope.startsWith(scope));
-
-        return index >= 0 ? true : false;
+    /**
+     * 檢查是否有權限操作
+     * @param schema 傳入設定在各xxx-routing.moudule.ts path的schema
+     * @param action 操作權限(未傳入預設取是否有read)
+    */
+    public checkUserScope(schema?: string, action?: 'read' | 'create' | 'update' | 'delete' | string): boolean {
+        action = !action ? 'read' : action;
+        let features: { [key: string]: string[] } = {};
+        let currentSchema = !schema ? this.schemaName : schema;
+        this._userProfile.consoleGroup.consoleGroupScope.forEach((groupScope) => {
+            let scope = groupScope.scope.split(".");
+            if (!features[scope[0]]) { features[scope[0]] = [] };
+            features[scope[0]].push(scope[1]);
+        });
+        if (!features[currentSchema]) { throw new Error(`${currentSchema}無對應的schema權限設定`) }
+        return features[currentSchema].includes(action);
     }
 }
