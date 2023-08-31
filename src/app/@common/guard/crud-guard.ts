@@ -16,7 +16,7 @@ export class CrudGuard implements CanActivateChild {
     const currentPath = childRoute.routeConfig.path;
     const children = childRoute.routeConfig.children;
     if (currentPath && !children) {
-      let schemaName = currentPath.split('-').slice(0,2).join('-');
+      let schemaName = currentPath.split('-').length < 3 ?  currentPath.slice(0, currentPath.lastIndexOf('-')) : currentPath.split("-").slice(0, 2).join('-');
       let schema = Object.keys(ScopeList).find(scope => scope === schemaName);
       if (schema !== undefined) {
         this.loginService.setSchema(schemaName);
