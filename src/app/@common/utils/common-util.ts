@@ -292,9 +292,9 @@ export const CommonUtil = {
    *  @param frequencyTime 執行時間
   */
   processExecutionFrequency(frequency: string, frequencyTime: string) {
-
     let result = '';
-    if (this.isBlank(frequency) || this.isBlank(frequencyTime)) return result;
+
+    if (this.isBlank(frequency) || this.isBlank(frequencyTime))  return result;
 
     const frequencyTimeArray = frequencyTime.split(/[:：]/);
     const frequencyLow = frequency?.toLowerCase();

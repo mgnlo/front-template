@@ -161,6 +161,10 @@ export class ReviewScheduleDetailComponent extends BaseComponent implements OnIn
     })
   }
 
+  processExecutionFrequency(frequency: string, frequencyTime: string) {
+    return CommonUtil.processExecutionFrequency(frequency, frequencyTime);
+  }
+
   changeClass(key1: string, key2?: string) {
     let isSame1 = this.isSameList[key1];
     if (!key2) {

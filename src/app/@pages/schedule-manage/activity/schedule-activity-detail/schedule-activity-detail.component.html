@@ -18,7 +18,7 @@
           </div>
           <div class="textGroup col-12 col-lg-4">
             <p class="text_bold">執行頻率：</p>
-            <span>{{detail?.executionFrequency?.toLowerCase() | enum:'frequency'}}</span>
+            <span>{{processExecutionFrequency(detail?.executionFrequency,detail?.frequencyTime)}}</span>
           </div>
         </div>
         <div class="row">

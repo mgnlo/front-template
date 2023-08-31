@@ -3,12 +3,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DialogService } from '@api/services/dialog.service';
 import { CommonModule } from '@common/common.module';
 import { ComponentModule } from '@component/component.module';
-import { NbDateFnsDateModule } from '@nebular/date-fns';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import {
-  NbAccordionModule,
-  NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbDialogModule, NbIconModule,
-  NbInputModule, NbRadioModule, NbSelectModule, NbSpinnerModule, NbTabsetModule, NbTagModule, NbTreeGridModule
+  NbButtonModule, NbCardModule, NbCheckboxModule, NbIconModule,
+  NbInputModule, NbRadioModule, NbSelectModule, NbSpinnerModule,
+  NbTabsetModule, NbTagModule, NbTreeGridModule
 } from '@nebular/theme';
 import { TagManageService } from '@pages/tag-manage/tag-manage.service';
 import { Ng2SmartTableModule } from 'ng2-smart-table';

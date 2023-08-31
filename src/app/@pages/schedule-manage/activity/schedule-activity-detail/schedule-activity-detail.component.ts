@@ -191,6 +191,10 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     }
   }
 
+  processExecutionFrequency(frequency: string, frequencyTime: string) {
+    return CommonUtil.processExecutionFrequency(frequency, frequencyTime);
+  }
+
   handleErrorResponse(err: any, message: string, route: Array<any>) {
     this.dialogService.alertAndBackToList(false, message, route);
     throw new Error(err.message);
