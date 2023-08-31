@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateChild, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { LoginService } from '@api/services/login.service';
 import { ScopeList } from '@pages/pages.component';
-import { Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class CrudGuard implements CanActivateChild {
@@ -16,7 +16,7 @@ export class CrudGuard implements CanActivateChild {
     const currentPath = childRoute.routeConfig.path;
     const children = childRoute.routeConfig.children;
     if (currentPath && !children) {
-      let schemaName = currentPath.slice(0, currentPath.lastIndexOf('-'));
+      let schemaName = currentPath.split('-').length < 3 ?  currentPath.slice(0, currentPath.lastIndexOf('-')) : currentPath.split("-").slice(0, 2).join('-');
       let schema = Object.keys(ScopeList).find(scope => scope === schemaName);
       if (schema !== undefined) {
         this.loginService.setSchema(schemaName);

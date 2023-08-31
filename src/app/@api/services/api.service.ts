@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ResponseModel } from '@api/models/base.model';
 import { RestStatus } from '@common/enums/rest-enum';
@@ -6,7 +6,7 @@ import { ApiLogicError } from './../error/api-logic-error';
 import { LoadingService } from './loading.service';
 import { ConfigService } from './config.service';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap, timeout, switchMap, finalize } from 'rxjs/operators';
+import { catchError, tap, timeout, finalize } from 'rxjs/operators';
 import { StorageService } from './storage.service';
 
 @Injectable({
@@ -157,45 +157,5 @@ export class ApiService {
       }),
       finalize(() => this.loadingService.close())
     ).subscribe()
-  }
-
-  download(url: string, requestObj: any): void {
-    this.loadingService.open();
-    this.http.post<Blob>(
-      this.prefixUrl + url,
-      requestObj,
-      { observe: 'response', responseType: 'blob' as 'json', ...this.httpOptions })
-      .pipe(
-        tap(res => {
-
-          if (res.body.type === 'application/json') { // 有邏輯錯誤 => 回傳json => 拋出logic error
-
-            res.body.text().then(text => {
-              const resModel = JSON.parse(text) as ResponseModel<any>;
-              throw new ApiLogicError(resModel.message, resModel.code);
-            });
-
-          } else {
-
-            let fileName: string;
-            const contentDispostion = res.headers.get('Content-Disposition');
-            if (!contentDispostion) fileName = 'file';
-            else {
-              contentDispostion.split(';').forEach(p => {
-                const key = 'filename=';
-                const match = p.match(key);
-                if (match) {
-                  fileName = decodeURIComponent(p.substring(match.index + key.length));
-                }
-              });
-            }
-            const downloadLink = document.createElement('a');
-            downloadLink.href = window.URL.createObjectURL(res.body);
-            downloadLink.download = fileName || 'file';
-            downloadLink.click();
-            this.loadingService.close();
-          }
-        }),
-      ).subscribe();
   }
 }
