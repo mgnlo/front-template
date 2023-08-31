@@ -215,8 +215,8 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         this.setData(mockData);
         this.loadingService.close();
         const formData = this.validateForm.getRawValue();
-        this.changeConditionSettingMethod(formData.conditionSettingMethod);
         this.changeTagType(formData.tagType);
+        this.changeConditionSettingMethod(formData.conditionSettingMethod);
         this.dataSource.load(ActivityListMock);
         return;
       }
@@ -274,8 +274,8 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         finalize(() => {
           //#region 設定欄位
           const formData = this.validateForm.getRawValue();
-          this.changeConditionSettingMethod(formData.conditionSettingMethod);
           this.changeTagType(formData.tagType);
+          this.changeConditionSettingMethod(formData.conditionSettingMethod);
           //#endregion
           this.loadingService.close();
         })
@@ -295,8 +295,8 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     else {//新增
       //#region 設定欄位
       const formData = this.validateForm.getRawValue();
-      this.changeConditionSettingMethod(formData.conditionSettingMethod);
       this.changeTagType(formData.tagType);
+      this.changeConditionSettingMethod(formData.conditionSettingMethod);
       //#endregion
     }
   }
