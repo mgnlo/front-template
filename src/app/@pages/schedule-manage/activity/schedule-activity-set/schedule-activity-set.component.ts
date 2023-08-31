@@ -235,12 +235,8 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         this.handleErrorResponse(err, `查詢名單列表${this.actionName}失敗`, routePath)
         return of(null);
       }),
+      filter(res => res.code === RestStatus.SUCCESS),
       tap(res => {
-        this.loadingService.close();
-        // console.info('res.result', res.result);
-      })
-    ).subscribe(res => {
-      if (res.code === RestStatus.SUCCESS) {
         const activityListSetting: Array<scheduleActivitySetting> = JSON.parse(JSON.stringify(res.result?.content));
         const activitySettingArray = [...this.ActivitySettingArray, ...activityListSetting]
         // console.info('activitySettingArray', activitySettingArray)
@@ -254,8 +250,9 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         }
 
         this.openPreviewDialog(activitySettingArray);
-      }
-    });
+      }),
+      finalize(() => this.loadingService.close())
+    ).subscribe();
   }
 
   handleErrorResponse(err: any, message: string, route: Array<any>) {
