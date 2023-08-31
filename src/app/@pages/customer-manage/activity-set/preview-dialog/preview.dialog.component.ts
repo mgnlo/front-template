@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfigService } from '@api/services/config.service';
+import { LoginService } from '@api/services/login.service';
 import { StorageService } from '@api/services/storage.service';
 import { CustomerListMock } from '@common/mock-data/customer-list-mock';
 import { ValidatorsUtil } from '@common/utils/validators-util';
@@ -38,9 +39,10 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private ref: NbDialogRef<PreviewDialogComponent>,
   ) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
     this.validateForm = new FormGroup({
       listLimit: new FormControl('150', [Validators.required, ValidatorsUtil.notZero]),
       orderBy: new FormControl(110, Validators.required),

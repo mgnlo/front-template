@@ -5,6 +5,7 @@ import { ActivityListCondition, ActivitySetting, ActivitySettingEditReq } from '
 import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
+import { LoginService } from '@api/services/login.service';
 import { StorageService } from '@api/services/storage.service';
 import { Filter, Schedule } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
@@ -32,13 +33,14 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private dialogService: DialogService,
     private customerManageService: CustomerManageService,
     private loadingService: LoadingService,
     private changeDetectorRef: ChangeDetectorRef,) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
 
     this.validateForm = new FormGroup({
       activityName: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),

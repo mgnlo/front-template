@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ScheduleTagSetting, ScheduleTagSettingView } from '@api/models/schedule-tag.model';
 import { ConfigService } from '@api/services/config.service';
+import { LoginService } from '@api/services/login.service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, Status, StatusResult } from '@common/enums/common-enum';
 import { ScheduleTagSettingMock } from '@common/mock-data/schedule-tag-list-mock';
@@ -32,10 +33,11 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
   ) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
   }
 
   gridDefine = {

@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Customer } from '@api/models/customer-list.model';
 import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
+import { LoginService } from '@api/services/login.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { CustomerListMock } from '@common/mock-data/customer-list-mock';
@@ -24,12 +25,13 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private dialogService: DialogService,
     private customerManageService: CustomerManageService,
     private tableService: Ng2SmartTableService,
     private activatedRoute: ActivatedRoute,
   ) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
     // 篩選條件
     this.validateForm = new FormGroup({
       customerId: new FormControl('', [ValidatorsUtil.searchCustId]),

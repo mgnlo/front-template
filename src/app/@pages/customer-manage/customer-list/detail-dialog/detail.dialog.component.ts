@@ -3,6 +3,7 @@ import { Customer, Tag } from '@api/models/customer-list.model';
 import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
+import { LoginService } from '@api/services/login.service';
 import { StorageService } from '@api/services/storage.service';
 import { RestStatus } from '@common/enums/rest-enum';
 import { CustomerListMock } from '@common/mock-data/customer-list-mock';
@@ -28,12 +29,13 @@ export class DetailDialogComponent extends BaseComponent implements OnInit {
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     protected ref: NbDialogRef<DetailDialogComponent>,
     private customerManageService: CustomerManageService,
     private loadingService: LoadingService,
     private dialogService: DialogService,
   ) {
-    super(storageService, configService)
+    super(storageService, configService, loginService)
   }
 
   ngOnInit() {

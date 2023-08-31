@@ -144,24 +144,19 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
     }
   };
 
-  hasConsoleGroupCreate: boolean;
-  hasConsoleGroupUpdate: boolean;
-
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private router: Router,
-    private loginService: LoginService,
     private accountManageService: AccountManageService,
     private loadingService: LoadingService,
     private tableService: Ng2SmartTableService,
     private dialogService: DialogService,
     private activatedRoute: ActivatedRoute) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
     this.dataSource = new LocalDataSource();
     this.dataSource2 = new LocalDataSource();
-    this.hasConsoleGroupCreate = this.loginService.checkUserScope('console-group','create');
-    this.hasConsoleGroupUpdate = this.loginService.checkUserScope('console-group','update');
   }
 
   ngOnInit(): void {

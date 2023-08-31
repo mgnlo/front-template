@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ActivityReviewHistory } from '@api/models/activity-list.model';
 import { ConfigService } from '@api/services/config.service';
+import { LoginService } from '@api/services/login.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass } from '@common/enums/common-enum';
@@ -25,11 +26,12 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private activatedRoute: ActivatedRoute,
     private reviewManageService: ReviewManageService,
     private tableService: Ng2SmartTableService,
   ) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
     // 篩選條件
     this.validateForm = new FormGroup({
       activityName: new FormControl(''),

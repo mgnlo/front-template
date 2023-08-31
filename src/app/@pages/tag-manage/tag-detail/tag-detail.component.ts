@@ -17,6 +17,7 @@ import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-
 import { ConfigService } from '@api/services/config.service';
 import { FileService } from '@api/services/file.service';
 import { FileReq } from '@api/models/file.model';
+import { LoginService } from '@api/services/login.service';
 
 @Component({
   selector: 'tag-detail',
@@ -35,6 +36,7 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private router: Router,
     private fileService: FileService,
     private activatedRoute: ActivatedRoute,
@@ -43,7 +45,7 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
     private loadingService: LoadingService,
     private tableService: Ng2SmartTableService,
   ) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
   }
 
   gridDefine = {

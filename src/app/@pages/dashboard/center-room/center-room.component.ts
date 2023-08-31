@@ -1,14 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { Category, TreeMapSeriesData, LineSeriesData, PieSeriesData, TreeSeriesData } from '@api/models/dashboard.model';
+import { Category, PieSeriesData } from '@api/models/dashboard.model';
+import { ConfigService } from '@api/services/config.service';
+import { LoginService } from '@api/services/login.service';
 import { SeriesService } from '@api/services/series.service';
+import { StorageService } from '@api/services/storage.service';
 import { DashboardInfoMock } from '@common/mock-data/dasthboard.mock';
+import { BaseComponent } from '@pages/base.component';
 
 @Component({
   selector: 'center-room',
   styleUrls: ['./center-room.component.scss'],
   templateUrl: './center-room.component.html',
 })
-export class CenterRoomComponent implements OnInit {
+export class CenterRoomComponent extends BaseComponent implements OnInit {
   mockData = DashboardInfoMock
 
   //構面數據佔比資料表
@@ -21,7 +25,13 @@ export class CenterRoomComponent implements OnInit {
   pieSeriesData: Array<PieSeriesData> = [];
   pieSeriesDataDate: string;
   
-  constructor(public seriesService: SeriesService) {
+  constructor(
+    storageService: StorageService,
+    configService: ConfigService,
+    loginService: LoginService,
+    public seriesService: SeriesService
+  ) {
+    super(storageService, configService, loginService)
 
     // 加工處理 構面數據佔比與名單數據
     this.mockData.categorys.filter((item) => {

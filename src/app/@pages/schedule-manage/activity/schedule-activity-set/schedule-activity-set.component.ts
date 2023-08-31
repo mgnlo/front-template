@@ -20,6 +20,7 @@ import { of } from 'rxjs';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { ConfigService } from '@api/services/config.service';
 import { ValidatorsUtil } from '@common/utils/validators-util';
+import { LoginService } from '@api/services/login.service';
 
 @Component({
   selector: 'schedule-activity-set',
@@ -79,6 +80,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private dialogService: DialogService,
@@ -87,7 +89,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     private loadingService: LoadingService,
     private readonly changeDetectorRef: ChangeDetectorRef,
   ) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
 
     this.validateForm = new FormGroup({
       jobName: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),

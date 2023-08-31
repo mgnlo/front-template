@@ -8,7 +8,7 @@ const routes: Routes = [
         path: "", component: DashboardComponent,
         children: [
             { path: '', redirectTo: 'center-room', pathMatch: 'full' },
-            { path: "center-room", component: CenterRoomComponent, data:{ schema: 'dashboard' }}
+            { path: 'center-room', component: CenterRoomComponent }
         ]
     }
 ]

@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ConfigService } from '@api/services/config.service';
+import { LoginService } from '@api/services/login.service';
 import { StorageService } from '@api/services/storage.service';
 import { CommonUtil } from '@common/utils/common-util';
 import { NbDialogRef } from '@nebular/theme';
@@ -24,9 +25,9 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
   constructor(
     private ref: NbDialogRef<PreviewDialogComponent>,
     private readonly changeDetectorRef: ChangeDetectorRef,
-    storageService: StorageService, configService: ConfigService,
+    storageService: StorageService, configService: ConfigService, loginService: LoginService,
   ) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
     this.validateForm = new FormGroup({
       activityName: new FormControl(null, this.existsInActivityList),
     });

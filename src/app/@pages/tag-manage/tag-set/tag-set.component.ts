@@ -26,6 +26,7 @@ import { ConfigService } from '@api/services/config.service';
 import { TagCategoryMock, TagSubCategoryMock } from '@common/mock-data/tag-category-mock';
 import { FileResp } from '@api/models/file.model';
 import { TagConditionMock } from '@common/mock-data/tag-condition-mock';
+import { LoginService } from '@api/services/login.service';
 
 @Component({
   selector: 'tag-set',
@@ -99,8 +100,9 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   constructor(
     storageService: StorageService,
-    private router: Router,
     configService: ConfigService,
+    loginService: LoginService,
+    private router: Router,
     private activatedRoute: ActivatedRoute,
     private readonly changeDetectorRef: ChangeDetectorRef,
     private tagManageService: TagManageService,
@@ -109,7 +111,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     private dialogService: DialogService,
     private tableService: Ng2SmartTableService,
   ) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
     this.validateForm = new FormGroup({
       tagName: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
       status: new FormControl('enabled', Validators.required),

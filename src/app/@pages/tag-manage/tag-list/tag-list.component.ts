@@ -13,6 +13,7 @@ import { TagManageService } from '../tag-manage.service';
 import { CommonUtil } from '@common/utils/common-util';
 import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { ConfigService } from '@api/services/config.service';
+import { LoginService } from '@api/services/login.service';
 
 @Component({
   selector: 'tag-list',
@@ -30,12 +31,13 @@ export class TagListComponent extends BaseComponent implements OnInit {
   constructor(
     storageService: StorageService,
     configService: ConfigService,
+    loginService: LoginService,
     private router: Router,
     private tagManageService: TagManageService,
     private activatedRoute: ActivatedRoute,
     private tableService: Ng2SmartTableService,
   ) {
-    super(storageService, configService);
+    super(storageService, configService, loginService);
     this.validateForm = new FormGroup({
       tagName: new FormControl(''),
       status: new FormControl(''),

@@ -3,6 +3,7 @@ import { ResponseModel } from '@api/models/base.model';
 import { ConsoleGroup, GridInnerCheckBox } from '@api/models/console-group.model';
 import { ConsoleUser } from '@api/models/console-user.model';
 import { ApiService } from '@api/services/api.service';
+import { ScopeList } from '@pages/pages.component';
 import { Observable } from 'rxjs';
 
 @Injectable()
@@ -15,19 +16,11 @@ export class AccountManageService {
     readonly CONSOLE_GROUP_SET_PATH = ['pages', 'account-manage', 'console-group-set'];
 
     createDefaultScopeGridInnerCheckBoxs(): Array<GridInnerCheckBox> {
-        return [
-            { featureName: "dashboard", read: false },
-            { featureName: "customer", read: false },
-            { featureName: "activity", read: false, create: false, update: false, delete: false },
-            { featureName: "tag", read: false, create: false, update: false, delete: false },
-            { featureName: "review-tag", read: false, update: false },
-            { featureName: "review-activity", read: false, update: false },
-            { featureName: "review-schedule", read: false, update: false },
-            { featureName: "schedule-tag", read: false, update: false },
-            { featureName: "schedule-activity", read: false, create: false, update: false, delete: false },
-            { featureName: "console-user", read: false, update: false },
-            { featureName: "console-group", read: false, create: false, update: false, delete: false }
-        ];
+        return Object.entries(ScopeList).map(([k, v]) => {
+            let feature: GridInnerCheckBox = {featureName: k};
+            v.crud.forEach(actionType => feature[actionType] = false);
+            return feature;
+        });
     }
     
     updateCheckbox(target: GridInnerCheckBox[], source: GridInnerCheckBox[]) {
