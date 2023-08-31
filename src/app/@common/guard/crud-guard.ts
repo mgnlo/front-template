@@ -15,11 +15,9 @@ export class CrudGuard implements CanActivateChild {
   ): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
     const currentPath = childRoute.routeConfig.path;
     const children = childRoute.routeConfig.children;
-    const parentRoute = '/' + childRoute.pathFromRoot.filter(v => v.url.length > 0).filter((v, i) => i < 2)
-      .map(v => v.url).map(segment => segment.toString()).join('/') + '/';
     if (currentPath && !children) {
-      let schemaName = currentPath.slice(0, currentPath.lastIndexOf('-'));
-      let schema = Object.entries(ScopeList).find(([k, v]) => k === schemaName);
+      let schemaName = currentPath.split('-').length < 3 ?  currentPath.slice(0, currentPath.lastIndexOf('-')) : currentPath.split("-").slice(0, 2).join('-');
+      let schema = Object.keys(ScopeList).find(scope => scope === schemaName);
       if (schema !== undefined) {
         this.loginService.setSchema(schemaName);
         if (currentPath.includes('set/:') || state.url.includes('/edit/')) {
@@ -30,6 +28,7 @@ export class CrudGuard implements CanActivateChild {
           return this.loginService.checkUserScope(schemaName, 'read'); //查詢頁檢查read權限
         }
       }
+      throw new Error(`schemaName:${schemaName} 無對應的權限設定`);
     }
     return true;
   }

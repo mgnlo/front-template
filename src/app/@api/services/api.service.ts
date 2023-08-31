@@ -6,7 +6,7 @@ import { ApiLogicError } from './../error/api-logic-error';
 import { LoadingService } from './loading.service';
 import { ConfigService } from './config.service';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap, timeout, switchMap, finalize } from 'rxjs/operators';
+import { catchError, tap, timeout, finalize } from 'rxjs/operators';
 import { StorageService } from './storage.service';
 
 @Injectable({
@@ -117,7 +117,7 @@ export class ApiService {
     }
 
     const resultUrl = this.prefixUrl + url;
-    this.http.get(resultUrl, {
+    this.http.get<Blob>(resultUrl, {
       // params: rqParams,
       responseType: 'blob' as 'json',
       observe: 'response',
@@ -125,9 +125,15 @@ export class ApiService {
     }).pipe(
       timeout(30000),
       catchError((err: HttpErrorResponse) => {
+        if (err.status === 403) {
+          // JWT 失效主機發送 403 錯誤，這邊需要導頁回兆豐登入頁，待補(需要確認導頁網址與相關參數)
+          this.storageService.removeSessionVal("jwtToken");
+        }
+
         return throwError(err.message);
       }),
-      tap((res: any) => {
+      tap((res: HttpResponse<Blob>) => {
+        // console.info('res',res)
         if (res && res.status?.toString() !== RestStatus.SUCCESS) {
           throw new ApiLogicError(res.statusText, res.status?.toString());
         }
@@ -141,9 +147,7 @@ export class ApiService {
 
         if (contentDispositionHeader) {
           const matches = contentDispositionHeader.match(/filename\*?=['"]?(?:UTF-8['"])?([^;\r\n"']*)['"]?;/);
-          if (matches && matches.length > 1) {
-            fileName = decodeURIComponent(matches[1]);
-          }
+          if (matches && matches.length > 1) fileName = decodeURIComponent(matches[1]);
         }
 
         const blob = new Blob([res.body], { type: 'application/octet-stream' });
@@ -157,45 +161,5 @@ export class ApiService {
       }),
       finalize(() => this.loadingService.close())
     ).subscribe()
-  }
-
-  download(url: string, requestObj: any): void {
-    this.loadingService.open();
-    this.http.post<Blob>(
-      this.prefixUrl + url,
-      requestObj,
-      { observe: 'response', responseType: 'blob' as 'json', ...this.httpOptions })
-      .pipe(
-        tap(res => {
-
-          if (res.body.type === 'application/json') { // 有邏輯錯誤 => 回傳json => 拋出logic error
-
-            res.body.text().then(text => {
-              const resModel = JSON.parse(text) as ResponseModel<any>;
-              throw new ApiLogicError(resModel.message, resModel.code);
-            });
-
-          } else {
-
-            let fileName: string;
-            const contentDispostion = res.headers.get('Content-Disposition');
-            if (!contentDispostion) fileName = 'file';
-            else {
-              contentDispostion.split(';').forEach(p => {
-                const key = 'filename=';
-                const match = p.match(key);
-                if (match) {
-                  fileName = decodeURIComponent(p.substring(match.index + key.length));
-                }
-              });
-            }
-            const downloadLink = document.createElement('a');
-            downloadLink.href = window.URL.createObjectURL(res.body);
-            downloadLink.download = fileName || 'file';
-            downloadLink.click();
-            this.loadingService.close();
-          }
-        }),
-      ).subscribe();
   }
 }
