@@ -63,7 +63,6 @@ export class ReviewTagDetailComponent extends BaseComponent implements OnInit {
     if (this.isMock) {
       let newMockData = ReviewTagListMock.find(tag => tag.historyId === this.historyId);
       this.newDetail = JSON.parse(JSON.stringify(newMockData));
-      console.info(this.newDetail);
       this.detail = this.newDetail;
       this.reviewStatus = newMockData.reviewStatus;
       this.reviewComment = newMockData.reviewComment;
