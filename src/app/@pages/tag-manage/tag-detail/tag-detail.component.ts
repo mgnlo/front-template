@@ -161,7 +161,7 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
 
   //#region 檔案下載
   onDownloadFile() {
-    //this.detail.fileData = 'fd79b9b3-e71e-441d-91b3-43594462d3c8';
+    this.detail.fileData = '2058fd0b-9307-428c-b82f-5a23d5530c83';
     if (CommonUtil.isBlank(this.detail?.fileData)) {
       this.dialogService.alertAndBackToList(false, '檔案下載失敗(無識別碼)');
       return

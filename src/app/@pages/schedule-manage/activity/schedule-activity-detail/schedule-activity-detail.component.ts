@@ -191,6 +191,10 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     }
   }
 
+  processExecutionFrequency(frequency: string, frequencyTime: string) {
+    return CommonUtil.processExecutionFrequency(frequency, frequencyTime);
+  }
+
   handleErrorResponse(err: any, message: string, route: Array<any>) {
     this.dialogService.alertAndBackToList(false, message, route);
     throw new Error(err.message);
@@ -259,10 +263,10 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
               selectedRows: this.selectedRows,
             };
 
+            //#region 用grid按鈕，控制是否全選
             instance.emitter.subscribe((res) => {
               // console.info('res', res)
 
-              //#region 用grid按鈕，控制是否全選
               const pageData = this.dataSource.getElements()
               pageData.then((res) => {
                 const hasActionFieldCNT = res.filter((f) => f.isShow).length;

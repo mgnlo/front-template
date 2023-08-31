@@ -11,6 +11,7 @@ import { ScheduleReviewHistoryMock } from '@common/mock-data/schedule-review-moc
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { ReviewManageService } from '../review-manage.service';
+import { CommonUtil } from '@common/utils/common-util';
 
 @Component({
   selector: 'app-review-schedule-list',
@@ -57,7 +58,7 @@ export class ReviewScheduleListComponent extends BaseComponent implements OnInit
         width: '30%',
         class: 'left',
         valuePrepareFunction: (cell: string, row: ScheduleReviewHistory) => {
-          return `<p class="left">${Frequency[row.executionFrequency]} ${row.frequencyTime}</p>`;
+          return CommonUtil.processExecutionFrequency(row.executionFrequency, row.frequencyTime)
         },
         sort: false,
       },
