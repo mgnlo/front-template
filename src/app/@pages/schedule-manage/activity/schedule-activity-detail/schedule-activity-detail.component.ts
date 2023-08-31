@@ -16,7 +16,7 @@ import { BaseComponent } from '@pages/base.component';
 import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
 import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
 import { combineLatest, of } from 'rxjs';
-import { catchError, filter, tap } from 'rxjs/operators';
+import { catchError, filter, finalize, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'schedule-activity-detail',
@@ -145,6 +145,12 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
       filter(([detailRes, gridRes]) => detailRes !== null && detailRes.code === RestStatus.SUCCESS && gridRes !== null && gridRes.code === RestStatus.SUCCESS),
       tap(([detailRes, gridRes]) => {
         this.detail = JSON.parse(JSON.stringify(detailRes.result));
+        //console.info('this.detail', this.detail)
+        const processedData = CommonUtil.getHistoryProcessData<ScheduleDetailView>('scheduleReviewHistoryAud', this.detail as ScheduleDetailView);
+        if (!!processedData) {
+          this.isHistoryOpen = processedData.isHistoryOpen;
+          this.detail.historyGroupView = processedData.detail?.historyGroupView;
+        }
 
         const gridData = JSON.parse(JSON.stringify(gridRes.result));
         const scheduleActivityGrid = this.mapGridDataToActivitySettings(gridData);
@@ -156,10 +162,11 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
           this.dataSource.setPage(storage.page);
           this.dataSource.setPaging(storage.page, this.dataSource.getPaging().perPage);
         }
+      }),
+      finalize(() => {
+        this.loadingService.close();
       })
-    ).subscribe(() => {
-      this.loadingService.close();
-    });
+    ).subscribe();
 
   }
 
