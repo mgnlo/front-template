@@ -309,8 +309,8 @@ export const CommonUtil = {
         result = `${Frequency[frequencyLow]} ${weekDayName} ${frequencyTimeArray[1] ?? ''} 時 ${frequencyTimeArray[2] ?? ''} 分`;
         break;
       case 'monthly':
-        const dayOfMonth = frequencyTimeArray?.[0] === '999' ? '月底' : frequencyTimeArray[0] ?? '';
-        result = `${Frequency[frequencyLow]} ${dayOfMonth}日 ${frequencyTimeArray[1] ?? ''} 時 ${frequencyTimeArray[2] ?? ''} 分`;
+        const dayOfMonth = frequencyTimeArray?.[0] === '999' ? '月底' : frequencyTimeArray[0] + '日' ?? '';
+        result = `${Frequency[frequencyLow]} ${dayOfMonth} ${frequencyTimeArray[1] ?? ''} 時 ${frequencyTimeArray[2] ?? ''} 分`;
         break;
       default:
         result = `${Frequency[frequencyLow]} ${frequencyTime}`;
