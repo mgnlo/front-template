@@ -578,14 +578,22 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   // 檢查是否存在清單中
   existsInConditionKeyList = (ctl: FormControl): { [key: string]: any } | null => {
     //console.info('ctl', ctl)
+    let filterValue = '';
+    if (ctl?.value instanceof Object && 'key' in ctl?.value && 'val' in ctl?.value) {
+      filterValue = ctl?.value?.val?.toLowerCase()
+    } else {
+      filterValue = ctl?.value?.toLowerCase()
+    }
+
     if ((ctl.dirty || ctl.touched || ctl.valueChanges) && this.conditionKeyList) {
-      const filterValue = ctl.value?.toLowerCase();
-      if (!CommonUtil.isBlank(filterValue) && !this.conditionKeyList.some(item => item.val?.toLowerCase() === filterValue)) {
+      // console.info('this.dataList', this.dataList)
+      // console.info('filterValue', filterValue)
+      if (!CommonUtil.isBlank(filterValue) && this.conditionKeyList.filter(item => item?.val?.toLowerCase() === filterValue).length === 0) {
         return { 'condition_valueErrMsg': '不存在偵測條件清單中' }; // 驗證失敗
       }
     }
 
-    if ((ctl.dirty || ctl.touched) && CommonUtil.isBlank(ctl.value)) {
+    if ((ctl.dirty || ctl.touched) && CommonUtil.isBlank(filterValue)) {
       return { 'condition_valueErrMsg': '不可為空' }; // 驗證失敗
     }
 
