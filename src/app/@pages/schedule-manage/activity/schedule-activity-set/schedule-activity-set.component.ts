@@ -109,57 +109,53 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     columns: {
       activityName: {
         title: '活動名稱',
-        type: 'html',
-        class: 'col-3 left',
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
-        },
+        type: 'string',
         sort: false
       },
       activityDescription: {
         title: '活動說明',
         type: 'html',
-        class: 'col-3 left',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${!!cell ? cell : ''}</p>`;
+          return `<p>${!!cell ? cell : ''}</p>`;
         },
         sort: false,
       },
       status: {
         title: '狀態',
-        type: 'string',
-        class: 'col-2',
+        type: 'html',
+        class: 'text_center w100',
         valuePrepareFunction: (cell: string) => {
-          return Status[cell?.toLowerCase()];
+          return `<p class="text_center">${Status[cell?.toLowerCase()]}</p>`;
         },
         sort: false,
       },
       batchUpdateTime: {
         title: '批次更新時間',
         type: 'html',
-        class: 'col-2',
+        class: 'text_center',
         valuePrepareFunction: (cell: string) => {
           if (!cell) { return '' }
           const datepipe: DatePipe = new DatePipe('en-US');
-          return `<p class="date">${datepipe.transform(cell, this.dateFormat)}</p>`;
+          return `<p class="text_center">${datepipe.transform(cell, this.dateFormat)}</p>`;
         },
         sort: false,
       },
       filterOptions: {
         title: '更新結果',
         type: 'html',
-        class: 'col-1',
+        class: 'text_center',
         valuePrepareFunction: (cell: string) => {
           const cellLow = cell?.toLowerCase();
           if (CommonUtil.isBlank(cellLow)) return cellLow
-          return `<p class="${ColumnClass[cellLow]}">${StatusResult[cellLow]}</p>`;
+          return `<p class="text_center ${ColumnClass[cellLow]}">${StatusResult[cellLow]}</p>`;
         },
         sort: false,
       },
       delete: {
         title: '移除',
-        class: 'col-1',
         type: 'custom',
+        class: 'center',
+        width: '3rem',
         renderComponent: ColumnButtonComponent,
         onComponentInitFunction: (instance: ColumnButtonComponent) => {
           instance.settings = { btnStatus: 'danger', btnIcon: 'trash-2-outline' }

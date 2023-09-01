@@ -41,27 +41,21 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
     columns: {
       jobName: {
         title: '作業名稱',
-        type: 'html',
-        class: 'left',
-        width: '25%',
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
-        },
+        type: 'string',
         sort: false
       },
       activityCount: {
         title: '名單數量',
-        type: 'string',
-        width: '15%',
+        type: 'html',
+        class: 'text_center w100',
         valuePrepareFunction: (cell: string, row: ScheduleActivitySetting) => {
-          return row.activitySetting.length;
+          return `<p class="text_center">` + row.activitySetting.length + `</p>`;
         },
         sort: false
       },
       executionFrequency: {
         title: '執行頻率',
         type: 'html',
-        width: '25%',
         valuePrepareFunction: (cell: string, row: ScheduleActivitySetting) => {
           const frequencyTime = row.frequencyTime;
           const frequencyTimeArray = frequencyTime.split(/[:：]/);
@@ -94,26 +88,27 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
       modificationTime: {
         title: '異動時間',
         type: 'html',
-        width: '15%',
+        class: 'text_center w200',
         valuePrepareFunction: (cell: string) => {
           const datepipe: DatePipe = new DatePipe('en-US');
-          return `<p class="date">${datepipe.transform(cell, this.dateFormat)}</p>`;
+          return `<p class="text_center">` + datepipe.transform(cell, this.dateFormat) + `</p>`;
         },
         sort: false,
       },
       status: {
         title: '狀態',
-        type: 'string',
-        width: '10%',
+        type: 'html',
+        class: 'text_center w100',
         valuePrepareFunction: (cell: string) => {
-          return Status[cell?.toLowerCase()];
+          return `<p class="text_center">` + Status[cell?.toLowerCase()] + `</p>`;
         },
         sort: false,
       },
       action: {
         title: '查看',
         type: 'custom',
-        width: '5%',
+        class: 'center',
+        width: '3rem',
         valuePrepareFunction: (cell, row: ScheduleActivitySetting) => row,
         renderComponent: DetailButtonComponent,
         sort: false,

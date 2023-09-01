@@ -140,49 +140,50 @@ export class TagReviewDetailComponent extends BaseComponent implements OnInit {
     columns: {
       activityName: {
         title: '活動名稱',
-        type: 'html',
-        class: 'col-2 left',
+        type: 'string',
         sort: false,
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
-        },
       },
       activityDescription: {
         title: '活動說明',
         type: 'html',
-        class: 'col-3 left',
         sort: false,
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${!!cell ? cell : ''}</p>`;
+          return `<p>${!!cell ? cell : ''}</p>`;
         },
       },
       department: {
         title: '所屬單位',
-        type: 'string',
-        class: 'col-2',
+        type: 'html',
+        class: 'text_center',
+        valuePrepareFunction: (value: any, row: any, cell: any) => {
+          return `<p class="text_center">` + value + `</p>`;
+        },
         sort: false,
       },
       owner: {
         title: '負責人',
-        type: 'string',
-        class: 'col-1',
+        type: 'html',
+        class: 'text_center',
+        valuePrepareFunction: (value: any, row: any, cell: any) => {
+          return `<p class="text_center">` + value + `</p>`;
+        },
         sort: false,
       },
       status: {
         title: '狀態',
-        type: 'string',
-        class: 'col-1',
+        type: 'html',
+        class: 'text_center',
         valuePrepareFunction: (cell: string) => {
-          return Status[cell];
+          return `<p class="text_center">` + Status[cell] + `</p>`;
         },
         sort: false,
       },
       during: {
         title: '起迄時間',
         type: 'html',
-        class: 'col-3',
+        class: 'text_center',
         valuePrepareFunction: (cell: any, row: ActivitySetting) => {
-          return row.startDate && row.endDate ? `<span class="date">${row.startDate}~${row.endDate}</span>` : '';
+          return row.startDate && row.endDate ? `<p class="text_center">${row.startDate} ~ ${row.endDate}</p>` : '';
         },
         sort: false,
       },

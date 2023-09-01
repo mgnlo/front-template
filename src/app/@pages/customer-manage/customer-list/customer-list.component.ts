@@ -57,26 +57,35 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
     columns: {
       customerId: {
         title: '用戶編號',
-        type: 'string',
-        width: '15%',
+        type: 'html',
+        class: 'text_center',
+        valuePrepareFunction: (value: any, row: any, cell: any) => {
+          return `<p class="text_center">` + value + `</p>`;
+        },
         sort: false
       },
       userName: {
         title: '姓名',
-        type: 'string',
-        width: '10%',
+        type: 'html',
+        class: 'text_center',
+        valuePrepareFunction: (value: any, row: any, cell: any) => {
+          return `<p class="text_center">` + value + `</p>`;
+        },
         sort: false,
       },
       mobile: {
         title: '手機號碼',
-        type: 'string',
-        width: '15%',
+        type: 'html',
+        class: 'text_center',
+        valuePrepareFunction: (value: any, row: any, cell: any) => {
+          return `<p class="text_center">` + value + `</p>`;
+        },
         sort: false,
       },
       tagKeyword: {
         title: `用戶標籤 (更新時間: ${this.updateTime})`,
         type: 'custom',
-        width: '55%',
+        class: 'text_center',
         valuePrepareFunction: (cell, row: Customer) => row.tagSetting,
         renderComponent: CustomerListTagComponent,
         sort: false,
@@ -84,7 +93,8 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
       action: {
         title: '查看',
         type: 'custom',
-        width: '5%',
+        class: 'center',
+        width: '3rem',
         renderComponent: ColumnButtonComponent,
         onComponentInitFunction: (instance: ColumnButtonComponent) => {
           instance.emitter.subscribe((res: Customer) => {
@@ -145,7 +155,7 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
 
 @Component({
   selector: 'customer-tag',
-  template: '<div class="tag left"><nb-tag status="info" appearance="filled" size="large" *ngFor="let tag of value" [text]="tag.tagName"></nb-tag></div>'
+  template: '<div class="tagList"><nb-tag status="info" appearance="filled" size="large" *ngFor="let tag of value" [text]="tag.tagName"></nb-tag></div>'
 })
 export class CustomerListTagComponent {
   @Input() value: { tagName: string, tagDescription: string }[];

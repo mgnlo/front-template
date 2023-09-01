@@ -70,67 +70,67 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
     columns: {
       tagName: {
         title: '標籤名稱',
-        type: 'html',
-        width: '20%',
-        class: 'left',
+        type: 'string',
         sort: false,
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
-        },
       },
       tagType: {
         title: '類型',
-        type: 'string',
-        width: '10%',
-        sort: false,
+        type: 'html',
+        class: 'text_center',
         valuePrepareFunction: (cell: string) => {
-          return `${TagType[cell]}`;
+          return `<p class="text_center">` + TagType[cell] + `</p>`;
         },
+        sort: false,
       },
       department: {
         title: '所屬單位',
-        type: 'string',
-        width: '15%',
+        type: 'html',
+        class: 'text_center',
+        valuePrepareFunction: (cell: string) => {
+          return `<p class="text_center">` + cell + `</p>`;
+        },
         sort: false,
       },
       owner: {
         title: '負責人',
-        type: 'string',
-        width: '5%',
+        type: 'html',
+        class: 'text_center',
+        valuePrepareFunction: (cell: string) => {
+          return `<p class="text_center">` + cell + `</p>`;
+        },
         sort: false,
       },
       tagDescription: {
         title: '說明',
         type: 'html',
-        width: '20%',
-        class: 'left',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${!!cell ? cell : ''}</p>`;
+          return `<p>${!!cell ? cell : ''}</p>`;
         },
         sort: false,
       },
       modificationTime: {
         title: '標籤有效起迄日',
-        type: 'string',
-        width: '20%',
+        type: 'html',
+        class: 'text_center',
+        valuePrepareFunction: (cell: any, row: TagSetting) => {
+          return row.startDate && row.endDate ? `<p class="text_center">${row.startDate} ~ ${row.endDate}</p>` : '';
+        },
         sort: false,
-        valuePrepareFunction: (cell: string, row: TagSetting) => {
-          return row.startDate + '~' + row.endDate;
-        }
       },
       reviewStatus: {
         title: '狀態',
         type: 'html',
-        width: '9%',
+        class: 'text_center',
         valuePrepareFunction: (cell: string) => {
-          return `<span class="${ColumnClass[cell]}">${ReviewStatus[cell]}</span>`;
+          return `<p class="text_center ${ColumnClass[cell]}">` + ReviewStatus[cell] + `</p>`;
         },
         sort: false,
       },
       action: {
         title: '查看',
         type: 'custom',
-        width: '1%',
+        class: 'center',
+        width: '3rem',
         valuePrepareFunction: (cell, row: TagSetting) => row,
         renderComponent: DetailButtonComponent,
         sort: false,

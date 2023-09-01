@@ -68,65 +68,64 @@ export class ActivityReviewListComponent extends BaseComponent implements OnInit
     columns: {
       activityName: {
         title: '活動名稱',
-        type: 'html',
-        class: 'left',
+        type: 'string',
         sort: false,
-        width: '20%',
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
-        },
       },
       activityDescription: {
         title: '活動說明',
         type: 'html',
-        class: 'left',
-        sort: false,
-        width: '25%',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${!!cell ? cell : ''}</p>`;
+          return `<p>${!!cell ? cell : ''}</p>`;
         },
+        sort: false,
       },
       filterOptions: {
         title: '差異過濾',
         type: 'custom',
-        sort: false,
-        width: '5%',
+        width: '3rem',
         renderComponent: CheckboxIconComponent,
+        sort: false,
       },
       listLimit: {
         title: '名單上限',
-        type: 'string',
-        sort: false,
-        width: '5%'
+        type: 'html',
+        class: 'text_center',
+        valuePrepareFunction: (value: any, row: any, cell: any) => {
+          return `<p class="text_center">` + value + `</p>`;
+        },
       },
       modificationTime: {
         title: '名單有效起迄日',
-        type: 'string',
-        width: '20%',
+        type: 'html',
+        class: 'text_center',
+        valuePrepareFunction: (cell: any, row: ActivityReviewHistory) => {
+          return `<p class="text_center">${row.startDate} ~ ${row.endDate}</p>`;
+        },
         sort: false,
-        valuePrepareFunction: (cell: string, row: ActivityReviewHistory) => {
-          return row.startDate + '~' + row.endDate;
-        }
       },
       type: {
         title: '異動類型',
-        type: 'string',
-        width: '10%',
+        type: 'html',
+        class: 'text_center',
+        valuePrepareFunction: (value: any, row: any, cell: any) => {
+          return `<p class="text_center">` + value + `</p>`;
+        },
         sort: false
       },
       reviewStatus: {
         title: '狀態',
         type: 'html',
-        width: '10%',
+        class: 'text_center',
         valuePrepareFunction: (cell: string) => {
-          return `<span class="${ColumnClass[cell]}">${ReviewStatus[cell]}</span>`;
+          return `<p class="text_center ${ColumnClass[cell]}">` + ReviewStatus[cell] + `</p>`;
         },
         sort: false,
       },
       action: {
         title: '查看',
         type: 'custom',
-        width: '5%',
+        class: 'center',
+        width: '3rem',
         valuePrepareFunction: (cell, row: ActivityReviewHistory) => row,
         renderComponent: DetailButtonComponent,
         sort: false,
