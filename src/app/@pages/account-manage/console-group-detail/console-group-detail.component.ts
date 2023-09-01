@@ -9,7 +9,7 @@ import { Ng2SmartTableService } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { GroupScope } from '@common/enums/console-group-enum';
 import { BusinessUnit } from '@common/enums/console-user-enum';
-import { RestStatus } from '@common/enums/rest-enum';
+import { RestStatus, WarningCode } from '@common/enums/rest-enum';
 import { ConsoleGroupDetailMock } from '@common/mock-data/console-group-detail-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/checkbox.component';
@@ -39,16 +39,15 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
       featureName: {
         title: '功能單元',
         type: 'html',
-        class: 'col-1 left',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${GroupScope[cell]}</p>`;
+          return `<p>${GroupScope[cell]}</p>`;
         },
         sort: false,
       },
       read: {
         title: '查看',
         type: 'custom',
-        class: 'col-1',
+        class: 'center',
         renderComponent: CheckboxColumnComponent,
         onComponentInitFunction: (instance: CheckboxColumnComponent) => {
           instance.settings = { isShowParam: { key: 'read' }, isCheckedParam: { key: 'read' }, disable: true };
@@ -58,7 +57,7 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
       create: {
         title: '新增',
         type: 'custom',
-        class: 'col-1',
+        class: 'center',
         renderComponent: CheckboxColumnComponent,
         onComponentInitFunction: (instance: CheckboxColumnComponent) => {
           instance.settings = { isShowParam: { key: 'create' }, isCheckedParam: { key: 'create' }, disable: true };
@@ -68,7 +67,7 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
       update: {
         title: '編輯',
         type: 'custom',
-        class: 'col-1',
+        class: 'center',
         renderComponent: CheckboxColumnComponent,
         onComponentInitFunction: (instance: CheckboxColumnComponent) => {
           instance.settings = { isShowParam: { key: 'update' }, isCheckedParam: { key: 'update' }, disable: true };
@@ -78,7 +77,7 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
       delete: {
         title: '刪除',
         type: 'custom',
-        class: 'col-1',
+        class: 'center',
         renderComponent: CheckboxColumnComponent,
         onComponentInitFunction: (instance: CheckboxColumnComponent) => {
           instance.settings = { isShowParam: { key: 'delete' }, isCheckedParam: { key: 'delete' }, disable: true };
@@ -102,34 +101,25 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
     columns: {
       account: {
         title: '帳號',
-        type: 'html',
-        class: 'col-2 left',
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
-        },
+        type: 'string',
         sort: false,
       },
       name: {
         title: '姓名',
         type: 'string',
-        class: 'col-2',
         sort: false,
       },
       email: {
         title: '電子郵件',
-        type: 'html',
-        class: 'col-6 left',
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
-        },
+        type: 'string',
         sort: false,
       },
       businessUnit: {
         title: '所屬單位',
-        type: 'string',
-        class: 'col-2',
+        type: 'html',
+        class: 'text_center',
         valuePrepareFunction: (cell: string) => {
-          return `${BusinessUnit[cell]}`;
+          return `<p class="text_center">${BusinessUnit[cell]}</p>`;
         },
         sort: false,
       }
@@ -180,7 +170,8 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
     this.accountManageService.getConsoleGroup(this.groupId).pipe(
       catchError((err) => {
         this.loadingService.close();
-        this.dialogService.alertAndBackToList(false, `${err.message}，將為您導回權限管理列表`, this.accountManageService.CONSOLE_GROUP_LIST_PATH)
+        let status = Object.values(WarningCode).includes(err.code) ? null : false;
+        this.dialogService.alertAndBackToList(status, `${err.message}，將為您導回權限管理列表`, this.accountManageService.CONSOLE_GROUP_LIST_PATH);
         throw new Error(err.message);
       }),
       filter(res => res.code === RestStatus.SUCCESS),
@@ -214,4 +205,9 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
     let sessionData = { page: this.paginator.nowPage, groupId: this.groupId };
     this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
+
+  cancel() {
+    this.router.navigate(['pages', 'account-manage', 'console-group-list']);
+  }
+
 }

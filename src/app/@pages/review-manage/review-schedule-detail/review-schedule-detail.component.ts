@@ -6,7 +6,7 @@ import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { LoginService } from '@api/services/login.service';
 import { StorageService } from '@api/services/storage.service';
-import { RestStatus } from '@common/enums/rest-enum';
+import { RestStatus, WarningCode } from '@common/enums/rest-enum';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { ScheduleReviewHistoryMock } from '@common/mock-data/schedule-review-mock';
 import { CommonUtil } from '@common/utils/common-util';
@@ -125,7 +125,8 @@ export class ReviewScheduleDetailComponent extends BaseComponent implements OnIn
       this.reviewManageService.getLastApprovedSchedule(this.historyId).pipe(
         filter(res => res.code === RestStatus.SUCCESS),
         catchError(err => {
-          this.dialogService.alertAndBackToList(false, `${err.message}，無前次核准紀錄`);
+          let status = Object.values(WarningCode).includes(err.code) ? null : false;
+        this.dialogService.alertAndBackToList(status, `${err.message}，無前次核准紀錄`);
           this.loadingService.close();
           throw new Error(err.message);
         }),

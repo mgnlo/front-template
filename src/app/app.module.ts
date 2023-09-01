@@ -13,7 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NbDateFnsDateModule } from '@nebular/date-fns';
 import { ApiModule } from '@api/api.module';
 import { ConfigService } from '@api/services/config.service';
-import { SSOLoginComponent } from './sso-login/sso-login.component';
+import { SSOLoginComponent } from './@pages/sso-login/sso-login.component';
 import { LoginComponent } from '@pages/login/login.component';
 
 const NG_MODULES = [BrowserModule, BrowserAnimationsModule, HttpClientModule];

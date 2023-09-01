@@ -1,93 +1,45 @@
-@import "~bootstrap/scss/mixins/breakpoints";
 @import "~@nebular/theme/styles/global/breakpoints";
 @import "../styles/themes";
 
 @include nb-install-component() {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
-
-    .logo-container {
-        display: flex;
-        align-items: center;
-        width: calc(#{nb-theme(sidebar-width)} - #{nb-theme(header-padding)});
-    }
-
-    nb-action {
-        height: auto;
-        display: flex;
-        align-content: center;
-    }
-
-    nb-user {
-        cursor: pointer;
-    }
-
-    .userIcon {
-        width: 26px;
-        height: 26px;
-    }
-
-    .calling {
-        position: absolute;
-        top: 0px;
-        right: 20px;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: #ff223d;
-    }
-
-    ::ng-deep nb-search button {
-        padding: 0 !important;
-    }
-
-    .header-container {
+    .webTitle {
         display: flex;
         align-items: center;
         width: auto;
-
-        .sidebar-toggle {
-            @include nb-ltr(padding-right, 1.25rem);
-            @include nb-rtl(padding-left, 1.25rem);
-            text-decoration: none;
+        .menuBtn {
             color: nb-theme(color-primary-500);
-            &.active {
-                nb-icon {
-                    transform: rotate(90deg);
-                    transition: transform 0.3s;
-                }
-            }
-
+            cursor: pointer;
+            margin-right: 1rem;
+            padding: 1px;
+            &.active nb-icon { transform: rotate(90deg); }
             nb-icon {
                 font-size: 1.75rem;
+                transition: transform 0.3s;
             }
         }
-
-        .logo {
+        .logoTitle {
+            display: flex;
+            align-items: center;
+            border-left: 1px solid #EDF1F7;
+            cursor: pointer;
             padding: 0 1.25rem;
-            font-size: 1.5rem;
-            @include nb-ltr(border-left, 1px solid nb-theme(divider-color));
-            @include nb-rtl(border-right, 1px solid nb-theme(divider-color));
-            white-space: nowrap;
-            text-decoration: none;
+            img {
+                height: 100%;
+                margin-right: 1rem;
+            }
+            p {
+                font-size: 1.2rem;
+                font-weight: bold;
+                color: nb-theme(color-primary-600);
+            }
         }
     }
 
     @include media-breakpoint-down(sm) {
-        .control-item {
-            display: none;
-        }
-
-        .user-action {
-            border: none;
-            padding: 0;
-        }
-    }
-
-    @include media-breakpoint-down(is) {
-        nb-select {
-            display: none;
-        }
+        .logoTitle img { display: none; }
     }
 }

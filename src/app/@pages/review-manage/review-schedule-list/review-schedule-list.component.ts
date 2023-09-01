@@ -44,19 +44,12 @@ export class ReviewScheduleListComponent extends BaseComponent implements OnInit
     columns: {
       jobName: {
         title: '作業名稱',
-        type: 'html',
-        class: 'left',
+        type: 'string',
         sort: false,
-        width: '25%',
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
-        },
       },
       frequency: {
         title: '執行頻率',
         type: 'html',
-        width: '30%',
-        class: 'left',
         valuePrepareFunction: (cell: string, row: ScheduleReviewHistory) => {
           return CommonUtil.processExecutionFrequency(row.executionFrequency, row.frequencyTime)
         },
@@ -66,27 +59,30 @@ export class ReviewScheduleListComponent extends BaseComponent implements OnInit
         title: '異動類型',
         type: 'string',
         sort: false,
-        width: '15%',
       },
       reviewer: {
         title: '變更人員',
-        type: 'string',
+        type: 'html',
+        class: 'text_center',
+        valuePrepareFunction: (value: any, row: any, cell: any) => {
+          return `<p class="text_center">` + value + `</p>`;
+        },
         sort: false,
-        width: '15%'
       },
       reviewStatus: {
         title: '狀態',
         type: 'html',
-        width: '10%',
+        class: 'text_center',
         valuePrepareFunction: (cell: string) => {
-          return `<span class="${ColumnClass[cell]}">${ReviewStatus[cell]}</span>`;
+          return `<p class="text_center ${ColumnClass[cell]}">` + ReviewStatus[cell] + `</p>`;
         },
         sort: false,
       },
       action: {
         title: '查看',
         type: 'custom',
-        width: '5%',
+        class: 'center',
+        width: '3rem',
         valuePrepareFunction: (cell, row: ScheduleReviewHistory) => row,
         renderComponent: DetailButtonComponent,
         sort: false,

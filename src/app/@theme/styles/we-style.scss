@@ -1052,11 +1052,14 @@ ul {
     }
     &.gather {
         align-items: center;
+        margin-right: 10px;
+        padding: 0;
         p, span { margin-right: 10px; }
         nb-tag {
             text-transform: inherit;
             border-radius: 4px;
             margin: 0;
+            padding: 4px;
         }
     }
 }
@@ -1758,6 +1761,3 @@ table {
         &.small, &.medium, &.large { width: 90vw; }
     }
 }
-
-// for CDP 使用，為了符合設計稿
-.tagList { margin: -10px; }

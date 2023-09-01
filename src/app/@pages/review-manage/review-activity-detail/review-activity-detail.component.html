@@ -81,8 +81,8 @@
     <div class="row" *ngIf="reviewStatus==='reviewing'">
         <div class="btnGroup">
             <button nbButton status="basic" size="medium" (click)="cancel()">返 回</button>
-            <button nbButton status="danger" size="medium" (click)="send('rejected')">不同意</button>
-            <button nbButton status="primary" size="medium" (click)="send('approved')">同 意</button>
+            <button *ngIf="isCrud['update']" nbButton status="danger" size="medium" (click)="send('rejected')">不同意</button>
+            <button *ngIf="isCrud['update']" nbButton status="primary" size="medium" (click)="send('approved')">同 意</button>
         </div>
     </div>
     <nb-card *ngIf="historyGroupView">

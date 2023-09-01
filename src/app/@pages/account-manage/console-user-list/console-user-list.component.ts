@@ -35,49 +35,43 @@ export class ConsoleUserListComponent extends BaseComponent implements OnInit {
     columns: {
       account: {
         title: '帳號',
-        type: 'html',
-        class: 'col-1 left',
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
-        },
+        type: 'string',
         sort: false,
       },
       name: {
         title: '姓名',
-        type: 'string',
-        class: 'col-2',
-        valuePrepareFunction: (cell: boolean) => cell,
+        type: 'html',
+        class: 'text_center',
+        valuePrepareFunction: (value: any, row: any, cell: any) => {
+          return `<p class="text_center">` + value + `</p>`;
+        },
         sort: false,
       },
       email: {
         title: '電子郵件',
-        type: 'html',
-        class: 'left col-4',
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
-        },
+        type: 'string',
         sort: false,
       },
       businessUnit: {
         title: '所屬單位',
-        type: 'string',
-        class: 'col-2',
-        valuePrepareFunction: (cell: string) => BusinessUnit[cell],
+        type: 'html',
+        class: 'text_center',
+        valuePrepareFunction: (value: any, row: any, cell: any) => {
+          return `<p class="text_center">` + BusinessUnit[value] + `</p>`;
+        },
         sort: false,
       },
       consoleGroup: {
         title: '權限',
-        type: 'html',
-        class: 'left col-2',
-        valuePrepareFunction: (cell: any) => {
-          return `<p class="left">${cell.groupName}</p>`;
-        },
+        type: 'string',
+        valuePrepareFunction: (cell: any) => cell.groupName,
         sort: false,
       },
       action: {
         title: '變更',
-        class: 'col-1',
         type: 'custom',
+        class: 'center',
+        width: '3rem',
         renderComponent: ColumnButtonComponent,
         onComponentInitFunction: (instance: ColumnButtonComponent) => {
           instance.settings = { btnStatus: 'primary', btnIcon: 'edit-outline' }

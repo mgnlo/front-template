@@ -50,46 +50,44 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
     columns: {
       historyId: {
         title: '項次',
-        type: 'string',
-        width: '10%',
+        type: 'html',
+        class: 'text_center',
+        valuePrepareFunction: (cell: string) => {
+          return `<p class="text_center">` + cell + `</p>`;
+        },
         sort: false
       },
       batchTime: {
         title: '批次時間',
-        type: 'html',
-        class: 'left',
-        width: '25%',
-        valuePrepareFunction: (cell: string) => {
-          return `<span class="left">${cell}</span>`;
-        },
+        type: 'string',
         sort: false,
       },
       batchResult: {
         title: '排程結果',
         type: 'html',
-        class: 'left',
-        width: '49%',
+        class: 'text_center',
         valuePrepareFunction: (cell: string) => {
           const lableName = '批次排程'
           const cellLow = cell?.toLowerCase();
           if (CommonUtil.isBlank(cellLow)) return cellLow
-          return `<p class="left ${ColumnClass[cellLow]}">${lableName}${StatusResult[cellLow]}</p>`;
+          return `<p class="text_center ${ColumnClass[cellLow]}">${lableName}${StatusResult[cellLow]}</p>`;
         },
         sort: false,
       },
       batchResultCount: {
         title: '貼標比數',
         type: 'html',
-        width: '15%',
+        class: 'text_center',
         valuePrepareFunction: (cell: string) => {
-          return `<p>${cell ?? 0}</p>`;
+          return `<p class="text_center">${cell ?? 0}</p>`;
         },
         sort: false
       },
       action: {
         title: '匯出',
         type: 'custom',
-        width: '1%',
+        class: 'center',
+        width: '3rem',
         renderComponent: ColumnButtonComponent,
         onComponentInitFunction: (instance: ColumnButtonComponent) => {
           instance.settings = { btnStatus: 'success', btnIcon: 'cloud-download-outline' }

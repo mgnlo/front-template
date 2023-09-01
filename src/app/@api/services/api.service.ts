@@ -26,9 +26,8 @@ export class ApiService {
       //   Authorization: '',
     },
   };
-  private prefixUrl = this.configService.getConfig().SERVER_URL + this.configService.getConfig().API_URL;
-  // private prefixUrl = "http://console-api-webcomm-c360.apps.ocp.webcomm.com.tw/api/";
 
+  private prefixUrl = this.configService.getConfig().SERVER_URL + this.configService.getConfig().API_URL;
 
   constructor(
     private http: HttpClient,
@@ -41,11 +40,14 @@ export class ApiService {
     method: 'post' | 'get' | 'put' | 'delete' | 'upload',
     url: string,
     requestObj?: any,
-    rqParams?: { [key: string]: any }): Observable<ResponseModel<T>> {
+    rqParams?: { [key: string]: any },
+    prefixUrl?: string,
+  ): Observable<ResponseModel<T>> {
 
     let observable: Observable<ResponseModel<T>>;
 
-    const resultUrl = this.prefixUrl + url;
+    prefixUrl = !prefixUrl ? this.prefixUrl : prefixUrl;
+    const resultUrl = prefixUrl + url;
     // const requestModel = { requestObj };
 
     if (this._jwtToken) {
@@ -94,8 +96,8 @@ export class ApiService {
     return this.doSend('post', url, requestObj);
   }
 
-  doGet<T>(url: string, rqParams?: { [key: string]: any }): Observable<ResponseModel<T>> {
-    return this.doSend('get', url, null, rqParams);
+  doGet<T>(url: string, rqParams?: { [key: string]: any }, prefixUrl?: string): Observable<ResponseModel<T>> {
+    return this.doSend('get', url, null, rqParams, prefixUrl);
   }
 
   doPut<T>(url: string, requestObj: any): Observable<ResponseModel<T>> {

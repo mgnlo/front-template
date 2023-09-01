@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
   public userPictureOnly: boolean = false;
   public header: any = {
-    title: 'Webcomm',
+    title: '客戶 360 數據中台',
   };
   public user: any = {
     account: '',

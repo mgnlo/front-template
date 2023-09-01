@@ -9,7 +9,7 @@ import { LoginService } from '@api/services/login.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { Status } from '@common/enums/common-enum';
-import { RestStatus } from '@common/enums/rest-enum';
+import { RestStatus, WarningCode } from '@common/enums/rest-enum';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { TagSettingMock } from '@common/mock-data/tag-list-mock';
 import { ReviewTagListMock } from '@common/mock-data/tag-review-mock';
@@ -115,7 +115,8 @@ export class ReviewTagDetailComponent extends BaseComponent implements OnInit {
       this.reviewManageService.getLastApprovedTag(this.historyId).pipe(
         filter(res => res.code === RestStatus.SUCCESS),
         catchError(err => {
-          this.dialogService.alertAndBackToList(false, `${err.message}，無前次核准紀錄`);
+          let status = Object.values(WarningCode).includes(err.code) ? null : false;
+          this.dialogService.alertAndBackToList(status, `${err.message}，無前次核准紀錄`);
           this.loadingService.close();
           throw new Error(err.message);
         }),
@@ -139,49 +140,50 @@ export class ReviewTagDetailComponent extends BaseComponent implements OnInit {
     columns: {
       activityName: {
         title: '活動名稱',
-        type: 'html',
-        class: 'col-2 left',
+        type: 'string',
         sort: false,
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
-        },
       },
       activityDescription: {
         title: '活動說明',
         type: 'html',
-        class: 'col-3 left',
         sort: false,
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${!!cell ? cell : ''}</p>`;
+          return `<p>${!!cell ? cell : ''}</p>`;
         },
       },
       department: {
         title: '所屬單位',
-        type: 'string',
-        class: 'col-2',
+        type: 'html',
+        class: 'text_center',
+        valuePrepareFunction: (value: any, row: any, cell: any) => {
+          return `<p class="text_center">` + value + `</p>`;
+        },
         sort: false,
       },
       owner: {
         title: '負責人',
-        type: 'string',
-        class: 'col-1',
+        type: 'html',
+        class: 'text_center',
+        valuePrepareFunction: (value: any, row: any, cell: any) => {
+          return `<p class="text_center">` + value + `</p>`;
+        },
         sort: false,
       },
       status: {
         title: '狀態',
-        type: 'string',
-        class: 'col-1',
+        type: 'html',
+        class: 'text_center',
         valuePrepareFunction: (cell: string) => {
-          return Status[cell];
+          return `<p class="text_center">` + Status[cell] + `</p>`;
         },
         sort: false,
       },
       during: {
         title: '起迄時間',
         type: 'html',
-        class: 'col-3',
+        class: 'text_center',
         valuePrepareFunction: (cell: any, row: ActivitySetting) => {
-          return row.startDate && row.endDate ? `<span class="date">${row.startDate}~${row.endDate}</span>` : '';
+          return row.startDate && row.endDate ? `<p class="text_center">${row.startDate} ~ ${row.endDate}</p>` : '';
         },
         sort: false,
       },

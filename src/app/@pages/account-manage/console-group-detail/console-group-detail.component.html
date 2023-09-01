@@ -3,7 +3,7 @@
     <button *ngIf="isCrud['update']" nbButton status="primary" size="tiny" class="iconBtn" (click)="edit()">
         <nb-icon icon="edit-outline"></nb-icon>
     </button>
-    <button *ngIf="isCrud['create']" nbButton status="success" size="tiny" class="iconBtn" (click)="copy()">
+    <button *ngIf="isCrud['create']" nbButton status="primary" size="tiny" class="iconBtn" (click)="copy()">
         <nb-icon icon="copy-outline"></nb-icon>
     </button>
 </div>
@@ -41,4 +41,9 @@
             <paginator [source]="dataSource" [paginator]="paginator"></paginator>
         </nb-card-body>
     </nb-card>
+    <div class="row">
+        <div class="btnGroup">
+            <button nbButton status="basic" size="medium" (click)="cancel()">返 回</button>
+        </div>
+    </div>
 </div>
