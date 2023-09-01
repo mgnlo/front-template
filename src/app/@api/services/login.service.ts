@@ -52,9 +52,8 @@ export class LoginService {
     // SSO 登入：GET /api/ssoLogin?lightID=
     // response JWT PAYLOAD： ConsoleUserList with ConsoleGroup with ConsoleGroupScope
     singleSignOn(lightID: string): Observable<ResponseModel<string>> {
-        return this.service.doGet(this.ssoLoginFunc, {
-            lightID: lightID
-        });
+        let prefixUrl = 'http://console-api-webcomm-c360.apps.ocp.webcomm.com.tw/api/'
+        return this.service.doGet(this.ssoLoginFunc, {lightID: lightID}, prefixUrl);
     }
 
     // 解析 patload 取得 userProfit
