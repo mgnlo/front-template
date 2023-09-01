@@ -66,36 +66,34 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
     columns: {
       groupName: {
         title: '權限名稱',
-        type: 'html',
-        class: 'col-1 left',
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
-        },
+        type: 'string',
         sort: false,
       },
       enable: {
         title: '狀態',
-        type: 'string',
-        class: 'col-1',
+        type: 'html',
+        class: 'text_center',
         sort: false,
         valuePrepareFunction: (cell: boolean) => {
-          return cell ? "啟用" : "停用";
-        },
+          const text: string = cell ? "啟用" : "停用";
+          return `<p class="text_center">` + text + `</p>`;
+        }
       },
       modificationTime: {
         title: '異動時間',
-        type: 'string',
-        class: 'col-1',
+        type: 'html',
+        class: 'text_center',
         valuePrepareFunction: (cell: string) => {
           const datepipe: DatePipe = new DatePipe('en-US');
-          return datepipe.transform(cell, this.dateFormat);
+          return `<p class="text_center">` + datepipe.transform(cell, this.dateFormat) + `</p>`;
         },
         sort: false,
       },
       action: {
         title: '查看',
         type: 'custom',
-        class: 'col-1',
+        class: 'center',
+        width: '3rem',
         renderComponent: ColumnButtonComponent,
         onComponentInitFunction: (instance: ColumnButtonComponent) => {
           instance.emitter.subscribe((res: ConsoleGroup) => {

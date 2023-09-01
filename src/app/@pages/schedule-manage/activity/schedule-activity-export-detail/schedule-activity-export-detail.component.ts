@@ -63,47 +63,48 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
     columns: {
       historyId: {
         title: '項次',
-        type: 'string',
-        width: '10%',
+        type: 'html',
+        class: 'text_center w100',
+        valuePrepareFunction: (cell: string) => {
+          return `<p class="text_center">${cell ?? 0}</p>`;
+        },
         sort: false
       },
       batchTime: {
         title: '批次時間',
         type: 'html',
-        class: 'left',
-        width: '25%',
+        class: 'w300',
         valuePrepareFunction: (cell: string) => {
           const datepipe: DatePipe = new DatePipe('en-US');
-          return `<p class="left">${datepipe.transform(cell, "yyyy-MM-dd HH:mm:ss")}</p>`;
+          return `<p>${datepipe.transform(cell, "yyyy-MM-dd HH:mm:ss")}</p>`;
         },
         sort: false,
       },
       batchResultCount: {
         title: '名單數量',
         type: 'html',
-        width: '15%',
+        class: 'text_center w100',
         valuePrepareFunction: (cell: string) => {
-          return `<p>${cell ?? 0}</p>`;
+          return `<p class="text_center">${cell ?? 0}</p>`;
         },
         sort: false
       },
       batchResult: {
         title: '排程結果',
         type: 'html',
-        class: 'left',
-        width: '49%',
         valuePrepareFunction: (cell: string) => {
           const lableName = '批次排程'
           const cellLow = cell?.toLowerCase();
           if (CommonUtil.isBlank(cellLow)) return cellLow
-          return `<p class="left ${ColumnClass[cellLow]}">${lableName}${StatusResult[cellLow]}</p>`;
+          return `<p class="${ColumnClass[cellLow]}">${lableName}${StatusResult[cellLow]}</p>`;
         },
         sort: false,
       },
       action: {
         title: '匯出',
         type: 'custom',
-        width: '1%',
+        class: 'center',
+        width: '3rem',
         renderComponent: ColumnButtonComponent,
         onComponentInitFunction: (instance: ColumnButtonComponent) => {
           instance.settings = { btnStatus: 'success', btnIcon: 'cloud-download-outline' }

@@ -54,67 +54,67 @@ export class TagListComponent extends BaseComponent implements OnInit {
     columns: {
       tagName: {
         title: '標籤名稱',
-        type: 'html',
-        class: 'left',
-        width: '10%',
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
-        },
+        type: 'string',
         sort: false
       },
       tagType: {
         title: '類型',
-        type: 'string',
-        width: '10%',
-        sort: false,
+        type: 'html',
+        class: 'text_center',
         valuePrepareFunction: (cell: string) => {
-          return `${TagType[cell]}`;
+          return `<p class="text_center">` + TagType[cell] + `</p>`;
         },
+        sort: false,
       },
       department: {
         title: '所屬單位',
-        type: 'string',
-        width: '15%',
+        type: 'html',
+        class: 'text_center',
+        valuePrepareFunction: (cell: string) => {
+          return `<p class="text_center">` + cell + `</p>`;
+        },
         sort: false,
       },
       owner: {
         title: '負責人',
-        type: 'string',
-        width: '10%',
+        type: 'html',
+        class: 'text_center',
+        valuePrepareFunction: (cell: string) => {
+          return `<p class="text_center">` + cell + `</p>`;
+        },
         sort: false,
       },
       tagDescription: {
         title: '說明',
         type: 'html',
-        class: 'left',
-        width: '24%',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${!!cell ? cell : ''}</p>`;
+          return `<p>${!!cell ? cell : ''}</p>`;
         },
         sort: false,
       },
       during: {
         title: '標籤有效起迄日',
-        type: 'string',
-        sort: false,
-        width: '20%',
-        valuePrepareFunction: (cell, row: TagSetting) => {
-          return row.startDate + "~" + row.endDate;
+        type: 'html',
+        class: 'text_center',
+        valuePrepareFunction: (cell: any, row: TagSetting) => {
+          return row.startDate && row.endDate ? `<p class="text_center">${row.startDate} ~ ${row.endDate}</p>` : '';
         },
+        sort: false,
       },
       status: {
         title: '狀態',
-        type: 'string',
-        width: '10%',
+        type: 'html',
+        class: 'text_center',
         valuePrepareFunction: (cell: string) => {
-          return Status[cell];
+          return `<p class="text_center">` + Status[cell] + `</p>`;
         },
         sort: false,
       },
       action: {
         title: '查看',
         type: 'custom',
-        width: '1%',
+        class: 'center',
+        width: '3rem',
         valuePrepareFunction: (cell, row: TagSetting) => row,
         renderComponent: DetailButtonComponent,
         sort: false,

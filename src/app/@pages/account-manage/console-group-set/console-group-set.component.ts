@@ -113,16 +113,15 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
       featureName: {
         title: '功能單元',
         type: 'html',
-        class: 'col-1 left',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${GroupScope[cell]}</p>`;
+          return `<p>${GroupScope[cell]}</p>`;
         },
         sort: false,
       },
       read: {
         title: '查看',
         type: 'custom',
-        class: 'col-1',
+        class: 'center',
         renderComponent: CheckboxColumnComponent,
         onComponentInitFunction: (instance: CheckboxColumnComponent) => {
           instance.settings = { isShowParam: { key: 'read' }, isCheckedParam: { key: 'read' } };
@@ -133,7 +132,7 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
       create: {
         title: '新增',
         type: 'custom',
-        class: 'col-1',
+        class: 'center',
         renderComponent: CheckboxColumnComponent,
         onComponentInitFunction: (instance: CheckboxColumnComponent) => {
           instance.settings = { isShowParam: { key: 'create' }, isCheckedParam: { key: 'create' } };
@@ -144,7 +143,7 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
       update: {
         title: '編輯',
         type: 'custom',
-        class: 'col-1',
+        class: 'center',
         renderComponent: CheckboxColumnComponent,
         onComponentInitFunction: (instance: CheckboxColumnComponent) => {
           instance.settings = { isShowParam: { key: 'update' }, isCheckedParam: { key: 'update' } };
@@ -155,7 +154,7 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
       delete: {
         title: '刪除',
         type: 'custom',
-        class: 'col-1',
+        class: 'center',
         renderComponent: CheckboxColumnComponent,
         onComponentInitFunction: (instance: CheckboxColumnComponent) => {
           instance.settings = { isShowParam: { key: 'delete' }, isCheckedParam: { key: 'delete' } };

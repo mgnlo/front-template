@@ -59,54 +59,51 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
     columns: {
       activityName: {
         title: '活動名稱',
-        type: 'html',
-        class: 'left',
-        width: '25%',
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
-        },
+        type: 'string',
         sort: false
       },
       activityDescription: {
         title: '活動說明',
         type: 'html',
-        class: 'left',
-        width: '25%',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${!!cell ? cell : ''}</p>`;
+          return `<p>${!!cell ? cell : ''}</p>`;
         },
         sort: false,
       },
       status: {
         title: '狀態',
-        type: 'string',
-        width: '10%',
+        type: 'html',
+        class: 'text_center w100',
         valuePrepareFunction: (cell: string) => {
-          return Status[cell];
+          return `<p class="text_center">` + Status[cell] + `</p>`;
         },
         sort: false,
       },
       batchUpdateTime: {
         title: '批次更新時間',
-        type: 'string',
-        width: '15%',
+        type: 'html',
+        class: 'text_center w200',
+        valuePrepareFunction: (cell: string) => {
+          return `<p class="text_center">` + cell + `</p>`;
+        },
         sort: false,
       },
       filterOptions: {
         title: '更新結果',
         type: 'html',
-        width: '5%',
+        width: '3rem',
         valuePrepareFunction: (cell: string) => {
           const cellLow = cell?.toLowerCase();
           if (CommonUtil.isBlank(cellLow)) return cellLow
-          return `<p class="${ColumnClass[cellLow]}">${StatusResult[cellLow]}</p>`;
+          return `<p class="text_center ${ColumnClass[cellLow]}">` + StatusResult[cellLow] + `</p>`;
         },
         sort: false,
       },
       action: {
         title: '查看',
         type: 'custom',
-        width: '5%',
+        class: 'center',
+        width: '3rem',
         renderComponent: ColumnButtonComponent,
         onComponentInitFunction: (instance: ColumnButtonComponent) => {
           instance.emitter.subscribe((res: Schedule_Batch_History) => {

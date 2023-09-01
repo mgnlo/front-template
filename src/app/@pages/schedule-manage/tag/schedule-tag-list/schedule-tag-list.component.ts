@@ -50,59 +50,50 @@ export class ScheduleTagListComponent extends BaseComponent implements OnInit {
     columns: {
       tagName: {
         title: '標籤名稱',
-        type: 'html',
-        class: 'left',
-        width: '27.5%',
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
-        },
+        type: 'string',
         sort: false
       },
       tagDescription: {
         title: '標籤說明',
-        type: 'html',
-        class: 'left',
-        width: '27.5%',
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${!!cell ? cell : ''}</p>`;
-        },
+        type: 'string',
         sort: false,
       },
       status: {
         title: '狀態',
-        type: 'string',
-        width: '10%',
+        type: 'html',
+        class: 'text_center w150',
         valuePrepareFunction: (cell: string) => {
-          return Status[cell];
+          return `<p class="text_center">` + Status[cell] + `</p>`;
         },
         sort: false,
       },
       batchTime: {
         title: '批次更新時間',
         type: 'html',
-        class: 'left',
-        width: '25%',
+        class: 'text_center w200',
         valuePrepareFunction: (cell: string) => {
           const datepipe: DatePipe = new DatePipe('en-US');
-          return `<p class="left">${datepipe.transform(cell, "yyyy-MM-dd HH:mm:ss")}</p>`;
+          return `<p class="text_center">` + datepipe.transform(cell, "yyyy-MM-dd HH:mm:ss") + `</p>`;
+
         },
         sort: false,
       },
       batchResult: {
         title: '更新結果',
         type: 'html',
-        width: '5%',
+        width: '3rem',
         valuePrepareFunction: (cell: string) => {
           const cellLow = cell?.toLowerCase();
           if (CommonUtil.isBlank(cellLow)) return cellLow
-          return `<p class="${ColumnClass[cellLow]}">${StatusResult[cellLow]}</p>`;
+          return `<p class="text_center ${ColumnClass[cellLow]}">` + StatusResult[cellLow] + `</p>`;
         },
         sort: false,
       },
       action: {
         title: '查看',
         type: 'custom',
-        width: '5%',
+        class: 'center',
+        width: '3rem',
         renderComponent: ColumnButtonComponent,
         onComponentInitFunction: (instance: ColumnButtonComponent) => {
           instance.emitter.subscribe((res: ScheduleTagSettingView) => {
