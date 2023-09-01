@@ -503,13 +503,13 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     this.selectedConditionId = '';
     this.conditionDialogData = undefined;
 
+    this.conditionKeyFilter(event.target.value);
+
     if (this.validateForm.get('conditionKey')?.hasError('condition_valueErrMsg')) return
 
     if (CommonUtil.isBlank(this.selectedConditionId)) {
       this.validateForm.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': '請點選一筆' });
     }
-
-    this.conditionKeyFilter(event.target.value);
   }
 
   //下拉選擇
@@ -543,7 +543,6 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       return
     }
 
-    if (CommonUtil.isBlank(filterValue)) this.filterConditionKeyList = [...this.conditionKeyList];
     this.filterConditionKeyList = this.conditionKeyList.filter((f) => {
       return f.val?.toLowerCase()?.includes(filterValue);
     })
@@ -638,7 +637,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   //#region 檔案上傳並驗證
   onUploadFile(event: any) {
-    console.log('event', event);
+    // console.log('event', event);
 
     const file: File = event.target.files[0];
     const fileValidatorResult = this.fileValidator(file);
