@@ -9,7 +9,7 @@
     <!-- 提示訊息 -->
     <div class="noteText" [ngClass]="{'alert': reviewStatus === 'rejected'}" *ngIf="reviewStatus !== 'reviewing'">
         <nb-icon icon="info-outline"></nb-icon>
-        <p>審核結果：{{reviewStatus | enum:'reviewStatus'}}</p><br/>
+        <p>審核結果：{{reviewStatus | enum:'reviewStatus'}}</p><br />
         <p *ngIf="reviewStatus === 'rejected'">原因：{{reviewComment}}</p>
     </div>
     <nb-card>
@@ -38,7 +38,8 @@
                     <span>{{detail?.owner}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="text_bold" [ngClass]="changeClass('startDate','endDate') | enum: 'reviewCompareClass'">起迄時間：</p>
+                    <p class="text_bold" [ngClass]="changeClass('startDate','endDate') | enum: 'reviewCompareClass'">
+                        起迄時間：</p>
                     <span>{{detail?.startDate}}~{{detail?.endDate}}</span>
                 </div>
             </div>
@@ -48,11 +49,13 @@
                     <span>{{detail?.tagDimension}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="text_bold" [ngClass]="changeClass('tagSubDimension') | enum: 'reviewCompareClass'">標籤子構面：</p>
+                    <p class="text_bold" [ngClass]="changeClass('tagSubDimension') | enum: 'reviewCompareClass'">標籤子構面：
+                    </p>
                     <span>{{detail?.tagSubDimension}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
-                    <p class="text_bold" [ngClass]="changeClass('modificationTime') | enum: 'reviewCompareClass'">異動時間：</p>
+                    <p class="text_bold" [ngClass]="changeClass('modificationTime') | enum: 'reviewCompareClass'">異動時間：
+                    </p>
                     <span>{{detail?.modificationTime | date:dateFormat}}</span>
                 </div>
             </div>
@@ -68,23 +71,33 @@
             </div>
             <div *ngIf="detail?.tagType !== 'document' &&
                (detail?.conditionSettingMethod === 'field' || detail?.conditionSettingMethod === 'normal')">
+                <div class="subTitle" *ngIf="detail?.conditionSettingMethod === 'field'">
+                    <p>條件設定</p>
+                </div>
                 <div class="row">
-                    <div class="textGroup code col-12">
-                        <p class="text_bold" [ngClass]="changeClass('conditionSettingMethod') | enum: 'reviewCompareClass'">條件設定：</p>
-                        <span *ngIf="detail?.conditionSettingMethod === 'field'">{{detail?.tagConditionSetting?.[0]?.conditionKey}}</span>
-                        <pre *ngIf="detail?.conditionSettingMethod === 'normal'">{{detail?.conditionSettingQuery}}</pre>
+                    <div class="textGroup code col-12" *ngIf="detail?.conditionSettingMethod === 'normal'">
+                        <p class="text_bold"
+                            [ngClass]="changeClass('conditionSettingMethod') | enum: 'reviewCompareClass'">條件設定：</p>
+                        <pre>{{detail?.conditionSettingQuery}}</pre>
                     </div>
-                    <!-- 灰底區塊 -->
-                    <div class="colorArea col-12" *ngIf="detail?.conditionSettingMethod === 'field'" [ngClass]="changeClass('tagConditionSetting') | enum: 'bgClass'">
+                    <div class="textGroup code col-12" *ngIf="detail?.conditionSettingMethod === 'field'">
+                        <p class="text_bold" [ngClass]="changeClass('conditionSettingMethod') | enum: 'reviewCompareClass'">偵測條件：</p>
+                        <span>{{detail?.tagConditionSetting?.[0]?.conditionKey}}</span>
+                    </div>
+                    <!-- 灰底區塊  -->
+                    <div class="colorArea col-12" *ngIf="detail?.conditionSettingMethod === 'field'"
+                        [ngClass]="changeClass('tagConditionSetting') | enum: 'bgClass'">
                         <div class="row">
-                            <div *ngFor="let tagCondition of detail?.tagConditionSetting">
+                            <ng-container *ngFor="let tagCondition of detail?.tagConditionSetting">
                                 <div class="textGroup gather">
                                     <p>{{tagCondition?.detectionCondition?.toLowerCase() | enum:'mathSymbol'}}</p>
                                     <span>{{tagCondition?.thresholdValue}}</span>
-                                    <nb-tag *ngIf="tagCondition?.joinValue?.toLowerCase() === 'and'" status="warning" appearance="filled" text="and"></nb-tag>
-                                    <nb-tag *ngIf="tagCondition?.joinValue?.toLowerCase() === 'or'" status="info" appearance="filled" text="or"></nb-tag>
+                                    <nb-tag *ngIf="tagCondition?.joinValue?.toLowerCase() === 'and'" status="warning"
+                                        appearance="filled" text="and"></nb-tag>
+                                    <nb-tag *ngIf="tagCondition?.joinValue?.toLowerCase() === 'or'" status="info"
+                                        appearance="filled" text="or"></nb-tag>
                                 </div>
-                            </div>
+                            </ng-container>
                         </div>
                     </div>
                 </div>
@@ -109,14 +122,17 @@
                 <nb-tab tabTitle="異動歷程">
                     <div class="historyList" *ngIf="!!historyGroupView">
                         <ng-container *ngFor="let hg of historyGroupView | keyvalue; let i=index;">
-                            <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
+                            <div class="historyItem active moreBtn"
+                                [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">
                                 <div class="mainItem">
                                     <h4 (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">{{history.type}}</h4>
-                                    <button nbButton ghost status="primary" size="tiny" class="iconBtn" (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">
+                                    <button nbButton ghost status="primary" size="tiny" class="iconBtn"
+                                        (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">
                                         <nb-icon icon="arrow-ios-forward"></nb-icon>
                                     </button>
                                 </div>
-                                <div class="subItem" [ngClass]="isHistoryOpen[hg.key] ? '' : 'dis_none'" *ngFor="let flow of history.flows">
+                                <div class="subItem" [ngClass]="isHistoryOpen[hg.key] ? '' : 'dis_none'"
+                                    *ngFor="let flow of history.flows">
                                     <div>
                                         <p>{{flow.time | date:dateFormat}}</p>
                                         <p>{{flow.time | date:'hh:mm:ss'}}</p>
