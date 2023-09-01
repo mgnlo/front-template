@@ -1,4 +1,3 @@
 @mixin ngx-layout() {
-    @include media-breakpoint-down(is) {
-    }
+    @include media-breakpoint-down(is) {}
 }

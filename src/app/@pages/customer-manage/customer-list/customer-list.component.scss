@@ -1,0 +1,4 @@
+::ng-deep .tagList {
+    margin: -10px;
+    nb-tag:nth-of-type(n+6) { display: none; }
+}

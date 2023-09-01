@@ -1,0 +1,30 @@
+.ssoBG {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: url('~assets/images/img_loginBg_sm.png') no-repeat center bottom -5rem / cover #E4E9EB;
+  .ssoMsg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 500px;
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transform: translate(-50%, -50%);
+      background: rgba(#FFFFFF, 0.8);
+      padding: 2rem 4rem;
+      img {
+          width: 140px;
+          margin-bottom: 20px;
+      }
+      p {
+          text-align: center;
+          font-size: 1.2rem;
+          font-weight: bold;
+          color: #1E4B7C;
+      }
+  }
+}
