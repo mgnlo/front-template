@@ -58,7 +58,7 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
       customerId: {
         title: '用戶編號',
         type: 'html',
-        class: 'text_center',
+        class: 'text_center w150',
         valuePrepareFunction: (value: any, row: any, cell: any) => {
           return `<p class="text_center">` + value + `</p>`;
         },
@@ -67,7 +67,7 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
       userName: {
         title: '姓名',
         type: 'html',
-        class: 'text_center',
+        class: 'text_center w100',
         valuePrepareFunction: (value: any, row: any, cell: any) => {
           return `<p class="text_center">` + value + `</p>`;
         },
@@ -76,7 +76,7 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
       mobile: {
         title: '手機號碼',
         type: 'html',
-        class: 'text_center',
+        class: 'text_center w150',
         valuePrepareFunction: (value: any, row: any, cell: any) => {
           return `<p class="text_center">` + value + `</p>`;
         },

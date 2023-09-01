@@ -12,7 +12,7 @@ import { catchError, tap } from 'rxjs/operators';
   styleUrls: ['./sso-login.component.scss'],
 })
 export class SSOLoginComponent implements OnInit, OnDestroy {
-  initProcessMsg = "(模擬 SSO login 流程，待整合串接) 登入授權處理中，請稍候 ...";
+  initProcessMsg = "(模擬 SSO login 流程，待整合串接) 登入授權處理中，請稍候...";
   lightID: any = "123456789";
   userProfileSubscription: Subscription;
 
