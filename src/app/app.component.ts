@@ -9,17 +9,17 @@ import { LoginService } from '@api/services/login.service';
 })
 export class AppComponent {
   title = 'Console-Frontend';
-  loading = false;
+  // loading = false;
 
-  ngOnInit() {
-    this.toggleLoadingAnimation();
-  }
+  // ngOnInit() {
+  //   this.toggleLoadingAnimation();
+  // }
 
-  toggleLoadingAnimation() {
-    this.loading = true;
-    // 2秒後消失
-    setTimeout(() => this.loading = false, 2000);
-  }
+  // toggleLoadingAnimation() {
+  //   this.loading = true;
+  //   // 2秒後消失
+  //   setTimeout(() => this.loading = false, 2000);
+  // }
   
 
   constructor(

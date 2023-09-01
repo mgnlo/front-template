@@ -29,16 +29,13 @@ export class SSOLoginComponent implements OnInit, OnDestroy {
     this.lightID = "17071";
     // 發送電文請求 JWT Token 與 登入者 GroupScope，模擬成功導到 page 頁面
     // setTimeout 主要是用來 delay 一下方便 debug，正是可以拿掉
-    this.loadingService.open();
     setTimeout(() => {
       this.loginService.singleSignOn(this.lightID).pipe(
         catchError((err) => {
-          this.loadingService.close();
           throw new Error(err.message);
         }),
         tap(res => {
           console.info(res)
-          this.loadingService.close();
         })).subscribe(res => {
           if (res.code === RestStatus.SUCCESS) {
             if (res.result) {
