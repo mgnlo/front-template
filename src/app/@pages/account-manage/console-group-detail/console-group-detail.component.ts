@@ -204,4 +204,9 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
     let sessionData = { page: this.paginator.nowPage, groupId: this.groupId };
     this.storageService.putSessionVal(this.sessionKey, sessionData);
   }
+
+  cancel() {
+    this.router.navigate(['pages', 'account-manage', 'console-group-list']);
+  }
+
 }

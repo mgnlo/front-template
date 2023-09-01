@@ -1,13 +1,13 @@
-<div class="header-container">
-    <div class="logo-container">
-        <a (click)="toggleSidebar()" href="#" class="sidebar-toggle" [ngClass]="isActive ? 'active' : ''">
-            <nb-icon icon="menu-outline"></nb-icon>
-        </a>
-        <a class="logo" href="#" (click)="navigateHome()"><span>{{header.title}}</span></a>
+<div class="webTitle">
+    <div class="menuBtn" [ngClass]="isActive ? 'active' : ''" (click)="toggleSidebar()">
+        <nb-icon icon="menu-outline"></nb-icon>
     </div>
+    <h1 class="logoTitle" (click)="navigateHome()">
+        <img src="assets/images/logo.svg">
+        <p>{{header.title}}</p>
+    </h1>
 </div>
-
-<div class="header-container">
+<div class="auxiliary">
     <nb-actions size="small">
         <nb-action class="user-action" *ngIf="user">
             <nb-user [nbContextMenu]="userMenu" nbContextMenuTag="user-menu" size="medium" shape="round"
