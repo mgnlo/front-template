@@ -13,8 +13,8 @@ export interface ScheduleTagSetting {
   endDate: string;
   conditionSettingMethod: string;
   conditionSettingQuery: string;
-  tagDimension: string;
-  tagSubDimension: string;
+  categoryKey: string;
+  tagTopicKey: string;
   scheduleSettings: string;
   uploadType: string;
   filePath: string;
@@ -64,8 +64,8 @@ export class ScheduleTagSettingView{
   endDate: string;
   conditionSettingMethod: string;
   conditionSettingQuery: string;
-  tagDimension: string;
-  tagSubDimension: string;
+  categoryKey: string;
+  tagTopicKey: string;
   scheduleSettings: string;
   uploadType: string;
   filePath: string;

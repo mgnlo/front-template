@@ -32,6 +32,10 @@ export class TagManageService {
     return this.service.doGet(this.tagConditionFunc);
   }
 
+  getTagFilterConditionList(): Observable<ResponseModel<Array<TagConditionChartLine>>> {
+    return this.service.doGet(this.tagConditionFunc);
+  }
+
   getTagConditionalDistribution(conditionKey: string): Observable<ResponseModel<Array<TagConditionChartLine>>> {
     return this.service.doGet(this.tagConditionFunc + conditionKey);
   }

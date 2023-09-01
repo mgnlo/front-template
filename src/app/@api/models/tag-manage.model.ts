@@ -11,8 +11,8 @@ export interface TagSetting {
   endDate: string;
   conditionSettingMethod: string; //條件設定方式
   conditionSettingQuery: string; //條件設定語法
-  tagDimension: string;
-  tagSubDimension: string;
+  categoryKey: string;
+  tagTopicKey: string;
   scheduleSettings: string;
   uploadType: string;
   fileName: string;
@@ -60,8 +60,8 @@ export class TagReviewHistory {
   endDate?: string;
   conditionSettingMethod?: string;
   conditionSettingQuery?: string;
-  tagDimension?: string;
-  tagSubDimension?: string;
+  categoryKey?: string;
+  tagTopicKey?: string;
   scheduleSettings?: string;
   uploadType?: string;
   filePath?: string;
@@ -115,8 +115,8 @@ export interface TagDetailView {
   endDate: string;
   conditionSettingMethod: string;
   conditionSettingQuery: string;
-  tagDimension: string;
-  tagSubDimension: string;
+  categoryKey: string;
+  tagTopicKey: string;
   scheduleSettings: string;
   uploadType: string;
   filePath: string;
@@ -153,8 +153,8 @@ export class TagSettingEditReq {
   conditionSettingMethod: string; //條件設定方式
   startDate: string;
   endDate: string;
-  tagDimension: string;
-  tagSubDimension: string;
+  categoryKey: string;
+  tagTopicKey: string;
   tagDescription: string;
   conditionSettingQuery?: string; //條件設定語法
   tagConditionSetting?: Array<TagConditionSetting>;

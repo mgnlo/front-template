@@ -48,8 +48,8 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "thresholdValue": "門檻值3"
       }
     ],
-    "tagDimension": "標籤構面",
-    "tagSubDimension": "標籤子構面",
+    "categoryKey": "標籤構面",
+    "tagTopicKey": "標籤子構面",
     "scheduleSettings": "排成設定",
     "uploadType": "名單上傳類型",
     "fileName": "上傳檔案名稱",
@@ -129,8 +129,8 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "thresholdValue": "門檻值3"
       }
     ],
-    "tagDimension": "標籤構面",
-    "tagSubDimension": "標籤子構面",
+    "categoryKey": "標籤構面",
+    "tagTopicKey": "標籤子構面",
     "scheduleSettings": "排成設定",
     "uploadType": "名單上傳類型",
     "fileName": "上傳檔案名稱",
@@ -202,8 +202,8 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "thresholdValue": "門檻值3"
       }
     ],
-    "tagDimension": "標籤構面",
-    "tagSubDimension": "標籤子構面",
+    "categoryKey": "標籤構面",
+    "tagTopicKey": "標籤子構面",
     "scheduleSettings": "排成設定",
     "uploadType": "名單上傳類型",
     "fileName": "上傳檔案名稱",
@@ -275,8 +275,8 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "thresholdValue": "門檻值3"
       }
     ],
-    "tagDimension": "標籤構面",
-    "tagSubDimension": "標籤子構面",
+    "categoryKey": "標籤構面",
+    "tagTopicKey": "標籤子構面",
     "scheduleSettings": "排成設定",
     "uploadType": "名單上傳類型",
     "fileName": "上傳檔案名稱",
@@ -348,8 +348,8 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "thresholdValue": "門檻值3"
       }
     ],
-    "tagDimension": "標籤構面",
-    "tagSubDimension": "標籤子構面",
+    "categoryKey": "標籤構面",
+    "tagTopicKey": "標籤子構面",
     "scheduleSettings": "排成設定",
     "uploadType": "名單上傳類型",
     "fileName": "上傳檔案名稱",
@@ -421,8 +421,8 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "thresholdValue": "門檻值3"
       }
     ],
-    "tagDimension": "標籤構面",
-    "tagSubDimension": "標籤子構面",
+    "categoryKey": "標籤構面",
+    "tagTopicKey": "標籤子構面",
     "scheduleSettings": "排成設定",
     "uploadType": "名單上傳類型",
     "fileName": "上傳檔案名稱",
@@ -494,8 +494,8 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "thresholdValue": "門檻值3"
       }
     ],
-    "tagDimension": "標籤構面",
-    "tagSubDimension": "標籤子構面",
+    "categoryKey": "標籤構面",
+    "tagTopicKey": "標籤子構面",
     "scheduleSettings": "排成設定",
     "uploadType": "名單上傳類型",
     "fileName": "上傳檔案名稱",
@@ -567,8 +567,8 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "thresholdValue": "門檻值3"
       }
     ],
-    "tagDimension": "標籤構面",
-    "tagSubDimension": "標籤子構面",
+    "categoryKey": "標籤構面",
+    "tagTopicKey": "標籤子構面",
     "scheduleSettings": "排成設定",
     "uploadType": "名單上傳類型",
     "fileName": "上傳檔案名稱",
@@ -640,8 +640,8 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "thresholdValue": "門檻值3"
       }
     ],
-    "tagDimension": "標籤構面",
-    "tagSubDimension": "標籤子構面",
+    "categoryKey": "標籤構面",
+    "tagTopicKey": "標籤子構面",
     "scheduleSettings": "排成設定",
     "uploadType": "名單上傳類型",
     "fileName": "上傳檔案名稱",
@@ -713,8 +713,8 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "thresholdValue": "門檻值3"
       }
     ],
-    "tagDimension": "標籤構面",
-    "tagSubDimension": "標籤子構面",
+    "categoryKey": "標籤構面",
+    "tagTopicKey": "標籤子構面",
     "scheduleSettings": "排成設定",
     "uploadType": "名單上傳類型",
     "fileName": "上傳檔案名稱",
@@ -787,8 +787,8 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "thresholdValue": "門檻值3"
       }
     ],
-    "tagDimension": "標籤構面",
-    "tagSubDimension": "標籤子構面",
+    "categoryKey": "標籤構面",
+    "tagTopicKey": "標籤子構面",
     "scheduleSettings": "排成設定",
     "uploadType": "名單上傳類型",
     "fileName": "上傳檔案名稱",
@@ -860,8 +860,8 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "thresholdValue": "門檻值3"
       }
     ],
-    "tagDimension": "標籤構面",
-    "tagSubDimension": "標籤子構面",
+    "categoryKey": "標籤構面",
+    "tagTopicKey": "標籤子構面",
     "scheduleSettings": "排成設定",
     "uploadType": "名單上傳類型",
     "fileName": "上傳檔案名稱",
@@ -933,8 +933,8 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "thresholdValue": "門檻值3"
       }
     ],
-    "tagDimension": "標籤構面",
-    "tagSubDimension": "標籤子構面",
+    "categoryKey": "標籤構面",
+    "tagTopicKey": "標籤子構面",
     "scheduleSettings": "排成設定",
     "uploadType": "名單上傳類型",
     "fileName": "上傳檔案名稱",
@@ -1006,8 +1006,8 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "thresholdValue": "門檻值3"
       }
     ],
-    "tagDimension": "標籤構面",
-    "tagSubDimension": "標籤子構面",
+    "categoryKey": "標籤構面",
+    "tagTopicKey": "標籤子構面",
     "scheduleSettings": "排成設定",
     "uploadType": "名單上傳類型",
     "fileName": "上傳檔案名稱",
@@ -1079,8 +1079,8 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "thresholdValue": "門檻值3"
       }
     ],
-    "tagDimension": "標籤構面",
-    "tagSubDimension": "標籤子構面",
+    "categoryKey": "標籤構面",
+    "tagTopicKey": "標籤子構面",
     "scheduleSettings": "排成設定",
     "uploadType": "名單上傳類型",
     "fileName": "上傳檔案名稱",
@@ -1152,8 +1152,8 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "thresholdValue": "門檻值3"
       }
     ],
-    "tagDimension": "標籤構面",
-    "tagSubDimension": "標籤子構面",
+    "categoryKey": "標籤構面",
+    "tagTopicKey": "標籤子構面",
     "scheduleSettings": "排成設定",
     "uploadType": "名單上傳類型",
     "fileName": "上傳檔案名稱",
@@ -1226,8 +1226,8 @@ export const ScheduleTagSettingMock: Array<ScheduleTagSetting> = [
         "thresholdValue": "門檻值3"
       }
     ],
-    "tagDimension": "標籤構面",
-    "tagSubDimension": "標籤子構面",
+    "categoryKey": "標籤構面",
+    "tagTopicKey": "標籤子構面",
     "scheduleSettings": "排成設定",
     "uploadType": "名單上傳類型",
     "fileName": "上傳檔案名稱",
