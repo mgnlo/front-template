@@ -72,7 +72,6 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     } else {
       this.conditions.removeAt(key)
     }
-    // console.info('or', this.conditions.getRawValue())
   }
 
   and(i: number, action: 'add' | 'remove', key: number) {
@@ -82,7 +81,6 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     } else {
       fg.removeControl(`${key}`);
     }
-    console.info('and', this.conditions.getRawValue())
   }
 
   get conditions(): FormArray {

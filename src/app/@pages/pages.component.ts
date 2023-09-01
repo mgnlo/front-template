@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivationStart, Router, RouterOutlet } from '@angular/router';
 import { LoginService } from '@api/services/login.service';
 import { NbMenuItem } from '@nebular/theme';
 
@@ -17,16 +18,16 @@ export const ParentMenu: { [parentMenu: string]: NbMenuItem } = {
  * @param parentMenu 對應ParentMenu
 */
 export const ScopeList: { [schemaName: string]: { crud: string[], menu: NbMenuItem, parentMenu?: string } } = {
-  'dashboard': { crud: ['read'], menu: { title: "儀表板", icon: "pie-chart-outline", link: "/pages/dashboard/center-room" } },
-  'customer': { crud: ['read'], menu: { title: "客群活動名單", link: "/pages/customer-manage/activity-list" }, parentMenu: 'customer-manage' },
-  'activity': { crud: ['read', 'create', 'update', 'delete'], menu: { title: "用戶列表", link: "/pages/customer-manage/customer-list" }, parentMenu: 'customer-manage' },
+  'dashboard': { crud: ['read'], menu: { title: "儀表板", icon: "pie-chart-outline", link: "/pages/dashboard/dashboard-room" } },
+  'customer': { crud: ['read'], menu: { title: "用戶列表", link: "/pages/customer-manage/customer-list" }, parentMenu: 'customer-manage' },
+  'activity': { crud: ['read', 'create', 'update', 'delete'], menu: { title: "客群活動名單", link: "/pages/customer-manage/activity-list" }, parentMenu: 'customer-manage' },
   'tag': { crud: ['read', 'create', 'update', 'delete'], menu: { title: "標籤管理", icon: "pricetags-outline", link: "/pages/tag-manage/tag-list" } },
-  'review-tag': { crud: ['read', 'update'], menu: { title: "標籤審核", link: "/pages/review-manage/tag-review-list" }, parentMenu: 'review-manage' },
-  'review-activity': { crud: ['read', 'update'], menu: { title: "客群名單審核", link: "/pages/review-manage/activity-review-list" }, parentMenu: 'review-manage' },
-  'review-schedule': { crud: ['read', 'update'], menu: { title: "名單排程審核", link: "/pages/review-manage/schedule-review-list" }, parentMenu: 'review-manage' },
-  'schedule-tag': { crud: ['read', 'update'], menu: { title: "貼標排程", link: "/pages/schedule-manage/schedule-tag-detail" }, parentMenu: 'schedule-manage' },
+  'review-tag': { crud: ['read', 'update'], menu: { title: "標籤審核", link: "/pages/review-manage/review-tag-list" }, parentMenu: 'review-manage' },
+  'review-activity': { crud: ['read', 'update'], menu: { title: "客群名單審核", link: "/pages/review-manage/review-activity-list" }, parentMenu: 'review-manage' },
+  'review-schedule': { crud: ['read', 'update'], menu: { title: "名單排程審核", link: "/pages/review-manage/review-schedule-list" }, parentMenu: 'review-manage' },
+  'schedule-tag': { crud: ['read', 'update'], menu: { title: "貼標排程", link: "/pages/schedule-manage/schedule-tag-list" }, parentMenu: 'schedule-manage' },
   'schedule-activity': { crud: ['read', 'create', 'update', 'delete'], menu: { title: "名單排程", link: "/pages/schedule-manage/schedule-activity-list" }, parentMenu: 'schedule-manage' },
-  'console-user': { crud: ['read', 'update'], menu: { title: "使用者管理", link: "/pages/account-manage/console-user" }, parentMenu: 'account-manage' },
+  'console-user': { crud: ['read', 'update'], menu: { title: "使用者管理", link: "/pages/account-manage/console-user-list" }, parentMenu: 'account-manage' },
   'console-group': { crud: ['read', 'create', 'update', 'delete'], menu: { title: "權限管理", link: "/pages/account-manage/console-group-list" }, parentMenu: 'account-manage' }
 };
 
@@ -38,8 +39,9 @@ export const ScopeList: { [schemaName: string]: { crud: string[], menu: NbMenuIt
 export class PagesComponent implements OnInit {
   basicMenu: NbMenuItem[] = [];
 
-  constructor(private loginSerivce: LoginService) {
-  }
+  constructor(private loginSerivce: LoginService, private router: Router) { }
+
+  @ViewChild(RouterOutlet) outlet: RouterOutlet;
 
   ngOnInit(): void {
     this.initMenu();

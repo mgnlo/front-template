@@ -8,7 +8,7 @@
       </nb-card-header>
       <nb-card-body>
           <div class="rightBox">
-            <button nbButton status="primary" size="medium" (click)="add()">新 增</button>
+            <button *ngIf="isCrud['create']" nbButton status="primary" size="medium" (click)="add()">新 增</button>
           </div>
           <ng-container *ngIf="restDataSource || dataSource as source" >
             <ng2-smart-table [settings]="gridDefine" [source]="source"></ng2-smart-table>

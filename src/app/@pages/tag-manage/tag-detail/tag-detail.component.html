@@ -1,9 +1,9 @@
 <div class="pageTitle">
   <h1>標籤管理</h1>
-  <button nbButton [status]="detail?.status === 'reviewing' ? 'basic' : 'primary'" size="tiny" class="iconBtn" (click)="edit()" [disabled]="detail?.status === 'reviewing'">
+  <button *ngIf="isCrud['update']" nbButton [status]="detail?.status === 'reviewing' ? 'basic' : 'primary'" size="tiny" class="iconBtn" (click)="edit()" [disabled]="detail?.status === 'reviewing'">
       <nb-icon icon="edit-outline"></nb-icon>
   </button>
-  <button nbButton [status]="detail?.status === 'reviewing' ? 'basic' : 'primary'" size="tiny" class="iconBtn" (click)="copy()" [disabled]="detail?.status === 'reviewing'">
+  <button *ngIf="isCrud['create']" nbButton [status]="detail?.status === 'reviewing' ? 'basic' : 'primary'" size="tiny" class="iconBtn" (click)="copy()" [disabled]="detail?.status === 'reviewing'">
       <nb-icon icon="copy-outline"></nb-icon>
   </button>
 </div>

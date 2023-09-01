@@ -14,11 +14,11 @@ import { BaseComponent } from '@pages/base.component';
 import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
 
 @Component({
-  selector: 'schedule-tag-detail',
-  templateUrl: './schedule-tag-detail.component.html',
-  styleUrls: ['./schedule-tag-detail.component.scss']
+  selector: 'schedule-tag-list',
+  templateUrl: './schedule-tag-list.component.html',
+  styleUrls: ['./schedule-tag-list.component.scss']
 })
-export class ScheduleTagDetailComponent extends BaseComponent implements OnInit {
+export class ScheduleTagListComponent extends BaseComponent implements OnInit {
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
   isAllSelected: boolean = false;
   selectedRows: Array<{ rowId: string }> = new Array;
@@ -219,9 +219,9 @@ export class ScheduleTagDetailComponent extends BaseComponent implements OnInit 
               selectedRows: this.selectedRows,
             };
 
+            //#region 用grid按鈕，控制是否全選
             instance.emitter.subscribe((res) => {
               // console.info('res', res)
-              //#region 用grid按鈕，控制是否全選
               const pageData = this.dataSource.getElements()
               pageData.then((res) => {
                 const hasActionFieldCNT = res.filter((f) => f.isShow).length;

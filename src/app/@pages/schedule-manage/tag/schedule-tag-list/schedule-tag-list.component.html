@@ -8,8 +8,8 @@
     </nb-card-header>
     <nb-card-body>
       <div>
-        <div class="rightBox" *ngIf="!this?.gridDefine?.columns?.['isChecked']"><button nbButton status="primary" size="medium" (click)="setGridDefineInit()">手動更新</button></div>
-        <div class="rightBox" *ngIf="this?.gridDefine?.columns?.['isChecked']">
+        <div class="rightBox" *ngIf="!this?.gridDefine?.columns?.['isChecked'] && isCrud['update']"><button nbButton status="primary" size="medium" (click)="setGridDefineInit()">手動更新</button></div>
+        <div class="rightBox" *ngIf="this?.gridDefine?.columns?.['isChecked'] && isCrud['update']">
           <button nbButton status="basic" size="medium" (click)="setGridDefineInit()">取 消</button>
           <button nbButton status="primary" size="medium" (click)="submitRefresh()">確 定</button>
         </div>

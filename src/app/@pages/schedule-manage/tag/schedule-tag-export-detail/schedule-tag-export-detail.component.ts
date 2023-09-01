@@ -136,7 +136,7 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
   }
 
   cancel() {
-    this.router.navigate(['pages', 'schedule-manage', 'schedule-tag-detail']);
+    this.router.navigate(['pages', 'schedule-manage', 'schedule-tag-list']);
   }
 
 }

@@ -101,11 +101,7 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
     },
     attr: {
       class: 'dialogTable'
-    },
-    // rowClassFunction: (row: Row) => {
-    //   console.info(row.getData().status)
-    //   return row.getData().status === 'ing' ? 'aa' : '';
-    // },
+    }
   };
 
   changeSort(sortType: string) {

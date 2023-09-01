@@ -1,6 +1,6 @@
 import { ActivityReviewHistory } from "@api/models/activity-list.model";
 
-export const ActivityReviewListMock: Array<ActivityReviewHistory> = [
+export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
   {
     historyId: "h123456",
     version: "uuid-zzzz",

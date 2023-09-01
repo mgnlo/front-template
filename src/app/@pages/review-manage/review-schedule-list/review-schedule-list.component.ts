@@ -11,13 +11,14 @@ import { ScheduleReviewHistoryMock } from '@common/mock-data/schedule-review-moc
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { ReviewManageService } from '../review-manage.service';
+import { CommonUtil } from '@common/utils/common-util';
 
 @Component({
-  selector: 'app-schedule-review-list',
-  templateUrl: './schedule-review-list.component.html',
-  styleUrls: ['./schedule-review-list.component.scss']
+  selector: 'app-review-schedule-list',
+  templateUrl: './review-schedule-list.component.html',
+  styleUrls: ['./review-schedule-list.component.scss']
 })
-export class ScheduleReviewListComponent extends BaseComponent implements OnInit {
+export class ReviewScheduleListComponent extends BaseComponent implements OnInit {
 
   mockData: Array<ScheduleReviewHistory> = ScheduleReviewHistoryMock;
 
@@ -48,8 +49,10 @@ export class ScheduleReviewListComponent extends BaseComponent implements OnInit
       },
       frequency: {
         title: '執行頻率',
-        type: 'string',
-        valuePrepareFunction: (cell: string, row: ScheduleReviewHistory) => Frequency[row.executionFrequency] + row.frequencyTime,
+        type: 'html',
+        valuePrepareFunction: (cell: string, row: ScheduleReviewHistory) => {
+          return CommonUtil.processExecutionFrequency(row.executionFrequency, row.frequencyTime)
+        },
         sort: false,
       },
       type: {

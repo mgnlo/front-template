@@ -27,7 +27,7 @@
             <h2>活動列表</h2>
         </nb-card-header>
         <nb-card-body>
-            <div class="rightBox"><button nbButton status="primary" size="medium" (click)="add()">新 增</button></div>
+            <div class="rightBox" *ngIf="isCrud['create']"><button nbButton status="primary" size="medium" (click)="add()">新 增</button></div>
             <ng-container *ngIf="restDataSource || dataSource as source" >
                 <ng2-smart-table [settings]="gridDefine" [source]="source"></ng2-smart-table>
                 <paginator [source]="source" [paginator]="paginator"></paginator>

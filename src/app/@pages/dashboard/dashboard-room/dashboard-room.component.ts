@@ -8,11 +8,11 @@ import { DashboardInfoMock } from '@common/mock-data/dasthboard.mock';
 import { BaseComponent } from '@pages/base.component';
 
 @Component({
-  selector: 'center-room',
-  styleUrls: ['./center-room.component.scss'],
-  templateUrl: './center-room.component.html',
+  selector: 'dashboard-room',
+  styleUrls: ['./dashboard-room.component.scss'],
+  templateUrl: './dashboard-room.component.html',
 })
-export class CenterRoomComponent extends BaseComponent implements OnInit {
+export class DashboardRoomComponent extends BaseComponent implements OnInit {
   mockData = DashboardInfoMock
 
   //構面數據佔比資料表

@@ -11,6 +11,7 @@ import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { ScheduleManageService } from '../../schedule-manage.service';
+import { CommonUtil } from '@common/utils/common-util';
 
 @Component({
   selector: 'schedule-activity-list',
@@ -57,31 +58,7 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
         title: '執行頻率',
         type: 'html',
         valuePrepareFunction: (cell: string, row: ScheduleActivitySetting) => {
-          const frequencyTime = row.frequencyTime;
-          const frequencyTimeArray = frequencyTime.split(/[:：]/);
-          const cellLow = cell?.toLowerCase();
-
-          let result = '';
-
-          switch (cellLow) {
-            case 'daily':
-              result = `${Frequency[cellLow]} ${frequencyTimeArray[0] ?? ''} 時 ${frequencyTimeArray[1] ?? ''} 分`;
-              break;
-            case 'weekly':
-              const dayOfWeek = parseInt(frequencyTimeArray[0] ?? '0');
-              const weekDayName = chineseWeekDayValues[dayOfWeek - 1] || '';
-              result = `${Frequency[cellLow]} ${weekDayName} ${frequencyTimeArray[1] ?? ''} 時 ${frequencyTimeArray[2] ?? ''} 分`;
-              break;
-            case 'monthly':
-              const dayOfMonth = frequencyTimeArray?.[0] === '999' ? '月底' : frequencyTimeArray[0] ?? '';
-              result = `${Frequency[cellLow]} ${dayOfMonth}日 ${frequencyTimeArray[1] ?? ''} 時 ${frequencyTimeArray[2] ?? ''} 分`;
-              break;
-            default:
-              result = `${Frequency[cellLow]} ${frequencyTime}`;
-              break;
-          }
-
-          return result;
+          return CommonUtil.processExecutionFrequency(cell, row.frequencyTime);
         },
         sort: false,
       },

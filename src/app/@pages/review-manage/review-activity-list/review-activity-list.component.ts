@@ -1,27 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { TagReviewHistory, TagSetting } from '@api/models/tag-manage.model';
+import { ActivityReviewHistory } from '@api/models/activity-list.model';
 import { ConfigService } from '@api/services/config.service';
 import { LoginService } from '@api/services/login.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass } from '@common/enums/common-enum';
 import { ReviewStatus } from '@common/enums/review-enum';
-import { TagType } from '@common/enums/tag-enum';
-import { TagReviewListMock } from '@common/mock-data/tag-review-mock';
+import { ReviewActivityListMock } from '@common/mock-data/activity-review-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
+import { CheckboxIconComponent } from '@component/table/checkbox-icon/checkbox-icon.component';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { ReviewManageService } from '../review-manage.service';
 
 @Component({
-  selector: 'tag-review-list',
-  templateUrl: './tag-review-list.component.html',
-  styleUrls: ['./tag-review-list.component.scss'],
+  selector: 'review-activity-list',
+  templateUrl: './review-activity-list.component.html',
+  styleUrls: ['./review-activity-list.component.scss'],
 })
-export class TagReviewListComponent extends BaseComponent implements OnInit {
+export class ReviewActivityListComponent extends BaseComponent implements OnInit {
 
   constructor(
     storageService: StorageService,
@@ -34,17 +34,15 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
     super(storageService, configService, loginService);
     // 篩選條件
     this.validateForm = new FormGroup({
-      tagName: new FormControl(''),
+      activityName: new FormControl(''),
       reviewStatus: new FormControl(''),
       startDate: new FormControl(null, ValidatorsUtil.dateFmt),
       endDate: new FormControl(null, ValidatorsUtil.dateFmt),
     }, [ValidatorsUtil.dateRange]);
+
+    this.sessionKey = this.activatedRoute.snapshot.routeConfig.path;
   }
 
-  statusList: Array<{ key: string; val: string }> = Object.entries(ReviewStatus).map(([k, v]) => ({ key: k, val: v }))
-  selected: string = '';
-  mockData: Array<TagReviewHistory> = TagReviewListMock;
-  sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
   isSearch: Boolean = false;
 
   ngOnInit(): void {
@@ -68,54 +66,51 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
       perPage: 10,
     },
     columns: {
-      tagName: {
-        title: '標籤名稱',
+      activityName: {
+        title: '活動名稱',
         type: 'string',
         sort: false,
       },
-      tagType: {
-        title: '類型',
-        type: 'html',
-        class: 'text_center',
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="text_center">` + TagType[cell] + `</p>`;
-        },
-        sort: false,
-      },
-      department: {
-        title: '所屬單位',
-        type: 'html',
-        class: 'text_center',
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="text_center">` + cell + `</p>`;
-        },
-        sort: false,
-      },
-      owner: {
-        title: '負責人',
-        type: 'html',
-        class: 'text_center',
-        valuePrepareFunction: (cell: string) => {
-          return `<p class="text_center">` + cell + `</p>`;
-        },
-        sort: false,
-      },
-      tagDescription: {
-        title: '說明',
+      activityDescription: {
+        title: '活動說明',
         type: 'html',
         valuePrepareFunction: (cell: string) => {
           return `<p>${!!cell ? cell : ''}</p>`;
         },
         sort: false,
       },
-      modificationTime: {
-        title: '標籤有效起迄日',
+      filterOptions: {
+        title: '差異過濾',
+        type: 'custom',
+        width: '3rem',
+        renderComponent: CheckboxIconComponent,
+        sort: false,
+      },
+      listLimit: {
+        title: '名單上限',
         type: 'html',
         class: 'text_center',
-        valuePrepareFunction: (cell: any, row: TagSetting) => {
-          return row.startDate && row.endDate ? `<p class="text_center">${row.startDate} ~ ${row.endDate}</p>` : '';
+        valuePrepareFunction: (value: any, row: any, cell: any) => {
+          return `<p class="text_center">` + value + `</p>`;
+        },
+      },
+      modificationTime: {
+        title: '名單有效起迄日',
+        type: 'html',
+        class: 'text_center',
+        valuePrepareFunction: (cell: any, row: ActivityReviewHistory) => {
+          return `<p class="text_center">${row.startDate} ~ ${row.endDate}</p>`;
         },
         sort: false,
+      },
+      type: {
+        title: '異動類型',
+        type: 'html',
+        class: 'text_center',
+        valuePrepareFunction: (value: any, row: any, cell: any) => {
+          return `<p class="text_center">` + value + `</p>`;
+        },
+        sort: false
       },
       reviewStatus: {
         title: '狀態',
@@ -131,7 +126,7 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
         type: 'custom',
         class: 'center',
         width: '3rem',
-        valuePrepareFunction: (cell, row: TagSetting) => row,
+        valuePrepareFunction: (cell, row: ActivityReviewHistory) => row,
         renderComponent: DetailButtonComponent,
         sort: false,
       },
@@ -145,7 +140,7 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
   };
 
   reset() {
-    this.validateForm.reset({ tagName: '', reviewStatus: '', startDate: null, endDate: null });
+    this.validateForm.reset({ activityName: '', reviewStatus: '', startDate: null, endDate: null });
     this.isSearch = true;
     this.paginator.nowPage = 1;
     this.setSessionData();
@@ -160,7 +155,7 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
       for (const [k, v] of Object.entries(filter).filter(([key, val]) => !!val)) {
         this.dataSource.addFilter({ field: k, filter: undefined, search: v });
       }
-      this.dataSource.load(TagReviewListMock);
+      this.dataSource.load(ReviewActivityListMock);
       return;
     }
 
@@ -181,10 +176,10 @@ export class TagReviewListComponent extends BaseComponent implements OnInit {
     if (key !== 'reset') this.setSessionData();
 
     let searchInfo: SearchInfo = {
-      apiUrl: this.reviewManageService.tagReviewFunc,
+      apiUrl: this.reviewManageService.activityReviewFunc,
       nowPage: page,
       filters: this.validateForm.getRawValue(),
-      errMsg: '名單審核查無資料',
+      errMsg: '客群名單審核查無資料',
     }
 
     this.restDataSource = this.tableService.searchData(searchInfo);

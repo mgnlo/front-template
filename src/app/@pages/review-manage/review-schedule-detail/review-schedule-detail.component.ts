@@ -15,11 +15,11 @@ import { catchError, filter, takeUntil, tap } from 'rxjs/operators';
 import { ReviewManageService } from '../review-manage.service';
 
 @Component({
-  selector: 'schedule-review-detail',
-  templateUrl: './schedule-review-detail.component.html',
-  styleUrls: ['./schedule-review-detail.component.scss']
+  selector: 'review-schedule-detail',
+  templateUrl: './review-schedule-detail.component.html',
+  styleUrls: ['./review-schedule-detail.component.scss']
 })
-export class ScheduleReviewDetailComponent extends BaseComponent implements OnInit {
+export class ReviewScheduleDetailComponent extends BaseComponent implements OnInit {
 
   detail: ScheduleDetailView;
   oldDetail: ScheduleDetailView;
@@ -99,7 +99,7 @@ export class ScheduleReviewDetailComponent extends BaseComponent implements OnIn
     this.reviewManageService.getScheduleReviewRow(this.historyId).pipe(
       filter(res => res.code === RestStatus.SUCCESS),
       catchError(err => {
-        this.dialogService.alertAndBackToList(false, `${err.message}，將為您導回名單排程審核列表`, ['pages', 'review-manage', 'schedule-review-list']);
+        this.dialogService.alertAndBackToList(false, `${err.message}，將為您導回名單排程審核列表`, ['pages', 'review-manage', 'review-schedule-list']);
         this.loadingService.close();
         throw new Error(err.message);
       }),
@@ -161,6 +161,10 @@ export class ScheduleReviewDetailComponent extends BaseComponent implements OnIn
     })
   }
 
+  processExecutionFrequency(frequency: string, frequencyTime: string) {
+    return CommonUtil.processExecutionFrequency(frequency, frequencyTime);
+  }
+
   changeClass(key1: string, key2?: string) {
     let isSame1 = this.isSameList[key1];
     if (!key2) {
@@ -182,7 +186,7 @@ export class ScheduleReviewDetailComponent extends BaseComponent implements OnIn
     if (this.isMock) {
       this.dialogService.openReview(dialogOption).componentRef.instance.emit.subscribe(mockInfo => {
         this.dialogService.openReview(dialogOption).close();
-        this.router.navigate(['pages', 'review-manage', 'schedule-review-list']);
+        this.router.navigate(['pages', 'review-manage', 'review-schedule-list']);
       });
       return;
     }
@@ -196,13 +200,13 @@ export class ScheduleReviewDetailComponent extends BaseComponent implements OnIn
           throw new Error(err.message);
         }),
         takeUntil(this.unsubscribe$),
-        tap(res => this.router.navigate(['pages', 'review-manage', 'schedule-review-list']))
+        tap(res => this.router.navigate(['pages', 'review-manage', 'review-schedule-list']))
       ).subscribe();
     })
   }
 
   cancel() {
-    this.router.navigate(['pages', 'review-manage', 'schedule-review-list']);
+    this.router.navigate(['pages', 'review-manage', 'review-schedule-list']);
   }
 
 }

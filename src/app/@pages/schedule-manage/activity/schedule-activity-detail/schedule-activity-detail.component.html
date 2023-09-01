@@ -1,6 +1,6 @@
 <div class="pageTitle" *ngIf="this.detail">
   <h1>排程管理</h1>
-  <button nbButton [status]="this.detail.status === 'reviewing' ? 'basic' : 'primary'" size="tiny" class="iconBtn" (click)="edit()" [disabled]="this.detail.status === 'reviewing'">
+  <button *ngIf="isCrud['update']" nbButton [status]="this.detail.status === 'reviewing' ? 'basic' : 'primary'" size="tiny" class="iconBtn" (click)="edit()" [disabled]="this.detail.status === 'reviewing'">
       <nb-icon icon="edit-outline"></nb-icon>
   </button>
 </div>
@@ -18,7 +18,7 @@
           </div>
           <div class="textGroup col-12 col-lg-4">
             <p class="text_bold">執行頻率：</p>
-            <span>{{detail?.executionFrequency?.toLowerCase() | enum:'frequency'}}</span>
+            <span>{{processExecutionFrequency(detail?.executionFrequency,detail?.frequencyTime)}}</span>
           </div>
         </div>
         <div class="row">
@@ -35,8 +35,8 @@
     </nb-card-header>
     <nb-card-body>
       <div>
-        <div class="rightBox" *ngIf="!this?.gridDefine?.columns?.['isChecked']"><button nbButton status="primary" size="medium" (click)="setGridDefineInit()">手動更新</button></div>
-        <div class="rightBox" *ngIf="this?.gridDefine?.columns?.['isChecked']">
+        <div class="rightBox" *ngIf="!this?.gridDefine?.columns?.['isChecked'] && isCrud['update']"><button nbButton status="primary" size="medium" (click)="setGridDefineInit()">手動更新</button></div>
+        <div class="rightBox" *ngIf="this?.gridDefine?.columns?.['isChecked'] && isCrud['update']">
           <button nbButton status="basic" size="medium" (click)="setGridDefineInit()">取 消</button>
           <button nbButton status="primary" size="medium" (click)="submitRefresh()">確 定</button>
         </div>
@@ -52,11 +52,11 @@
       </div>
     </nb-card-body>
   </nb-card>
-  <nb-card *ngIf="isHistoryOpen && detail?.historyGroupView">
+  <nb-card>
       <nb-card-header>
           <h2>異動歷程</h2>
       </nb-card-header>
-      <nb-card-body>
+      <nb-card-body *ngIf="isHistoryOpen && detail?.historyGroupView">
           <div class="historyList">
               <ng-container *ngFor="let hg of detail.historyGroupView | keyvalue; let i=index;">
                   <div class="historyItem active moreBtn" [ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg.value as history;">

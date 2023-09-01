@@ -1,4 +1,5 @@
 import { FormArray, FormGroup, ValidationErrors } from '@angular/forms';
+import { Frequency, chineseWeekDayValues } from '@common/enums/common-enum';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
@@ -285,5 +286,38 @@ export const CommonUtil = {
     }
 
     return selectedRows;
+  },
+  /** 處理執行頻率顯示
+   *  @param frequency 執行頻率
+   *  @param frequencyTime 執行時間
+  */
+  processExecutionFrequency(frequency: string, frequencyTime: string) {
+    let result = '';
+
+    if (this.isBlank(frequency) || this.isBlank(frequencyTime))  return result;
+
+    const frequencyTimeArray = frequencyTime.split(/[:：]/);
+    const frequencyLow = frequency?.toLowerCase();
+
+    switch (frequencyLow) {
+      case 'daily':
+        result = `${Frequency[frequencyLow]} ${frequencyTimeArray[0] ?? ''} 時 ${frequencyTimeArray[1] ?? ''} 分`;
+        break;
+      case 'weekly':
+        const dayOfWeek = parseInt(frequencyTimeArray[0] ?? '0');
+        const weekDayName = chineseWeekDayValues[dayOfWeek - 1] || '';
+        result = `${Frequency[frequencyLow]} ${weekDayName} ${frequencyTimeArray[1] ?? ''} 時 ${frequencyTimeArray[2] ?? ''} 分`;
+        break;
+      case 'monthly':
+        const dayOfMonth = frequencyTimeArray?.[0] === '999' ? '月底' : frequencyTimeArray[0] + '日' ?? '';
+        result = `${Frequency[frequencyLow]} ${dayOfMonth} ${frequencyTimeArray[1] ?? ''} 時 ${frequencyTimeArray[2] ?? ''} 分`;
+        break;
+      default:
+        result = `${Frequency[frequencyLow]} ${frequencyTime}`;
+        break;
+    }
+
+    return result;
   }
+
 }; // End

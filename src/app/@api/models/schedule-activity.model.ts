@@ -114,7 +114,7 @@ export class ScheduleActivitySettingEditReq {
   activityIds: Array<string>;
 }
 
-export interface ScheduleReviewListRes {
+export interface ReviewScheduleListRes {
   data: [];
 }
 

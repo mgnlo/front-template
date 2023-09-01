@@ -1,4 +1,4 @@
-import { ConsoleUser } from "./console-user.model";
+import { ConsoleUserList } from "./console-user.model";
 
 export class ConsoleGroup {
     groupId: string;
@@ -8,8 +8,8 @@ export class ConsoleGroup {
     enable: boolean;
     createTime: string;
     modificationTime: string;
-    //6.1 master 的時候不會有 ConsoleUser，需要另外查 6.2 detail 才會得到完整
-    consoleUser?: Array<ConsoleUser>;
+    //6.1 master 的時候不會有 ConsoleUserList，需要另外查 6.2 detail 才會得到完整
+    consoleUser?: Array<ConsoleUserList>;
     //6.1 master 的時候不會有 Scope，需要另外查 6.2 detail 才會得到完整
     consoleGroupScope?: Array<ConsoleGroupScope>;
 }
