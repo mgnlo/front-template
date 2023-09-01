@@ -9,7 +9,7 @@ import { Ng2SmartTableService } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { GroupScope } from '@common/enums/console-group-enum';
 import { BusinessUnit } from '@common/enums/console-user-enum';
-import { RestStatus } from '@common/enums/rest-enum';
+import { RestStatus, WarningCode } from '@common/enums/rest-enum';
 import { ConsoleGroupDetailMock } from '@common/mock-data/console-group-detail-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/checkbox.component';
@@ -170,7 +170,8 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
     this.accountManageService.getConsoleGroup(this.groupId).pipe(
       catchError((err) => {
         this.loadingService.close();
-        this.dialogService.alertAndBackToList(false, `${err.message}，將為您導回權限管理列表`, this.accountManageService.CONSOLE_GROUP_LIST_PATH)
+        let status = Object.values(WarningCode).includes(err.code) ? null : false;
+        this.dialogService.alertAndBackToList(status, `${err.message}，將為您導回權限管理列表`, this.accountManageService.CONSOLE_GROUP_LIST_PATH);
         throw new Error(err.message);
       }),
       filter(res => res.code === RestStatus.SUCCESS),

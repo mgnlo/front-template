@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { ConsoleGroup } from '@api/models/console-group.model';
 import { ConsoleUserList } from '@api/models/console-user.model';
 import { DialogService } from '@api/services/dialog.service';

@@ -70,6 +70,7 @@ export enum BgClass {
 
 export enum toastIcon {
   danger = 'alert-triangle-outline',
+  warning = 'alert-triangle-outline',
   success = 'checkmark-outline',
   info = 'paper-plane-outline',
   primary = 'bell-outline'
@@ -77,6 +78,7 @@ export enum toastIcon {
 
 export enum toastTitle {
   danger = '警告',
+  warning = '提醒',
   success = '成功',
   info = '訊息',
   primary = '通知'

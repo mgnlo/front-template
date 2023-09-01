@@ -47,14 +47,14 @@ export class DialogService {
     });
   }
 
-  /** 成功或失敗的彈跳視窗 1.5s後關閉視窗
-   * @param isSuccess 成功 or 失敗 boolean
+  /** 成功/失敗/警告 的彈跳視窗 1.5s後關閉視窗
+   * @param isSuccess true=成功(success) false=失敗(danger) null=警告(warning)
    * @param msg 要顯示的訊息
    * @param url 有傳就會導頁, 沒傳就停留原頁
    * */
-  alertAndBackToList(isSuccess: boolean, msg: string, url?: string[]): void {
+  alertAndBackToList(isSuccess: boolean | null, msg: string, url?: string[]): void {
     this.loadingService.open();
-    this.showToast(isSuccess ? 'success' : 'danger', msg);
+    this.showToast(isSuccess === null ? 'warning': isSuccess === true ? 'success' : 'danger', msg);
     if (!!url) {
       interval(1500).pipe(map(val => 1 - val), takeWhile(x => x >= 0)).subscribe(() => {
         this.router.navigate(url);
