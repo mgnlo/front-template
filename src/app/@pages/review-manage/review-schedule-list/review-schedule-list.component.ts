@@ -65,7 +65,7 @@ export class ReviewScheduleListComponent extends BaseComponent implements OnInit
         type: 'html',
         class: 'text_center',
         valuePrepareFunction: (value: any, row: any, cell: any) => {
-          return `<p class="text_center">` + value + `</p>`;
+          return `<p class="text_center">` + (value??"") + `</p>`;
         },
         sort: false,
       },
