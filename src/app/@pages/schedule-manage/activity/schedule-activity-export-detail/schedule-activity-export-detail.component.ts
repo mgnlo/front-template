@@ -64,7 +64,7 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
       historyId: {
         title: '項次',
         type: 'html',
-        class: 'text_center w100',
+        class: 'text_center w300',
         valuePrepareFunction: (cell: string) => {
           return `<p class="text_center">${cell ?? 0}</p>`;
         },

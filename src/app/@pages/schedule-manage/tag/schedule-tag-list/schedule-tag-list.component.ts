@@ -11,6 +11,7 @@ import { CommonUtil } from '@common/utils/common-util';
 import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/checkbox.component';
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
+import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
 import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
 
 @Component({
@@ -34,6 +35,7 @@ export class ScheduleTagListComponent extends BaseComponent implements OnInit {
     storageService: StorageService,
     configService: ConfigService,
     loginService: LoginService,
+    private scheduleManageService: ScheduleManageService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
   ) {
@@ -298,6 +300,9 @@ export class ScheduleTagListComponent extends BaseComponent implements OnInit {
 
   submitRefresh() {
     const result = this.selectedRows.map(m => m.rowId);
+    this.scheduleManageService.retrigger('tag', result.toString()).subscribe(() => {
+      this.setGridDefineInit();
+    });
     // console.info('selectedRows', this.selectedRows);
     // console.info('result', result);
   }

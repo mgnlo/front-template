@@ -15,6 +15,7 @@ import { ThemeModule } from '../../@theme/theme.module';
 import { routedComponents, UserManageRoutingModule } from './customer-manage-routing.module';
 import { CustomerManageService } from './customer-manage.service';
 import { ChartsModule } from '@pages/charts/charts.module';
+import { TagManageService } from '@pages/tag-manage/tag-manage.service';
 
 export const NB_MODULES = [
   NbSpinnerModule,
@@ -49,6 +50,7 @@ export const NB_MODULES = [
   providers: [
     DialogService,
     CustomerManageService,
+    TagManageService,
   ],
   declarations: [
     ...routedComponents,

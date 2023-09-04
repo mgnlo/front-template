@@ -174,7 +174,7 @@ export class ConsoleUserListComponent extends BaseComponent implements OnInit {
     }
 
     // 有分頁但下拉選單需要一次取全部
-    this.accountManageService.getConsoleGroupList(20).pipe(
+    this.accountManageService.getConsoleGroupList(100).pipe(
       catchError((err) => {
         this.loadingService.close();
         throw new Error(err.message);

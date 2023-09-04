@@ -37,4 +37,8 @@ export class ScheduleManageService {
     return this.service.doDelete(this.scheduleFunc + scheduleId);
   }
 
+  retrigger(type: 'tag' | 'activity', referenceIdList: string): Observable<ResponseModel<any>> {
+    return this.service.doGet(this.batchFunc + 'retrigger/' + type, {referenceIdList: referenceIdList});
+  }
+
 }

@@ -342,6 +342,9 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
 
   submitRefresh() {
     const result = this.selectedRows.map(m => m.rowId);
+    this.scheduleManageService.retrigger('activity', result.toString()).subscribe(() => {
+      this.setGridDefineInit();
+    });
     // console.info('selectedRows', this.selectedRows);
     // console.info('result', result);
   }
