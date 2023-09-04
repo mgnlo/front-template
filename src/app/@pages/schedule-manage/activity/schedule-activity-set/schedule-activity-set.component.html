@@ -37,7 +37,7 @@
             </div>
 
             <div *ngIf="validateForm.get('executionFrequency').value?.toLowerCase() === 'weekly'" class="multi">
-              <nb-select  fullWidth placeholder="日" formControlName="daily"
+              <nb-select  fullWidth placeholder="星期" formControlName="daily"
                           [status]="validateForm.get('daily')?.touched && validateForm.get('daily')?.invalid? 'danger' : 'basic'">
               <nb-option *ngFor="let daily of weekDailyList" [value]="daily.key">{{ daily.val }}</nb-option>
               </nb-select>
