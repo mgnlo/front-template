@@ -6,7 +6,6 @@ import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { LoginService } from '@api/services/login.service';
-import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, StatusResult } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
@@ -15,7 +14,7 @@ import { CommonUtil } from '@common/utils/common-util';
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
-import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
+import { LocalDataSource } from 'ng2-smart-table';
 import { catchError, filter, tap } from 'rxjs/operators';
 
 @Component({
@@ -39,11 +38,9 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
     loginService: LoginService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private scheduleManageService: ScheduleManageService,
     private customerManageService: CustomerManageService,
     private loadingService: LoadingService,
     private dialogService: DialogService,
-    private tableService: Ng2SmartTableService,
   ) {
     super(storageService, configService, loginService);
     this.params = this.activatedRoute.snapshot.params;
@@ -64,7 +61,7 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
       historyId: {
         title: '項次',
         type: 'html',
-        class: 'text_center w300',
+        class: 'text_center',
         valuePrepareFunction: (cell: string) => {
           return `<p class="text_center">${cell ?? 0}</p>`;
         },
@@ -136,6 +133,7 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
       return;
     }
 
+    this.dataSource = new LocalDataSource();
     this.customerManageService.getActivitySettingRow(this.referenceId).pipe(
       catchError(err => {
         this.dialogService.alertAndBackToList(false, '查無此筆活動排程', ['pages', 'schedule-manage', 'schedule-activity-detail']);
@@ -144,16 +142,11 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
       filter(res => res.code === RestStatus.SUCCESS),
       tap((res) => {
         this.activitySetting = JSON.parse(JSON.stringify(res.result));
+        this.dataSource.load(this.activitySetting['scheduleBatchHistory']);
+        this.dataSource.setSort([{ field: 'batchTime', direction: 'desc' }])
         this.loadingService.close();
       }),
     ).subscribe();
-
-    let searchInfo: SearchInfo = {
-      apiUrl: this.scheduleManageService.batchFunc + this.referenceId + '/history',
-      nowPage: this.paginator.nowPage,
-      errMsg: '查無此筆排程紀錄'
-    }
-    this.restDataSource = this.tableService.searchData(searchInfo);
   }
 
   cancel() {

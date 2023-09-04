@@ -3,16 +3,22 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ScheduleTagSetting, ScheduleTagSettingView } from '@api/models/schedule-tag.model';
 import { ConfigService } from '@api/services/config.service';
+import { DialogService } from '@api/services/dialog.service';
 import { LoginService } from '@api/services/login.service';
+import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, Status, StatusResult } from '@common/enums/common-enum';
+import { RestStatus } from '@common/enums/rest-enum';
 import { ScheduleTagSettingMock } from '@common/mock-data/schedule-tag-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { CheckboxColumnComponent } from '@component/table/checkbox-column.ts/checkbox.component';
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
+import { TagManageService } from '@pages/tag-manage/tag-manage.service';
 import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
+import { of } from 'rxjs';
+import { catchError, filter, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'schedule-tag-list',
@@ -36,7 +42,9 @@ export class ScheduleTagListComponent extends BaseComponent implements OnInit {
     configService: ConfigService,
     loginService: LoginService,
     private scheduleManageService: ScheduleManageService,
+    private tagManageService: TagManageService,
     private activatedRoute: ActivatedRoute,
+    private tableService: Ng2SmartTableService,
     private router: Router,
   ) {
     super(storageService, configService, loginService);
@@ -110,41 +118,53 @@ export class ScheduleTagListComponent extends BaseComponent implements OnInit {
   };
 
   ngOnInit(): void {
+    if(this.isMock){
+      this.scheduleTagListSetting.map(m => {
+        const latestBatchTimeModel = m.scheduleBatchHistory.reduce((latest, current) => {
+          const latestDate = new Date(latest.batchTime);
+          const currentDate = new Date(current.batchTime);
+          return (latestDate < currentDate) ? current : latest;
+        });
+        this.scheduleTagSettingView.push(new ScheduleTagSettingView({
+          tagId: m.tagId,
+          version: m.version,
+          tagName: m.tagName,
+          tagDescription: m.tagDescription,
+          tagType: m.tagType,
+          department: m.department,
+          owner: m.owner,
+          createTime: m.createTime,
+          modificationTime: m.modificationTime,
+          status: m.status,
+          startDate: m.startDate,
+          endDate: m.endDate,
+          conditionSettingMethod: m.conditionSettingMethod,
+          conditionSettingQuery: m.conditionSettingQuery,
+          categoryKey: m.categoryKey,
+          tagTopicKey: m.tagTopicKey,
+          scheduleSettings: m.scheduleSettings,
+          uploadType: m.uploadType,
+          filePath: m.filePath,
+          //拿最新一筆ScheduleBatchHistory
+          historyId: latestBatchTimeModel?.historyId,
+          batchTime: latestBatchTimeModel?.batchTime,
+          batchResult: latestBatchTimeModel?.batchResult,
+          batchResultCount: latestBatchTimeModel?.batchResultCount,
+        }))
+      })
+      this.dataSource.load(this.scheduleTagSettingView);
+      return;
+    }
+
     this.dataSource = new LocalDataSource();
-    this.scheduleTagListSetting.map(m => {
-      const latestBatchTimeModel = m.scheduleBatchHistory.reduce((latest, current) => {
-        const latestDate = new Date(latest.batchTime);
-        const currentDate = new Date(current.batchTime);
-        return (latestDate < currentDate) ? current : latest;
-      });
-      this.scheduleTagSettingView.push(new ScheduleTagSettingView({
-        tagId: m.tagId,
-        version: m.version,
-        tagName: m.tagName,
-        tagDescription: m.tagDescription,
-        tagType: m.tagType,
-        department: m.department,
-        owner: m.owner,
-        createTime: m.createTime,
-        modificationTime: m.modificationTime,
-        status: m.status,
-        startDate: m.startDate,
-        endDate: m.endDate,
-        conditionSettingMethod: m.conditionSettingMethod,
-        conditionSettingQuery: m.conditionSettingQuery,
-        categoryKey: m.categoryKey,
-        tagTopicKey: m.tagTopicKey,
-        scheduleSettings: m.scheduleSettings,
-        uploadType: m.uploadType,
-        filePath: m.filePath,
-        //拿最新一筆ScheduleBatchHistory
-        historyId: latestBatchTimeModel?.historyId,
-        batchTime: latestBatchTimeModel?.batchTime,
-        batchResult: latestBatchTimeModel?.batchResult,
-        batchResultCount: latestBatchTimeModel?.batchResultCount,
-      }))
-    })
-    this.dataSource.load(this.scheduleTagSettingView);
+    let searchInfo: SearchInfo = {
+      apiUrl: this.tagManageService.tagFunc,
+      nowPage: this.paginator.nowPage,
+      errMsg: '貼標排程列表查無資料',
+    }
+    this.tableService.searchData(searchInfo).getElements().then((data) => {
+      this.dataSource.load(data);
+    });
   }
 
   ngAfterViewInit(): void {

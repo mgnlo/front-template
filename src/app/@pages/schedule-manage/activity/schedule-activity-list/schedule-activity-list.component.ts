@@ -6,12 +6,12 @@ import { ConfigService } from '@api/services/config.service';
 import { LoginService } from '@api/services/login.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
-import { Frequency, Status, chineseWeekDayValues } from '@common/enums/common-enum';
+import { Status } from '@common/enums/common-enum';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
+import { CommonUtil } from '@common/utils/common-util';
 import { DetailButtonComponent } from '@component/table/detail-button/detail-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { ScheduleManageService } from '../../schedule-manage.service';
-import { CommonUtil } from '@common/utils/common-util';
 
 @Component({
   selector: 'schedule-activity-list',
