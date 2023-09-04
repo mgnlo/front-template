@@ -362,7 +362,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     this.subCategoryList = new Array<{ key: string; val: string }>();
     if (CommonUtil.isBlank(categoryKeyVal)) return
 
-    this.validateForm.get('tagTopicKey').enable();
+    this.validateForm.get('conditionKey').enable();
 
     if (this.isMock) {
       TagSubCategoryMock.tagTopic.forEach((tagTopic) => {
@@ -467,7 +467,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
     if (CommonUtil.isBlank(categoryKeyVal)) return
 
-    this.validateForm.get('tagTopicKey').enable();
+    this.validateForm.get('conditionKey').enable();
 
     if (this.isMock) {
       TagConditionMock.forEach((condition) => this.conditionKeyList.push({ key: condition.conditionKey, val: condition.conditionName }))
