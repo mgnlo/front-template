@@ -4,6 +4,7 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ScheduleTagSetting, ScheduleTagSettingView } from '@api/models/schedule-tag.model';
 import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
+import { LoadingService } from '@api/services/loading.service';
 import { LoginService } from '@api/services/login.service';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
 import { StorageService } from '@api/services/storage.service';
@@ -17,7 +18,6 @@ import { BaseComponent } from '@pages/base.component';
 import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
 import { TagManageService } from '@pages/tag-manage/tag-manage.service';
 import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
-import { of } from 'rxjs';
 import { catchError, filter, tap } from 'rxjs/operators';
 
 @Component({
@@ -45,6 +45,8 @@ export class ScheduleTagListComponent extends BaseComponent implements OnInit {
     private tagManageService: TagManageService,
     private activatedRoute: ActivatedRoute,
     private tableService: Ng2SmartTableService,
+    private dialogService: DialogService,
+    private loadingService: LoadingService,
     private router: Router,
   ) {
     super(storageService, configService, loginService);
@@ -82,6 +84,7 @@ export class ScheduleTagListComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'text_center w200',
         valuePrepareFunction: (cell: string) => {
+          if (!cell) { return '' }
           const datepipe: DatePipe = new DatePipe('en-US');
           return `<p class="text_center">` + datepipe.transform(cell, "yyyy-MM-dd HH:mm:ss") + `</p>`;
 
@@ -118,7 +121,7 @@ export class ScheduleTagListComponent extends BaseComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    if(this.isMock){
+    if (this.isMock) {
       this.scheduleTagListSetting.map(m => {
         const latestBatchTimeModel = m.scheduleBatchHistory.reduce((latest, current) => {
           const latestDate = new Date(latest.batchTime);
@@ -319,12 +322,23 @@ export class ScheduleTagListComponent extends BaseComponent implements OnInit {
   }
 
   submitRefresh() {
-    const result = this.selectedRows.map(m => m.rowId);
-    this.scheduleManageService.retrigger('tag', result.toString()).subscribe(() => {
-      this.setGridDefineInit();
-    });
-    // console.info('selectedRows', this.selectedRows);
-    // console.info('result', result);
+    if (this.selectedRows.length > 0) {
+      const result = this.selectedRows.map(m => m.rowId);
+      this.loadingService.open();
+      this.scheduleManageService.retrigger('tag', result.toString()).pipe(
+        catchError(err => {
+          this.dialogService.alertAndBackToList(false, `手動更新失敗: ${err.message}`);
+          throw new Error(err.message);
+        }),
+        filter(res => res.code === RestStatus.SUCCESS),
+        tap(() => {
+          this.setGridDefineInit();
+          this.loadingService.close();
+        })
+      ).subscribe();
+    } else {
+      this.dialogService.showToast('warning', '請至少選擇一筆');
+    }
   }
 
 }
