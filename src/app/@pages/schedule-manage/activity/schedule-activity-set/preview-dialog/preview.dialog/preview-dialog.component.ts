@@ -37,7 +37,7 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
     if (this.validateForm.get('activityName')?.hasError('activityErrMsg')) return
 
     if(this.dataList?.length === 0){
-      this.validateForm.get('conditionKey')?.setErrors({ 'activityErrMsg': '查無活動清單' });
+      this.validateForm.get('activityName')?.setErrors({ 'activityErrMsg': '查無活動清單' });
       return
     }
 
