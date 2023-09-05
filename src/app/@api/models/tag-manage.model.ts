@@ -76,6 +76,15 @@ export class TagReviewHistory {
 }
 
 //#region 偵測條件
+export class TagConditionReq{
+  categoryKey: string;
+  tagTopicKey: string;
+
+  constructor(data: Partial<TagConditionReq>) {
+    Object.assign(this, data);
+  }
+}
+
 export class TagCondition{
   conditionKey: string;
   conditionName: string;

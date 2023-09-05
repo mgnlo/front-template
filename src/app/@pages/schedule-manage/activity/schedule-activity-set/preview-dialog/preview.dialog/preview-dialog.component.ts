@@ -36,6 +36,11 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
   onBlurActivityInput(): void {
     if (this.validateForm.get('activityName')?.hasError('activityErrMsg')) return
 
+    if(this.dataList?.length === 0){
+      this.validateForm.get('conditionKey')?.setErrors({ 'activityErrMsg': '查無活動清單' });
+      return
+    }
+
     if (CommonUtil.isBlank(this.selectedActivityId)) {
       this.validateForm.get('activityName')?.setErrors({ 'activityErrMsg': '請點選一筆' });
       return

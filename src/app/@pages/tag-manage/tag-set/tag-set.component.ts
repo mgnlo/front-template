@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting } from '@api/models/activity-list.model';
-import { TagCategory, TagCondition, TagConditionChartLine, TagConditionSetting, TagDetailView, TagSetting, TagSettingEditReq, TagSubCategory } from '@api/models/tag-manage.model';
+import { TagCategory, TagCondition, TagConditionChartLine, TagConditionReq, TagConditionSetting, TagDetailView, TagSetting, TagSettingEditReq, TagSubCategory } from '@api/models/tag-manage.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
@@ -318,7 +318,10 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     }
 
     const tagTopicKeyVal = this.validateForm.get('tagTopicKey')?.value;
-    if (CommonUtil.isNotBlank(categoryKeyVal) && CommonUtil.isNotBlank(tagTopicKeyVal) && tagTopicKeyVal != this.beforeSubCategoryVal) {
+    if (CommonUtil.isNotBlank(categoryKeyVal) &&
+      CommonUtil.isNotBlank(tagTopicKeyVal) &&
+      tagTopicKeyVal != this.beforeSubCategoryVal &&
+      this.validateForm.get('conditionSettingMethod')?.value === 'field'  ) {
       this.beforeSubCategoryVal = tagTopicKeyVal;
       //#region 抓取偵測條件
       this.getConditionKeyList(categoryKeyVal, tagTopicKeyVal);
@@ -338,7 +341,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       return
     }
 
-    this.tagManageService.getTagCategoryList().pipe(
+    this.tagManageService.getTagCategoryListOption().pipe(
       catchError((err) => {
         this.dialogService.alertAndBackToList(false, '查詢標籤構面失敗');
         this.validateForm?.get('categoryKey')?.setErrors({ 'categoryKeyErrMsg': err.message ? err.message : '查詢標籤構面失敗' });
@@ -346,14 +349,14 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       }),
       filter(res => res.code === RestStatus.SUCCESS),
       tap((res) => {
-        // console.info('res', res)
-        const result = JSON.parse(JSON.stringify(res.result)) as Array<TagCategory>
-        if (!result || result.length === 0) {
+        const mapArray = JSON.parse(JSON.stringify(res.result)) as Record<string, string>;
+        if (!mapArray || Object.keys(mapArray).length === 0) {
           this.dialogService.alertAndBackToList(false, '查無標籤構面');
           this.validateForm?.get('categoryKey')?.setErrors({ 'categoryKeyErrMsg': '查無標籤構面' });
-          return
+          return;
         }
-        result.forEach((category) => this.categoryList.push({ key: category.categoryKey, val: category.categoryName }))
+
+        this.categoryList = Object.entries(mapArray).map(([key, val]) => ({ key, val }));
       })
     ).subscribe()
   }
@@ -362,7 +365,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     this.subCategoryList = new Array<{ key: string; val: string }>();
     if (CommonUtil.isBlank(categoryKeyVal)) return
 
-    this.validateForm.get('conditionKey').enable();
+    this.validateForm.get('tagTopicKey').enable();
 
     if (this.isMock) {
       TagSubCategoryMock.tagTopic.forEach((tagTopic) => {
@@ -371,7 +374,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       return
     }
 
-    this.tagManageService.getTagSubCategory(categoryKeyVal).pipe(
+    this.tagManageService.getTagSubCategoryListOption(categoryKeyVal).pipe(
       catchError((err) => {
         this.dialogService.alertAndBackToList(false, '查詢子標籤構面失敗');
         this.validateForm?.get('tagTopicKey')?.setErrors({ 'tagTopicKeyErrMsg': err.message ? err.message : '查詢子標籤構面失敗' });
@@ -379,13 +382,14 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       }),
       filter(res => res.code === RestStatus.SUCCESS),
       tap((res) => {
-        const result = JSON.parse(JSON.stringify(res.result)) as TagSubCategory
-        const detail = result.tagTopic
-        if (!detail || detail.length === 0 || result.categoryKey !== categoryKeyVal) {
+        const mapArray = JSON.parse(JSON.stringify(res.result)) as Record<string, string>;
+        if (!mapArray || Object.keys(mapArray).length === 0) {
+          this.dialogService.alertAndBackToList(false, '查無子標籤構面');
           this.validateForm?.get('tagTopicKey')?.setErrors({ 'tagTopicKeyErrMsg': '查無子標籤構面' });
-          return
+          return;
         }
-        detail.forEach((tagTopic) => this.subCategoryList.push({ key: tagTopic.tagTopicKey, val: tagTopic.tagTopicName }))
+
+        this.subCategoryList = Object.entries(mapArray).map(([key, val]) => ({ key, val }));
       })
     ).subscribe()
   }
@@ -465,7 +469,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     this.conditionKeyList = new Array<{ key: string; val: string }>();
     this.filterConditionKeyList = new Array<{ key: string; val: string }>();
 
-    if (CommonUtil.isBlank(categoryKeyVal)) return
+    if (CommonUtil.isBlank(categoryKeyVal) || CommonUtil.isBlank(tagTopicKeyVal)) return
 
     this.validateForm.get('conditionKey').enable();
 
@@ -475,31 +479,39 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       return
     }
 
-    // this.tagManageService.getTagConditionList().pipe(
-    //   catchError((err) => {
-    //     this.dialogService.alertAndBackToList(false, '查詢偵測條件失敗');
-    //     this.validateForm?.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': err.message ? err.message : '查詢偵測條件失敗' });
-    //     throw new Error(err.message);
-    //   }),
-    //   filter(res => res.code === RestStatus.SUCCESS),
-    //   tap(res => {
-    //     const result = JSON.parse(JSON.stringify(res.result)) as Array<TagCondition>
-    //     if (!result || result.length === 0) {
-    //       this.dialogService.alertAndBackToList(false, '查無偵測條件');
-    //       this.validateForm?.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': '查無偵測條件' });
-    //       return
-    //     }
-    //     result.forEach(m => {
-    //       this.conditionKeyList.push({ key: m.conditionKey, val: m.conditionName });
-    //     });
-    //     this.filterConditionKeyList = [...this.conditionKeyList];
-    //     console.info('res', res)
-    //   })
-    // ).subscribe();
+    this.tagManageService.getTagFilterConditionListOption(
+      new TagConditionReq(
+        {
+          categoryKey: categoryKeyVal,
+          tagTopicKey: tagTopicKeyVal
+        })).pipe(
+          catchError((err) => {
+            this.dialogService.alertAndBackToList(false, '查詢偵測條件失敗');
+            this.validateForm?.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': err.message ? err.message : '查詢偵測條件失敗' });
+            throw new Error(err.message);
+          }),
+          filter(res => res.code === RestStatus.SUCCESS),
+          tap(res => {
+            const mapArray = JSON.parse(JSON.stringify(res.result)) as Record<string, string>;
+            if (!mapArray || Object.keys(mapArray).length === 0) {
+              this.dialogService.alertAndBackToList(false, '查無偵測條件');
+              this.validateForm?.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': '查無偵測條件' });
+              return;
+            }
+
+            this.conditionKeyList = Object.entries(mapArray).map(([key, val]) => ({ key, val }));
+            this.filterConditionKeyList = [...this.conditionKeyList];
+          })
+        ).subscribe();
   }
 
   onBlurConditionKeyInput(): void {
     if (this.validateForm.get('conditionKey')?.hasError('condition_valueErrMsg')) return
+
+    if(this.conditionKeyList?.length === 0){
+      this.validateForm.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': '查無偵測條件' });
+      return
+    }
 
     if (CommonUtil.isBlank(this.selectedConditionId)) {
       this.validateForm.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': '請點選一筆' });
