@@ -1,7 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TagSetting } from '@api/models/activity-list.model';
 import { FileReq } from '@api/models/file.model';
 import { Schedule_Batch_History } from '@api/models/schedule-activity.model';
 import { ScheduleTagSetting } from '@api/models/schedule-tag.model';
@@ -110,7 +109,7 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
             instance.isShow = res.batchResult.toLowerCase() === 'success';
           });
           instance.emitter.subscribe((res: Schedule_Batch_History) => {
-            // TODO: download API
+            this.scheduleManageService.batchDownload(res.historyId);
           })
         },
         sort: false,
@@ -141,10 +140,11 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
   //#endregion
 
   ngOnInit(): void {
-
+    this.loadingService.open();
     if (this.isMock) {
       this.detail = ScheduleTagSettingMock[0];
       this.dataSource.load(this.detail.scheduleBatchHistory);
+      this.loadingService.close();
       return;
     }
 
@@ -159,7 +159,7 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
       tap((res) => {
         this.detail = JSON.parse(JSON.stringify(res.result));
         this.dataSource.load(this.detail.scheduleBatchHistory);
-        this.dataSource.setSort([{ field: 'batchTime', direction: 'desc' }])
+        this.dataSource.setSort([{ field: 'batchTime', direction: 'desc' }]);
       }),
       finalize(() => this.loadingService.close())
     ).subscribe();

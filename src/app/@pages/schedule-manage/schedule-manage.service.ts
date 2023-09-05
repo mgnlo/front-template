@@ -38,7 +38,11 @@ export class ScheduleManageService {
   }
 
   retrigger(type: 'tag' | 'activity', referenceIdList: string): Observable<ResponseModel<any>> {
-    return this.service.doGet(this.batchFunc + 'retrigger/' + type, {referenceIdList: referenceIdList});
+    return this.service.doGet(this.batchFunc + 'retrigger/' + type, { referenceIdList: referenceIdList });
+  }
+
+  batchDownload(historyId: string): void {
+    this.service.doGetDownload(this.batchFunc + historyId + '/download', {fileName: historyId, uploadType: '.csv'});
   }
 
 }

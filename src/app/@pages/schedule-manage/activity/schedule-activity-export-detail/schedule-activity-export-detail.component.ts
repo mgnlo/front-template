@@ -14,6 +14,7 @@ import { CommonUtil } from '@common/utils/common-util';
 import { ColumnButtonComponent } from '@component/table/column-button/column-button.component';
 import { BaseComponent } from '@pages/base.component';
 import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
+import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
 import { LocalDataSource } from 'ng2-smart-table';
 import { catchError, filter, tap } from 'rxjs/operators';
 
@@ -39,6 +40,7 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private customerManageService: CustomerManageService,
+    private scheduleManageService: ScheduleManageService,
     private loadingService: LoadingService,
     private dialogService: DialogService,
   ) {
@@ -109,7 +111,7 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
             instance.isShow = res.batchResult.toLowerCase() === 'success';
           });
           instance.emitter.subscribe((res: Schedule_Batch_History) => {
-            // TODO: download API
+            this.scheduleManageService.batchDownload(res.historyId);
           })
         },
         sort: false,
