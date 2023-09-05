@@ -41,8 +41,8 @@ export class ScheduleManageService {
     return this.service.doGet(this.batchFunc + 'retrigger/' + type, { referenceIdList: referenceIdList });
   }
 
-  batchDownload(historyId: string): void {
-    this.service.doGetDownload(this.batchFunc + historyId + '/download', {fileName: historyId, uploadType: '.csv'});
+  batchDownload(historyId: string, batchName: string): void {
+    this.service.doGetDownload(this.batchFunc + historyId + '/download', {fileName: batchName+"_"+historyId, uploadType: '.csv'});
   }
 
 }

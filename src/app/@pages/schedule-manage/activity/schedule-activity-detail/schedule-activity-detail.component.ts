@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ActivitySetting, ScheduleDetailView, Schedule_Batch_History } from '@api/models/schedule-activity.model';
@@ -84,7 +85,10 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'text_center w200',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="text_center">` + cell + `</p>`;
+          if (!cell) { return '' }
+          const datepipe: DatePipe = new DatePipe('en-US');
+          return `<p class="text_center">` + datepipe.transform(cell, "yyyy-MM-dd HH:mm:ss") + `</p>`;
+
         },
         sort: false,
       },
@@ -341,12 +345,23 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
   }
 
   submitRefresh() {
-    const result = this.selectedRows.map(m => m.rowId);
-    this.scheduleManageService.retrigger('activity', result.toString()).subscribe(() => {
-      this.setGridDefineInit();
-    });
-    // console.info('selectedRows', this.selectedRows);
-    // console.info('result', result);
+    if (this.selectedRows.length > 0) {
+      const result = this.selectedRows.map(m => m.rowId);
+      this.loadingService.open();
+      this.scheduleManageService.retrigger('activity', result.toString()).pipe(
+        catchError(err => {
+          this.dialogService.alertAndBackToList(false, `手動更新失敗: ${err.message}`);
+          throw new Error(err.message);
+        }),
+        filter(res => res.code === RestStatus.SUCCESS),
+        tap(() => {
+          this.setGridDefineInit();
+          this.loadingService.close();
+        })
+      ).subscribe();
+    } else {
+      this.dialogService.showToast('warning', '請至少選擇一筆');
+    }
   }
 
   edit() {

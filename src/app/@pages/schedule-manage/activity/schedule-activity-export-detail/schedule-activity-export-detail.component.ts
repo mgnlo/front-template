@@ -111,7 +111,7 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
             instance.isShow = res.batchResult.toLowerCase() === 'success';
           });
           instance.emitter.subscribe((res: Schedule_Batch_History) => {
-            this.scheduleManageService.batchDownload(res.historyId);
+            this.scheduleManageService.batchDownload(res.historyId, this.activitySetting.activityName);
           })
         },
         sort: false,

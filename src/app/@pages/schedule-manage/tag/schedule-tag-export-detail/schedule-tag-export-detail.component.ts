@@ -109,7 +109,7 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
             instance.isShow = res.batchResult.toLowerCase() === 'success';
           });
           instance.emitter.subscribe((res: Schedule_Batch_History) => {
-            this.scheduleManageService.batchDownload(res.historyId);
+            this.scheduleManageService.batchDownload(res.historyId, this.detail.tagName);
           })
         },
         sort: false,
