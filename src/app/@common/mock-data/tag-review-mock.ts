@@ -93,6 +93,7 @@ export const ReviewTagListMock: Array<TagReviewHistory> = [
         "detectionCondition": "$eq",
         "joinValue": "and",
         "conditionKey": "3000",
+        "conditionName": "conditionName",
         "thresholdValue": "100000"
       },
       {
@@ -103,6 +104,7 @@ export const ReviewTagListMock: Array<TagReviewHistory> = [
         "detectionCondition": "$lt",
         "joinValue": "and",
         "conditionKey": "apply-amount",
+        "conditionName": "conditionName",
         "thresholdValue": "40"
       },
       {
@@ -113,6 +115,7 @@ export const ReviewTagListMock: Array<TagReviewHistory> = [
         "detectionCondition": "$gt",
         "joinValue": null,
         "conditionKey": "apply-amount",
+        "conditionName": "conditionName",
         "thresholdValue": "100"
       }
     ],
