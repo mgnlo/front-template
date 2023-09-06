@@ -87,7 +87,7 @@ export class ReviewTagListComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'text_center',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="text_center">` + cell + `</p>`;
+          return `<p class="text_center">` + (cell ?? "") + `</p>`;
         },
         sort: false,
       },
@@ -96,7 +96,7 @@ export class ReviewTagListComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'text_center',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="text_center">` + cell + `</p>`;
+          return `<p class="text_center">` + (cell ?? "") + `</p>`;
         },
         sort: false,
       },
