@@ -15,7 +15,7 @@ export class ConfigService {
   }
 
   public loadConfig() {
-    return fetch('./assets/config.json')
+    return fetch('./assets/configs/config.json')
       .then(response => response.json())
       .then(config => {
         console.log(config);
