@@ -90,8 +90,8 @@ export class ReviewActivityListComponent extends BaseComponent implements OnInit
         title: '名單上限',
         type: 'html',
         class: 'text_center',
-        valuePrepareFunction: (value: any, row: any, cell: any) => {
-          return `<p class="text_center">` + value + `</p>`;
+        valuePrepareFunction: (cell: any, row: any) => {
+          return `<p class="text_center">${cell ?? ""}</p>`;
         },
       },
       modificationTime: {

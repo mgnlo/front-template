@@ -71,8 +71,9 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
         title: '所屬單位',
         type: 'html',
         class: 'text_center',
-        valuePrepareFunction: (value: any, row: any, cell: any) => {
-          return `<p class="text_center">` + value + `</p>`;
+        valuePrepareFunction: (cell: any, row: any) => {
+          if (!cell) { return '' }
+          return `<p class="text_center">` + cell + `</p>`;
         },
         sort: false,
       },
@@ -80,8 +81,9 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
         title: '負責人',
         type: 'html',
         class: 'text_center',
-        valuePrepareFunction: (value: any, row: any, cell: any) => {
-          return `<p class="text_center">` + value + `</p>`;
+        valuePrepareFunction: (cell: any, row: any) => {
+          if (!cell) { return '' }
+          return `<p class="text_center">` + cell + `</p>`;
         },
         sort: false,
       },

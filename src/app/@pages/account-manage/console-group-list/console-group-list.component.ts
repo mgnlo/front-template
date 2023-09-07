@@ -84,6 +84,7 @@ export class ConsoleGroupListComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'text_center',
         valuePrepareFunction: (cell: string) => {
+          if (!cell) { return '' }
           const datepipe: DatePipe = new DatePipe('en-US');
           return `<p class="text_center">` + datepipe.transform(cell, this.dateFormat) + `</p>`;
         },
