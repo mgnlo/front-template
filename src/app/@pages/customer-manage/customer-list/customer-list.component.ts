@@ -34,7 +34,7 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
     super(storageService, configService, loginService);
     // 篩選條件
     this.validateForm = new FormGroup({
-      customerId: new FormControl(''),
+      customerId: new FormControl('', ValidatorsUtil.searchCustId),
       mobile: new FormControl('', ValidatorsUtil.number),
       tagKeyword: new FormControl(''),
     });

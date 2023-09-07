@@ -32,8 +32,8 @@ export const ValidatorsUtil = {
   /** 搜尋區的身份證字號檢核 */
   searchCustId: (ctl: AbstractControl) => {
     const v = ctl.value;
-    if (v && (ctl.dirty || ctl.touched) && !RegExpUtil.custIdSearch.test(v)) {
-      return { 'searchCustId': '請輸入有效會員號碼，大寫英文字母或數字' };
+    if (v && (ctl.dirty || ctl.touched) && !/^[a-zA-Z0-9]*$/.test(v)) {
+      return { 'searchCustId': '請輸入有效用戶編號，英文字母或數字' };
     }
     return null;
   },
