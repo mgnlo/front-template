@@ -176,20 +176,20 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
   };
 
   //#region 頻率切換
-  changeFrequencyType(key: string) {
+  changeFrequencyType(key: string, frequencyTimeArray?: string[]) {
     this.removeFieldIfExists('daily');
     this.removeFieldIfExists('hour');
     this.removeFieldIfExists('minute');
     switch (key) {
       case 'daily':
-        this.addFieldIfNotExists('hour', null, [Validators.required, ValidatorsUtil.blank]);
-        this.addFieldIfNotExists('minute', null, [Validators.required, ValidatorsUtil.blank]);
+        this.addFieldIfNotExists('hour', frequencyTimeArray?.[0], [Validators.required, ValidatorsUtil.blank]);
+        this.addFieldIfNotExists('minute', frequencyTimeArray?.[1], [Validators.required, ValidatorsUtil.blank]);
         break;
       case 'weekly':
       case 'monthly':
-        this.addFieldIfNotExists('daily', null, [Validators.required, ValidatorsUtil.blank]);
-        this.addFieldIfNotExists('hour', null, [Validators.required, ValidatorsUtil.blank]);
-        this.addFieldIfNotExists('minute', null, [Validators.required, ValidatorsUtil.blank]);
+        this.addFieldIfNotExists('daily', frequencyTimeArray?.[0], [Validators.required, ValidatorsUtil.blank]);
+        this.addFieldIfNotExists('hour', frequencyTimeArray?.[1], [Validators.required, ValidatorsUtil.blank]);
+        this.addFieldIfNotExists('minute', frequencyTimeArray?.[2], [Validators.required, ValidatorsUtil.blank]);
         break;
     }
   }
@@ -323,7 +323,8 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         }),
         filter(res => res.code === RestStatus.SUCCESS),
         tap((res) => {
-          this.setData(res.result);
+          const result = JSON.parse(JSON.stringify(res.result)) as ScheduleActivitySetting;
+          this.setData(result);
           this.loadingService.close();
         })
       ).subscribe();
@@ -393,7 +394,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     let executionFrequency = this.validateForm.get('executionFrequency').value;
     reqData.frequencyTime = executionFrequency === 'daily' ? hour + ':' + minute : daily + ':' + hour + ':' + minute;
     reqData.activityIds = this.scheduleActivitySettingGrid.map(activitySetting => activitySetting.activityId);
-    // console.info('reqData', reqData);
+    console.info('reqData', reqData);
 
     return reqData;
   }
@@ -403,20 +404,13 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     const frequencyTimeArray = frequencyTime.split(/[:：]/);
     if (frequencyTimeArray.length > 0 && result.executionFrequency) {
       let executionFrequency = result.executionFrequency?.toLowerCase();
-      this.changeFrequencyType(executionFrequency);
-      if (result.executionFrequency?.toLowerCase() === 'daily') {
-        this.validateForm.get('hour').setValue(frequencyTimeArray[0]);
-        this.validateForm.get('minute').setValue(frequencyTimeArray[1]);
-      }
-      else {
-        this.validateForm.get('daily').setValue(frequencyTimeArray[0]);
-        this.validateForm.get('hour').setValue(frequencyTimeArray[1]);
-        this.validateForm.get('minute').setValue(frequencyTimeArray[2]);
-      }
+      this.changeFrequencyType(executionFrequency, frequencyTimeArray);
     }
+
     //塞資料
     Object.keys(result).forEach(key => {
       if (!!this.validateForm.controls[key]) {
+        console.info(key, result[key])
         this.validateForm.controls[key].setValue(result[key]);
       } else if (key === 'activitySetting') {
         this.scheduleActivitySettingGrid = result[key];

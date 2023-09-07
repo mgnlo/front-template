@@ -24,6 +24,7 @@
                  [selectList]="{options: frequencyList, key: 'key', val: 'val'}"
                  (valueChange)="changeFrequencyType($event)"
                  [errorTextBoolen]="false"></radio>
+
             <div *ngIf="validateForm.get('executionFrequency').value?.toLowerCase() === 'daily'" class="multi">
               <nb-select  fullWidth placeholder="時" formControlName="hour"
                           [status]="validateForm.get('hour')?.touched && validateForm.get('hour')?.invalid? 'danger' : 'basic'">

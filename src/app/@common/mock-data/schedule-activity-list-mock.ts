@@ -5,7 +5,7 @@ export const ScheduleActivitySettingMock: Array<ScheduleActivitySetting> = [
     "scheduleId": "uuid-1",
     "version": "uuid-zzzz",
     "jobName": "Job Name",
-    "executionFrequency": "Daily",
+    "executionFrequency": "daily",
     "frequencyTime":"00:00",
     "filePath":"/file/path/",
     "creationTime": "2023-07-20 10:00:00",
