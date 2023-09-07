@@ -125,7 +125,8 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'text_center w100',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="text_center">${Status[cell?.toLowerCase()]}</p>`;
+          if (!cell) { return '' }
+          return `<p class="text_center">${(Status[cell?.toLowerCase()] || '')}</p>`;
         },
         sort: false,
       },
@@ -148,7 +149,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         valuePrepareFunction: (cell: string) => {
           const cellLow = cell?.toLowerCase();
           if (CommonUtil.isBlank(cellLow)) return cellLow
-          return `<p class="text_center ${ColumnClass[cellLow]}">${StatusResult[cellLow]}</p>`;
+          return `<p class="text_center ${(ColumnClass[cellLow] || '')}">${(StatusResult[cellLow] || '')}</p>`;
         },
         sort: false,
       },

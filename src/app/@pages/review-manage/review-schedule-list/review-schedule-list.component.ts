@@ -51,7 +51,7 @@ export class ReviewScheduleListComponent extends BaseComponent implements OnInit
         title: '執行頻率',
         type: 'html',
         valuePrepareFunction: (cell: string, row: ScheduleReviewHistory) => {
-          return CommonUtil.processExecutionFrequency(row.executionFrequency, row.frequencyTime)
+          return CommonUtil.processExecutionFrequency(row?.executionFrequency, row?.frequencyTime)
         },
         sort: false,
       },
@@ -74,7 +74,8 @@ export class ReviewScheduleListComponent extends BaseComponent implements OnInit
         type: 'html',
         class: 'text_center',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="text_center ${ColumnClass[cell]}">` + ReviewStatus[cell] + `</p>`;
+          if (!cell) { return '' }
+          return `<p class="text_center ${(ColumnClass[cell] || '')}">` + (ReviewStatus[cell] || '') + `</p>`;
         },
         sort: false,
       },

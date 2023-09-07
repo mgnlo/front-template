@@ -86,7 +86,8 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'text_center',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="text_center">` + Status[cell] + `</p>`;
+          if (!cell) { return '' }
+          return `<p class="text_center">` + (Status[cell] || '') + `</p>`;
         },
         sort: false,
       },

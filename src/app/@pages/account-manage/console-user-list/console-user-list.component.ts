@@ -57,7 +57,8 @@ export class ConsoleUserListComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'text_center',
         valuePrepareFunction: (value: any, row: any, cell: any) => {
-          return `<p class="text_center">` + BusinessUnit[value] + `</p>`;
+          if (!cell) { return '' }
+          return `<p class="text_center">` + (BusinessUnit[value] || '') + `</p>`;
         },
         sort: false,
       },

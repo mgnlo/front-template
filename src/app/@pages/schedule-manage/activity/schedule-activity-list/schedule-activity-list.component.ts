@@ -58,7 +58,7 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
         title: '執行頻率',
         type: 'html',
         valuePrepareFunction: (cell: string, row: ScheduleActivitySetting) => {
-          return CommonUtil.processExecutionFrequency(cell, row?.frequencyTime);
+          return CommonUtil.processExecutionFrequency((cell ?? ""), row?.frequencyTime);
         },
         sort: false,
       },
@@ -78,7 +78,8 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'text_center w100',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="text_center">` + Status[cell?.toLowerCase()] + `</p>`;
+          if (!cell) { return '' }
+          return `<p class="text_center">` + (Status[cell?.toLowerCase()] || '') + `</p>`;
         },
         sort: false,
       },

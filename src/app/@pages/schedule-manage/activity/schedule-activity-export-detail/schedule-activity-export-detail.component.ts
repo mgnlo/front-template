@@ -74,6 +74,7 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
         type: 'html',
         class: 'w300',
         valuePrepareFunction: (cell: string) => {
+          if (!cell) { return '' }
           const datepipe: DatePipe = new DatePipe('en-US');
           return `<p>${datepipe.transform(cell, "yyyy-MM-dd HH:mm:ss")}</p>`;
         },
@@ -95,7 +96,7 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
           const lableName = '批次排程'
           const cellLow = cell?.toLowerCase();
           if (CommonUtil.isBlank(cellLow)) return cellLow
-          return `<p class="${ColumnClass[cellLow]}">${lableName}${StatusResult[cellLow]}</p>`;
+          return `<p class="${(ColumnClass[cellLow] || '')}">${lableName}${(StatusResult[cellLow] || '')}</p>`;
         },
         sort: false,
       },
