@@ -62,7 +62,7 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
         type: 'html',
         class: 'text_center',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="text_center">` + cell + `</p>`;
+          return `<p class="text_center">` + (cell ?? "") + `</p>`;
         },
         sort: false
       },
@@ -71,6 +71,7 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
         type: 'html',
         class: 'w300',
         valuePrepareFunction: (cell: string) => {
+          if (!cell) { return '' }
           const datepipe: DatePipe = new DatePipe('en-US');
           return `<p>${datepipe.transform(cell, "yyyy-MM-dd HH:mm:ss")}</p>`;
         },
@@ -84,7 +85,7 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
           const lableName = '批次排程'
           const cellLow = cell?.toLowerCase();
           if (CommonUtil.isBlank(cellLow)) return cellLow
-          return `<p class="text_center ${ColumnClass[cellLow]}">${lableName}${StatusResult[cellLow]}</p>`;
+          return `<p class="text_center ${(ColumnClass[cellLow] || '')}">${lableName}${(StatusResult[cellLow] || '')}</p>`;
         },
         sort: false,
       },

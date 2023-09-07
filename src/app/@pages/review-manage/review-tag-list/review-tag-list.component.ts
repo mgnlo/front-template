@@ -78,7 +78,8 @@ export class ReviewTagListComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'text_center',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="text_center">` + TagType[cell] + `</p>`;
+          if (!cell) { return '' }
+          return `<p class="text_center">` + (TagType[cell] || '') + `</p>`;
         },
         sort: false,
       },
@@ -104,7 +105,7 @@ export class ReviewTagListComponent extends BaseComponent implements OnInit {
         title: '說明',
         type: 'html',
         valuePrepareFunction: (cell: string) => {
-          return `<p>${!!cell ? cell : ''}</p>`;
+          return `<p>${(cell ?? "")}</p>`;
         },
         sort: false,
       },
@@ -113,7 +114,7 @@ export class ReviewTagListComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'text_center',
         valuePrepareFunction: (cell: any, row: TagSetting) => {
-          return row.startDate && row.endDate ? `<p class="text_center">${row.startDate} ~ ${row.endDate}</p>` : '';
+          return row.startDate && row.endDate ? `<p class="text_center">${row?.startDate} ~ ${row?.endDate}</p>` : '';
         },
         sort: false,
       },
@@ -122,7 +123,8 @@ export class ReviewTagListComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'text_center',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="text_center ${ColumnClass[cell]}">` + ReviewStatus[cell] + `</p>`;
+          if (!cell) { return '' }
+          return `<p class="text_center ${(ColumnClass[cell] || '')}">` + (ReviewStatus[cell] || '') + `</p>`;
         },
         sort: false,
       },

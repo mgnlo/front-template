@@ -60,7 +60,7 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'text_center w150',
         valuePrepareFunction: (value: any, row: any, cell: any) => {
-          return `<p class="text_center">` + value + `</p>`;
+          return `<p class="text_center">` + (value ?? "") + `</p>`;
         },
         sort: false
       },
@@ -69,7 +69,7 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'text_center w100',
         valuePrepareFunction: (value: any, row: any, cell: any) => {
-          return `<p class="text_center">` + value + `</p>`;
+          return `<p class="text_center">` + (value ?? "") + `</p>`;
         },
         sort: false,
       },
@@ -78,7 +78,7 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'text_center w150',
         valuePrepareFunction: (value: any, row: any, cell: any) => {
-          return `<p class="text_center">` + value + `</p>`;
+          return `<p class="text_center">` + (value ?? "") + `</p>`;
         },
         sort: false,
       },

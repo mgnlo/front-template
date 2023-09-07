@@ -93,7 +93,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     this.validateForm = new FormGroup({
       jobName: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
       status: new FormControl(null, Validators.required),
-      executionFrequency: new FormControl('daily', Validators.required),
+      executionFrequency: new FormControl(null, Validators.required),
       hour: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
       minute: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
       filePath: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
@@ -116,7 +116,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         title: '活動說明',
         type: 'html',
         valuePrepareFunction: (cell: string) => {
-          return `<p>${!!cell ? cell : ''}</p>`;
+          return `<p>${(cell ?? "")}</p>`;
         },
         sort: false,
       },
@@ -125,7 +125,8 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'text_center w100',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="text_center">${Status[cell?.toLowerCase()]}</p>`;
+          if (!cell) { return '' }
+          return `<p class="text_center">${(Status[cell?.toLowerCase()] || '')}</p>`;
         },
         sort: false,
       },
@@ -148,7 +149,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
         valuePrepareFunction: (cell: string) => {
           const cellLow = cell?.toLowerCase();
           if (CommonUtil.isBlank(cellLow)) return cellLow
-          return `<p class="text_center ${ColumnClass[cellLow]}">${StatusResult[cellLow]}</p>`;
+          return `<p class="text_center ${(ColumnClass[cellLow] || '')}">${(StatusResult[cellLow] || '')}</p>`;
         },
         sort: false,
       },
@@ -328,7 +329,12 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
           this.loadingService.close();
         })
       ).subscribe();
+
+      return
     }
+
+    this.validateForm.get('executionFrequency').setValue('daily');
+
   }
 
   ngAfterViewChecked(): void {
@@ -410,7 +416,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     //塞資料
     Object.keys(result).forEach(key => {
       if (!!this.validateForm.controls[key]) {
-        console.info(key, result[key])
+        //console.info(key, result[key])
         this.validateForm.controls[key].setValue(result[key]);
       } else if (key === 'activitySetting') {
         this.scheduleActivitySettingGrid = result[key];

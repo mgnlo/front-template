@@ -114,7 +114,8 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
         title: '功能單元',
         type: 'html',
         valuePrepareFunction: (cell: string) => {
-          return `<p>${GroupScope[cell]}</p>`;
+          if (!cell) { return '' }
+          return `<p>${(GroupScope[cell] || '')}</p>`;
         },
         sort: false,
       },
@@ -180,7 +181,7 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'col-2 left',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
+          return `<p class="left">${(cell ?? "")}</p>`;
         },
         sort: false,
       },
@@ -195,7 +196,7 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'col-6 left',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
+          return `<p class="left">${(cell ?? "")}</p>`;
         },
         sort: false,
       },
@@ -204,7 +205,8 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
         type: 'string',
         class: 'col-2',
         valuePrepareFunction: (cell: string) => {
-          return `${BusinessUnit[cell]}`;
+          if (!cell) { return '' }
+          return `${(BusinessUnit[cell] || '')}`;
         },
         sort: false,
       },

@@ -40,7 +40,8 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
         title: '功能單元',
         type: 'html',
         valuePrepareFunction: (cell: string) => {
-          return `<p>${GroupScope[cell]}</p>`;
+          if (!cell) { return '' }
+          return `<p>${(GroupScope[cell] || '')}</p>`;
         },
         sort: false,
       },
@@ -119,7 +120,8 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
         type: 'html',
         class: 'text_center',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="text_center">${BusinessUnit[cell]}</p>`;
+          if (!cell) { return '' }
+          return `<p class="text_center">${(BusinessUnit[cell] || '')}</p>`;
         },
         sort: false,
       }

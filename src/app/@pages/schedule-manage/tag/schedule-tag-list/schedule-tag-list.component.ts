@@ -75,7 +75,8 @@ export class ScheduleTagListComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'text_center w150',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="text_center">` + Status[cell] + `</p>`;
+          if (!cell) { return '' }
+          return `<p class="text_center">` + (Status[cell] || '') + `</p>`;
         },
         sort: false,
       },
@@ -98,7 +99,7 @@ export class ScheduleTagListComponent extends BaseComponent implements OnInit {
         valuePrepareFunction: (cell: string) => {
           const cellLow = cell?.toLowerCase();
           if (CommonUtil.isBlank(cellLow)) return cellLow
-          return `<p class="text_center ${ColumnClass[cellLow]}">` + StatusResult[cellLow] + `</p>`;
+          return `<p class="text_center ${(ColumnClass[cellLow] || '')}">` + (StatusResult[cellLow] || '') + `</p>`;
         },
         sort: false,
       },
