@@ -93,7 +93,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     this.validateForm = new FormGroup({
       jobName: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
       status: new FormControl(null, Validators.required),
-      executionFrequency: new FormControl('daily', Validators.required),
+      executionFrequency: new FormControl(null, Validators.required),
       hour: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
       minute: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
       filePath: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
@@ -328,7 +328,12 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
           this.loadingService.close();
         })
       ).subscribe();
+
+      return
     }
+
+    this.validateForm.get('executionFrequency').setValue('daily');
+
   }
 
   ngAfterViewChecked(): void {
@@ -410,7 +415,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     //塞資料
     Object.keys(result).forEach(key => {
       if (!!this.validateForm.controls[key]) {
-        console.info(key, result[key])
+        //console.info(key, result[key])
         this.validateForm.controls[key].setValue(result[key]);
       } else if (key === 'activitySetting') {
         this.scheduleActivitySettingGrid = result[key];
