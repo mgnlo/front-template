@@ -25,13 +25,13 @@
                  (valueChange)="changeFrequencyType($event)"
                  [errorTextBoolen]="false"></radio>
             <div *ngIf="validateForm.get('executionFrequency').value?.toLowerCase() === 'daily'" class="multi">
-              <nb-select fullWidth placeholder="時" formControlName="hour"
-                         [status]="validateForm.get('hour')?.touched && validateForm.get('hour')?.invalid? 'danger' : 'basic'">
+              <nb-select  fullWidth placeholder="時" formControlName="hour"
+                          [status]="validateForm.get('hour')?.touched && validateForm.get('hour')?.invalid? 'danger' : 'basic'">
               <nb-option *ngFor="let hour of hourList" [value]="hour.key">{{ hour.val }}</nb-option>
               </nb-select>
               <span>：</span>
-              <nb-select fullWidth placeholder="分" formControlName="minute"
-                         [status]="validateForm.get('minute')?.touched && validateForm.get('minute')?.invalid? 'danger' : 'basic'">
+              <nb-select  fullWidth placeholder="分" formControlName="minute"
+                          [status]="validateForm.get('minute')?.touched && validateForm.get('minute')?.invalid? 'danger' : 'basic'">
               <nb-option *ngFor="let minute of minuteList" [value]="minute.key">{{ minute.val }}</nb-option>
               </nb-select>
             </div>

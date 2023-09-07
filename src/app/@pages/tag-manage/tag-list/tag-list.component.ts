@@ -71,8 +71,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'text_center',
         valuePrepareFunction: (cell: string) => {
-          if (!cell) { return '' }
-          return `<p class="text_center">` + cell + `</p>`;
+          return `<p class="text_center">` + (cell ?? "") + `</p>`;
         },
         sort: false,
       },
@@ -81,8 +80,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'text_center',
         valuePrepareFunction: (cell: string) => {
-          if (!cell) { return '' }
-          return `<p class="text_center">` + cell + `</p>`;
+          return `<p class="text_center">` + (cell ?? "") + `</p>`;
         },
         sort: false,
       },
@@ -90,7 +88,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
         title: '說明',
         type: 'html',
         valuePrepareFunction: (cell: string) => {
-          return `<p>${!!cell ? cell : ''}</p>`;
+          return `<p>${(cell ?? "")}</p>`;
         },
         sort: false,
       },

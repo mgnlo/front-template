@@ -30,6 +30,7 @@ export const TagSettingMock: Array<TagSetting> = [
         "groupId": 1,
         "detectionCondition": "偵測條件1",
         "conditionKey": "條件值1",
+        "conditionName": "conditionName",
         "thresholdValue": "門檻值1",
         "joinValue": "and",
       },
@@ -40,6 +41,7 @@ export const TagSettingMock: Array<TagSetting> = [
         "groupId": 1,
         "detectionCondition": "偵測條件2",
         "conditionKey": "條件值2",
+        "conditionName": "conditionName",
         "thresholdValue": "門檻值2",
         "joinValue": "or",
       },
@@ -50,6 +52,7 @@ export const TagSettingMock: Array<TagSetting> = [
         "groupId": 2,
         "detectionCondition": "偵測條件3",
         "conditionKey": "條件值3",
+        "conditionName": "conditionName",
         "thresholdValue": "門檻值3",
       }
     ],
@@ -148,6 +151,7 @@ export const TagSettingMock: Array<TagSetting> = [
         "groupId": 1,
         "detectionCondition": "偵測條件1",
         "conditionKey": "條件值1",
+        "conditionName": "conditionName",
         "thresholdValue": "門檻值1"
       },
       {
@@ -157,6 +161,7 @@ export const TagSettingMock: Array<TagSetting> = [
         "groupId": 1,
         "detectionCondition": "偵測條件2",
         "conditionKey": "條件值2",
+        "conditionName": "conditionName",
         "thresholdValue": "門檻值2"
       },
       {
@@ -166,6 +171,7 @@ export const TagSettingMock: Array<TagSetting> = [
         "groupId": 2,
         "detectionCondition": "偵測條件3",
         "conditionKey": "條件值3",
+        "conditionName": "conditionName",
         "thresholdValue": "門檻值3"
       }
     ],
@@ -265,6 +271,7 @@ export const TagSettingMock: Array<TagSetting> = [
         "detectionCondition": "$eq",
         "joinValue": "and",
         "conditionKey": "3000",
+        "conditionName": "conditionName",
         "thresholdValue": "100000"
       },
       {
@@ -275,6 +282,7 @@ export const TagSettingMock: Array<TagSetting> = [
         "detectionCondition": "$lt",
         "joinValue": "and",
         "conditionKey": "apply-amount",
+        "conditionName": "conditionName",
         "thresholdValue": "40"
       },
       {
@@ -285,6 +293,7 @@ export const TagSettingMock: Array<TagSetting> = [
         "detectionCondition": "$gt",
         "joinValue": null,
         "conditionKey": "apply-amount",
+        "conditionName": "conditionName",
         "thresholdValue": "100"
       }
     ],

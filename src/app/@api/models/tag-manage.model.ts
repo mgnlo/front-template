@@ -30,6 +30,7 @@ export class TagConditionSetting {
   groupId: number
   detectionCondition: string;
   conditionKey: string;
+  conditionName: string;
   thresholdValue: string;
   joinValue?: string;
 
@@ -125,7 +126,9 @@ export interface TagDetailView {
   conditionSettingMethod: string;
   conditionSettingQuery: string;
   categoryKey: string;
+  categoryName: string;
   tagTopicKey: string;
+  tagTopicName: string;
   scheduleSettings: string;
   uploadType: string;
   filePath: string;

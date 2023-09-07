@@ -46,11 +46,11 @@
             <div class="row">
                 <div class="textGroup col-12 col-lg-4">
                     <p class="text_bold" [ngClass]="changeClass('categoryKey') | enum: 'reviewCompareClass'">標籤屬性：</p>
-                    <span>{{detail?.categoryKey}}</span>
+                    <span>{{detail?.categoryName}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p class="text_bold" [ngClass]="changeClass('tagTopicKey') | enum: 'reviewCompareClass'">標籤子構面：</p>
-                    <span>{{detail?.tagTopicKey}}</span>
+                    <span>{{detail?.tagTopicName}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p class="text_bold" [ngClass]="changeClass('modificationTime') | enum: 'reviewCompareClass'">異動時間：
@@ -81,7 +81,7 @@
                     </div>
                     <div class="textGroup code col-12" *ngIf="detail?.conditionSettingMethod === 'field'">
                         <p class="text_bold" [ngClass]="changeClass('conditionSettingMethod') | enum: 'reviewCompareClass'">偵測條件：</p>
-                        <span>{{detail?.tagConditionSetting?.[0]?.conditionKey}}</span>
+                        <span>{{detail?.tagConditionSetting?.[0]?.conditionName}}</span>
                     </div>
                     <!-- 灰底區塊  -->
                     <div class="colorArea col-12" *ngIf="detail?.conditionSettingMethod === 'field'"
