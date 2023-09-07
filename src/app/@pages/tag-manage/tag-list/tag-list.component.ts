@@ -97,7 +97,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'text_center',
         valuePrepareFunction: (cell: any, row: TagSetting) => {
-          return row.startDate && row.endDate ? `<p class="text_center">${row.startDate} ~ ${row.endDate}</p>` : '';
+          return row.startDate && row.endDate ? `<p class="text_center">${row?.startDate} ~ ${row?.endDate}</p>` : '';
         },
         sort: false,
       },

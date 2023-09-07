@@ -61,7 +61,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
         title: '活動說明',
         type: 'html',
         valuePrepareFunction: (cell: string) => {
-          return `<p>${!!cell ? cell : ''}</p>`;
+          return `<p>${(cell ?? "")}</p>`;
         },
         sort: false,
       },
@@ -77,7 +77,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'text_center',
         valuePrepareFunction: (value: any, row: any, cell: any) => {
-          return `<p class="text_center">` + value + `</p>`;
+          return `<p class="text_center">` + (value ?? "") + `</p>`;
         },
         sort: false,
       },
@@ -95,7 +95,7 @@ export class ActivityListComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'text_center',
         valuePrepareFunction: (cell: any, row: ActivitySetting) => {
-          return row.startDate && row.endDate ? `<p class="text_center">${row.startDate} ~ ${row.endDate}</p>` : '';
+          return row.startDate && row.endDate ? `<p class="text_center">${row?.startDate} ~ ${row?.endDate}</p>` : '';
         },
         sort: false,
       },

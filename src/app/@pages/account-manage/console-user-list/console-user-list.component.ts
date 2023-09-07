@@ -43,7 +43,7 @@ export class ConsoleUserListComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'text_center',
         valuePrepareFunction: (value: any, row: any, cell: any) => {
-          return `<p class="text_center">` + value + `</p>`;
+          return `<p class="text_center">` + (value ?? "") + `</p>`;
         },
         sort: false,
       },
@@ -64,7 +64,7 @@ export class ConsoleUserListComponent extends BaseComponent implements OnInit {
       consoleGroup: {
         title: '權限',
         type: 'string',
-        valuePrepareFunction: (cell: any) => cell.groupName,
+        valuePrepareFunction: (cell: any) => cell?.groupName,
         sort: false,
       },
       action: {

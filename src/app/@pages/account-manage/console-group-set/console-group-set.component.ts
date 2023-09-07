@@ -180,7 +180,7 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'col-2 left',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
+          return `<p class="left">${(cell ?? "")}</p>`;
         },
         sort: false,
       },
@@ -195,7 +195,7 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'col-6 left',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="left">${cell}</p>`;
+          return `<p class="left">${(cell ?? "")}</p>`;
         },
         sort: false,
       },

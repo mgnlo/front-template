@@ -62,7 +62,7 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
         type: 'html',
         class: 'text_center',
         valuePrepareFunction: (cell: string) => {
-          return `<p class="text_center">` + cell + `</p>`;
+          return `<p class="text_center">` + (cell ?? "") + `</p>`;
         },
         sort: false
       },

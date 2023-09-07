@@ -67,7 +67,7 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         title: '活動說明',
         type: 'html',
         valuePrepareFunction: (cell: string) => {
-          return `<p>${!!cell ? cell : ''}</p>`;
+          return `<p>${(cell ?? "")}</p>`;
         },
         sort: false,
       },

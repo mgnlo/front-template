@@ -75,7 +75,7 @@ export class ReviewActivityListComponent extends BaseComponent implements OnInit
         title: '活動說明',
         type: 'html',
         valuePrepareFunction: (cell: string) => {
-          return `<p>${!!cell ? cell : ''}</p>`;
+          return `<p>${(cell ?? "")}</p>`;
         },
         sort: false,
       },
@@ -91,7 +91,7 @@ export class ReviewActivityListComponent extends BaseComponent implements OnInit
         type: 'html',
         class: 'text_center',
         valuePrepareFunction: (cell: any, row: any) => {
-          return `<p class="text_center">${cell ?? ""}</p>`;
+          return `<p class="text_center">${(cell ?? "")}</p>`;
         },
       },
       modificationTime: {
@@ -99,7 +99,7 @@ export class ReviewActivityListComponent extends BaseComponent implements OnInit
         type: 'html',
         class: 'text_center',
         valuePrepareFunction: (cell: any, row: ActivityReviewHistory) => {
-          return `<p class="text_center">${row.startDate} ~ ${row.endDate}</p>`;
+          return `<p class="text_center">${row?.startDate} ~ ${row?.endDate}</p>`;
         },
         sort: false,
       },
@@ -108,7 +108,7 @@ export class ReviewActivityListComponent extends BaseComponent implements OnInit
         type: 'html',
         class: 'text_center',
         valuePrepareFunction: (value: any, row: any, cell: any) => {
-          return `<p class="text_center">` + value + `</p>`;
+          return `<p class="text_center">` + (value ?? "") + `</p>`;
         },
         sort: false
       },

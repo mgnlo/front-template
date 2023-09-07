@@ -151,7 +151,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         type: 'html',
         sort: false,
         valuePrepareFunction: (cell: string) => {
-          return `<p>${!!cell ? cell : ''}</p>`;
+          return `<p>${(cell ?? "")}</p>`;
         },
       },
       department: {
@@ -160,7 +160,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         class: 'text_center',
         valuePrepareFunction: (cell: any, row: any) => {
           if (!cell) { return '' }
-          return `<p class="text_center">` + cell + `</p>`;
+          return `<p class="text_center">` + (cell ?? "") + `</p>`;
         },
         sort: false,
       },
@@ -170,7 +170,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         class: 'text_center',
         valuePrepareFunction: (cell: any, row: any) => {
           if (!cell) { return '' }
-          return `<p class="text_center">` + cell + `</p>`;
+          return `<p class="text_center">` + (cell ?? "") + `</p>`;
         },
         sort: false,
       },
@@ -188,7 +188,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         type: 'html',
         class: 'text_center',
         valuePrepareFunction: (cell: any, row: ActivitySetting) => {
-          return row.startDate && row.endDate ? `<p class="text_center">${row.startDate} ~ ${row.endDate}</p>` : '';
+          return row.startDate && row.endDate ? `<p class="text_center">${row?.startDate} ~ ${row?.endDate}</p>` : '';
         },
         sort: false,
       },
