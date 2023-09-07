@@ -161,7 +161,7 @@ export class ScheduleTagListComponent extends BaseComponent implements OnInit {
 
     this.dataSource = new LocalDataSource();
     let searchInfo: SearchInfo = {
-      apiUrl: this.tagManageService.tagFunc,
+      apiUrl: this.tagManageService.tagFunc + 'schedule-batch',
       nowPage: this.paginator.nowPage,
       errMsg: '貼標排程列表查無資料',
     }
