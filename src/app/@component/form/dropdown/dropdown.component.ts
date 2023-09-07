@@ -13,6 +13,7 @@ export class DropdownComponent implements OnInit {
   @Input() title: string;
   @Input() form: FormGroup;
   @Input() ctlName: string;
+  @Input() mapList?: Map<string, string>;
   @Input() selectList?: {options: any, key: string|number, val: string};
   /** 有enumName就會以此做enum的對應, 沒enumName就會用ctlName做對應 */
   @Input() enumName?: string;
@@ -27,7 +28,9 @@ export class DropdownComponent implements OnInit {
 
   ngOnInit(): void {
     this.ctl = this.form.get(this.ctlName) as FormControl;
-    if(!!this.enumName && Object.keys(ENUMS).includes(this.enumName)){
+    if(!!this.mapList){
+      this.enumList = this.mapList;
+    } else if(!!this.enumName && Object.keys(ENUMS).includes(this.enumName)){
       this.enumKey = this.enumName;
     } else if (Object.keys(ENUMS).includes(this.ctlName)){
       this.enumKey = this.ctlName;

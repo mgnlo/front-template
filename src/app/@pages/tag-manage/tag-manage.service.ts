@@ -17,7 +17,7 @@ export class TagManageService {
     return this.service.doGet(this.tagFunc);
   }
 
-  //4.2 ==>未使用
+  //4.2 客群活動名單->活動名單條件下拉選單
   getTagSettingListOption(data: any): Observable<ResponseModel<Array<TagSetting>>> {
     return this.service.doGet(this.tagFunc, data);
   }

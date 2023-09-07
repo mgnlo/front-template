@@ -44,9 +44,8 @@
                 <div class="colorArea" [formGroupName]="i" *ngFor="let con of condition.value | keyvalue; let first2 = first; let last2 = last">
                     <div class="fieldGroup">
                         <div class="mb_0">
-                            <nb-select fullWidth placeholder="請選擇" [formControlName]="''+con.key">
-                                <nb-option [value]="con.value" [id]="con.key">{{con.value}}</nb-option>
-                                <nb-option value="item2">item2</nb-option>
+                            <nb-select fullWidth [status]="conditionHasError(''+i, ''+con.key) ? 'danger':'basic'" placeholder="請選擇" [formControlName]="''+con.key">
+                                <nb-option *ngFor="let category of categoryList | keyvalue" [value]="category.key">{{category.value}}</nb-option>
                             </nb-select>
                             <span class="and" [ngClass]="{'color_red': !first2 || first2 !== last2, 'color_green': last2}">and</span>
                             <button nbButton status="success" *ngIf="last2" size="tiny" class="iconBtn" (click)="and(i, 'add', +con.key)">

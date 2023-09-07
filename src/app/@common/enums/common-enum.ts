@@ -8,8 +8,8 @@ export enum Frequency {
   daily = '每日',
   weekly = '每週',
   monthly = '每月',
-  quarterly = '每季',
-  annually = '每年',
+  // quarterly = '每季',
+  // annually = '每年',
 }
 
 export enum Schedule {

@@ -4,19 +4,23 @@
   </nb-card-header>
   <nb-card-body>
     <div class="row">
-      <basic-input class="col-4 col-lg-4" title="名單上限" [form]="validateForm" ctlName="listLimit" [infos]="infos" type="number"></basic-input>
-      <dropdown class="col-4 col-lg-4" title="資料排序方式" [form]="validateForm" ctlName="orderBy"
-        [selectList]="{options: orderByList | keyvalue, key: 'key', val: 'value'}"></dropdown>
-      <radio class="col-4 col-lg-4" title="排序順序" [form]="validateForm" ctlName="sortType"
-        (valueChange)="changeSort($event)"
-        [selectList]="{options: sortList | keyvalue, key: 'key', val: 'value'}"></radio>
+      <basic-input class="col-4" title="名單上限" [form]="validateForm" ctlName="listLimit" [disabled]="true"></basic-input>
+      <dropdown class="col-4" title="資料排序方式" [form]="validateForm" ctlName="orderBy" [mapList]="orderByList"></dropdown>
+      <radio class="col-3" title="排序順序" [form]="validateForm" ctlName="sortType" (valueChange)="changeSort($event)"
+        [selectList]="{options: sortList | keyvalue, key: 'key', val: 'value'}">
+      </radio>
+      <div class="rightBox">
+        <button nbButton status="primary" size="medium" (click)="search()"><nb-icon icon="search"></nb-icon>搜尋</button>
+      </div>
     </div>
-    <ng2-smart-table [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
-    <paginator [source]="dataSource" [paginator]="paginator"></paginator>
+    <div class="noteText" *ngIf="info">
+      <nb-icon icon="info-outline"></nb-icon>
+      <p>{{info}}</p>
+    </div>
+    <ng2-smart-table *ngIf="!!dataSource" [settings]="gridDefine" [source]="dataSource"></ng2-smart-table>
+    <paginator *ngIf="!!dataSource" [source]="dataSource" [paginator]="paginator"></paginator>
   </nb-card-body>
   <nb-card-footer>
-      <div class="btnGroup">
-        <button nbButton status="basic" size="medium" (click)="close()">關 閉</button>
-      </div>
+    <div class="btnGroup"><button nbButton status="basic" size="medium" (click)="close()">關 閉</button></div>
   </nb-card-footer>
 </nb-card>

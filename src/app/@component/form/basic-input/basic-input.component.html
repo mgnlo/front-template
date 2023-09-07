@@ -1,8 +1,8 @@
-<div class="fieldGroup" [ngClass]="{'error': hasError(), 'essential': required}" [formGroup]="form">
+<div class="fieldGroup" [ngClass]="{'error': hasError(), 'essential': required, 'disabled': disabled}" [formGroup]="form">
   <label>{{title}}</label>
   <div>
-      <input nbInput fullWidth [status]="hasError() ? 'danger':'basic'" [type]="type"
-        [placeholder]="placeholder" [formControlName]="ctlName" [maxlength]="maxlength"/>
+      <input nbInput fullWidth [status]="hasError() ? 'danger': 'basic'" [type]="type"
+        [placeholder]="placeholder" [formControlName]="ctlName" [maxlength]="maxlength" [readonly]="disabled"/>
   </div>
   <div class="note" *ngIf="linkInfo">
     <a [href]="linkInfo.link">{{linkInfo.title}}</a>

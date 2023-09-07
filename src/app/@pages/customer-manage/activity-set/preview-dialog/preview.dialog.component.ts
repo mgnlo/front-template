@@ -1,13 +1,18 @@
+import { SimpleChanges } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfigService } from '@api/services/config.service';
+import { DialogService } from '@api/services/dialog.service';
+import { LoadingService } from '@api/services/loading.service';
 import { LoginService } from '@api/services/login.service';
 import { StorageService } from '@api/services/storage.service';
+import { WarningCode, RestStatus } from '@common/enums/rest-enum';
 import { CustomerListMock } from '@common/mock-data/customer-list-mock';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { NbDialogRef } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
-import { LocalDataSource } from 'ng2-smart-table';
+import { TagManageService } from '@pages/tag-manage/tag-manage.service';
+import { catchError, filter, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'ngx-preview',
@@ -16,22 +21,9 @@ import { LocalDataSource } from 'ng2-smart-table';
 })
 export class PreviewDialogComponent extends BaseComponent implements OnInit {
 
-  @Input() dataList: Array<string>;
+  @Input() listLimit: string;
 
-  orderByList = new Map([
-    [110, '消費金額'],
-    [111, '交易次數'],
-    [112, '換匯次數'],
-    [113, '定存筆數'],
-    [114, '消費金額'],
-    [115, '交易次數'],
-    [116, '換匯次數'],
-    [117, '定存筆數'],
-    [118, '消費金額'],
-    [119, '交易次數'],
-    [120, '換匯次數'],
-    [121, '定存筆數'],
-  ]);
+  orderByList = new Map<string, string>();
   sortList = new Map([
     ['asc', '升冪'],
     ['desc', '降冪'],
@@ -40,26 +32,42 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
     storageService: StorageService,
     configService: ConfigService,
     loginService: LoginService,
+    private loadingService: LoadingService,
+    private tagManageService: TagManageService,
+    private dialogService: DialogService,
     private ref: NbDialogRef<PreviewDialogComponent>,
   ) {
     super(storageService, configService, loginService);
     this.validateForm = new FormGroup({
       listLimit: new FormControl('150', [Validators.required, ValidatorsUtil.notZero]),
-      orderBy: new FormControl(110, Validators.required),
+      orderBy: new FormControl('', Validators.required),
       sortType: new FormControl('asc', Validators.required),
     });
   }
-  limit: number = 100;
-  infos = [`名單預計可抓取共 ${this.limit} 位名單資料，若有預算上考量請設定名單上限與資料排序方式。`];
+  info: string;
+  limit: string;
 
-  ngOnInit() {
-    this.dataSource = new LocalDataSource();
-    this.dataSource.load(CustomerListMock);
-    if (!!this.dataList['listLimit']) {
-      this.validateForm.get('listLimit').setValue(this.dataList['listLimit']);
-      this.limit = this.dataList['listLimit']+100; //TODO: 待加上取值邏輯
+  ngOnInit(): void {
+    this.tagManageService.getTagConditionList().pipe(
+      catchError((err) => {
+        this.loadingService.close();
+        let status = Object.values(WarningCode).includes(err.code) ? null : false;
+        this.dialogService.alertAndBackToList(status, '無可選的資料排序方式');
+        throw new Error(err.message);
+      }),
+      filter(res => res.code === RestStatus.SUCCESS),
+      tap(res => {
+        //L2裡面用到的L1標籤
+        res.result.forEach(option => this.orderByList.set(option.conditionKey, option.conditionName));
+        this.loadingService.close();
+      })
+    ).subscribe();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (!changes.listLimit.currentValue) {
+      this.validateForm.get('listLimit').setValue(changes.listLimit.currentValue, { emitEvent: false });
     }
-    console.info(this.dataList);
   }
 
   gridDefine = {
@@ -106,6 +114,18 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
 
   changeSort(sortType: string) {
     this.dataSource.setSort([{ field: 'custId', direction: sortType }]);
+  }
+
+  search() {
+    this.loadingService.open();
+    if (this.isMock) {
+      this.dataSource.load(CustomerListMock);
+      this.loadingService.close();
+      return;
+    }
+    //TODO: 回傳的客戶總數
+    this.info = `名單預計可抓取共`+ this.limit + `位名單資料，若有預算上考量請設定名單上限與資料排序方式。`;
+    this.loadingService.close();
   }
 
   close() {

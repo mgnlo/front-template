@@ -7,12 +7,13 @@ import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { LoginService } from '@api/services/login.service';
 import { StorageService } from '@api/services/storage.service';
-import { Filter, Schedule } from '@common/enums/common-enum';
+import { Filter, Frequency } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
 import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
+import { TagManageService } from '@pages/tag-manage/tag-manage.service';
 import * as moment from 'moment';
 import { catchError, filter, tap } from 'rxjs/operators';
 import { CustomerManageService } from '../customer-manage.service';
@@ -26,9 +27,10 @@ import { PreviewDialogComponent } from './preview-dialog/preview.dialog.componen
 export class ActivitySetComponent extends BaseComponent implements OnInit {
 
   filterList: Array<{ key: string; val: string }> = Object.entries(Filter).map(([k, v]) => ({ key: k, val: v }));
-  scheduleList: Array<{ key: string; val: string }> = Object.entries(Schedule).map(([k, v]) => ({ key: k, val: v }));
+  scheduleList: Array<{ key: string; val: string }> = Object.entries(Frequency).map(([k, v]) => ({ key: k, val: v }));
   activityId: string;
   actionName: string;// 新增/編輯/複製
+  categoryList: Map<string, string> = new Map();
 
   constructor(
     storageService: StorageService,
@@ -38,6 +40,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private dialogService: DialogService,
     private customerManageService: CustomerManageService,
+    private tagManageService: TagManageService,
     private loadingService: LoadingService,
     private changeDetectorRef: ChangeDetectorRef,) {
     super(storageService, configService, loginService);
@@ -91,6 +94,21 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     this.activityId = this.activatedRoute.snapshot.params?.activityId;
     this.actionName = CommonUtil.getActionName(CommonUtil.isNotBlank(this.activityId) ? 'edit' : null);
 
+    //TODO: L2標籤=TagSetting<tagId tagName>
+    this.tagManageService.getTagSettingList().pipe(
+      catchError((err) => {
+        this.loadingService.close();
+        this.dialogService.alertAndBackToList(false, '查詢可選活動名單條件失敗');
+        this.validateForm?.get('activityListCondition')?.setErrors({ 'categoryKeyErrMsg': err.message ? err.message : '查詢可選活動名單條件失敗' });
+        throw new Error(err.message);
+      }),
+      filter(res => res.code === RestStatus.SUCCESS),
+      tap(res => {
+        res.result.forEach(tag => this.categoryList.set(tag.tagId, tag.tagName));
+        this.loadingService.close();
+      })
+    ).subscribe();
+
     if (!!this.activityId) {
       this.loadingService.open();
 
@@ -135,7 +153,14 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
               let fg = new FormGroup({});
               let condition = groupData[key] as Array<ActivityListCondition>;
               condition.forEach(con => {
-                fg.setControl(con.tagKey.replace('tag-', ''), new FormControl(con.tagName, Validators.required));
+                if (!this.categoryList[con.tagKey]) {
+                  // this.categoryList[con.tagKey] = con.tagName //把取回的值塞進活動名單條件下拉選單
+                  this.dialogService.alertAndBackToList(null, `活動名單條件 ${con.tagName} 已不存在，請重新選擇`);
+                  fg.setControl(con.tagKey, new FormControl(null, Validators.required));
+                  fg.get(con.tagKey).markAsTouched();
+                } else {
+                  fg.setControl(con.tagKey, new FormControl(con.tagKey, Validators.required));
+                }
               });
               this.conditions.push(fg);
             })
@@ -154,7 +179,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
 
   preview() {
     this.dialogService.open(PreviewDialogComponent, {
-      dataList: this.validateForm.getRawValue()
+      listLimit: this.validateForm.get('listLimit').value
     });
   }
 
@@ -214,11 +239,18 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     this.validateForm.getRawValue().activityListCondition.forEach((condition, i) => {
       Object.keys(condition).forEach((key) => {
         conditionId++;
-        flatConditions.push({ conditionId: `${conditionId}`, tagGroup: i + 1, tagKey: `tag-${key}`, tagName: condition[key] });
+        flatConditions.push({ conditionId: `${conditionId}`, tagGroup: i + 1, tagKey: condition[key], tagName: this.categoryList[condition[key]] });
       })
     });
     reqData.activityListCondition = flatConditions;
     return reqData;
+  }
+
+  conditionHasError(groupIndex: string, controlIndex: string) {
+    let formArr = this.validateForm.get('activityListCondition') as FormArray;
+    let isTouch = formArr.at(+groupIndex).get(controlIndex).touched;
+    let isDirty = formArr.at(+groupIndex).get(controlIndex).dirty;
+    return !formArr.value[groupIndex][controlIndex] && (isTouch || isDirty) ? true : false;
   }
 
 }

@@ -7,6 +7,7 @@ import { NbDateFnsDateModule } from '@nebular/date-fns';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import {
   NbAccordionModule,
+  NbAutocompleteModule,
   NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbDialogModule, NbIconModule,
   NbInputModule, NbRadioModule, NbSelectModule, NbSpinnerModule, NbTagModule, NbTreeGridModule
 } from '@nebular/theme';
@@ -33,6 +34,7 @@ export const NB_MODULES = [
   NbDialogModule.forChild(),
   NbTagModule,
   NbAccordionModule,
+  NbAutocompleteModule,
 ];
 
 @NgModule({
