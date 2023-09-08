@@ -94,8 +94,8 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     this.activityId = this.activatedRoute.snapshot.params?.activityId;
     this.actionName = CommonUtil.getActionName(CommonUtil.isNotBlank(this.activityId) ? 'edit' : null);
 
-    //TODO: L2標籤=TagSetting<tagId tagName>
-    this.tagManageService.getTagSettingList().pipe(
+    //L2標籤
+    this.tagManageService.getTagSettingListOption().pipe(
       catchError((err) => {
         this.loadingService.close();
         this.dialogService.alertAndBackToList(false, '查詢可選活動名單條件失敗');
@@ -104,7 +104,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
       }),
       filter(res => res.code === RestStatus.SUCCESS),
       tap(res => {
-        res.result.forEach(tag => this.categoryList.set(tag.tagId, tag.tagName));
+        Object.entries(res.result).forEach(([k,v]) => this.categoryList.set(k, v));
         this.loadingService.close();
       })
     ).subscribe();

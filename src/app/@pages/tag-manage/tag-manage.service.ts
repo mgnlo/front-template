@@ -18,8 +18,8 @@ export class TagManageService {
   }
 
   //4.2 客群活動名單->活動名單條件下拉選單
-  getTagSettingListOption(data: any): Observable<ResponseModel<Array<TagSetting>>> {
-    return this.service.doGet(this.tagFunc, data);
+  getTagSettingListOption(data?: any): Observable<ResponseModel<Map<string, string>>> {
+    return this.service.doGet(this.tagFunc + 'option', data);
   }
 
   //4.6
