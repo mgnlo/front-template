@@ -21,8 +21,9 @@ import { catchError, filter, tap } from 'rxjs/operators';
 })
 export class PreviewDialogComponent extends BaseComponent implements OnInit {
 
-  @Input() listLimit: string;
+  @Input() limit: string;
 
+  info: string;
   orderByList = new Map<string, string>();
   sortList = new Map([
     ['asc', '升冪'],
@@ -39,15 +40,14 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
   ) {
     super(storageService, configService, loginService);
     this.validateForm = new FormGroup({
-      listLimit: new FormControl('150', [Validators.required, ValidatorsUtil.notZero]),
+      listLimit: new FormControl(null, [Validators.required, ValidatorsUtil.notZero]),
       orderBy: new FormControl('', Validators.required),
       sortType: new FormControl('asc', Validators.required),
     });
   }
-  info: string;
-  limit: string;
 
   ngOnInit(): void {
+    this.validateForm.get('listLimit').setValue(this.limit);
     this.tagManageService.getTagConditionList().pipe(
       catchError((err) => {
         this.loadingService.close();
@@ -62,12 +62,6 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
         this.loadingService.close();
       })
     ).subscribe();
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (!changes.listLimit.currentValue) {
-      this.validateForm.get('listLimit').setValue(changes.listLimit.currentValue, { emitEvent: false });
-    }
   }
 
   gridDefine = {
@@ -118,13 +112,14 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
 
   search() {
     this.loadingService.open();
+    let resLimit = '';
     if (this.isMock) {
       this.dataSource.load(CustomerListMock);
       this.loadingService.close();
       return;
     }
     //TODO: 回傳的客戶總數
-    this.info = `名單預計可抓取共`+ this.limit + `位名單資料，若有預算上考量請設定名單上限與資料排序方式。`;
+    this.info = `名單預計可抓取共` + resLimit + `位名單資料，若有預算上考量請設定名單上限與資料排序方式。`;
     this.loadingService.close();
   }
 

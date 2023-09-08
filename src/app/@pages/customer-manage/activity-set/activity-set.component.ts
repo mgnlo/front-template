@@ -56,7 +56,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
       activityDescription: new FormControl(null),
       activityListCondition: new FormArray([
         new FormGroup({
-          1: new FormControl(null, Validators.required)
+          1: new FormControl(null, [Validators.required, ValidatorsUtil.isRepeat])
         })
       ], Validators.required),
     }, [ValidatorsUtil.dateRange]);
@@ -70,7 +70,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     if (action === 'add') {
       let ctlName = !!key ? key++ : 1;
       this.conditions.push(new FormGroup({
-        [ctlName]: new FormControl(null, Validators.required)
+        [ctlName]: new FormControl(null, [Validators.required, ValidatorsUtil.isRepeat])
       }));
     } else {
       this.conditions.removeAt(key)
@@ -80,7 +80,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
   and(i: number, action: 'add' | 'remove', key: number) {
     let fg = this.conditions.at(i) as FormGroup;
     if (action === 'add') {
-      fg.setControl(`${key + 1}`, new FormControl(null, Validators.required));
+      fg.setControl(`${key + 1}`, new FormControl(null, [Validators.required, ValidatorsUtil.isRepeat]));
     } else {
       fg.removeControl(`${key}`);
     }
@@ -104,7 +104,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
       }),
       filter(res => res.code === RestStatus.SUCCESS),
       tap(res => {
-        Object.entries(res.result).forEach(([k,v]) => this.categoryList.set(k, v));
+        Object.entries(res.result).forEach(([k, v]) => this.categoryList.set(k, v));
         this.loadingService.close();
       })
     ).subscribe();
@@ -152,14 +152,14 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
             Object.keys(groupData).forEach(key => {
               let fg = new FormGroup({});
               let condition = groupData[key] as Array<ActivityListCondition>;
-              condition.forEach(con => {
+              condition.forEach((con, index) => {
                 if (!this.categoryList[con.tagKey]) {
                   // this.categoryList[con.tagKey] = con.tagName //把取回的值塞進活動名單條件下拉選單
                   this.dialogService.alertAndBackToList(null, `活動名單條件 ${con.tagName} 已不存在，請重新選擇`);
-                  fg.setControl(con.tagKey, new FormControl(null, Validators.required));
-                  fg.get(con.tagKey).markAsTouched();
+                  fg.setControl("" + index, new FormControl(null, Validators.required));
+                  fg.get("" + index).markAsTouched();
                 } else {
-                  fg.setControl(con.tagKey, new FormControl(con.tagKey, Validators.required));
+                  fg.setControl("" + index, new FormControl(con.tagKey, Validators.required));
                 }
               });
               this.conditions.push(fg);
@@ -179,7 +179,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
 
   preview() {
     this.dialogService.open(PreviewDialogComponent, {
-      listLimit: this.validateForm.get('listLimit').value
+      limit: this.validateForm.get('listLimit').value
     });
   }
 
@@ -239,7 +239,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     this.validateForm.getRawValue().activityListCondition.forEach((condition, i) => {
       Object.keys(condition).forEach((key) => {
         conditionId++;
-        flatConditions.push({ conditionId: `${conditionId}`, tagGroup: i + 1, tagKey: condition[key], tagName: this.categoryList[condition[key]] });
+        flatConditions.push({ conditionId: `${conditionId}`, tagGroup: i + 1, tagKey: condition[key], tagName: this.categoryList.get(condition[key]) });
       })
     });
     reqData.activityListCondition = flatConditions;
@@ -250,7 +250,8 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     let formArr = this.validateForm.get('activityListCondition') as FormArray;
     let isTouch = formArr.at(+groupIndex).get(controlIndex).touched;
     let isDirty = formArr.at(+groupIndex).get(controlIndex).dirty;
-    return !formArr.value[groupIndex][controlIndex] && (isTouch || isDirty) ? true : false;
+    let isError = formArr.at(+groupIndex).get(controlIndex).errors;
+    return (isTouch || isDirty) && isError? true : false;
   }
 
 }

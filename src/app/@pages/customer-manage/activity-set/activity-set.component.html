@@ -42,7 +42,7 @@
                     </button>
                 </div>
                 <div class="colorArea" [formGroupName]="i" *ngFor="let con of condition.value | keyvalue; let first2 = first; let last2 = last">
-                    <div class="fieldGroup">
+                    <div class="fieldGroup" *ngIf="condition.get(''++con.key) as ctl" [ngClass]="{'error': (ctl?.dirty || ctl?.touched) && ctl?.errors }">
                         <div class="mb_0">
                             <nb-select fullWidth [status]="conditionHasError(''+i, ''+con.key) ? 'danger':'basic'" placeholder="請選擇" [formControlName]="''+con.key">
                                 <nb-option *ngFor="let category of categoryList | keyvalue" [value]="category.key">{{category.value}}</nb-option>
@@ -57,7 +57,8 @@
                         </div>
                         <div class="note errorText">
                             <nb-icon class="and" icon="alert-triangle"></nb-icon>
-                            <p>欄位錯誤訊息</p>
+                            <p *ngIf="ctl.errors?.required; else otherErr">此為必填欄位</p>
+                            <ng-template #otherErr><p>{{ctl.errors?.repeat}}</p></ng-template>
                         </div>
                     </div>
                 </div>

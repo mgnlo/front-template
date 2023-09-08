@@ -1,4 +1,5 @@
 import { AbstractControl, FormGroup, ValidatorFn } from '@angular/forms';
+import { CommonUtil } from './common-util';
 import { RegExpUtil } from './reg-exp-util';
 import { ValidateUtil } from './validate-util';
 
@@ -147,4 +148,26 @@ export const ValidatorsUtil = {
       return null;
     };
   },
+  isRepeat: (ctl: AbstractControl) => {
+    const v: string = ctl.value;
+    if (ctl.parent?.value) {
+      const valueList = Object.values(ctl.parent.value);
+      const uniqueList = Array.from(new Set(valueList).values());
+      let repeatList = new Set();
+      valueList.filter((val, i, arr) => ValidatorsUtil.countInArray(arr, val) > 1)
+        .forEach((val) => repeatList.add(val));
+      if (uniqueList.length !== valueList.length && repeatList.has(v)) {
+        return { 'repeat': '不可重複' };
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  },
+  countInArray<T>(array: T[], target: T) {
+    var count = 0;
+    array.filter((v, i, arr) => arr[i] === target).forEach(() => count++);
+    return count;
+  }
 };
