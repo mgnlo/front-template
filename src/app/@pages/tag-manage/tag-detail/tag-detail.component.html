@@ -42,12 +42,12 @@
             <div class="textGroup col-12 col-lg-4">
               <p class="text_bold">標籤構面：</p>
               <!-- <span>{{detail?.categoryKey | enum:'categoryKey'}}</span> -->
-              <span>{{detail?.categoryKey}}</span>
+              <span>{{detail?.categoryName || detail?.categoryKey}}</span>
             </div>
             <div class="textGroup col-12 col-lg-4">
               <p class="text_bold">標籤子構面：</p>
               <!-- <span>{{detail?.tagTopicKey| enum:'tagTopicKey'}}</span> -->
-              <span>{{detail?.tagTopicKey}}</span>
+              <span>{{detail?.tagTopicName || detail?.tagTopicKey}}</span>
             </div>
             <div class="textGroup col-12 col-lg-4">
                 <p class="text_bold">異動時間：</p>
