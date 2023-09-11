@@ -72,10 +72,7 @@ export const DashboardInfoMock: DashBoardInfo = {
     // 客群名單數量
     customers: 21, //份數
     // 今日統計已貼標籤數
-    tagRecord: {
-        tagged: 223456788,
-        fail: 160
-    },
+    tagRecord: null,
     // 熱門
     hotTags: {
         title: "熱門名單採用標籤",

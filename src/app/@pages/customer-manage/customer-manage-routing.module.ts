@@ -3,10 +3,10 @@ import { RouterModule, Routes } from "@angular/router"
 import { ActivityDetailComponent } from "./activity-detail/activity-detail.component"
 import { ActivityListComponent } from "./activity-list/activity-list.component"
 import { ActivitySetComponent } from "./activity-set/activity-set.component"
-import { PreviewDialogComponent } from "./activity-set/preview-dialog/preview.dialog.component"
 import { CustomerListComponent, CustomerListTagComponent } from "./customer-list/customer-list.component"
 import { DetailDialogComponent } from "./customer-list/detail-dialog/detail.dialog.component"
 import { CustomerManageComponent } from "./customer-manage.component"
+import { PreviewDialogComponent } from "./activity-set/preview-dialog/preview.dialog.component"
 
 const routes: Routes = [
     {
