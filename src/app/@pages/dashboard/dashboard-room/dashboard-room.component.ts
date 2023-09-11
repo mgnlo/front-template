@@ -86,6 +86,7 @@ export class DashboardRoomComponent extends BaseComponent implements OnInit {
       finalize(() => this.loadingService.close())
     ).subscribe()
   }
+
   ngOnInit(): void {
     document.querySelector("nb-layout-column").scrollTo(0, 0);
   }
@@ -124,13 +125,11 @@ export class DashboardRoomComponent extends BaseComponent implements OnInit {
   }
 
   convertTreeMapSeriesData(originData: OriginTreeMapSeriesData): Array<TreeMapSeriesData> {
-
-    console.info('originDataoriginDataoriginData', originData)
     let treeMapSeriesData: Array<TreeMapSeriesData> = [];
 
     treeMapSeriesData.push({
-      name: originData.title,
-      children: originData.items
+      name: originData?.title,
+      children: originData?.items
     });
 
     return treeMapSeriesData;

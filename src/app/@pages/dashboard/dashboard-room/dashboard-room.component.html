@@ -54,7 +54,7 @@
 					<h2>標籤組成統計</h2>
 				</nb-card-header>
 				<nb-card-body>
-					<dashboard-echarts-tree [data]="converTreeSeriesData(dashboardData?.categorys)"></dashboard-echarts-tree>
+					<dashboard-echarts-tree *ngIf="dashboardData?.categorys" [data]="converTreeSeriesData(dashboardData?.categorys)"></dashboard-echarts-tree>
 				</nb-card-body>
 			</nb-card>
 		</div>
@@ -64,7 +64,7 @@
 					<h2>{{ dashboardData?.hotTags?.title }}</h2>
 				</nb-card-header>
 				<nb-card-body>
-					<dashboard-echarts-treemap-hot [data]="convertTreeMapSeriesData(dashboardData?.hotTags)"></dashboard-echarts-treemap-hot>
+					<dashboard-echarts-treemap-hot *ngIf="dashboardData?.hotTags" [data]="convertTreeMapSeriesData(dashboardData?.hotTags)"></dashboard-echarts-treemap-hot>
 				</nb-card-body>
 			</nb-card>
 		</div>
@@ -74,7 +74,7 @@
 					<h2>{{ dashboardData?.coldTags?.title }}</h2>
 				</nb-card-header>
 				<nb-card-body>
-					<dashboard-echarts-treemap-cool [data]="convertTreeMapSeriesData(dashboardData?.coldTags)"></dashboard-echarts-treemap-cool>
+					<dashboard-echarts-treemap-cool *ngIf="dashboardData?.coldTags" [data]="convertTreeMapSeriesData(dashboardData?.coldTags)"></dashboard-echarts-treemap-cool>
 				</nb-card-body>
 			</nb-card>
 		</div>
@@ -94,7 +94,7 @@
 					<h2>每日案件審核數量</h2>
 				</nb-card-header>
 				<nb-card-body>
-					<dashboard-echarts-line [data]="convertLineSeriesData(dashboardData?.reviewCaseInfos)" (chartEvent)="lineSeriesClick($event)"></dashboard-echarts-line>
+					<dashboard-echarts-line *ngIf="dashboardData?.reviewCaseInfos" [data]="convertLineSeriesData(dashboardData?.reviewCaseInfos)" (chartEvent)="lineSeriesClick($event)"></dashboard-echarts-line>
 				</nb-card-body>
 			</nb-card>
 		</div>
