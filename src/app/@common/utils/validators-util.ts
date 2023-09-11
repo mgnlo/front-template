@@ -154,8 +154,8 @@ export const ValidatorsUtil = {
       const valueList = Object.values(ctl.parent.value);
       const uniqueList = Array.from(new Set(valueList).values());
       let repeatList = new Set();
-      valueList.filter((val, i, arr) => ValidatorsUtil.countInArray(arr, val) > 1)
-        .forEach((val) => repeatList.add(val));
+      valueList.filter((val, i, arr) => ValidatorsUtil.countInArray(arr, val) > 1).forEach((val) => repeatList.add(val));
+      console.info(repeatList, v)
       if (uniqueList.length !== valueList.length && repeatList.has(v)) {
         return { 'repeat': '不可重複' };
       } else {

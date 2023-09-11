@@ -46,11 +46,11 @@
             <div class="row">
                 <div class="textGroup col-12 col-lg-4">
                     <p class="text_bold" [ngClass]="changeClass('categoryKey') | enum: 'reviewCompareClass'">標籤屬性：</p>
-                    <span>{{detail?.categoryName}}</span>
+                    <span>{{detail?.categoryName|| detail?.categoryKey}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p class="text_bold" [ngClass]="changeClass('tagTopicKey') | enum: 'reviewCompareClass'">標籤子構面：</p>
-                    <span>{{detail?.tagTopicName}}</span>
+                    <span>{{detail?.tagTopicName || detail?.tagTopicKey}}</span>
                 </div>
                 <div class="textGroup col-12 col-lg-4">
                     <p class="text_bold" [ngClass]="changeClass('modificationTime') | enum: 'reviewCompareClass'">異動時間：

@@ -14,7 +14,9 @@ export interface ScheduleTagSetting {
   conditionSettingMethod: string;
   conditionSettingQuery: string;
   categoryKey: string;
+  categoryName?: string;
   tagTopicKey: string;
+  tagTopicName?: string;
   scheduleSettings: string;
   uploadType: string;
   filePath: string;
