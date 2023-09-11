@@ -28,6 +28,18 @@ export class DashboardRoomComponent extends BaseComponent implements OnInit {
   // 所有總和標籤數
   totalTags: number = 0;
 
+  //標籤組成統計
+  categorysData: TreeSeriesData;
+
+  //熱門
+  hotTagsData: TreeMapSeriesData[];
+
+  //冷門
+  coldTagsData: TreeMapSeriesData[];
+
+  //每日案件審核數量
+  reviewCaseInfosData: LineSeriesData;
+
   // 審核案件比例
   pieSeriesData: Array<PieSeriesData> = [];
   pieSeriesDataDate: string;
@@ -52,7 +64,7 @@ export class DashboardRoomComponent extends BaseComponent implements OnInit {
       }),
       filter((res) => res.code === RestStatus.SUCCESS),
       tap(res => {
-        console.info(res);
+        // console.info(res);
         this.dashboardData = JSON.parse(JSON.stringify(res.result)) as DashBoardInfo
 
         if (!this.dashboardData) {
@@ -80,6 +92,10 @@ export class DashboardRoomComponent extends BaseComponent implements OnInit {
         lastPieSeries = this.dashboardData.reviewCaseInfos[this.dashboardData.reviewCaseInfos.length - 1];
         this.pieSeriesDataDate = lastPieSeries.date;
         this.pieSeriesData = lastPieSeries.items;
+        this.hotTagsData = this.convertTreeMapSeriesData(this.dashboardData?.hotTags);
+        this.coldTagsData = this.convertTreeMapSeriesData(this.dashboardData?.coldTags);
+        this.reviewCaseInfosData = this.convertLineSeriesData(this.dashboardData?.reviewCaseInfos);
+        this.categorysData = this.converTreeSeriesData(this.dashboardData?.categorys);
 
         this.dialogService.alertAndBackToList(true, `查詢儀錶板成功`);
       }),
