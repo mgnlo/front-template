@@ -153,7 +153,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
               let fg = new FormGroup({});
               let condition = groupData[key] as Array<ActivityListCondition>;
               condition.forEach((con, index) => {
-                if (!this.categoryList[con.tagKey]) {
+                if (!this.categoryList.get(con.tagKey)) {
                   // this.categoryList[con.tagKey] = con.tagName //把取回的值塞進活動名單條件下拉選單
                   this.dialogService.alertAndBackToList(null, `活動名單條件 ${con.tagName} 已不存在，請重新選擇`);
                   fg.setControl("" + index, new FormControl(null, Validators.required));
