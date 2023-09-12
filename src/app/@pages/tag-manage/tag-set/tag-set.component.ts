@@ -59,8 +59,8 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
 
   //偵測條件下拉
-  selectedConditionId: string = '';
   selectedConditionKey: string = '';
+  selectedConditionVal: string = '';
 
   //預設狀態
   tagStatusList = [Status.enabled, Status.disabled];
@@ -241,22 +241,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
                   break;
                 case 'tagConditionSetting':
                   this.conditions.removeAt(0);
-                  res.result.tagConditionSetting.forEach((conditionSetting, index) => {
-                    if (!!conditionSetting.joinValue) {
-                      this.conditions.push(new FormGroup({
-                        id: new FormControl(index),
-                        ['detectionCondition_' + index]: new FormControl(conditionSetting.detectionCondition, Validators.required),
-                        ['thresholdValue_' + index]: new FormControl(+conditionSetting.thresholdValue, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
-                        ['joinValue_' + index]: new FormControl(conditionSetting.joinValue, Validators.required)
-                      }));
-                    } else {
-                      this.conditions.push(new FormGroup({
-                        id: new FormControl(index),
-                        ['detectionCondition_' + index]: new FormControl(conditionSetting.detectionCondition, Validators.required),
-                        ['thresholdValue_' + index]: new FormControl(+conditionSetting.thresholdValue, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
-                      }));
-                    }
-                  })
+                  this.createConditionControl(res.result.tagConditionSetting);
                   //console.info(this.conditions.getRawValue());
                   break;
                 default:
@@ -450,6 +435,11 @@ export class TagSetComponent extends BaseComponent implements OnInit {
           }
         }
         this.validateForm?.patchValue({ 'conditionSettingMethod': 'field' });
+        //#region 抓取偵測條件
+        const categoryKeyVal = this.validateForm.get('categoryKey')?.value;
+        const tagTopicKeyVal = this.validateForm.get('tagTopicKey')?.value;
+        this.getConditionKeyList(categoryKeyVal, tagTopicKeyVal);
+        //#endregion
         break;
     }
 
@@ -512,7 +502,9 @@ export class TagSetComponent extends BaseComponent implements OnInit {
             if (this.tagId) {
               const conditionKey = this.conditionKeyList.find(f => f.key == this.detail?.tagConditionSetting?.[0]?.conditionKey)
               this.selectedConditionKey = conditionKey?.key;
+              this.selectedConditionVal = conditionKey?.val;
               this.validateForm.get('conditionKey').patchValue(conditionKey?.val);
+              this.getTagConditionalDistribution();
             }
           })
         ).subscribe();
@@ -526,7 +518,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       return
     }
 
-    if (CommonUtil.isBlank(this.selectedConditionId) && !this.tagId) {
+    if (CommonUtil.isBlank(this.selectedConditionKey) && !this.tagId) {
       this.validateForm.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': '請點選一筆' });
       return
     }
@@ -536,14 +528,14 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   //輸入查詢
   onConditionKeyChange(event: any) {
-    this.selectedConditionId = '';
+    this.selectedConditionKey = '';
     this.conditionDialogData = undefined;
 
     this.conditionKeyFilter(event.target.value);
 
     if (this.validateForm.get('conditionKey')?.hasError('condition_valueErrMsg')) return
 
-    if (CommonUtil.isBlank(this.selectedConditionId)) {
+    if (CommonUtil.isBlank(this.selectedConditionKey)) {
       this.validateForm.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': '請點選一筆' });
     }
   }
@@ -555,17 +547,17 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       return
     }
 
-    this.selectedConditionId = event.key;
-    this.selectedConditionKey = event.val;
+    this.selectedConditionKey = event.key;
+    this.selectedConditionVal = event.val;
 
-    // console.log('selectedConditionId Value:', this.selectedConditionId);
-    // console.log('Selected Value:', this.selectedConditionKey);
+    // console.log('selectedConditionKey Value:', this.selectedConditionKey);
+    // console.log('Selected Value:', this.selectedConditionVal);
 
     this.getTagConditionalDistribution();
 
-    this.conditionKeyFilter(this.selectedConditionKey);
+    this.conditionKeyFilter(this.selectedConditionVal);
 
-    this.validateForm.get('conditionKey').setValue(this.selectedConditionKey);
+    this.validateForm.get('conditionKey').setValue(this.selectedConditionVal);
   }
 
   //篩選邏輯
@@ -586,7 +578,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   //取得圖表資料
   getTagConditionalDistribution() {
-    const conditionId = this.selectedConditionId
+    const conditionId = this.selectedConditionKey
 
     if (this.isMock) {
       this.conditionDialogData = TagConditionChartLineMock as TagConditionChartLine;
