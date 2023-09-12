@@ -360,7 +360,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     }
 
     if (this.isMock) {
-      this.dialogService.alertAndBackToList(true, `${this.actionName}成功`, ['pages', 'schedule-manage', 'schedule-activity-list']);
+      this.dialogService.alertAndBackToList(true, `${this.actionName}名單排程送審成功`, ['pages', 'schedule-manage', 'schedule-activity-list']);
       this.loadingService.close();
       return;
     }
@@ -386,7 +386,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
       filter((res) => res.code === RestStatus.SUCCESS),
       tap(res => {
         // console.info(res);
-        this.dialogService.alertAndBackToList(true, `${this.actionName}成功`, ['pages', 'schedule-manage', 'schedule-activity-list']);
+        this.dialogService.alertAndBackToList(true, `${this.actionName}名單排程送審成功`, ['pages', 'schedule-manage', 'schedule-activity-list']);
       }),
       finalize(() => this.loadingService.close())
     ).subscribe();

@@ -195,12 +195,12 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
 
     if (!valid || !reqData) {
       const route = this.activityId ? [this.activityId] : [];
-      this.dialogService.alertAndBackToList(false, `${this.actionName}驗證失敗`, ['pages', 'customer-manage', 'customer-set', ...route]);
+      this.dialogService.alertAndBackToList(false, `${this.actionName}活動驗證失敗`, ['pages', 'customer-manage', 'customer-set', ...route]);
       return
     }
 
     if (this.isMock) {
-      this.dialogService.alertAndBackToList(true, `${this.actionName}成功`, ['pages', 'customer-manage', 'activity-list']);
+      this.dialogService.alertAndBackToList(true, `${this.actionName}活動送審成功`, ['pages', 'customer-manage', 'activity-list']);
       this.loadingService.close();
       return;
     }
@@ -221,7 +221,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     requestObservable.pipe(
       catchError((err) => {
         const route = this.activityId ? [this.activityId] : [];
-        this.dialogService.alertAndBackToList(false, `${this.actionName}失敗`, ['pages', 'customer-manage', 'activity-set', ...route]);
+        this.dialogService.alertAndBackToList(false, `${this.actionName}活動失敗`, ['pages', 'customer-manage', 'activity-set', ...route]);
         throw new Error(err.message);
       }),
       tap(res => {
@@ -230,7 +230,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
       })
     ).subscribe(res => {
       if (res.code === RestStatus.SUCCESS) {
-        this.dialogService.alertAndBackToList(true, `${this.actionName}成功`, ['pages', 'customer-manage', 'activity-list']);
+        this.dialogService.alertAndBackToList(true, `${this.actionName}活動送審成功`, ['pages', 'customer-manage', 'activity-list']);
       }
     });
   }
