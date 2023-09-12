@@ -69,14 +69,14 @@
             <!-- 灰底區塊 -->
             <div class="colorArea col-12" *ngIf="detail?.conditionSettingMethod === 'field'">
               <div class="row">
-                <div *ngFor="let tagCondition of detail?.tagConditionSetting">
+                <ng-container *ngFor="let tagCondition of detail?.tagConditionSetting">
                   <div class="textGroup gather">
                     <p>{{tagCondition?.detectionCondition?.toLowerCase() | enum:'mathSymbol'}}</p>
                     <span>{{tagCondition?.thresholdValue}}</span>
                     <nb-tag *ngIf="tagCondition?.joinValue?.toLowerCase() === 'and'" status="warning" appearance="filled" text="and"></nb-tag>
                     <nb-tag *ngIf="tagCondition?.joinValue?.toLowerCase() === 'or'" status="info" appearance="filled" text="or"></nb-tag>
                   </div>
-                </div>
+                </ng-container>
               </div>
             </div>
           </div>
