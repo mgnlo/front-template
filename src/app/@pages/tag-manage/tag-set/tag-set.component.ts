@@ -59,8 +59,8 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   isHistoryOpen: { [x: number]: boolean } = {}; //異動歷程收合
 
   //偵測條件下拉
-  selectedConditionId: string = '';
   selectedConditionKey: string = '';
+  selectedConditionVal: string = '';
 
   //預設狀態
   tagStatusList = [Status.enabled, Status.disabled];
@@ -230,7 +230,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         filter(res => res.code === RestStatus.SUCCESS),
         tap((res) => {
           this.detail = JSON.parse(JSON.stringify(res.result));
-          // console.info('this.detail', this.detail)
+          console.info('this.detail', this.detail)
           const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistoryAud', res.result as TagSetting); // 異動歷程處理
           Object.keys(res.result).forEach(key => {
             if (!!this.validateForm.controls[key]) {
@@ -241,22 +241,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
                   break;
                 case 'tagConditionSetting':
                   this.conditions.removeAt(0);
-                  res.result.tagConditionSetting.forEach((conditionSetting, index) => {
-                    if (!!conditionSetting.joinValue) {
-                      this.conditions.push(new FormGroup({
-                        id: new FormControl(index),
-                        ['detectionCondition_' + index]: new FormControl(conditionSetting.detectionCondition, Validators.required),
-                        ['thresholdValue_' + index]: new FormControl(+conditionSetting.thresholdValue, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
-                        ['joinValue_' + index]: new FormControl(conditionSetting.joinValue, Validators.required)
-                      }));
-                    } else {
-                      this.conditions.push(new FormGroup({
-                        id: new FormControl(index),
-                        ['detectionCondition_' + index]: new FormControl(conditionSetting.detectionCondition, Validators.required),
-                        ['thresholdValue_' + index]: new FormControl(+conditionSetting.thresholdValue, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
-                      }));
-                    }
-                  })
+                  this.createConditionControl(res.result.tagConditionSetting);
                   //console.info(this.conditions.getRawValue());
                   break;
                 default:
@@ -271,13 +256,11 @@ export class TagSetComponent extends BaseComponent implements OnInit {
               this.detail.historyGroupView = processedData.detail?.historyGroupView;
             }
           }
+
+          this.changeTagType(this.detail.tagType);
+          this.changeConditionSettingMethod(this.detail.conditionSettingMethod);
         }),
         finalize(() => {
-          //#region 設定欄位
-          const formData = this.validateForm.getRawValue();
-          this.changeTagType(formData.tagType);
-          this.changeConditionSettingMethod(formData.conditionSettingMethod);
-          //#endregion
           this.loadingService.close();
         })
       ).subscribe();
@@ -307,7 +290,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   }
 
   ngDoCheck() {
-    // console.info('this.findInvalidControls()', this.findInvalidControls())
+    console.info('this.findInvalidControls()', this.findInvalidControls())
     const categoryKeyVal = this.validateForm.get('categoryKey')?.value;
     if (CommonUtil.isNotBlank(categoryKeyVal) && categoryKeyVal != this.beforeCategoryVal) {
       this.beforeCategoryVal = categoryKeyVal;
@@ -324,7 +307,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     if (CommonUtil.isNotBlank(categoryKeyVal) &&
       CommonUtil.isNotBlank(tagTopicKeyVal) &&
       tagTopicKeyVal != this.beforeSubCategoryVal &&
-      this.validateForm.get('conditionSettingMethod')?.value === 'field'  ) {
+      this.validateForm.get('conditionSettingMethod')?.value === 'field') {
       this.beforeSubCategoryVal = tagTopicKeyVal;
       //#region 抓取偵測條件
       this.getConditionKeyList(categoryKeyVal, tagTopicKeyVal);
@@ -393,6 +376,9 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         }
 
         this.subCategoryList = Object.entries(mapArray).map(([key, val]) => ({ key, val }));
+        if (this.tagId) {
+          this.validateForm?.get('tagTopicKey').patchValue(this.detail?.tagTopicKey)
+        }
       })
     ).subscribe()
   }
@@ -404,12 +390,11 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     this.removeFieldIfExists('fileName');
     this.removeFieldIfExists('conditionSettingMethod');
     this.removeFieldIfExists('conditionSettingQuery');
-    this.removeFieldIfExists('tagConditionSetting');
 
     switch (key?.toLocaleLowerCase()) {
       case 'normal':
         this.addFieldIfNotExists('conditionSettingMethod', 'normal', Validators.required);
-        this.addFieldIfNotExists('conditionSettingQuery', null, Validators.required);
+        this.addFieldIfNotExists('conditionSettingQuery', this.detail?.conditionSettingQuery, Validators.required);
         this.validateForm?.patchValue({ 'tagType': 'normal' });
         break;
       case 'document':
@@ -429,7 +414,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
     switch (key?.toLocaleLowerCase()) {
       case 'normal':
-        this.addFieldIfNotExists('conditionSettingQuery', null, Validators.required);
+        this.addFieldIfNotExists('conditionSettingQuery', this.detail?.conditionSettingQuery, Validators.required);
         this.validateForm?.patchValue({ 'conditionSettingMethod': 'normal' });
         break;
       case 'field':
@@ -437,14 +422,24 @@ export class TagSetComponent extends BaseComponent implements OnInit {
           this.validateForm.addControl('tagConditionSetting', new FormArray([]));
         }
         this.addFieldIfNotExists('conditionKey', null, [Validators.required, this.existsInConditionKeyList]);
-        if (this.conditions?.getRawValue()?.length === 0) {
-          this.conditions.push(new FormGroup({
-            id: new FormControl(0),
-            ['detectionCondition_' + 0]: new FormControl(null, Validators.required),
-            ['thresholdValue_' + 0]: new FormControl(null, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
-          }));
+
+        this.createConditionControl(this.detail?.tagConditionSetting);
+
+        if (!this.detail?.tagConditionSetting) {
+          if (this.conditions?.getRawValue()?.length === 0) {
+            this.conditions.push(new FormGroup({
+              id: new FormControl(0),
+              ['detectionCondition_' + 0]: new FormControl(null, Validators.required),
+              ['thresholdValue_' + 0]: new FormControl(null, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
+            }));
+          }
         }
         this.validateForm?.patchValue({ 'conditionSettingMethod': 'field' });
+        //#region 抓取偵測條件
+        const categoryKeyVal = this.validateForm.get('categoryKey')?.value;
+        const tagTopicKeyVal = this.validateForm.get('tagTopicKey')?.value;
+        this.getConditionKeyList(categoryKeyVal, tagTopicKeyVal);
+        //#endregion
         break;
     }
 
@@ -504,6 +499,13 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
             this.conditionKeyList = Object.entries(mapArray).map(([key, val]) => ({ key, val }));
             this.filterConditionKeyList = [...this.conditionKeyList];
+            if (this.tagId) {
+              const conditionKey = this.conditionKeyList.find(f => f.key == this.detail?.tagConditionSetting?.[0]?.conditionKey)
+              this.selectedConditionKey = conditionKey?.key;
+              this.selectedConditionVal = conditionKey?.val;
+              this.validateForm.get('conditionKey').patchValue(conditionKey?.val);
+              this.getTagConditionalDistribution();
+            }
           })
         ).subscribe();
   }
@@ -511,12 +513,12 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   onBlurConditionKeyInput(): void {
     if (this.validateForm.get('conditionKey')?.hasError('condition_valueErrMsg')) return
 
-    if(this.conditionKeyList?.length === 0){
+    if (this.conditionKeyList?.length === 0) {
       this.validateForm.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': '查無偵測條件' });
       return
     }
 
-    if (CommonUtil.isBlank(this.selectedConditionId)) {
+    if (CommonUtil.isBlank(this.selectedConditionKey) && !this.tagId) {
       this.validateForm.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': '請點選一筆' });
       return
     }
@@ -526,14 +528,14 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   //輸入查詢
   onConditionKeyChange(event: any) {
-    this.selectedConditionId = '';
+    this.selectedConditionKey = '';
     this.conditionDialogData = undefined;
 
     this.conditionKeyFilter(event.target.value);
 
     if (this.validateForm.get('conditionKey')?.hasError('condition_valueErrMsg')) return
 
-    if (CommonUtil.isBlank(this.selectedConditionId)) {
+    if (CommonUtil.isBlank(this.selectedConditionKey)) {
       this.validateForm.get('conditionKey')?.setErrors({ 'condition_valueErrMsg': '請點選一筆' });
     }
   }
@@ -545,17 +547,17 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       return
     }
 
-    this.selectedConditionId = event.key;
-    this.selectedConditionKey = event.val;
+    this.selectedConditionKey = event.key;
+    this.selectedConditionVal = event.val;
 
-    // console.log('selectedConditionId Value:', this.selectedConditionId);
-    // console.log('Selected Value:', this.selectedConditionKey);
+    // console.log('selectedConditionKey Value:', this.selectedConditionKey);
+    // console.log('Selected Value:', this.selectedConditionVal);
 
     this.getTagConditionalDistribution();
 
-    this.conditionKeyFilter(this.selectedConditionKey);
+    this.conditionKeyFilter(this.selectedConditionVal);
 
-    this.validateForm.get('conditionKey').setValue(this.selectedConditionKey);
+    this.validateForm.get('conditionKey').setValue(this.selectedConditionVal);
   }
 
   //篩選邏輯
@@ -576,7 +578,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   //取得圖表資料
   getTagConditionalDistribution() {
-    const conditionId = this.selectedConditionId
+    const conditionId = this.selectedConditionKey
 
     if (this.isMock) {
       this.conditionDialogData = TagConditionChartLineMock as TagConditionChartLine;
@@ -658,6 +660,25 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       fg.removeControl(`${key}`);
     }
     // console.info('setConditions', this.conditions.getRawValue())
+  }
+
+  createConditionControl(tagConditionSetting: TagConditionSetting[]) {
+    tagConditionSetting?.forEach((conditionSetting, index) => {
+      if (!!conditionSetting.joinValue) {
+        this.conditions.push(new FormGroup({
+          id: new FormControl(index),
+          ['detectionCondition_' + index]: new FormControl(conditionSetting.detectionCondition, Validators.required),
+          ['thresholdValue_' + index]: new FormControl(+conditionSetting.thresholdValue, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
+          ['joinValue_' + index]: new FormControl(conditionSetting.joinValue, Validators.required)
+        }));
+      } else {
+        this.conditions.push(new FormGroup({
+          id: new FormControl(index),
+          ['detectionCondition_' + index]: new FormControl(conditionSetting.detectionCondition, Validators.required),
+          ['thresholdValue_' + index]: new FormControl(+conditionSetting.thresholdValue, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
+        }));
+      }
+    })
   }
   //#endregion
 
@@ -851,22 +872,8 @@ export class TagSetComponent extends BaseComponent implements OnInit {
             break;
           case 'tagConditionSetting':
             this.conditions.removeAt(0);
-            result.tagConditionSetting.forEach((conditionSetting, index) => {
-              if (!!conditionSetting.joinValue) {
-                this.conditions.push(new FormGroup({
-                  id: new FormControl(index),
-                  ['detectionCondition_' + index]: new FormControl(conditionSetting.detectionCondition, Validators.required),
-                  ['thresholdValue_' + index]: new FormControl(+conditionSetting.thresholdValue, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
-                  ['joinValue_' + index]: new FormControl(conditionSetting.joinValue, Validators.required)
-                }));
-              } else {
-                this.conditions.push(new FormGroup({
-                  id: new FormControl(index),
-                  ['detectionCondition_' + index]: new FormControl(conditionSetting.detectionCondition, Validators.required),
-                  ['thresholdValue_' + index]: new FormControl(+conditionSetting.thresholdValue, [Validators.required, Validators.pattern(RegExpUtil.isNumeric)]),
-                }));
-              }
-            })
+            this.createConditionControl(result.tagConditionSetting);
+
             //console.info(this.conditions.getRawValue());
             break;
           default:
