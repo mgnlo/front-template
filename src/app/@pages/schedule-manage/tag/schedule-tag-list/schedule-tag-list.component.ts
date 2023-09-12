@@ -168,6 +168,7 @@ export class ScheduleTagListComponent extends BaseComponent implements OnInit {
     }
     this.tableService.searchData(searchInfo).getElements().then((data) => {
       this.dataSource.load(data);
+      this.getSessionSetPage();
     });
   }
 

@@ -63,7 +63,7 @@
           <div class="row">
             <div class="textGroup code col-12">
                 <p class="text_bold">條件設定：</p>
-                <span *ngIf="detail?.conditionSettingMethod === 'field'">{{detail?.tagConditionSetting?.[0]?.conditionKey}}</span>
+                <span *ngIf="detail?.conditionSettingMethod === 'field'">{{detail?.tagConditionSetting?.[0]?.conditionName || detail?.tagConditionSetting?.[0]?.conditionKey}}</span>
                 <pre *ngIf="detail?.conditionSettingMethod === 'normal'">{{detail?.conditionSettingQuery}}</pre>
             </div>
             <!-- 灰底區塊 -->
