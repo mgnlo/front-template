@@ -14,13 +14,13 @@ import { BaseComponent } from '@pages/base.component';
 import { ScheduleManageService } from '@pages/schedule-manage/schedule-manage.service';
 import { LocalDataSource } from 'ng2-smart-table';
 import { catchError, filter, finalize, tap } from 'rxjs/operators';
-import { PreviewDialogComponent } from './preview-dialog/preview.dialog/preview-dialog.component';
 import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
 import { of } from 'rxjs';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { ConfigService } from '@api/services/config.service';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { LoginService } from '@api/services/login.service';
+import { PreviewDialogComponent } from './preview-dialog/preview-dialog.component';
 
 @Component({
   selector: 'schedule-activity-set',

@@ -16,18 +16,18 @@
 						<li *ngFor="let category of categories">
 							<div>
 								<nb-icon icon="folder-outline"></nb-icon>
-								<h3>{{ category.name }} {{ (category.tags / this.totalTags * 100).toFixed(1) }}%</h3>
+								<h3>{{ category?.name }} {{ (category?.tags / this?.totalTags * 100).toFixed(1) }}%</h3>
 							</div>
-							<p><span>{{ category.tags }}</span>標籤數</p>
+							<p><span>{{ category?.tags }}</span>標籤數</p>
 						</li>
 					</ul>
 					<ul class="categoryList userList">
-						<li>
+						<li *ngIf="dashboardData?.customers">
 							<div>
 								<nb-icon icon="file-outline"></nb-icon>
 								<h3>客群名單</h3>
 							</div>
-							<p><span>{{ this.mockData.customers }}</span>份</p>
+							<p><span>{{ dashboardData?.customers ?? 0 }}</span>份</p>
 						</li>
 					</ul>
 				</nb-card-body>
@@ -39,10 +39,10 @@
 					</div>
 					<div class="details">
 						<h3>今日完成貼標之標籤數量</h3>
-						<p>{{ this.mockData.tagRecord.tagged | number }}</p>
+						<p>{{ dashboardData?.tagRecord?.tagged ?? 0 | number }}</p>
 						<span>
 							<nb-icon icon="alert-circle-outline"></nb-icon>
-							{{ this.mockData.tagRecord.fail | number }} 筆貼標失敗
+							 {{ dashboardData?.tagRecord?.fail ?? 0 | number }} 筆貼標失敗
 						</span>
 					</div>
 				</nb-card-body>
@@ -54,27 +54,27 @@
 					<h2>標籤組成統計</h2>
 				</nb-card-header>
 				<nb-card-body>
-					<ngx-echarts-tree [data]="seriesService.converTreeSeriesData(mockData.categorys)"></ngx-echarts-tree>
+					<dashboard-echarts-tree *ngIf="categorysData" [data]="categorysData"></dashboard-echarts-tree>
 				</nb-card-body>
 			</nb-card>
 		</div>
 		<div class="col-lg-6">
 			<nb-card>
 				<nb-card-header>
-					<h2>{{ mockData.hotTags.title }}</h2>
+					<h2>{{ dashboardData?.hotTags?.title }}</h2>
 				</nb-card-header>
 				<nb-card-body>
-					<ngx-echarts-treemap-hot [data]="seriesService.convertTreeMapSeriesData(mockData.hotTags)"></ngx-echarts-treemap-hot>
+					<dashboard-echarts-treemap-hot *ngIf="hotTagsData" [data]="hotTagsData"></dashboard-echarts-treemap-hot>
 				</nb-card-body>
 			</nb-card>
 		</div>
 		<div class="col-lg-6">
 			<nb-card>
 				<nb-card-header>
-					<h2>{{ mockData.coldTags.title }}</h2>
+					<h2>{{ dashboardData?.coldTags?.title }}</h2>
 				</nb-card-header>
 				<nb-card-body>
-					<ngx-echarts-treemap-cool [data]="seriesService.convertTreeMapSeriesData(mockData.coldTags)"></ngx-echarts-treemap-cool>
+					<dashboard-echarts-treemap-cool *ngIf="coldTagsData" [data]="coldTagsData"></dashboard-echarts-treemap-cool>
 				</nb-card-body>
 			</nb-card>
 		</div>
@@ -84,7 +84,7 @@
 					<h2>審核案件比例 {{ pieSeriesDataDate }}</h2>
 				</nb-card-header>
 				<nb-card-body>
-					<ngx-echarts-doughnut [data]="pieSeriesData"></ngx-echarts-doughnut>
+					<dashboard-echarts-doughnut [data]="pieSeriesData"></dashboard-echarts-doughnut>
 				</nb-card-body>
 			</nb-card>
 		</div>
@@ -94,7 +94,7 @@
 					<h2>每日案件審核數量</h2>
 				</nb-card-header>
 				<nb-card-body>
-					<ngx-echarts-line [data]="seriesService.convertLineSeriesData(mockData.reviewCaseInfos)" (chartEvent)="lineSeriesClick($event)"></ngx-echarts-line>
+					<dashboard-echarts-line *ngIf="reviewCaseInfosData" [data]="reviewCaseInfosData" (chartEvent)="lineSeriesClick($event)"></dashboard-echarts-line>
 				</nb-card-body>
 			</nb-card>
 		</div>

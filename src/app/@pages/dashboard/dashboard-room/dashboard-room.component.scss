@@ -4,6 +4,16 @@ $option-color: #82878B;
 $scrollbar: #BBC1C5;
 $listColors: (#FF3D71, #008CD0, #00D68F, #FFAA00, #BBC1C5, #29A7E6);
 
+$iterations: 100;
+
+@for $i from 1 through $iterations {
+  $colorIndex: ($i % length($listColors)) + 1;
+
+  $newColor: nth($listColors, $colorIndex);
+
+  $listColors: append($listColors, $newColor);
+}
+
 .categoryList {
     list-style: none;
     margin: 0;
