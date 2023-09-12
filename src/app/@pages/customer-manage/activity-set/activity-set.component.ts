@@ -94,20 +94,26 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     this.activityId = this.activatedRoute.snapshot.params?.activityId;
     this.actionName = CommonUtil.getActionName(CommonUtil.isNotBlank(this.activityId) ? 'edit' : null);
 
-    //L2標籤
-    this.tagManageService.getTagSettingListOption().pipe(
-      catchError((err) => {
-        this.loadingService.close();
-        this.dialogService.alertAndBackToList(false, '查詢可選活動名單條件失敗');
-        this.validateForm?.get('activityListCondition')?.setErrors({ 'categoryKeyErrMsg': err.message ? err.message : '查詢可選活動名單條件失敗' });
-        throw new Error(err.message);
-      }),
-      filter(res => res.code === RestStatus.SUCCESS),
-      tap(res => {
-        Object.entries(res.result).forEach(([k, v]) => this.categoryList.set(k, v));
-        this.loadingService.close();
-      })
-    ).subscribe();
+    if (this.isMock) {
+      ActivityListMock.forEach(activity => {
+        activity.activityListCondition.forEach(condition => this.categoryList.set(condition.tagKey, condition.tagName));
+      });
+    } else {
+      //L2標籤
+      this.tagManageService.getTagSettingListOption().pipe(
+        catchError((err) => {
+          this.loadingService.close();
+          this.dialogService.alertAndBackToList(false, '查詢可選活動名單條件失敗');
+          this.validateForm?.get('activityListCondition')?.setErrors({ 'categoryKeyErrMsg': err.message ? err.message : '查詢可選活動名單條件失敗' });
+          throw new Error(err.message);
+        }),
+        filter(res => res.code === RestStatus.SUCCESS),
+        tap(res => {
+          Object.entries(res.result).forEach(([k, v]) => this.categoryList.set(k, v));
+          this.loadingService.close();
+        })
+      ).subscribe();
+    }
 
     if (!!this.activityId) {
       this.loadingService.open();
