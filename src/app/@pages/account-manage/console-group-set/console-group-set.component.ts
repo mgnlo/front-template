@@ -270,7 +270,7 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
         filter(res => res.code === RestStatus.SUCCESS),
         tap(res => {
           this.loadingService.close();
-          this.dialogService.alertAndBackToList(true, `${this.actionName}成功`, ['pages', 'account-manage', 'console-group-detail', res.result.groupId]);
+          this.dialogService.alertAndBackToList(true, `${this.actionName}權限成功`, ['pages', 'account-manage', 'console-group-detail', res.result.groupId]);
         })).subscribe();
     }
 
