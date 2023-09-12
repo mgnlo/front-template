@@ -1,13 +1,15 @@
-import { SimpleChanges } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { TagCondition } from '@api/models/tag-manage.model';
 import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { LoginService } from '@api/services/login.service';
 import { StorageService } from '@api/services/storage.service';
 import { WarningCode, RestStatus } from '@common/enums/rest-enum';
+import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { CustomerListMock } from '@common/mock-data/customer-list-mock';
+import { TagConditionMock } from '@common/mock-data/tag-condition-mock';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { NbDialogRef } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
@@ -48,6 +50,10 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.validateForm.get('listLimit').setValue(this.limit);
+    if(this.isMock){
+      TagConditionMock.forEach(condition => this.orderByList.set(condition.conditionKey, condition.conditionName));
+      return;
+    }
     this.tagManageService.getTagConditionList().pipe(
       catchError((err) => {
         this.loadingService.close();
@@ -113,13 +119,13 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
   search() {
     this.loadingService.open();
     let resLimit = '';
+    //TODO: 回傳的客戶總數
+    this.info = `名單預計可抓取共` + resLimit + `位名單資料，若有預算上考量請設定名單上限與資料排序方式。`;
     if (this.isMock) {
       this.dataSource.load(CustomerListMock);
       this.loadingService.close();
       return;
     }
-    //TODO: 回傳的客戶總數
-    this.info = `名單預計可抓取共` + resLimit + `位名單資料，若有預算上考量請設定名單上限與資料排序方式。`;
     this.loadingService.close();
   }
 
