@@ -13,6 +13,7 @@ import { DialogService } from '@api/services/dialog.service';
 import { RestStatus } from '@common/enums/rest-enum';
 import { catchError, filter, finalize, tap } from 'rxjs/operators';
 import { LoadingService } from '@api/services/loading.service';
+import { DashboardInfoMock } from '@common/mock-data/dasthboard.mock';
 
 @Component({
   selector: 'dashboard-room',
@@ -21,6 +22,8 @@ import { LoadingService } from '@api/services/loading.service';
 })
 export class DashboardRoomComponent extends BaseComponent implements OnInit {
   dashboardData: DashBoardInfo = new DashBoardInfo();
+
+  mockData = DashboardInfoMock;
 
   //構面數據佔比資料表
   categories: Array<Category> = [];
@@ -55,6 +58,33 @@ export class DashboardRoomComponent extends BaseComponent implements OnInit {
     super(storageService, configService, loginService)
 
     let lastPieSeries: OriginLineSeriesData = new OriginLineSeriesData();
+
+    if (this.isMock) {
+      this.dashboardData = this.mockData;
+      // 加工處理 構面數據佔比與名單數據
+      this.mockData.categorys.filter((item) => {
+        let category: Category = {
+          name: item.nodeName,
+          tags: 0
+        };
+
+        item.subNodes.filter(sub => {
+          // 構面數據佔比資料
+          this.totalTags += sub.value;
+          // 所有總和標籤數
+          category.tags += sub.value
+        });
+        this.categories.push(category);
+      });
+      lastPieSeries = this.dashboardData.reviewCaseInfos[this.dashboardData.reviewCaseInfos.length - 1];
+      this.pieSeriesDataDate = lastPieSeries.date;
+      this.pieSeriesData = lastPieSeries.items;
+      this.hotTagsData = this.convertTreeMapSeriesData(this.dashboardData?.hotTags);
+      this.coldTagsData = this.convertTreeMapSeriesData(this.dashboardData?.coldTags);
+      this.reviewCaseInfosData = this.convertLineSeriesData(this.dashboardData?.reviewCaseInfos);
+      this.categorysData = this.converTreeSeriesData(this.dashboardData?.categorys);
+      return;
+    }
 
     this.loadingService.open();
     this.dashboardService.getDashboard().pipe(
