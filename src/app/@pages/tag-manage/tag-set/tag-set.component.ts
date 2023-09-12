@@ -787,7 +787,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       filter(res => res.code === RestStatus.SUCCESS),
       tap(() => {
         // console.info(res);
-        this.dialogService.alertAndBackToList(true, `${this.actionName}成功`, ['pages', 'tag-manage', 'tag-list']);
+        this.dialogService.alertAndBackToList(true, `${this.actionName}標籤送審成功`, ['pages', 'tag-manage', 'tag-list']);
       }),
       finalize(() => {
         this.loadingService.close();
