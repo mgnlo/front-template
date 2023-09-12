@@ -1,13 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { TagCondition } from '@api/models/tag-manage.model';
 import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { LoginService } from '@api/services/login.service';
 import { StorageService } from '@api/services/storage.service';
 import { WarningCode, RestStatus } from '@common/enums/rest-enum';
-import { ActivityListMock } from '@common/mock-data/activity-list-mock';
 import { CustomerListMock } from '@common/mock-data/customer-list-mock';
 import { TagConditionMock } from '@common/mock-data/tag-condition-mock';
 import { ValidatorsUtil } from '@common/utils/validators-util';

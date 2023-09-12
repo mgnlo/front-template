@@ -8,6 +8,7 @@ import { ConfigService } from './config.service';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap, timeout, finalize } from 'rxjs/operators';
 import { StorageService } from './storage.service';
+import { DialogService } from './dialog.service';
 
 @Injectable({
   providedIn: 'root',
@@ -33,6 +34,7 @@ export class ApiService {
     private http: HttpClient,
     private loadingService: LoadingService,
     private configService: ConfigService,
+    private dialogService: DialogService,
     private storageService: StorageService
   ) { }
 
@@ -137,10 +139,12 @@ export class ApiService {
       tap((res: HttpResponse<Blob>) => {
         // console.info('res',res)
         if (res && res.status?.toString() !== RestStatus.SUCCESS) {
+          this.dialogService.alertAndBackToList(false, '檔案下載失敗');
           throw new ApiLogicError(res.statusText, res.status?.toString());
         }
 
         if (res.body.type === 'application/json') { // 有邏輯錯誤 => 回傳json => 拋出logic error
+          this.dialogService.alertAndBackToList(false, '檔案下載失敗');
           throw new ApiLogicError('不可為json', res.status?.toString());
         }
 
