@@ -816,7 +816,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       endDate: formData.endDate ? moment(formData.endDate).format('YYYY-MM-DD') : null,
       categoryKey: formData.categoryKey,
       tagTopicKey: formData.tagTopicKey,
-      tagDescription: formData.TagDescription,
+      tagDescription: formData.tagDescription,
       conditionSettingQuery:
         (formData.tagType === 'normal' && formData.conditionSettingMethod === 'normal') ?
           formData.conditionSettingQuery : null, //條件設定語法
