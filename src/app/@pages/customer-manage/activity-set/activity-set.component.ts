@@ -162,10 +162,10 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
                 if (!this.categoryList.get(con.tagKey)) {
                   // this.categoryList[con.tagKey] = con.tagName //把取回的值塞進活動名單條件下拉選單
                   this.dialogService.alertAndBackToList(null, `活動名單條件 ${con.tagName} 已不存在，請重新選擇`);
-                  fg.setControl("" + index, new FormControl(null, Validators.required));
+                  fg.setControl("" + index, new FormControl(null, [Validators.required, ValidatorsUtil.isRepeat]));
                   fg.get("" + index).markAsTouched();
                 } else {
-                  fg.setControl("" + index, new FormControl(con.tagKey, Validators.required));
+                  fg.setControl("" + index, new FormControl(con.tagKey, [Validators.required, ValidatorsUtil.isRepeat]));
                 }
               });
               this.conditions.push(fg);
