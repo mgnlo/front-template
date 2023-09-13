@@ -1,8 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ConfigService } from '@api/services/config.service';
 import { LoadingService } from '@api/services/loading.service';
 import { LoginService } from '@api/services/login.service';
 import { RestStatus } from '@common/enums/rest-enum';
+import { UserProfileMock } from '@common/mock-data/user-profile-mock';
 import { Subscription } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
@@ -19,7 +21,8 @@ export class SSOLoginComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private loadingService: LoadingService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private configService: ConfigService,
   ) { }
 
   ngOnInit(): void {
@@ -27,6 +30,12 @@ export class SSOLoginComponent implements OnInit, OnDestroy {
     this.lightID = new URLSearchParams(window.location.search).get("lightID");
     // 目前測試用 lightID : 17071 ~ 170175
     this.lightID = "17071";
+
+    if(this.configService.getConfig().IS_MOCK){
+      this.router.navigate(["pages"]);
+      this.loginService.userProfileSubject.next(UserProfileMock);
+      return;
+    }
     // 發送電文請求 JWT Token 與 登入者 GroupScope，模擬成功導到 page 頁面
     // setTimeout 主要是用來 delay 一下方便 debug，正是可以拿掉
     setTimeout(() => {
@@ -49,8 +58,6 @@ export class SSOLoginComponent implements OnInit, OnDestroy {
                   }
                 }
               });
-            } else {
-
             }
           }
         });
@@ -84,7 +91,9 @@ export class SSOLoginComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    this.userProfileSubscription.unsubscribe();
+    if(!!this.userProfileSubscription){
+      this.userProfileSubscription.unsubscribe();
+    }
   }
 }
 

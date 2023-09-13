@@ -49,6 +49,20 @@ export class ServerSourceInitConfig {
 }
 
 export class CommonServerDataSource extends ServerDataSource {
+  _jwtToken: string = null
+
+  public set jwtToken(jwt: string) {
+    this._jwtToken = jwt;
+  }
+
+  private httpOptions = {
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8;',
+      'Access-Control-Allow-Origin': '*',
+      //   Authorization: '',
+    },
+  };
+
   private configService: ConfigService = ConfigService.getInstance();
   private initConf: ServerSourceInitConfig;
   private prefixUrl = this.configService.getConfig().SERVER_URL + this.configService.getConfig().API_URL;
@@ -63,6 +77,10 @@ export class CommonServerDataSource extends ServerDataSource {
 
     const resultUrl = this.prefixUrl + this.conf.endPoint;
     let httpParams = this.createRequesParams();
+
+    if (this._jwtToken) {
+      this.httpOptions.headers["Authorization"] = `Bearer ${this._jwtToken}`;
+    }
 
     //初始化頁面
     const page = (this?.initConf?.page ?? 1);
@@ -91,7 +109,7 @@ export class CommonServerDataSource extends ServerDataSource {
       this.apiStatusSubject.next('loading');
     }
 
-    return this.http.get(resultUrl, { params: httpParams, observe: 'response' })
+    return this.http.get(resultUrl, { params: httpParams, ...this.httpOptions, observe: 'response' })
       .pipe(
         catchError(err => {
           this.apiStatusSubject.next('error');
