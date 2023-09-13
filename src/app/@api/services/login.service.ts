@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { ResponseModel } from '@api/models/base.model';
 import { ConsoleUserList } from '@api/models/console-user.model';
+import { UserProfileMock } from '@common/mock-data/user-profile-mock';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Observable } from 'rxjs/internal/Observable';
 import { ApiService } from './api.service';
+import { ConfigService } from './config.service';
 import { StorageService } from './storage.service';
 
 @Injectable({
@@ -41,8 +43,13 @@ export class LoginService {
 
     constructor(
         private service: ApiService,
-        private storageService: StorageService) {
+        private storageService: StorageService,
+        private configService: ConfigService) {
         let storageJwt = this.storageService.getSessionVal("jwtToken");
+
+        if(this.configService.getConfig().IS_MOCK){
+            this._userProfile = UserProfileMock;
+        }
 
         if (storageJwt) {
             this.jwtToken = storageJwt;

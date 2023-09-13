@@ -2,7 +2,7 @@
 
 body { overflow: hidden; }
 
-$title-color: #0B3255;
+// $title-color: #0B3255;
 $label-color: #393C3E;
 $option-color: #82878B;
 $scrollbar: #BBC1C5;
@@ -70,11 +70,10 @@ $scrollbar: #BBC1C5;
     border-bottom: none;
     margin-bottom: 0;
     a {
-        padding: 12px 20px 12px 0;
+        font-size: $f14;
         transition: all 0.3s;
-        &.active nb-icon {
-            color: nb-theme(color-primary-500);
-        }
+        padding: 12px 20px 12px 0;
+        &.active nb-icon { color: nb-theme(color-primary-500); }
         &:hover nb-icon { color: #FFFFFF; }
     }
     .menu-icon { margin: 0 calc((4.3rem - 20px)/2); }
@@ -87,6 +86,7 @@ $scrollbar: #BBC1C5;
             a {
                 position: relative;
                 min-height: 40px;
+                font-size: $f14;
                 color: #FFFFFF;
                 background-color: rgba($color: #FFFFFF, $alpha: 0);
                 padding: 0px 0 0 35px;
@@ -179,6 +179,7 @@ $scrollbar: #BBC1C5;
         padding: 0.75rem 1rem;
         &:hover { color: nb-theme(color-primary-500); }
     }
+    nb-user.size-medium .user-title { font-size: $f13; }
     nb-card {
         border: 0;
         nb-card-header, nb-card-body {
@@ -209,11 +210,11 @@ $scrollbar: #BBC1C5;
             h2, p {
                 line-height: initial;
                 font-weight: bold;
-                color: $title-color;
+                color: nb-theme(color-primary-500);
                 &:not(:nth-last-child(1)) { margin-right: 0.75rem; }
             }
-            h2 { font-size: $f15; }
-            p { font-size: $f14; }
+            h2 { font-size: $f16; }
+            p { font-size: $f15; }
             .fieldGroup { padding: 0 0.625rem 0 0 !important; }
             &.column-header { flex-wrap: nowrap; }
         }
@@ -238,7 +239,6 @@ $scrollbar: #BBC1C5;
         &.colorArea { padding: 0; }
     }
     nb-accordion {
-        border: 0.0625rem solid #E4E9F2;
         border-radius: 0.25rem;
         box-shadow: none;
         margin-bottom: 1.875rem;
@@ -269,11 +269,11 @@ $scrollbar: #BBC1C5;
             h2, p {
                 line-height: initial;
                 font-weight: bold;
-                color: $title-color;
+                color: nb-theme(color-primary-500);
                 &:not(:nth-last-child(1)) { margin-right: 0.75rem; }
             }
-            h2 { font-size: $f15; }
-            p { font-size: $f14; }
+            h2 { font-size: $f16; }
+            p { font-size: $f15; }
             .fieldGroup { padding: 0 0.625rem 0 0 !important; }
             &.column-header { flex-wrap: nowrap; }
         }
@@ -290,11 +290,7 @@ $scrollbar: #BBC1C5;
             }
         }
     }
-    nb-button-group {
-        [nbButton] {
-            margin: unset;
-        }
-    }
+    nb-button-group [nbButton] { margin: unset; }
     nb-select {
         .select-button { min-width: unset; }
         &:disabled { pointer-events: none; }
@@ -307,6 +303,7 @@ $scrollbar: #BBC1C5;
                 }
             }
         }
+        &.size-medium .select-button { font-size: $f16; }
     }
     nb-option { background-color: #FAFAFA; }
     nb-option-list {
@@ -325,8 +322,11 @@ $scrollbar: #BBC1C5;
         flex-wrap: wrap;
     }
     nb-radio {
-        .text { font-weight: initial; }
-        > label { cursor: pointer; }
+        label { cursor: pointer; }
+        .text {
+            font-size: $f15;
+            font-weight: initial;
+        }
         &.status-info {
             label {
                 &:hover {
@@ -434,11 +434,14 @@ $scrollbar: #BBC1C5;
         }
     }
     nb-checkbox {
-        .label {
-            font-weight: bold;
-            padding: 0.375rem 1.25rem 0.375rem 0;
+        label.label {
             cursor: pointer;
-            .text { font-weight: initial; }
+            padding: 0.375rem 1.5rem 0.375rem 0;
+        }
+        .text {
+            font-size: $f15;
+            font-weight: initial;
+            &:not(:empty) { padding-left: 0.5rem !important; }
         }
         &.status-info {
             .text {
@@ -518,6 +521,7 @@ $scrollbar: #BBC1C5;
                 .tab-link {
                     min-width: 100px;
                     justify-content: center;
+                    font-size: $f16;
                     font-weight: normal;
                     padding: 1rem;
                 }
@@ -570,7 +574,7 @@ $scrollbar: #BBC1C5;
     }
     nb-tag {
         &.size-medium {
-            font-size: $f14;
+            font-size: $f15;
             font-weight: bold;
             line-height: 1.2;
             margin: 5px;
@@ -583,9 +587,7 @@ $scrollbar: #BBC1C5;
             margin: 5px;
             padding: 0.375rem 0.9375rem;
         }
-        &.appearance-filled.status-basic {
-            color: #FFFFFF;
-        }
+        &.appearance-filled.status-basic { color: #FFFFFF; }
     }
     nb-list {
         nb-list-item {
@@ -612,6 +614,7 @@ $scrollbar: #BBC1C5;
                 pointer-events: none;
                 opacity: 0.5;
             }
+            &.size-medium { font-size: $f16; }
             &.automatic {
                 pointer-events: none;
                 color: rgba($color: nb-theme(text-basic-color), $alpha: 1);
@@ -631,7 +634,7 @@ $scrollbar: #BBC1C5;
             flex-shrink: 0;
             width: 25px;
             height: 25px;
-            margin: 5px;
+            margin: 0.25rem;
             padding: 0 !important;
             nb-icon {
                 width: 19px;
@@ -646,11 +649,16 @@ $scrollbar: #BBC1C5;
             }
         }
         &.size-medium {
+            font-size: $f16;
             nb-icon {
                 width: 18px !important;
                 height: 18px !important;
                 margin-right: 0.375rem !important;
             }
+        }
+        &.size-small {
+            font-size: $f14;
+            margin: 0.25rem;
         }
         &.appearance-filled.status-basic { color: #FFFFFF; }
         &.appearance-ghost {
@@ -739,9 +747,8 @@ ul {
         color: nb-theme(color-primary-600);
         line-height: initial;
         margin: 0;
-        margin-right: 0.75rem;
+        margin-right: 0.5rem;
     }
-    [nbButton] { margin: 0; }
 }
 .subTitle {
     display: flex;
@@ -756,10 +763,46 @@ ul {
         margin: auto auto auto 0.5rem;
     }
     p {
-        font-size: $f14;
+        font-size: $f15;
         font-weight: bold;
-        margin-right: 10px;
+        margin-right: 0.5rem;
     }
+}
+.pageNav {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    list-style-type: none;
+    padding: 1.25rem 2rem;
+    margin-bottom: 0;
+    nb-icon {
+        width: 1rem;
+        height: 1rem;
+        margin-right: 0.25rem;
+    }
+    li {
+        position: relative;
+        font-size: $f14;
+        color: nb-theme(color-primary-500);
+        &:nth-last-of-type(1) { font-weight: bold; }
+        &:not(:nth-last-of-type(1)) {
+            margin-right: 1rem;
+            margin-bottom: 0;
+            &:after {
+                content: '/';
+                position: absolute;
+                right: -9px;
+                top: -1px;
+                font-size: 1rem;
+            }
+            &:hover {
+                cursor:  pointer;
+                text-decoration: underline;
+            }
+        }
+    }
+    + .pageTitle { margin-top: -2rem; }
 }
 .btnGroup {
     width: calc(100% + 1rem);
@@ -782,30 +825,20 @@ ul {
     border-radius: 0.25rem;
     padding: 1rem 1.5rem;
     margin-bottom: 0.5rem;
-    nb-icon,p,li { color: nb-theme(color-info-500); }
+    nb-icon, p, li { color: nb-theme(color-info-500); }
     nb-icon {
-        width: 21px;
-        height: 21px;
+        width: 22px;
+        height: 22px;
         flex-shrink: 0;
-        margin-right: 8px;
+        margin-right: 0.5rem;
+        + p { margin-top: 2px }
     }
-    p {
-        font-size: $f13;
+    p, li {
+        font-size: $f14;
         font-weight: bold;
-        margin-top: 2px;
+        &:not(:nth-last-child(1)) { margin-bottom: 0.25rem; }
     }
-    li {
-        font-size: $f13;
-        font-weight: bold;
-        &:not(:nth-last-of-type(1)) {
-            margin-bottom: 0.125rem;
-        }
-    }
-    ul { margin-bottom: 0; }
-    div p:not(:nth-last-child(1)) {
-        margin-top: 0;
-        margin-bottom: 0.25rem;
-    }
+    ul:last-child { margin-bottom: 0; }
     &.alert {
         background: rgba($color: nb-theme(color-danger-500), $alpha: 0.1);
         nb-icon,p,li { color: nb-theme(color-danger-500); }
@@ -842,10 +875,10 @@ ul {
     > label {
         position: relative;
         width: fit-content;
-        font-size: $f12;
+        font-size: $f15;
         font-weight: bold;
         color: $label-color;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.375rem;
     }
     > div {
         position: relative;
@@ -901,7 +934,8 @@ ul {
                 display: flex;
                 font-size: $f14;
                 font-weight: bold;
-                color: rgba($color: $title-color, $alpha: 0.5);
+                // color: rgba($color: $title-color, $alpha: 0.5);
+                color: rgba(nb-theme(color-primary-500), $alpha: 0.5);
                 nb-icon { margin-right: 0.2rem; }
             }
         }
@@ -945,12 +979,12 @@ ul {
         align-items: flex-start;
         color: nb-theme(color-info-500);
         margin-top: -0.25rem;
-        margin-bottom: 0.25rem !important;
+        margin-bottom: 0.375rem !important;
         nb-icon {
             font-size: $f15;
             margin: 3px 3px 0 0;
         }
-        p, a { font-size: $f12; }
+        p, a { font-size: $f14; }
         p {
             width: calc(100% - 18px);
             color: nb-theme(color-info-500);
@@ -1029,9 +1063,9 @@ ul {
     }
     > button {
         align-self: flex-start;
-        margin: 0 0.5rem !important;
+        margin: -0.25rem 0.5rem 0 !important;
     }
-    p, a, span { font-size: $f14; }
+    p, a, span { font-size: $f15; }
     p {
         word-break: keep-all;
         font-weight: bold;
@@ -1099,7 +1133,7 @@ ul {
         }
         h4 {
             position: relative;
-            font-size: $f15;
+            font-size: $f16;
             line-height: initial;
             color: rgba($color: nb-theme(color-info-500), $alpha: 0.6);
             margin: 0;
@@ -1141,7 +1175,7 @@ ul {
                 &:nth-of-type(1) {
                     position: relative;
                     margin-right: 1rem;
-                    p { font-size: $f12; }
+                    p { font-size: $f14; }
                     &:before {
                         content: '';
                         position: absolute;
@@ -1155,7 +1189,7 @@ ul {
                     }
                 }
                 &:nth-of-type(2) p {
-                    font-size: $f14;
+                    font-size: $f15;
                     &:nth-of-type(1) { font-weight: bold; }
                 }
             }
@@ -1202,6 +1236,7 @@ ul {
         padding: 0.875rem 0.625rem;
         nb-card {
             height: 100%;
+            border: 0.0625rem solid #e4e9f2;
             margin: 0;
             nb-card-body {
                 .textGroup { padding: 0.375rem 0; }
@@ -1229,7 +1264,7 @@ ul {
             color: nb-theme(color-primary-500);
         }
         p {
-            font-size: $f12;
+            font-size: $f14;
             font-weight: bold;
             color: $option-color;
         }
@@ -1333,7 +1368,7 @@ ul {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    p, span { font-size: 12px; }
+    p, span { font-size: $f14; }
     p {
         font-weight: bold;
         margin-right: 1rem;
@@ -1368,6 +1403,7 @@ ul {
         }
     }
 }
+// 表格 樣式
 .tableContainer {
     position: relative;
     max-width: 100%;
@@ -1389,16 +1425,18 @@ ul {
         z-index: 1;
     }
 }
-// 表格頁籤
 .tablePager {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     justify-content: space-between;
+    p { font-size: $f14; }
     ul.pagination {
         width: auto;
         display: flex;
         border: #DBDEE1 solid 1px;
         border-radius: 0.25rem;
-        margin: 1.25rem 0 1.25rem auto;
+        margin: 1.25rem 0;
         padding: 0;
         .pageItem {
             overflow: hidden;
@@ -1456,14 +1494,13 @@ table {
     th, td {
         position: relative;
         vertical-align: middle;
-        font-size: $f14;
-        font-weight: normal;
         color: #121A23;
         border: 1px solid #DBDEE1;
-        padding: 0.875rem 1.25rem !important;
-        &.center { text-align: center; }
+        padding: 0.875rem 1.25rem;
     }
     th {
+        font-size: $f16;
+        font-weight: bold;
         &.w100 { width: 100px;}
         &.w150 { width: 150px;}
         &.w200 { width: 200px; }
@@ -1484,6 +1521,8 @@ table {
         &.min_w500 { min-width: 500px; }
     }
     td {
+        font-size: $f15;
+        font-weight: normal;
         word-break: break-all;
         .btnCol {
             position: absolute;
@@ -1582,19 +1621,18 @@ table {
 .nb-theme-default ng2-smart-table {
     table {
         tr {
-            th {
-                font-weight: bold;
-                color: $label-color;
-                padding: 0.875rem 1.25rem;
+            th, td {
                 p, a, span {
-                    font-weight: inherit;
-                    color: inherit !important;
+                    font-size: inherit;
                 }
             }
-            td {
-                font-size: $f14;
-                p, a, span { font-size: inherit; }
+            th {
+                font-size: $f16;
+                font-weight: bold;
+                color: $label-color;
+                padding: 0.875rem 1.25rem !important;
             }
+            td { font-size: $f15; }
         }
         tbody tr {
             &:nth-child(odd),&:nth-child(odd).select { background-color: #FAFAFA !important; }
@@ -1687,17 +1725,11 @@ table {
                 border-color: #DBDEE1;
                 margin: 0;
                 li {
-                    a, span { color: #0078B2; }
                     &:not(:last-child) { border-color: #DBDEE1 !important; }
-                    &.active {
-                        a, a:hover, a:focus, > span { background-color: #0078B2; }
-                    }
                     &.disabled a span { color: rgba(143, 155, 179, 0.48);}
                 }
             }
-            @media all and (max-width: 960px) {
-                margin-top: 2.5rem;
-            }
+            @media all and (max-width: 960px) { margin-top: 2.5rem; }
         }
     }
     ~ .tablePager {
@@ -1709,7 +1741,6 @@ table {
         }
     }
 }
-
 // 圖例 樣式
 .legend {
     display: flex;
@@ -1732,7 +1763,6 @@ table {
         }
     }
 }
-
 // Dialog 樣式
 .dialogCard {
     min-width: 320px;
@@ -1756,7 +1786,6 @@ table {
             font-weight: bold;
         }
     }
-    // p { margin-bottom: 0.5rem; }
     @media all and (max-width: 575px) {
         &.small, &.medium, &.large { width: 90vw; }
     }
