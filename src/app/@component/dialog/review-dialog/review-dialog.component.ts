@@ -35,6 +35,7 @@ export class ReviewDialogComponent implements OnInit {
         takeWhile(x => x >= 0)
       ).subscribe(() => {
         this.emit.next({isApproved: true, reviewComment: null});
+        this.emit.complete();
         this.ref.close();
       })
     }
@@ -47,6 +48,7 @@ export class ReviewDialogComponent implements OnInit {
   submit() {
     if(this.form.valid){
       this.emit.next({isApproved: false, reviewComment: this.form.get('reason').value});
+      this.emit.complete();
       this.ref.close();
     }
   }
