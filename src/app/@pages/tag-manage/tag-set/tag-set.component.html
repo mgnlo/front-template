@@ -97,8 +97,9 @@
 								(input)="onConditionKeyChange($event)" (blur)="onBlurConditionKeyInput()"
 								formControlName="conditionKey" />
 							<nb-autocomplete #auto (selectedChange)="onConditionKeySelectChange($event)">
-								<nb-option *ngFor="let conditionKey of filterConditionKeyList" [value]="conditionKey">{{
-									conditionKey.val }}</nb-option>
+                  <nb-option *ngFor="let conditionKey of filterConditionKeyList" [value]="conditionKey">
+                    {{ conditionKey.val }}
+                  </nb-option>
 							</nb-autocomplete>
 						</div>
 						<div class="note errorText">
