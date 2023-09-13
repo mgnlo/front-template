@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DialogService } from './dialog.service';
 import { LoadingService } from './loading.service';
+import { ApiService } from './api.service';
 
 export interface SearchInfo {
   apiUrl: string
@@ -22,6 +23,7 @@ export class Ng2SmartTableService {
 
   constructor(
     private http: HttpClient,
+    private service: ApiService,
     private loadingService: LoadingService,
     private dialogService: DialogService,
   ) { }
@@ -49,7 +51,7 @@ export class Ng2SmartTableService {
       initConf.sorts = searchInfo.sorts;
     }
 
-    let restDataSource = new CommonServerDataSource(this.http, conf, initConf);
+    let restDataSource = new CommonServerDataSource(this.http,this.service, conf, initConf);
 
     restDataSource.apiStatus().pipe(takeUntil(unsubscribe$)).subscribe(status => {
       switch (status) {
