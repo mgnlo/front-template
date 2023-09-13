@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ResponseModel } from '@api/models/base.model';
 import { RestStatus } from '@common/enums/rest-enum';
@@ -21,10 +21,11 @@ export class ApiService {
   }
 
   private httpOptions = {
-    headers: new HttpHeaders({
+    headers: {
       'Content-type': 'application/json; charset=UTF-8;',
       'Access-Control-Allow-Origin': '*',
-    }),
+      //   Authorization: '',
+    },
   };
 
   private prefixUrl = this.configService.getConfig().SERVER_URL + this.configService.getConfig().API_URL;
@@ -42,17 +43,20 @@ export class ApiService {
     url: string,
     requestObj?: any,
     rqParams?: { [key: string]: any },
+    prefixUrl?: string,
   ): Observable<ResponseModel<T>> {
 
     let observable: Observable<ResponseModel<T>>;
 
-    const resultUrl = this.prefixUrl + url;
+    prefixUrl = !prefixUrl ? this.prefixUrl : prefixUrl;
+    const resultUrl = prefixUrl + url;
     // const requestModel = { requestObj };
 
     if (this._jwtToken) {
-      this.httpOptions.headers = this.httpOptions.headers.set("Authorization", `Bearer ${this._jwtToken}`);
+      this.httpOptions.headers["Authorization"] = `Bearer ${this._jwtToken}`;
     }
-    console.log(this.httpOptions.headers.get("Authorization"));
+
+    // console.log('this.httpOptionsthis',JSON.stringify(this.httpOptions));
 
     switch (method) {
       case 'post':
@@ -96,8 +100,8 @@ export class ApiService {
     return this.doSend('post', url, requestObj);
   }
 
-  doGet<T>(url: string, rqParams?: { [key: string]: any }): Observable<ResponseModel<T>> {
-    return this.doSend('get', url, null, rqParams);
+  doGet<T>(url: string, rqParams?: { [key: string]: any }, prefixUrl?: string): Observable<ResponseModel<T>> {
+    return this.doSend('get', url, null, rqParams, prefixUrl);
   }
 
   doPut<T>(url: string, requestObj: any): Observable<ResponseModel<T>> {
