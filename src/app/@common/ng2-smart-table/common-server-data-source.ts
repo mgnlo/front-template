@@ -1,5 +1,4 @@
 import { HttpClient } from '@angular/common/http';
-import { ApiService } from '@api/services/api.service';
 import { ConfigService } from '@api/services/config.service';
 import { CommonUtil } from '@common/utils/common-util';
 import { ServerDataSource } from 'ng2-smart-table';
@@ -50,23 +49,19 @@ export class ServerSourceInitConfig {
 }
 
 export class CommonServerDataSource extends ServerDataSource {
-  private service: ApiService;
+  private configService: ConfigService = ConfigService.getInstance();
   private initConf: ServerSourceInitConfig;
+  private prefixUrl = this.configService.getConfig().SERVER_URL + this.configService.getConfig().API_URL;
   private apiStatusSubject: BehaviorSubject<'init' | 'loading' | 'finish' | 'error'> = new BehaviorSubject('init');
 
-  constructor(
-    protected http: HttpClient,
-    service: ApiService,
-    conf: CommonConf | {} = {},
-    initConf?: ServerSourceInitConfig,
-    ) {
+  constructor(protected http: HttpClient, conf: CommonConf | {} = {}, initConf?: ServerSourceInitConfig) {
     super(http, conf);
     this.initConf = initConf;
-    this.service = service;
   }
 
   protected requestElements(): Observable<any> {
 
+    const resultUrl = this.prefixUrl + this.conf.endPoint;
     let httpParams = this.createRequesParams();
 
     //初始化頁面
@@ -96,7 +91,7 @@ export class CommonServerDataSource extends ServerDataSource {
       this.apiStatusSubject.next('loading');
     }
 
-    return this.service.doGet(this.conf.endPoint, httpParams)
+    return this.http.get(resultUrl, { params: httpParams, observe: 'response' })
       .pipe(
         catchError(err => {
           this.apiStatusSubject.next('error');
@@ -108,19 +103,6 @@ export class CommonServerDataSource extends ServerDataSource {
           this.setPage(page + 1, false)
         }),
       );
-
-    // return this.http.get(resultUrl, { params: httpParams, observe: 'response' })
-    //   .pipe(
-    //     catchError(err => {
-    //       this.apiStatusSubject.next('error');
-    //       throw err;
-    //     }),
-    //     tap((res) => {
-    //       this.apiStatusSubject.next('finish')
-    //       const page = res?.body?.result?.pageable?.pageNumber ?? 0
-    //       this.setPage(page + 1, false)
-    //     }),
-    //   );
   }
 
   apiStatus(): Observable<'init' | 'loading' | 'finish' | 'error'> {

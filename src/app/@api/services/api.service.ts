@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ResponseModel } from '@api/models/base.model';
 import { RestStatus } from '@common/enums/rest-enum';
@@ -21,11 +21,10 @@ export class ApiService {
   }
 
   private httpOptions = {
-    headers: {
+    headers: new HttpHeaders({
       'Content-type': 'application/json; charset=UTF-8;',
       'Access-Control-Allow-Origin': '*',
-      //   Authorization: '',
-    },
+    }),
   };
 
   private prefixUrl = this.configService.getConfig().SERVER_URL + this.configService.getConfig().API_URL;
@@ -51,8 +50,9 @@ export class ApiService {
     // const requestModel = { requestObj };
 
     if (this._jwtToken) {
-      this.httpOptions.headers["Authorization"] = `Bearer ${this._jwtToken}`;
+      this.httpOptions.headers = this.httpOptions.headers.set("Authorization", `Bearer ${this._jwtToken}`);
     }
+    console.log(this.httpOptions.headers.get("Authorization"));
 
     switch (method) {
       case 'post':
