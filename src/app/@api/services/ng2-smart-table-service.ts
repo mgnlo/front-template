@@ -4,6 +4,7 @@ import { CommonConf, CommonServerDataSource, ServerSourceInitConfig } from '@com
 import { CommonUtil } from '@common/utils/common-util';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { ApiService } from './api.service';
 import { DialogService } from './dialog.service';
 import { LoadingService } from './loading.service';
 
@@ -24,6 +25,7 @@ export class Ng2SmartTableService {
     private http: HttpClient,
     private loadingService: LoadingService,
     private dialogService: DialogService,
+    private apiService: ApiService
   ) { }
 
   /**
@@ -49,7 +51,7 @@ export class Ng2SmartTableService {
       initConf.sorts = searchInfo.sorts;
     }
 
-    let restDataSource = new CommonServerDataSource(this.http, conf, initConf);
+    let restDataSource = new CommonServerDataSource(this.http, this.apiService, conf, initConf);
 
     restDataSource.apiStatus().pipe(takeUntil(unsubscribe$)).subscribe(status => {
       switch (status) {

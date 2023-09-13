@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { ConfigService } from '@api/services/config.service';
+import { ApiService } from '@api/services/api.service';
 import { CommonUtil } from '@common/utils/common-util';
 import { ServerDataSource } from 'ng2-smart-table';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -49,39 +49,18 @@ export class ServerSourceInitConfig {
 }
 
 export class CommonServerDataSource extends ServerDataSource {
-  _jwtToken: string = null
 
-  public set jwtToken(jwt: string) {
-    this._jwtToken = jwt;
-  }
-
-  private httpOptions = {
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8;',
-      'Access-Control-Allow-Origin': '*',
-      //   Authorization: '',
-    },
-  };
-
-  private configService: ConfigService = ConfigService.getInstance();
   private initConf: ServerSourceInitConfig;
-  private prefixUrl = this.configService.getConfig().SERVER_URL + this.configService.getConfig().API_URL;
   private apiStatusSubject: BehaviorSubject<'init' | 'loading' | 'finish' | 'error'> = new BehaviorSubject('init');
 
-  constructor(protected http: HttpClient, conf: CommonConf | {} = {}, initConf?: ServerSourceInitConfig) {
+  constructor(protected http: HttpClient, private apiService: ApiService, conf: CommonConf | {} = {}, initConf?: ServerSourceInitConfig) {
     super(http, conf);
     this.initConf = initConf;
   }
 
   protected requestElements(): Observable<any> {
 
-    const resultUrl = this.prefixUrl + this.conf.endPoint;
     let httpParams = this.createRequesParams();
-
-    if (this._jwtToken) {
-      this.httpOptions.headers["Authorization"] = `Bearer ${this._jwtToken}`;
-    }
-
     //初始化頁面
     const page = (this?.initConf?.page ?? 1);
     if (page > 1) {
@@ -109,7 +88,7 @@ export class CommonServerDataSource extends ServerDataSource {
       this.apiStatusSubject.next('loading');
     }
 
-    return this.http.get(resultUrl, { params: httpParams, ...this.httpOptions, observe: 'response' })
+    return this.apiService.doGet(this.conf.endPoint, httpParams, null, 'response')
       .pipe(
         catchError(err => {
           this.apiStatusSubject.next('error');

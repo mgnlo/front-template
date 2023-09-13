@@ -44,6 +44,7 @@ export class ApiService {
     requestObj?: any,
     rqParams?: { [key: string]: any },
     prefixUrl?: string,
+    observe?: string,
   ): Observable<ResponseModel<T>> {
 
     let observable: Observable<ResponseModel<T>>;
@@ -63,7 +64,9 @@ export class ApiService {
         observable = this.http.post<ResponseModel<T>>(resultUrl, requestObj, this.httpOptions);
         break;
       case 'get':
-        observable = this.http.get<ResponseModel<T>>(resultUrl, { params: rqParams, ...this.httpOptions });
+        let httpOptions0 = { params: rqParams, ...this.httpOptions }
+        let httpOptions1 = { params: rqParams, ...this.httpOptions, observe: 'response'}
+        observable = this.http.get<ResponseModel<T>>(resultUrl, observe ? httpOptions1 : httpOptions0);
         break;
       case 'put':
         observable = this.http.put<ResponseModel<T>>(resultUrl, requestObj, this.httpOptions);
@@ -89,7 +92,7 @@ export class ApiService {
         return throwError(errorMessage);
       }),
       tap(res => {
-        if (res && res.code !== RestStatus.SUCCESS) {
+        if (res && (res.code || res['body']['code']) !== RestStatus.SUCCESS) {
           throw new ApiLogicError(res.message, res.code);
         }
       }),
@@ -100,8 +103,8 @@ export class ApiService {
     return this.doSend('post', url, requestObj);
   }
 
-  doGet<T>(url: string, rqParams?: { [key: string]: any }, prefixUrl?: string): Observable<ResponseModel<T>> {
-    return this.doSend('get', url, null, rqParams, prefixUrl);
+  doGet<T>(url: string, rqParams?: { [key: string]: any }, prefixUrl?: string, observe?: string): Observable<ResponseModel<T>> {
+    return this.doSend('get', url, null, rqParams, prefixUrl, observe);
   }
 
   doPut<T>(url: string, requestObj: any): Observable<ResponseModel<T>> {
