@@ -1,5 +1,4 @@
 import { AbstractControl, FormGroup, ValidatorFn } from '@angular/forms';
-import { CommonUtil } from './common-util';
 import { RegExpUtil } from './reg-exp-util';
 import { ValidateUtil } from './validate-util';
 

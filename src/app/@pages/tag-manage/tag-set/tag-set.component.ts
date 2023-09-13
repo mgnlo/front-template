@@ -277,6 +277,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     }
     //#endregion
     else {//新增
+      this.validateForm.get('endDate')?.patchValue(new Date('9999-12-31'));
       //#region 設定欄位
       const formData = this.validateForm.getRawValue();
       this.changeTagType(formData.tagType);
@@ -290,7 +291,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   }
 
   ngDoCheck() {
-    console.info('this.findInvalidControls()', this.findInvalidControls())
+    // console.info('this.findInvalidControls()', this.findInvalidControls())
     const categoryKeyVal = this.validateForm.get('categoryKey')?.value;
     if (CommonUtil.isNotBlank(categoryKeyVal) && categoryKeyVal != this.beforeCategoryVal) {
       this.beforeCategoryVal = categoryKeyVal;
