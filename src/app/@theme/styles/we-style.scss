@@ -573,8 +573,6 @@ $scrollbar: #BBC1C5;
         }
     }
     nb-tag {
-        display: flex;
-        align-items: center;
         &.size-medium {
             font-size: $f15;
             font-weight: bold;
@@ -1405,6 +1403,7 @@ ul {
         }
     }
 }
+// 表格 樣式
 .tableContainer {
     position: relative;
     max-width: 100%;
@@ -1426,12 +1425,12 @@ ul {
         z-index: 1;
     }
 }
-// 表格頁籤
 .tablePager {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
+    p { font-size: $f14; }
     ul.pagination {
         width: auto;
         display: flex;
@@ -1728,17 +1727,11 @@ table {
                 border-color: #DBDEE1;
                 margin: 0;
                 li {
-                    a, span { color: #0078B2; }
                     &:not(:last-child) { border-color: #DBDEE1 !important; }
-                    &.active {
-                        a, a:hover, a:focus, > span { background-color: #0078B2; }
-                    }
                     &.disabled a span { color: rgba(143, 155, 179, 0.48);}
                 }
             }
-            @media all and (max-width: 960px) {
-                margin-top: 2.5rem;
-            }
+            @media all and (max-width: 960px) { margin-top: 2.5rem; }
         }
     }
     ~ .tablePager {
@@ -1750,7 +1743,6 @@ table {
         }
     }
 }
-
 // 圖例 樣式
 .legend {
     display: flex;
@@ -1773,7 +1765,6 @@ table {
         }
     }
 }
-
 // Dialog 樣式
 .dialogCard {
     min-width: 320px;
