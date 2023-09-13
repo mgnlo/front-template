@@ -43,13 +43,11 @@ export class ApiService {
     url: string,
     requestObj?: any,
     rqParams?: { [key: string]: any },
-    prefixUrl?: string,
   ): Observable<ResponseModel<T>> {
 
     let observable: Observable<ResponseModel<T>>;
 
-    prefixUrl = !prefixUrl ? this.prefixUrl : prefixUrl;
-    const resultUrl = prefixUrl + url;
+    const resultUrl = this.prefixUrl + url;
     // const requestModel = { requestObj };
 
     if (this._jwtToken) {
@@ -98,8 +96,8 @@ export class ApiService {
     return this.doSend('post', url, requestObj);
   }
 
-  doGet<T>(url: string, rqParams?: { [key: string]: any }, prefixUrl?: string): Observable<ResponseModel<T>> {
-    return this.doSend('get', url, null, rqParams, prefixUrl);
+  doGet<T>(url: string, rqParams?: { [key: string]: any }): Observable<ResponseModel<T>> {
+    return this.doSend('get', url, null, rqParams);
   }
 
   doPut<T>(url: string, requestObj: any): Observable<ResponseModel<T>> {

@@ -5,13 +5,12 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Observable } from 'rxjs/internal/Observable';
 import { ApiService } from './api.service';
 import { StorageService } from './storage.service';
-import { ConfigService } from './config.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class LoginService {
-    readonly ssoLoginFunc = 'ssoLogin/';
+    readonly ssoLoginFunc = 'ssoLogin';
     schemaName: string = '';
 
     setSchema(schema: string) {
@@ -42,8 +41,7 @@ export class LoginService {
 
     constructor(
         private service: ApiService,
-        private storageService: StorageService,
-        private configService: ConfigService) {
+        private storageService: StorageService) {
         let storageJwt = this.storageService.getSessionVal("jwtToken");
 
         if (storageJwt) {
@@ -54,8 +52,7 @@ export class LoginService {
     // SSO 登入：GET /api/ssoLogin?lightID=
     // response JWT PAYLOAD： ConsoleUserList with ConsoleGroup with ConsoleGroupScope
     singleSignOn(lightID: string): Observable<ResponseModel<string>> {
-        let prefixUrl = this.configService.getConfig().SERVER_URL + this.configService.getConfig().API_URL;
-        return this.service.doGet(this.ssoLoginFunc, {lightID: lightID}, prefixUrl);
+        return this.service.doGet(this.ssoLoginFunc, {lightID: lightID});
     }
 
     // 解析 patload 取得 userProfit
