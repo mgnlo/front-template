@@ -81,7 +81,7 @@
                     </div>
                     <div class="textGroup code col-12" *ngIf="detail?.conditionSettingMethod === 'field'">
                         <p class="text_bold" [ngClass]="changeClass('conditionSettingMethod') | enum: 'reviewCompareClass'">偵測條件：</p>
-                        <span>{{detail?.tagConditionSetting?.[0]?.conditionName}}</span>
+                        <span>{{detail?.tagConditionSetting?.[0]?.conditionName || detail?.tagConditionSetting?.[0]?.conditionKey}}</span>
                     </div>
                     <!-- 灰底區塊  -->
                     <div class="colorArea col-12" *ngIf="detail?.conditionSettingMethod === 'field'"
