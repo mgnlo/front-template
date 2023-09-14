@@ -98,45 +98,47 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
       ActivityListMock.forEach(activity => {
         activity.activityListCondition.forEach(condition => this.categoryList.set(condition.tagKey, condition.tagName));
       });
-    } else {
-      //L2標籤
-      this.tagManageService.getTagSettingListOption().pipe(
-        catchError((err) => {
+      if (!!this.activityId) {
+        this.loadingService.open();
+        if (this.isMock) {
+          let mockData = ActivityListMock.find(activity => activity.activityId === this.activityId)
+          this.setData(mockData);
           this.loadingService.close();
-          this.dialogService.alertAndBackToList(false, '查詢可選活動名單條件失敗');
-          this.validateForm?.get('activityListCondition')?.setErrors({ 'categoryKeyErrMsg': err.message ? err.message : '查詢可選活動名單條件失敗' });
-          throw new Error(err.message);
-        }),
-        filter(res => res.code === RestStatus.SUCCESS),
-        tap(res => {
-          Object.entries(res.result).forEach(([k, v]) => this.categoryList.set(k, v));
-          this.loadingService.close();
-        })
-      ).subscribe();
-    }
-
-    if (!!this.activityId) {
-      this.loadingService.open();
-
-      if (this.isMock) {
-        let mockData = ActivityListMock.find(activity => activity.activityId === this.activityId)
-        this.setData(mockData);
-        this.loadingService.close();
-        return;
+          return;
+        }
       }
-
-      this.customerManageService.getActivitySettingRow(this.activityId).pipe(
-        catchError(err => {
-          this.dialogService.alertAndBackToList(false, '查無該筆資料，將為您導回客群名單', ['pages', 'customer-manage', 'activity-list']);
-          throw new Error(err.message);
-        }),
-        filter(res => res.code === RestStatus.SUCCESS),
-        tap((res) => {
-          this.setData(res.result);
-          this.loadingService.close();
-        })
-      ).subscribe();
+      return;
     }
+
+    //L2標籤
+    this.tagManageService.getTagSettingListOption().pipe(
+      catchError((err) => {
+        this.loadingService.close();
+        this.dialogService.alertAndBackToList(false, '查詢可選活動名單條件失敗');
+        this.validateForm?.get('activityListCondition')?.setErrors({ 'categoryKeyErrMsg': err.message ? err.message : '查詢可選活動名單條件失敗' });
+        throw new Error(err.message);
+      }),
+      filter(res => res.code === RestStatus.SUCCESS),
+      tap(res => {
+        Object.entries(res.result).forEach(([k, v]) => this.categoryList.set(k, v));
+        this.loadingService.close();
+      })
+    ).subscribe(() => {
+      if (!!this.activityId) {
+        this.loadingService.open();
+        this.customerManageService.getActivitySettingRow(this.activityId).pipe(
+          catchError(err => {
+            this.dialogService.alertAndBackToList(false, '查無該筆資料，將為您導回客群名單', ['pages', 'customer-manage', 'activity-list']);
+            throw new Error(err.message);
+          }),
+          filter(res => res.code === RestStatus.SUCCESS),
+          tap((res) => {
+            this.setData(res.result);
+            this.loadingService.close();
+          })
+        ).subscribe();
+      }
+    });
   }
 
   setData(result: ActivitySetting) {
@@ -258,7 +260,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     let isTouch = formArr.at(+groupIndex).get(controlIndex).touched;
     let isDirty = formArr.at(+groupIndex).get(controlIndex).dirty;
     let isError = formArr.at(+groupIndex).get(controlIndex).errors;
-    return (isTouch || isDirty) && isError? true : false;
+    return (isTouch || isDirty) && isError ? true : false;
   }
 
 }
