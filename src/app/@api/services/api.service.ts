@@ -154,6 +154,9 @@ export class ApiService {
         }
 
         const contentDispositionHeader = res.headers.get('Content-Disposition');
+        if (rqParams?.uploadType && rqParams.uploadType.charAt(0) !== '.') {
+          rqParams.uploadType = '.' + rqParams.uploadType;
+        }
         let fileName = rqParams?.fileName + rqParams?.uploadType; // 預設的文件名
 
         if (contentDispositionHeader) {
