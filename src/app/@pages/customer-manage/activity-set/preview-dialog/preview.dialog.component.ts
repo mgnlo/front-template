@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivityListCondition, PreviewCustomerReq } from '@api/models/activity-list.model';
 import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
@@ -11,8 +12,9 @@ import { TagConditionMock } from '@common/mock-data/tag-condition-mock';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { NbDialogRef } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
+import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
 import { TagManageService } from '@pages/tag-manage/tag-manage.service';
-import { catchError, filter, tap } from 'rxjs/operators';
+import { catchError, filter, finalize, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'ngx-preview',
@@ -21,7 +23,8 @@ import { catchError, filter, tap } from 'rxjs/operators';
 })
 export class PreviewDialogComponent extends BaseComponent implements OnInit {
 
-  @Input() limit: string;
+  @Input() size: string;
+  @Input() conditionList: Array<ActivityListCondition>;
 
   info: string;
   orderByList = new Map<string, string>();
@@ -35,20 +38,21 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
     loginService: LoginService,
     private loadingService: LoadingService,
     private tagManageService: TagManageService,
+    private customerManageService: CustomerManageService,
     private dialogService: DialogService,
     private ref: NbDialogRef<PreviewDialogComponent>,
   ) {
     super(storageService, configService, loginService);
     this.validateForm = new FormGroup({
-      listLimit: new FormControl(null, [Validators.required, ValidatorsUtil.notZero]),
-      orderBy: new FormControl('', Validators.required),
-      sortType: new FormControl('asc', Validators.required),
+      size: new FormControl(null, ValidatorsUtil.listLimitRequired),
+      conditionKey: new FormControl('', Validators.required),
+      orderby: new FormControl('asc', Validators.required),
     });
   }
 
   ngOnInit(): void {
-    this.validateForm.get('listLimit').setValue(this.limit);
-    if(this.isMock){
+    this.validateForm.get('size').setValue(this.size);
+    if (this.isMock) {
       TagConditionMock.forEach(condition => this.orderByList.set(condition.conditionKey, condition.conditionName));
       return;
     }
@@ -115,6 +119,7 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
   }
 
   search() {
+    if (this.validateForm.invalid) { return; }
     this.loadingService.open();
     let resLimit = '';
     //TODO: 回傳的客戶總數
@@ -125,6 +130,17 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
       return;
     }
     this.loadingService.close();
+    let req: PreviewCustomerReq = this.validateForm.getRawValue();
+    req.activityListCondition = this.conditionList;
+    this.customerManageService.getPreviewCustomerByActivityListCondition(req).pipe(
+      catchError((err) => {
+        this.loadingService.close();
+        this.dialogService.alertAndBackToList(false, err.message);
+        throw new Error(err.message);
+      }),
+      filter(res => res.code === RestStatus.SUCCESS),
+      finalize(() => this.loadingService.close())
+    ).subscribe();
   }
 
   close() {

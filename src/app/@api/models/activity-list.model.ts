@@ -1,3 +1,5 @@
+import { TagCondition } from "./tag-manage.model";
+
 export interface ActivitySetting {
   activityId: string;
   activityName: string;
@@ -159,4 +161,12 @@ export class ActivitySettingEditReq {
   scheduleSettings: string;
   activityDescription: string;
   activityListCondition: Array<ActivityListCondition>;
+}
+
+export class PreviewCustomerReq {
+  activityListCondition: Array<ActivityListCondition>;
+  tagSetting: Array<TagSetting>;
+  conditionKey: string;
+  orderby: string;
+  size: number;
 }
