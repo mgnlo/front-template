@@ -160,7 +160,7 @@ export class ApiService {
         let fileName = rqParams?.fileName + rqParams?.uploadType; // 預設的文件名
 
         if (contentDispositionHeader) {
-          const matches = contentDispositionHeader.match(/filename\*?=['"]?(?:UTF-8['"])?([^;\r\n"']*)['"]?;/);
+          const matches = contentDispositionHeader.match(/filename\*=utf-8''(.+)/);
           if (matches && matches.length > 1) fileName = decodeURIComponent(matches[1]);
         }
 
