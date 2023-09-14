@@ -96,7 +96,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
 
     if (this.isMock) {
       ActivityListMock.forEach(activity => {
-        activity.activityListCondition.forEach(condition => this.categoryList.set(condition.tagKey, condition.tagName));
+        activity.activityListCondition.forEach(condition => this.categoryList.set(condition.tagId, condition.tagName));
       });
       if (!!this.activityId) {
         this.loadingService.open();
@@ -161,13 +161,13 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
               let fg = new FormGroup({});
               let condition = groupData[key] as Array<ActivityListCondition>;
               condition.forEach((con, index) => {
-                if (!this.categoryList.get(con.tagKey)) {
-                  // this.categoryList[con.tagKey] = con.tagName //把取回的值塞進活動名單條件下拉選單
+                if (!this.categoryList.get(con.tagId)) {
+                  // this.categoryList[con.tagId] = con.tagName //把取回的值塞進活動名單條件下拉選單
                   this.dialogService.alertAndBackToList(null, `活動名單條件 ${con.tagName} 已不存在，請重新選擇`);
                   fg.setControl("" + index, new FormControl(null, [Validators.required, ValidatorsUtil.isRepeat]));
                   fg.get("" + index).markAsTouched();
                 } else {
-                  fg.setControl("" + index, new FormControl(con.tagKey, [Validators.required, ValidatorsUtil.isRepeat]));
+                  fg.setControl("" + index, new FormControl(con.tagId, [Validators.required, ValidatorsUtil.isRepeat]));
                 }
               });
               this.conditions.push(fg);
@@ -244,11 +244,11 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     reqData.startDate = moment(reqData.startDate).format('YYYY-MM-DD');
     reqData.endDate = moment(reqData.endDate).format('YYYY-MM-DD');
     let conditionId: number = 0;
-    let flatConditions: { conditionId: string, tagGroup: number, tagKey: string, tagName: string }[] = [];
+    let flatConditions: { conditionId: string, tagGroup: number, tagId: string, tagName: string }[] = [];
     this.validateForm.getRawValue().activityListCondition.forEach((condition, i) => {
       Object.keys(condition).forEach((key) => {
         conditionId++;
-        flatConditions.push({ conditionId: `${conditionId}`, tagGroup: i + 1, tagKey: condition[key], tagName: this.categoryList.get(condition[key]) });
+        flatConditions.push({ conditionId: `${conditionId}`, tagGroup: i + 1, tagId: condition[key], tagName: this.categoryList.get(condition[key]) });
       })
     });
     reqData.activityListCondition = flatConditions;

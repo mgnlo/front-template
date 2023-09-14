@@ -23,7 +23,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近一個月_基金_定期定額手續費-高",
-        tagKey: "tag-123"
+        tagId: "tag-123"
       },
       {
         activityId: "abcdefg123456",
@@ -31,7 +31,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近三個月_基金_手續費-低",
-        tagKey: "tag-456"
+        tagId: "tag-456"
       },
       {
         activityId: "abcdefg123456",
@@ -39,7 +39,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 2,
         tagName: "近一個月_換匯_交易金額-高",
-        tagKey: "tag-789"
+        tagId: "tag-789"
       },
     ],
     version: "uuuid-zzzz",
@@ -138,7 +138,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近一個月_基金_定期定額手續費-高",
-        tagKey: "tag-123"
+        tagId: "tag-123"
       },
       {
         activityId: "abcdefg123457",
@@ -146,7 +146,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 2,
         tagName: "近三個月_基金_手續費-低",
-        tagKey: "tag-456"
+        tagId: "tag-456"
       },
       {
         activityId: "abcdefg123457",
@@ -154,7 +154,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 3,
         tagName: "近一個月_換匯_交易金額-高",
-        tagKey: "tag-789"
+        tagId: "tag-789"
       }
     ],
     version: "uuuid-zzzz",
@@ -253,7 +253,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近一個月_基金_定期定額手續費-高",
-        tagKey: "tag-123"
+        tagId: "tag-123"
       },
       {
         activityId: "abcdefg123458",
@@ -261,7 +261,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近三個月_基金_手續費-低",
-        tagKey: "tag-45"
+        tagId: "tag-45"
       },
       {
         activityId: "abcdefg123458",
@@ -269,7 +269,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 2,
         tagName: "近一個月_換匯_交易金額-高",
-        tagKey: "tag-789"
+        tagId: "tag-789"
       }
     ],
     version: "uuuid-zzzz",
@@ -368,7 +368,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近一個月_基金_定期定額手續費-高",
-        tagKey: "tag-123"
+        tagId: "tag-123"
       },
       {
         activityId: "abcdefg123459",
@@ -376,7 +376,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近三個月_基金_手續費-低",
-        tagKey: "tag-456"
+        tagId: "tag-456"
       },
       {
         activityId: "abcdefg123459",
@@ -384,7 +384,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 2,
         tagName: "近一個月_換匯_交易金額-高",
-        tagKey: "tag-789"
+        tagId: "tag-789"
       }
     ],
     version: "uuuid-zzzz",
@@ -483,7 +483,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近一個月_基金_定期定額手續費-高",
-        tagKey: "tag-123"
+        tagId: "tag-123"
       },
       {
         activityId: "abcdefg123460",
@@ -491,7 +491,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近三個月_基金_手續費-低",
-        tagKey: "tag-456"
+        tagId: "tag-456"
       },
       {
         activityId: "abcdefg123460",
@@ -499,7 +499,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 2,
         tagName: "近一個月_換匯_交易金額-高",
-        tagKey: "tag-789"
+        tagId: "tag-789"
       }
     ],
     version: "uuuid-zzzz",
@@ -598,7 +598,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近一個月_基金_活存定額手續費-高",
-        tagKey: "tag-123"
+        tagId: "tag-123"
       },
       {
         activityId: "abcdefg123461",
@@ -606,7 +606,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近五個月_基金_手續費-低",
-        tagKey: "tag-456"
+        tagId: "tag-456"
       },
       {
         activityId: "abcdefg123461",
@@ -614,7 +614,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 2,
         tagName: "近六個月_換匯_交易金額-中",
-        tagKey: "tag-789"
+        tagId: "tag-789"
       },
       {
         activityId: "abcdefg123461",
@@ -622,7 +622,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 2,
         tagName: "近一個月_換匯_美金換匯頻率-低",
-        tagKey: "tag-234"
+        tagId: "tag-234"
       },
       {
         activityId: "abcdefg123461",
@@ -630,7 +630,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 2,
         tagName: "近六個月_換匯_日幣換匯頻率-低",
-        tagKey: "tag-345"
+        tagId: "tag-345"
       },
     ],
     version: "uuuid-zzzz",
@@ -729,7 +729,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近一個月_基金_定期定額手續費-高",
-        tagKey: "tag-123"
+        tagId: "tag-123"
       },
       {
         activityId: "abcdefg123462",
@@ -737,7 +737,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近三個月_基金_手續費-低",
-        tagKey: "tag-456"
+        tagId: "tag-456"
       },
       {
         activityId: "abcdefg123462",
@@ -745,7 +745,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 2,
         tagName: "近一個月_換匯_交易金額-高",
-        tagKey: "tag-789"
+        tagId: "tag-789"
       }
     ],
     version: "uuuid-zzzz",
@@ -844,7 +844,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近一個月_基金_定期定額手續費-高",
-        tagKey: "tag-123"
+        tagId: "tag-123"
       },
       {
         activityId: "abcdefg123463",
@@ -852,7 +852,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近三個月_基金_手續費-低",
-        tagKey: "tag-456"
+        tagId: "tag-456"
       },
       {
         activityId: "abcdefg123463",
@@ -860,7 +860,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 2,
         tagName: "近一個月_換匯_交易金額-高",
-        tagKey: "tag-789"
+        tagId: "tag-789"
       }
     ],
     version: "uuuid-zzzz",
@@ -959,7 +959,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近一個月_基金_定期定額手續費-高",
-        tagKey: "tag-123"
+        tagId: "tag-123"
       },
       {
         activityId: "abcdefg123463",
@@ -967,7 +967,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近三個月_基金_手續費-低",
-        tagKey: "tag-456"
+        tagId: "tag-456"
       },
       {
         activityId: "abcdefg123463",
@@ -975,7 +975,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 2,
         tagName: "近一個月_換匯_交易金額-高",
-        tagKey: "tag-789"
+        tagId: "tag-789"
       }
     ],
     version: "uuuid-zzzz",
@@ -1074,7 +1074,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近一個月_基金_定期定額手續費-高",
-        tagKey: "tag-123"
+        tagId: "tag-123"
       },
       {
         activityId: "abcdefg123464",
@@ -1082,7 +1082,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近三個月_基金_手續費-低",
-        tagKey: "tag-456"
+        tagId: "tag-456"
       },
       {
         activityId: "abcdefg123464",
@@ -1090,7 +1090,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 2,
         tagName: "近一個月_換匯_交易金額-高",
-        tagKey: "tag-789"
+        tagId: "tag-789"
       }
     ],
     version: "uuuid-zzzz",
@@ -1189,7 +1189,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近一個月_基金_定期定額手續費-高",
-        tagKey: "tag-123"
+        tagId: "tag-123"
       },
       {
         activityId: "abcdefg123465",
@@ -1197,7 +1197,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近三個月_基金_手續費-低",
-        tagKey: "tag-456"
+        tagId: "tag-456"
       },
       {
         activityId: "abcdefg123465",
@@ -1205,7 +1205,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 2,
         tagName: "近一個月_換匯_交易金額-高",
-        tagKey: "tag-789"
+        tagId: "tag-789"
       }
     ],
     version: "uuuid-zzzz",
@@ -1304,7 +1304,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近一個月_基金_定期定額手續費-高",
-        tagKey: "tag-123"
+        tagId: "tag-123"
       },
       {
         activityId: "abcdefg123466",
@@ -1312,7 +1312,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近三個月_基金_手續費-低",
-        tagKey: "tag-456"
+        tagId: "tag-456"
       },
       {
         activityId: "abcdefg123466",
@@ -1320,7 +1320,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 2,
         tagName: "近一個月_換匯_交易金額-高",
-        tagKey: "tag-789"
+        tagId: "tag-789"
       }
     ],
     version: "uuuid-zzzz",
@@ -1419,7 +1419,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近一個月_基金_定期定額手續費-高",
-        tagKey: "tag-123"
+        tagId: "tag-123"
       },
       {
         activityId: "abcdefg123466",
@@ -1427,7 +1427,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近三個月_基金_手續費-低",
-        tagKey: "tag-456"
+        tagId: "tag-456"
       },
       {
         activityId: "abcdefg123466",
@@ -1435,7 +1435,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 2,
         tagName: "近一個月_換匯_交易金額-高",
-        tagKey: "tag-789"
+        tagId: "tag-789"
       }
     ],
     version: "uuuid-zzzz",
@@ -1534,7 +1534,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近一個月_基金_定期定額手續費-高",
-        tagKey: "tag-123"
+        tagId: "tag-123"
       },
       {
         activityId: "abcdefg123466",
@@ -1542,7 +1542,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 1,
         tagName: "近三個月_基金_手續費-低",
-        tagKey: "tag-456"
+        tagId: "tag-456"
       },
       {
         activityId: "abcdefg123466",
@@ -1550,7 +1550,7 @@ export const ActivityListMock: Array<ActivitySetting> = [
         version: "uuid-zzzz",
         tagGroup: 2,
         tagName: "近一個月_換匯_交易金額-高",
-        tagKey: "tag-789"
+        tagId: "tag-789"
       }
     ],
     version: "uuuid-zzzz",

@@ -135,7 +135,7 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
     let req: PreviewCustomerReq = this.validateForm.getRawValue();
     let conditionOr: { [x: number]: TagGroupView[] } = CommonUtil.groupBy(this.conditionList, 'tagGroup', false);
     let conditions: Array<string>[] = Object.keys(conditionOr).map(conditionAnd => {
-      return conditionOr[conditionAnd].map((and: TagGroupView) => and.tagKey);
+      return conditionOr[conditionAnd].map((and: TagGroupView) => and.tagId);
     });
     req.activityListCondition = conditions;
     this.customerManageService.getPreviewCustomerByActivityListCondition(req).pipe(

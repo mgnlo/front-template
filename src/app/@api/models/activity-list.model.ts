@@ -25,7 +25,7 @@ export class ActivityListCondition {
   version?: string;
   tagGroup: number;
   tagName: string;
-  tagKey: string;
+  tagId: string;
 }
 export class ActivityReviewHistory {
   historyId: string;
@@ -128,7 +128,7 @@ export interface ActivityDetail {
 //for HTML diaplay
 export interface TagGroupView {
   conditionId: number;
-  tagKey: string;
+  tagId: string;
   tagName: string;
 }
 
