@@ -164,8 +164,8 @@ export class ActivitySettingEditReq {
 }
 
 export class PreviewCustomerReq {
-  activityListCondition: Array<ActivityListCondition>;
-  tagSetting: Array<TagSetting>;
+  activityListCondition: Array<string[]>;
+  tagSetting: string[];
   conditionKey: string;
   orderby: string;
   size: number;

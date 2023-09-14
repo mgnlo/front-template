@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivityListCondition, PreviewCustomerReq } from '@api/models/activity-list.model';
+import { ActivityListCondition, PreviewCustomerReq, TagGroupView } from '@api/models/activity-list.model';
 import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
@@ -9,11 +9,14 @@ import { StorageService } from '@api/services/storage.service';
 import { WarningCode, RestStatus } from '@common/enums/rest-enum';
 import { CustomerListMock } from '@common/mock-data/customer-list-mock';
 import { TagConditionMock } from '@common/mock-data/tag-condition-mock';
+import { CommonUtil } from '@common/utils/common-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { NbDialogRef } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
 import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
 import { TagManageService } from '@pages/tag-manage/tag-manage.service';
+import { LocalData } from 'ng2-completer';
+import { LocalDataSource } from 'ng2-smart-table';
 import { catchError, filter, finalize, tap } from 'rxjs/operators';
 
 @Component({
@@ -121,24 +124,31 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
   search() {
     if (this.validateForm.invalid) { return; }
     this.loadingService.open();
-    let resLimit = '';
-    //TODO: 回傳的客戶總數
-    this.info = `名單預計可抓取共` + resLimit + `位名單資料，若有預算上考量請設定名單上限與資料排序方式。`;
+
     if (this.isMock) {
       this.dataSource.load(CustomerListMock);
+      this.info = `名單預計可抓取共` + CustomerListMock.length + `位名單資料，若有預算上考量請設定名單上限與資料排序方式。`;
       this.loadingService.close();
       return;
     }
-    this.loadingService.close();
+
     let req: PreviewCustomerReq = this.validateForm.getRawValue();
-    req.activityListCondition = this.conditionList;
+    let conditionOr: { [x: number]: TagGroupView[] } = CommonUtil.groupBy(this.conditionList, 'tagGroup', false);
+    let conditions: Array<string>[] = Object.keys(conditionOr).map(conditionAnd => {
+      return conditionOr[conditionAnd].map((and: TagGroupView) => and.tagKey);
+    });
+    req.activityListCondition = conditions;
     this.customerManageService.getPreviewCustomerByActivityListCondition(req).pipe(
       catchError((err) => {
-        this.loadingService.close();
         this.dialogService.alertAndBackToList(false, err.message);
         throw new Error(err.message);
       }),
       filter(res => res.code === RestStatus.SUCCESS),
+      tap((res) => {
+        this.dataSource = new LocalDataSource();
+        this.dataSource.load(res.result);
+        this.info = `名單預計可抓取共` + res.result.length + `位名單資料，若有預算上考量請設定名單上限與資料排序方式。`;
+      }),
       finalize(() => this.loadingService.close())
     ).subscribe();
   }
