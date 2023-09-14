@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { ActivitySetting, ActivitySettingEditReq } from "@api/models/activity-list.model";
+import { ActivitySetting, ActivitySettingEditReq, PreviewCustomerReq } from "@api/models/activity-list.model";
 import { ResData, ResponseModel } from "@api/models/base.model";
 import { Customer } from "@api/models/customer-list.model";
 import { ApiService } from "@api/services/api.service";
@@ -31,6 +31,14 @@ export class CustomerManageService {
 
     updateActivitySetting(activityId: string, data: ActivitySettingEditReq): Observable<ResponseModel<any>> {
         return this.service.doPut(this.activityFunc + activityId, data);
+    }
+
+    getPreviewCustomerByActivityListCondition(data: PreviewCustomerReq): Observable<ResponseModel<any>> {
+        return this.service.doPost(this.activityFunc + 'preview/list-condition', data);
+    }
+
+    getPreviewCustomerByTagSetting(data: PreviewCustomerReq): Observable<ResponseModel<any>> {
+        return this.service.doPost(this.activityFunc + 'preview/tag-setting', data);
     }
 
 }

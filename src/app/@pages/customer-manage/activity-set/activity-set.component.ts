@@ -48,7 +48,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     this.validateForm = new FormGroup({
       activityName: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
       status: new FormControl('disabled', Validators.required),
-      listLimit: new FormControl(null, ValidatorsUtil.number),
+      listLimit: new FormControl(null, [ValidatorsUtil.number, ValidatorsUtil.notZero]),
       filterOptions: new FormControl(false),
       startDate: new FormControl(new Date(), [Validators.required, ValidatorsUtil.dateFmt]),
       endDate: new FormControl(moment(new Date()).add(3, 'months').toDate(), [Validators.required, ValidatorsUtil.dateFmt]),
@@ -185,7 +185,8 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
 
   preview() {
     this.dialogService.open(PreviewDialogComponent, {
-      limit: this.validateForm.get('listLimit').value
+      size: this.validateForm.get('listLimit').value,
+      conditionList: this.getRequestData().activityListCondition
     });
   }
 

@@ -4,13 +4,13 @@
   </nb-card-header>
   <nb-card-body>
     <div class="row">
-      <basic-input class="col-4" title="名單上限" [form]="validateForm" ctlName="listLimit" [disabled]="true"></basic-input>
-      <dropdown class="col-4" title="資料排序方式" [form]="validateForm" ctlName="orderBy" [mapList]="orderByList"></dropdown>
-      <radio class="col-3" title="排序順序" [form]="validateForm" ctlName="sortType" (valueChange)="changeSort($event)"
+      <basic-input class="col-4" title="名單上限" [form]="validateForm" ctlName="size" [disabled]="true"></basic-input>
+      <dropdown class="col-4" title="資料排序方式" [form]="validateForm" ctlName="conditionKey" [mapList]="orderByList"></dropdown>
+      <radio class="col-2" title="排序順序" [form]="validateForm" ctlName="orderby" (valueChange)="changeSort($event)"
         [selectList]="{options: sortList | keyvalue, key: 'key', val: 'value'}">
       </radio>
       <div class="rightBox">
-        <button nbButton status="primary" size="medium" (click)="search()"><nb-icon icon="search"></nb-icon>搜尋</button>
+        <button nbButton status="primary" size="medium" (click)="search()" [disabled]="validateForm.invalid"><nb-icon icon="search"></nb-icon>搜尋</button>
       </div>
     </div>
     <div class="noteText" *ngIf="info">
