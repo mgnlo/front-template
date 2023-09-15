@@ -4,9 +4,5 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
   selector: 'dashboard',
   template: '<router-outlet></router-outlet>',
 })
-export class DashboardComponent implements OnDestroy, OnInit {
-
-  constructor() {}
-  ngOnInit(): void {}
-  ngOnDestroy(): void {}
+export class DashboardComponent {
 }

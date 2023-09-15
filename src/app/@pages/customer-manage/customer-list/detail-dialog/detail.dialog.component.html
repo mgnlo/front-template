@@ -1,4 +1,4 @@
-<nb-card class="dialogCard large" *ngIf="!!datas">
+<nb-card class="dialogCard large">
   <nb-card-header>
     <h2>用戶明細資訊-{{customerId}}</h2>
   </nb-card-header>
@@ -40,7 +40,7 @@
       </div>
     </div>
     <div class="tagBlock row">
-      <div class="tagItem col-6 col-lg-6" *ngFor="let tag of departmentTag[selectedDepartment]">
+      <div class="tagItem col-6 col-lg-6" *ngFor="let tag of departmentTag?.[selectedDepartment]">
           <nb-tag status="info" appearance="filled" [text]="tag?.tagName"></nb-tag>
           <p class="tagContent">{{tag?.tagDescription}}</p>
       </div>
@@ -52,7 +52,7 @@
       <div><span class="bg_skyBlue"></span><p>規則標籤</p></div>
       <div><span class="bg_orange"></span><p>名單標籤</p></div>
     </div>
-    <ngx-echarts-timeline-multi-range [datas]="departmentTag[selectedDepartment]"></ngx-echarts-timeline-multi-range>
+    <ngx-echarts-timeline-multi-range [datas]="departmentTag?.[selectedDepartment]"></ngx-echarts-timeline-multi-range>
   </nb-card-body>
   <nb-card-footer>
       <div class="btnGroup">

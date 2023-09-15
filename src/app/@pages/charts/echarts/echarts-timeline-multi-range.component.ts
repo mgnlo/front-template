@@ -209,6 +209,7 @@ export class EchartsTimelineMultiRangeComponent<T> implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if(!!this.themeSubscription)
     this.themeSubscription.unsubscribe();
   }
 }

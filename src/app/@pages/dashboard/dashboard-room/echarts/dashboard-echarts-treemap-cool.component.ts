@@ -66,6 +66,7 @@ export class DashboardEchartsTreemapCoolComponent implements AfterViewInit, OnDe
 	}
 
 	ngOnDestroy(): void {
+		if(!!this.themeSubscription)
 		this.themeSubscription.unsubscribe();
 	}
 }

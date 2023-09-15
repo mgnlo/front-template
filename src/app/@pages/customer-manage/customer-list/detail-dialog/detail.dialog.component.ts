@@ -21,7 +21,7 @@ export class DetailDialogComponent extends BaseComponent implements OnInit {
 
   @Input() customerId: string;
 
-  departmentTag: { [x: number]: Tag[] };
+  departmentTag: Partial<{ [x: number]: Tag[] }>;
   departments: Array<string> = [];
   datas: Customer;
   selectedDepartment: string;
@@ -33,7 +33,7 @@ export class DetailDialogComponent extends BaseComponent implements OnInit {
     protected ref: NbDialogRef<DetailDialogComponent>,
     private customerManageService: CustomerManageService,
     private loadingService: LoadingService,
-    private dialogService: DialogService,
+    private dialogService: DialogService
   ) {
     super(storageService, configService, loginService)
   }
