@@ -32,13 +32,19 @@ export class EchartsTimelineMultiRangeComponent<T> implements OnDestroy {
 
   //資料流
   data = [];
+  sourceData = [];
 
   constructor(private theme: NbThemeService) { }
 
+  ngOnInit() {
+    if(!this.datas){
+      this.ngOnChanges(null);
+    }
+  }
+
   ngOnChanges(changes: SimpleChanges) {
-    let sourceData = !changes.datas.currentValue ? this.mockData : [];
-    if (changes.datas.previousValue !== changes.datas.currentValue && !!changes.datas.currentValue) {
-      sourceData = [];
+    let sourceData = !!changes?.datas?.currentValue ? [] : this.mockData;
+    if (!!changes?.datas?.currentValue && changes.datas.previousValue !== changes.datas.currentValue) {
       this.data = [];
       this.categories = [];
       changes.datas.currentValue.forEach(tag => {
@@ -209,7 +215,7 @@ export class EchartsTimelineMultiRangeComponent<T> implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if(!!this.themeSubscription)
-    this.themeSubscription.unsubscribe();
+    if (!!this.themeSubscription)
+      this.themeSubscription.unsubscribe();
   }
 }
