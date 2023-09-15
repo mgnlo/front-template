@@ -2,6 +2,7 @@ import { Component, Input, OnDestroy, SimpleChanges } from '@angular/core';
 import { CustomerTagHistory } from '@common/mock-data/customer-tag-history-mock';
 import { NbThemeService } from '@nebular/theme';
 import * as echarts from 'echarts';
+import * as moment from 'moment';
 
 @Component({
   selector: 'ngx-echarts-timeline-multi-range',
@@ -14,8 +15,8 @@ export class EchartsTimelineMultiRangeComponent<T> implements OnDestroy {
   options: any = {};
   themeSubscription: any;
 
-  startTime;
-  endTime;
+  startTime: number;
+  endTime: number;
 
   //主機提供資料
   mockData = CustomerTagHistory;
@@ -37,8 +38,8 @@ export class EchartsTimelineMultiRangeComponent<T> implements OnDestroy {
   constructor(private theme: NbThemeService) { }
 
   ngOnInit() {
-    if(!this.datas){
-      this.ngOnChanges(null);
+    if (!this.datas) {
+      this.ngOnChanges(null); //沒Input走假資料
     }
   }
 
@@ -79,10 +80,15 @@ export class EchartsTimelineMultiRangeComponent<T> implements OnDestroy {
       }
     }
 
-    //最小起始日期，以資料流內容最小值為準 - 86400000 * 2, //最小起始日往前兩天，這個可以調整
-    this.startTime = this.data.reduce((agg, d) => Math.min(agg, d.value[1]), Infinity) - 86400000 * 2;
-    //最大結束日期，以資料流內容最大值為準 + 86400000 * 2, //最大結束日往後兩天，這個可以調整
-    this.endTime = this.data.reduce((agg, d) => Math.max(agg, d.value[2]), 0) + 86400000 * 2;
+    if(!changes){
+      //最小起始日期，以資料流內容最小值為準 - 86400000 * 2, //最小起始日往前兩天，這個可以調整
+      this.startTime = this.data.reduce((agg, d) => Math.min(agg, d.value[1]), Infinity) - 86400000 * 2;
+      //最大結束日期，以資料流內容最大值為準 + 86400000 * 2, //最大結束日往後兩天，這個可以調整
+      this.endTime = this.data.reduce((agg, d) => Math.max(agg, d.value[2]), 0) + 86400000 * 2;
+    } else {
+      this.startTime = moment().subtract(3, 'months').toDate().getTime(); //近三個月
+      this.endTime = new Date().getTime();
+    }
     this.render();
   }
 
