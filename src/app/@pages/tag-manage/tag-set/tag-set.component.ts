@@ -232,24 +232,9 @@ export class TagSetComponent extends BaseComponent implements OnInit {
           this.detail = JSON.parse(JSON.stringify(res.result));
           console.info('this.detail', this.detail)
           const processedData = CommonUtil.getHistoryProcessData<TagSetting>('tagReviewHistoryAud', res.result as TagSetting); // 異動歷程處理
-          Object.keys(res.result).forEach(key => {
-            if (!!this.validateForm.controls[key]) {
-              switch (key) {
-                case 'startDate':
-                case 'endDate':
-                  this.validateForm.controls[key].setValue(new Date(res.result[key]))
-                  break;
-                case 'tagConditionSetting':
-                  this.conditions.removeAt(0);
-                  this.createConditionControl(res.result.tagConditionSetting);
-                  //console.info(this.conditions.getRawValue());
-                  break;
-                default:
-                  this.validateForm.controls[key].setValue(res.result[key]);
-                  break;
-              }
-            }
-          });
+
+          this.setData(this.detail);
+
           if (!!processedData) {
             if (this.changeRouteName === 'edit') {
               this.isHistoryOpen = processedData.isHistoryOpen;
@@ -426,7 +411,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
         this.createConditionControl(this.detail?.tagConditionSetting);
 
-        if (!this.detail?.tagConditionSetting) {
+        if (!this.detail?.tagConditionSetting|| this.detail?.tagConditionSetting?.length === 0) {
           if (this.conditions?.getRawValue()?.length === 0) {
             this.conditions.push(new FormGroup({
               id: new FormControl(0),
