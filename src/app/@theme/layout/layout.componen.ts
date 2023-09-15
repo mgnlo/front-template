@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { LoadingService } from '@api/services/loading.service';
 
 @Component({
@@ -9,11 +9,12 @@ import { LoadingService } from '@api/services/loading.service';
 export class LayoutComponet implements OnInit {
   public loading: boolean = false;
 
-  constructor(private loadingService: LoadingService) {}
+  constructor(private loadingService: LoadingService, private cdr: ChangeDetectorRef) {}
 
   public ngOnInit(): void {
     this.loadingService.getLoading().subscribe((loading) => {
       this.loading = loading;
+      this.cdr.detectChanges();
     });
   }
 }

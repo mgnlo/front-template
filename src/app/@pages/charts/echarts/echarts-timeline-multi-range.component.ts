@@ -37,7 +37,7 @@ export class EchartsTimelineMultiRangeComponent<T> implements OnDestroy {
 
   ngOnChanges(changes: SimpleChanges) {
     let sourceData = !changes.datas.currentValue ? this.mockData : [];
-    if (changes.datas.previousValue !== changes.datas.currentValue) {
+    if (changes.datas.previousValue !== changes.datas.currentValue && !!changes.datas.currentValue) {
       sourceData = [];
       this.data = [];
       this.categories = [];
