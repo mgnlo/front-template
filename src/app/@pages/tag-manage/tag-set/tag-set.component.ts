@@ -178,8 +178,9 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         title: '狀態',
         type: 'html',
         class: 'text_center',
-        valuePrepareFunction: (cell: string, row: TagSetting) => {
-          return `<p class="text_center">${(Status[row.reviewStatus] || Status[cell] || '')}</p>`;
+        valuePrepareFunction: (cell: string) => {
+          if (!cell) { return '' }
+          return `<p class="text_center">` + (Status[cell] || '') + `</p>`;
         },
         sort: false,
       },
@@ -528,6 +529,10 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   //下拉選擇
   onConditionKeySelectChange(event: any) {
     // console.info('event',event)
+    if(CommonUtil.isNotBlank(event) && this.tagId){
+      this.conditionKeyFilter(event);
+    }
+
     if (CommonUtil.isBlank(event.key) || CommonUtil.isBlank(event.val)) {
       return
     }
