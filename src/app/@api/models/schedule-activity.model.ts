@@ -8,6 +8,7 @@ export interface ScheduleActivitySetting {
   creationTime: string;
   modificationTime: string;
   status: string;
+  reviewStatus: string;
   activitySetting: Array<ActivitySetting>;
   scheduleReviewHistoryAud: Array<ScheduleReviewHistory>;
 }
@@ -22,12 +23,15 @@ export class ActivitySetting {
   filterOptions: string;
   listLimit: number;
   status: string;
+  reviewStatus: string;
   startDate: string;
   endDate: string;
   createTime: string;
   modificationTime: string;
   scheduleSettings: string;
   batchUpdateTime: string;
+  batchTime: string;
+  batchResult: string;
   schedule_batch_history?: Array<Schedule_Batch_History>;
 
   constructor(data: Partial<ActivitySetting>) {
@@ -80,6 +84,7 @@ export interface ScheduleDetailView {
   creationTime: string;
   modificationTime: string;
   status: string;
+  reviewStatus: string;
   filePath?: string;
   historyGroupView?: { [x: number]: HistoryGroupView };
 }

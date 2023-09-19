@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { ActivitySetting, ScheduleDetailView, Schedule_Batch_History } from '@api/models/schedule-activity.model';
+import { ActivitySetting, ScheduleActivitySetting, ScheduleDetailView, Schedule_Batch_History } from '@api/models/schedule-activity.model';
 import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
@@ -75,9 +75,8 @@ export class ScheduleDetailComponent extends BaseComponent implements OnInit {
         title: '狀態',
         type: 'html',
         class: 'text_center w100',
-        valuePrepareFunction: (cell: string) => {
-          if (!cell) { return '' }
-          return `<p class="text_center">` + (Status[cell] || '') + `</p>`;
+        valuePrepareFunction: (cell: string, row: ScheduleActivitySetting) => {
+          return `<p class="text_center">${(Status[row.reviewStatus] || Status[cell] || '')}</p>`;
         },
         sort: false,
       },

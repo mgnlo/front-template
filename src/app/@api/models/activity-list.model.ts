@@ -17,6 +17,7 @@ export interface ActivitySetting {
   batchUpdateTime: string;
   activityListCondition: Array<ActivityListCondition>;
   version: string;
+  reviewStatus: string;
   activityReviewHistoryAud: Array<ActivityReviewHistory>;
 }
 export class ActivityListCondition {
@@ -116,6 +117,7 @@ export interface ActivityDetail {
   filterOptions: string;
   listLimit: number;
   status: string;
+  reviewStatus: string;
   startDate: string;
   endDate: string;
   modificationTime: string;

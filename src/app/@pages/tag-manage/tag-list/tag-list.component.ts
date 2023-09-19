@@ -106,9 +106,8 @@ export class TagListComponent extends BaseComponent implements OnInit {
         title: '狀態',
         type: 'html',
         class: 'text_center',
-        valuePrepareFunction: (cell: string) => {
-          if (!cell) { return '' }
-          return `<p class="text_center">` + (Status[cell] || '') + `</p>`;
+        valuePrepareFunction: (cell: string, row: TagSetting) => {
+          return `<p class="text_center">${(Status[row.reviewStatus] || Status[cell] || '')}</p>`;
         },
         sort: false,
       },
