@@ -1,6 +1,6 @@
 <div class="pageTitle" *ngIf="this.detail">
   <h1>排程管理</h1>
-  <button *ngIf="isCrud['update']" nbButton [status]="this.detail.status === 'reviewing' ? 'basic' : 'primary'" size="tiny" class="iconBtn" (click)="edit()" [disabled]="this.detail.status === 'reviewing'">
+  <button *ngIf="isCrud['update']" nbButton [status]="this.detail.reviewStatus === 'reviewing' ? 'basic' : 'primary'" size="tiny" class="iconBtn" (click)="edit()" [disabled]="this.detail.reviewStatus === 'reviewing'">
       <nb-icon icon="edit-outline"></nb-icon>
   </button>
 </div>

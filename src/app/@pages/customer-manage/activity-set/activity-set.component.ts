@@ -224,7 +224,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     requestObservable.pipe(
       catchError((err) => {
         const route = this.activityId ? [this.activityId] : [];
-        this.dialogService.alertAndBackToList(false, `${this.actionName}活動失敗`, ['pages', 'customer-manage', 'activity-set', ...route]);
+        this.dialogService.alertAndBackToList(false, `${this.actionName}活動失敗 ${err.message}`, ['pages', 'customer-manage', 'activity-set', ...route]);
         throw new Error(err.message);
       }),
       tap(res => {

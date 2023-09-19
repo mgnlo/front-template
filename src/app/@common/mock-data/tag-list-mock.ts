@@ -22,6 +22,7 @@ export const TagSettingMock: Array<TagSetting> = [
     "filePath": "上傳檔案路徑/A/AAA/B\BB.config",
     "fileData": "上傳檔案資料",
     "version": "123-321",
+    "reviewStatus": "reviewing",
     "tagConditionSetting": [
       {
         "tagId": "cccccc123456",
@@ -143,6 +144,7 @@ export const TagSettingMock: Array<TagSetting> = [
     "fileName": "檔案名稱",
     "fileData": "上傳檔案資料",
     "version": "123-321",
+    "reviewStatus": "approved",
     "tagConditionSetting": [
       {
         "tagId": "cccccc123456",
@@ -262,6 +264,7 @@ export const TagSettingMock: Array<TagSetting> = [
     "fileName": "檔案名稱",
     "fileData": "上傳檔案資料",
     "version": "093e360c-900c-4def-83c2-acd1c5aa96c8",
+    "reviewStatus": "approved",
     "tagConditionSetting": [
       {
         "tagId": "5d2ce90b-dbe7-4b70-8b41-f50b0e2ba635",
@@ -306,7 +309,7 @@ export const TagSettingMock: Array<TagSetting> = [
         "title": "建立條件送審",
         "detail": "自訂內容",
         "type": "自訂類型",
-        "reviewStatus": "reviewing",
+        "reviewStatus": "approved",
         "reviewer": null,
         "reviewComment": null,
         "reviewTime": null,
