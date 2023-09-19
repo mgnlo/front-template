@@ -17,7 +17,6 @@ export class BasicInputComponent implements OnInit {
   @Input() infos?: string[]; //欄位提示文字
   @Input() linkInfo?: {link: string, title: string}; //連結文字
   @Input() disabled?: boolean = false;
-  @Input() id?: string;
 
   firstErr: string;
   ctl: FormControl;
