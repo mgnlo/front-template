@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting } from '@api/models/activity-list.model';
-import { TagCategory, TagCondition, TagConditionChartLine, TagConditionReq, TagConditionSetting, TagDetailView, TagSetting, TagSettingEditReq, TagSubCategory } from '@api/models/tag-manage.model';
+import { TagConditionChartLine, TagConditionReq, TagConditionSetting, TagDetailView, TagSetting, TagSettingEditReq } from '@api/models/tag-manage.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
@@ -410,7 +410,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
         this.createConditionControl(this.detail?.tagConditionSetting);
 
-        if (!this.detail?.tagConditionSetting|| this.detail?.tagConditionSetting?.length === 0) {
+        if (!this.detail?.tagConditionSetting || this.detail?.tagConditionSetting?.length === 0) {
           if (this.conditions?.getRawValue()?.length === 0) {
             this.conditions.push(new FormGroup({
               id: new FormControl(0),
@@ -489,9 +489,11 @@ export class TagSetComponent extends BaseComponent implements OnInit {
               this.selectedConditionKey = conditionKey?.key;
               this.selectedConditionVal = conditionKey?.val;
               this.validateForm.get('conditionKey').patchValue(conditionKey?.val);
+              this.conditionKeyFilter(conditionKey?.val);
+              this.filterConditionKeyList = new Array<{ key: string; val: string }>();
               this.getTagConditionalDistribution();
             }
-          })
+          }),
         ).subscribe();
   }
 
@@ -528,10 +530,6 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   //下拉選擇
   onConditionKeySelectChange(event: any) {
     // console.info('event',event)
-    if(CommonUtil.isNotBlank(event) && this.tagId){
-      this.conditionKeyFilter(event);
-    }
-
     if (CommonUtil.isBlank(event.key) || CommonUtil.isBlank(event.val)) {
       return
     }
