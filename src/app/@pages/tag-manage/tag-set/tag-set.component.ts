@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting } from '@api/models/activity-list.model';
@@ -14,7 +14,7 @@ import { RegExpUtil } from '@common/utils/reg-exp-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
-import { catchError, filter, tap, finalize } from 'rxjs/operators';
+import { catchError, filter, tap, finalize, first } from 'rxjs/operators';
 import { TagManageService } from '../tag-manage.service';
 import { TagConditionDialogComponent } from './condition-dialog/condition-dialog.component';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
@@ -61,6 +61,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   //偵測條件下拉
   selectedConditionKey: string = '';
   selectedConditionVal: string = '';
+  isInit: boolean = false; //控制偵測條件下拉的auto-complete要不要show
 
   //預設狀態
   tagStatusList = [Status.enabled, Status.disabled];
@@ -105,7 +106,6 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     loginService: LoginService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private readonly changeDetectorRef: ChangeDetectorRef,
     private tagManageService: TagManageService,
     private fileService: FileService,
     private loadingService: LoadingService,
@@ -269,12 +269,12 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       //#endregion
     }
   }
-
-  ngAfterViewChecked(): void {
-    this.changeDetectorRef.detectChanges();
-  }
-
+  
   ngDoCheck() {
+    this.validateForm.get('categoryKey').valueChanges.pipe(first()).subscribe(() => {
+      //第一次load回資料塞值的時候
+      this.isInit = true;
+    });
     // console.info('this.findInvalidControls()', this.findInvalidControls())
     const categoryKeyVal = this.validateForm.get('categoryKey')?.value;
     if (CommonUtil.isNotBlank(categoryKeyVal) && categoryKeyVal != this.beforeCategoryVal) {
@@ -490,7 +490,6 @@ export class TagSetComponent extends BaseComponent implements OnInit {
               this.selectedConditionVal = conditionKey?.val;
               this.validateForm.get('conditionKey').patchValue(conditionKey?.val);
               this.conditionKeyFilter(conditionKey?.val);
-              this.filterConditionKeyList = new Array<{ key: string; val: string }>();
               this.getTagConditionalDistribution();
             }
           }),
