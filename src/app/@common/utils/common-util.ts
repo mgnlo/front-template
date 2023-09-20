@@ -102,16 +102,6 @@ export const CommonUtil = {
       return value;
     }
   },
-  /** 輸入時改變日期格式 */
-  replaceDate(event: KeyboardEvent): void {
-    const element = event.target as HTMLInputElement;
-    const v = element.value;
-    const isNumber = !isNaN(parseInt(event.key, 10));
-
-    if (event.key && isNumber && (/^\d{4}$/.test(v) || /^\d{4}\/\d{2}$/.test(v))) {
-      element.value += '/';
-    }
-  },
   /** 比較兩個object, 以objA的key為比較基準*/
   compareObj<T extends Object>(objA: T, objB: T): { [x: string]: boolean } {
     const result: { [key in string]: boolean } = {};
