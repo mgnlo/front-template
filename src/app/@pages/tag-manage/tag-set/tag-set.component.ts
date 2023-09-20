@@ -125,7 +125,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       tagTopicKey: new FormControl({ value: null, disabled: true }, Validators.required),
       tagDescription: new FormControl(null),
       conditionKey: new FormControl({ value: null, disabled: true }, [Validators.required, this.existsInConditionKeyList]),
-      conditionSettingQuery: new FormControl(null, Validators.required),
+      conditionSettingQuery: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
       tagConditionSetting: new FormArray([]),
     }, [ValidatorsUtil.dateRange]);
 
@@ -269,7 +269,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       //#endregion
     }
   }
-  
+
   ngDoCheck() {
     this.validateForm.get('categoryKey').valueChanges.pipe(first()).subscribe(() => {
       //第一次load回資料塞值的時候
@@ -379,7 +379,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     switch (key?.toLocaleLowerCase()) {
       case 'normal':
         this.addFieldIfNotExists('conditionSettingMethod', 'normal', Validators.required);
-        this.addFieldIfNotExists('conditionSettingQuery', this.detail?.conditionSettingQuery, Validators.required);
+        this.addFieldIfNotExists('conditionSettingQuery', this.detail?.conditionSettingQuery, [Validators.required, ValidatorsUtil.blank]);
         this.validateForm?.patchValue({ 'tagType': 'normal' });
         break;
       case 'document':
@@ -399,7 +399,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
     switch (key?.toLocaleLowerCase()) {
       case 'normal':
-        this.addFieldIfNotExists('conditionSettingQuery', this.detail?.conditionSettingQuery, Validators.required);
+        this.addFieldIfNotExists('conditionSettingQuery', this.detail?.conditionSettingQuery, [Validators.required, ValidatorsUtil.blank]);
         this.validateForm?.patchValue({ 'conditionSettingMethod': 'normal' });
         break;
       case 'field':
