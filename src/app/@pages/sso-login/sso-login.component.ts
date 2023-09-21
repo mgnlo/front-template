@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfigService } from '@api/services/config.service';
-import { LoadingService } from '@api/services/loading.service';
 import { LoginService } from '@api/services/login.service';
 import { RestStatus } from '@common/enums/rest-enum';
 import { UserProfileMock } from '@common/mock-data/user-profile-mock';
@@ -15,7 +14,7 @@ import { catchError, tap } from 'rxjs/operators';
 })
 export class SSOLoginComponent implements OnInit, OnDestroy {
   initProcessMsg = "(模擬 SSO login 流程，待整合串接) 登入授權處理中，請稍候...";
-  lightID: string;
+  lightID: string = '';
   userProfileSubscription: Subscription;
 
   constructor(
@@ -27,22 +26,21 @@ export class SSOLoginComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // 自網址上取得 lightID 參數
-    this.lightID = this.route.snapshot.queryParams['lightID'];
-    // 目前測試用 lightID : 17071 ~ 17075
-    this.lightID = "17071";
+    this.lightID = this.route.snapshot.queryParamMap.get('lightID');
 
-    if(this.configService.getConfig().IS_MOCK){
+    // 目前測試用 lightID : 17071 ~ 17075
+    // this.lightID = "17071";
+    if (this.configService.getConfig().IS_MOCK) {
       this.router.navigate(["pages"]);
       this.loginService.userProfileSubject.next(UserProfileMock);
       return;
     }
+  }
+
+  ngAfterContentInit() {
     // 發送電文請求 JWT Token 與 登入者 GroupScope，模擬成功導到 page 頁面
-    // setTimeout 主要是用來 delay 一下方便 debug，正是可以拿掉
-    setTimeout(() => {
       this.loginService.singleSignOn(this.lightID).pipe(
-        catchError((err) => {
-          throw new Error(err.message);
-        }),
+        catchError((err) => { throw new Error(err.message); }),
         tap(res => {
           console.info(res)
         })).subscribe(res => {
@@ -61,7 +59,6 @@ export class SSOLoginComponent implements OnInit, OnDestroy {
             }
           }
         });
-    }, 2000);
 
     // 模擬電文成功導轉到 Pages，底下這段在上面電文串接成功後要改寫
     // setTimeout(() => {
@@ -90,8 +87,8 @@ export class SSOLoginComponent implements OnInit, OnDestroy {
     // }, 1000);
   }
 
-  public ngOnDestroy() {
-    if(!!this.userProfileSubscription){
+  ngOnDestroy() {
+    if (!!this.userProfileSubscription) {
       this.userProfileSubscription.unsubscribe();
     }
   }
