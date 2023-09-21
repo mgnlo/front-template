@@ -122,7 +122,7 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
       read: {
         title: '查看',
         type: 'custom',
-        class: 'center',
+        class: 'text_center',
         renderComponent: CheckboxColumnComponent,
         onComponentInitFunction: (instance: CheckboxColumnComponent) => {
           instance.settings = { isShowParam: { key: 'read' }, isCheckedParam: { key: 'read' } };
@@ -133,7 +133,7 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
       create: {
         title: '新增',
         type: 'custom',
-        class: 'center',
+        class: 'text_center',
         renderComponent: CheckboxColumnComponent,
         onComponentInitFunction: (instance: CheckboxColumnComponent) => {
           instance.settings = { isShowParam: { key: 'create' }, isCheckedParam: { key: 'create' } };
@@ -144,7 +144,7 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
       update: {
         title: '編輯',
         type: 'custom',
-        class: 'center',
+        class: 'text_center',
         renderComponent: CheckboxColumnComponent,
         onComponentInitFunction: (instance: CheckboxColumnComponent) => {
           instance.settings = { isShowParam: { key: 'update' }, isCheckedParam: { key: 'update' } };
@@ -152,17 +152,17 @@ export class ConsoleGroupSetComponent extends BaseComponent implements OnInit {
         },
         sort: false,
       },
-      delete: {
-        title: '刪除',
-        type: 'custom',
-        class: 'center',
-        renderComponent: CheckboxColumnComponent,
-        onComponentInitFunction: (instance: CheckboxColumnComponent) => {
-          instance.settings = { isShowParam: { key: 'delete' }, isCheckedParam: { key: 'delete' } };
-          instance.emitter.subscribe((res) => { res.delete = res.isSelected });
-        },
-        sort: false,
-      }
+      // delete: {
+      //   title: '刪除',
+      //   type: 'custom',
+      //   class: 'text_center',
+      //   renderComponent: CheckboxColumnComponent,
+      //   onComponentInitFunction: (instance: CheckboxColumnComponent) => {
+      //     instance.settings = { isShowParam: { key: 'delete' }, isCheckedParam: { key: 'delete' } };
+      //     instance.emitter.subscribe((res) => { res.delete = res.isSelected });
+      //   },
+      //   sort: false,
+      // }
     },
     hideSubHeader: true,
     actions: false,

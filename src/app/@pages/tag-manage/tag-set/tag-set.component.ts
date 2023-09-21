@@ -1,8 +1,8 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitySetting } from '@api/models/activity-list.model';
-import { TagCategory, TagCondition, TagConditionChartLine, TagConditionReq, TagConditionSetting, TagDetailView, TagSetting, TagSettingEditReq, TagSubCategory } from '@api/models/tag-manage.model';
+import { TagConditionChartLine, TagConditionReq, TagConditionSetting, TagDetailView, TagSetting, TagSettingEditReq } from '@api/models/tag-manage.model';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
@@ -14,7 +14,7 @@ import { RegExpUtil } from '@common/utils/reg-exp-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { BaseComponent } from '@pages/base.component';
 import * as moment from 'moment';
-import { catchError, filter, tap, finalize } from 'rxjs/operators';
+import { catchError, filter, tap, finalize, first } from 'rxjs/operators';
 import { TagManageService } from '../tag-manage.service';
 import { TagConditionDialogComponent } from './condition-dialog/condition-dialog.component';
 import { Ng2SmartTableService, SearchInfo } from '@api/services/ng2-smart-table-service';
@@ -61,6 +61,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   //偵測條件下拉
   selectedConditionKey: string = '';
   selectedConditionVal: string = '';
+  isInit: boolean = false; //控制偵測條件下拉的auto-complete要不要show
 
   //預設狀態
   tagStatusList = [Status.enabled, Status.disabled];
@@ -105,7 +106,6 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     loginService: LoginService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private readonly changeDetectorRef: ChangeDetectorRef,
     private tagManageService: TagManageService,
     private fileService: FileService,
     private loadingService: LoadingService,
@@ -125,7 +125,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       tagTopicKey: new FormControl({ value: null, disabled: true }, Validators.required),
       tagDescription: new FormControl(null),
       conditionKey: new FormControl({ value: null, disabled: true }, [Validators.required, this.existsInConditionKeyList]),
-      conditionSettingQuery: new FormControl(null, Validators.required),
+      conditionSettingQuery: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
       tagConditionSetting: new FormArray([]),
     }, [ValidatorsUtil.dateRange]);
 
@@ -270,11 +270,11 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     }
   }
 
-  ngAfterViewChecked(): void {
-    this.changeDetectorRef.detectChanges();
-  }
-
   ngDoCheck() {
+    this.validateForm.get('categoryKey').valueChanges.pipe(first()).subscribe(() => {
+      //第一次load回資料塞值的時候
+      this.isInit = true;
+    });
     // console.info('this.findInvalidControls()', this.findInvalidControls())
     const categoryKeyVal = this.validateForm.get('categoryKey')?.value;
     if (CommonUtil.isNotBlank(categoryKeyVal) && categoryKeyVal != this.beforeCategoryVal) {
@@ -379,7 +379,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     switch (key?.toLocaleLowerCase()) {
       case 'normal':
         this.addFieldIfNotExists('conditionSettingMethod', 'normal', Validators.required);
-        this.addFieldIfNotExists('conditionSettingQuery', this.detail?.conditionSettingQuery, Validators.required);
+        this.addFieldIfNotExists('conditionSettingQuery', this.detail?.conditionSettingQuery, [Validators.required, ValidatorsUtil.blank]);
         this.validateForm?.patchValue({ 'tagType': 'normal' });
         break;
       case 'document':
@@ -399,7 +399,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
     switch (key?.toLocaleLowerCase()) {
       case 'normal':
-        this.addFieldIfNotExists('conditionSettingQuery', this.detail?.conditionSettingQuery, Validators.required);
+        this.addFieldIfNotExists('conditionSettingQuery', this.detail?.conditionSettingQuery, [Validators.required, ValidatorsUtil.blank]);
         this.validateForm?.patchValue({ 'conditionSettingMethod': 'normal' });
         break;
       case 'field':
@@ -410,7 +410,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
         this.createConditionControl(this.detail?.tagConditionSetting);
 
-        if (!this.detail?.tagConditionSetting|| this.detail?.tagConditionSetting?.length === 0) {
+        if (!this.detail?.tagConditionSetting || this.detail?.tagConditionSetting?.length === 0) {
           if (this.conditions?.getRawValue()?.length === 0) {
             this.conditions.push(new FormGroup({
               id: new FormControl(0),
@@ -489,9 +489,10 @@ export class TagSetComponent extends BaseComponent implements OnInit {
               this.selectedConditionKey = conditionKey?.key;
               this.selectedConditionVal = conditionKey?.val;
               this.validateForm.get('conditionKey').patchValue(conditionKey?.val);
+              this.conditionKeyFilter(conditionKey?.val);
               this.getTagConditionalDistribution();
             }
-          })
+          }),
         ).subscribe();
   }
 

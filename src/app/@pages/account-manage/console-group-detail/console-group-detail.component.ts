@@ -48,7 +48,7 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
       read: {
         title: '查看',
         type: 'custom',
-        class: 'center',
+        class: 'text_center',
         renderComponent: CheckboxColumnComponent,
         onComponentInitFunction: (instance: CheckboxColumnComponent) => {
           instance.settings = { isShowParam: { key: 'read' }, isCheckedParam: { key: 'read' }, disable: true };
@@ -58,7 +58,7 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
       create: {
         title: '新增',
         type: 'custom',
-        class: 'center',
+        class: 'text_center',
         renderComponent: CheckboxColumnComponent,
         onComponentInitFunction: (instance: CheckboxColumnComponent) => {
           instance.settings = { isShowParam: { key: 'create' }, isCheckedParam: { key: 'create' }, disable: true };
@@ -68,23 +68,23 @@ export class ConsoleGroupDetailComponent extends BaseComponent implements OnInit
       update: {
         title: '編輯',
         type: 'custom',
-        class: 'center',
+        class: 'text_center',
         renderComponent: CheckboxColumnComponent,
         onComponentInitFunction: (instance: CheckboxColumnComponent) => {
           instance.settings = { isShowParam: { key: 'update' }, isCheckedParam: { key: 'update' }, disable: true };
         },
         sort: false,
       },
-      delete: {
-        title: '刪除',
-        type: 'custom',
-        class: 'center',
-        renderComponent: CheckboxColumnComponent,
-        onComponentInitFunction: (instance: CheckboxColumnComponent) => {
-          instance.settings = { isShowParam: { key: 'delete' }, isCheckedParam: { key: 'delete' }, disable: true };
-        },
-        sort: false,
-      }
+      // delete: {
+      //   title: '刪除',
+      //   type: 'custom',
+      //   class: 'text_center',
+      //   renderComponent: CheckboxColumnComponent,
+      //   onComponentInitFunction: (instance: CheckboxColumnComponent) => {
+      //     instance.settings = { isShowParam: { key: 'delete' }, isCheckedParam: { key: 'delete' }, disable: true };
+      //   },
+      //   sort: false,
+      // }
     },
     hideSubHeader: true,
     actions: {
