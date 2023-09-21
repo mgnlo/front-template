@@ -92,11 +92,13 @@
 						[ngClass]="{'error': condition_key?.errors?.condition_valueErrMsg }">
 						<label>偵測條件</label>
 						<div>
-							<input *ngIf="isInit" nbInput fullWidth type="text" placeholder="請輸入或選擇" formControlName="conditionKey" (keyup)="isInit = false"/>
-							<input *ngIf="!isInit" nbInput fullWidth type="text" placeholder="請輸入或選擇" [nbAutocomplete]="auto"
-								[status]="condition_key?.errors?.condition_valueErrMsg  ? 'danger' : 'basic'"
-								(input)="onConditionKeyChange($event)" (blur)="onBlurConditionKeyInput()"
-								formControlName="conditionKey" />
+							<input *ngIf="this.tagId&&isInit" nbInput fullWidth type="text" placeholder="請輸入或選擇" formControlName="conditionKey"
+                     (keyup)="isInit = false" (click)="isInit = false"
+                     [status]="condition_key?.errors?.condition_valueErrMsg  ? 'danger' : 'basic'"/>
+							<input *ngIf="!this.tagId||!isInit" nbInput fullWidth type="text" placeholder="請輸入或選擇" [nbAutocomplete]="auto"
+								     [status]="condition_key?.errors?.condition_valueErrMsg  ? 'danger' : 'basic'"
+								     (input)="onConditionKeyChange($event)" (blur)="onBlurConditionKeyInput()"
+								     formControlName="conditionKey" />
 							<nb-autocomplete #auto (selectedChange)="onConditionKeySelectChange($event)">
                   <nb-option *ngFor="let conditionKey of filterConditionKeyList" [value]="conditionKey">
                     {{ conditionKey.val }}
