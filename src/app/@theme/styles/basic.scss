@@ -50,6 +50,17 @@ $f40: 2.5rem;
     &_italic { font-style: italic !important; }
     &_oblique { font-style: oblique !important; }
 }
+// word-break
+.word_break_all {
+    word-break: break-all;
+}
+.word_break_word {
+    word-break: break-word;
+}
+// white-space
+.white_space {
+    white-space: nowrap;
+}
 // display
 .dis{
     &_block { display: block !important; }
