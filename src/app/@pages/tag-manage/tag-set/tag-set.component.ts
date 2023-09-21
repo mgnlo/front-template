@@ -62,6 +62,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   selectedConditionKey: string = '';
   selectedConditionVal: string = '';
   isInit: boolean = false; //控制偵測條件下拉的auto-complete要不要show
+  changeConditionType: boolean = false; //切換時不在ngDoCheck觸發getConditionKeyList
 
   //預設狀態
   tagStatusList = [Status.enabled, Status.disabled];
@@ -202,10 +203,6 @@ export class TagSetComponent extends BaseComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    //#region 抓取(主)標籤構面
-    this.getTagCategoryList();
-    //#endregion
-
     //#region 載入編輯資料
     if (!!this.tagId) {
       this.loadingService.open();
@@ -243,6 +240,10 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
           this.changeTagType(this.detail.tagType);
           this.changeConditionSettingMethod(this.detail.conditionSettingMethod);
+
+          //#region 抓取(主)標籤構面
+          this.getTagCategoryList();
+          //#endregion
         }),
         finalize(() => {
           this.loadingService.close();
@@ -261,6 +262,10 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     }
     //#endregion
     else {//新增
+      //#region 抓取(主)標籤構面
+      this.getTagCategoryList();
+      //#endregion
+
       this.validateForm.get('endDate')?.patchValue(new Date('9999-12-31'));
       //#region 設定欄位
       const formData = this.validateForm.getRawValue();
@@ -275,6 +280,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       //第一次load回資料塞值的時候
       this.isInit = true;
     });
+
     // console.info('this.findInvalidControls()', this.findInvalidControls())
     const categoryKeyVal = this.validateForm.get('categoryKey')?.value;
     if (CommonUtil.isNotBlank(categoryKeyVal) && categoryKeyVal != this.beforeCategoryVal) {
@@ -295,7 +301,9 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       this.validateForm.get('conditionSettingMethod')?.value === 'field') {
       this.beforeSubCategoryVal = tagTopicKeyVal;
       //#region 抓取偵測條件
-      this.getConditionKeyList(categoryKeyVal, tagTopicKeyVal);
+      if(this.changeConditionType){
+        this.getConditionKeyList(categoryKeyVal, tagTopicKeyVal);
+      }
       //#endregion
       if (CommonUtil.isBlank(this.validateForm.get('conditionKey')?.value)) return
     }
@@ -328,6 +336,11 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         }
 
         this.categoryList = Object.entries(mapArray).map(([key, val]) => ({ key, val }));
+        if (this.tagId && !this.categoryList.some(s => s.key === this.detail?.categoryKey)) {
+          this.dialogService.alertAndBackToList(false, '查無標籤構面');
+          this.validateForm?.get('categoryKey')?.setErrors({ 'categoryKeyErrMsg': '查無標籤構面' });
+          return;
+        }
       })
     ).subscribe()
   }
@@ -355,14 +368,19 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       tap((res) => {
         const mapArray = JSON.parse(JSON.stringify(res.result)) as Record<string, string>;
         if (!mapArray || Object.keys(mapArray).length === 0) {
+          this.detail.tagTopicKey = null;
           this.dialogService.alertAndBackToList(false, '查無子標籤構面');
           this.validateForm?.get('tagTopicKey')?.setErrors({ 'tagTopicKeyErrMsg': '查無子標籤構面' });
           return;
         }
 
         this.subCategoryList = Object.entries(mapArray).map(([key, val]) => ({ key, val }));
-        if (this.tagId) {
-          this.validateForm?.get('tagTopicKey').patchValue(this.detail?.tagTopicKey)
+        if (this.tagId &&
+          CommonUtil.isNotBlank(this.detail.tagTopicKey) &&
+          !this.subCategoryList.some(s => s.key === this.validateForm.get('tagTopicKey')?.value)) {
+          this.dialogService.alertAndBackToList(false, '查無子標籤構面');
+          this.validateForm?.get('tagTopicKey')?.setErrors({ 'tagTopicKeyErrMsg': '查無子標籤構面' });
+          return;
         }
       })
     ).subscribe()
@@ -393,6 +411,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
   //#region 條件設定方式 更動時切換驗證
   changeConditionSettingMethod(key: string) {
+    this.changeConditionType = false;
     this.removeFieldIfExists('conditionKey');
     this.removeFieldIfExists('tagConditionSetting');
     this.removeFieldIfExists('conditionSettingQuery');
@@ -427,7 +446,9 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         //#endregion
         break;
     }
-
+    setTimeout(() => {
+      this.changeConditionType = true;
+    }, 0)
     this.conditions?.updateValueAndValidity();
   }
   //#endregion
