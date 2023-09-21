@@ -60,7 +60,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
       tagType: {
         title: '類型',
         type: 'html',
-        class: 'text_center',
+        class: 'text_center min_w100',
         valuePrepareFunction: (cell: string) => {
           if (!cell) { return '' }
           return `<p class="text_center">` + (TagType[cell] || '') + `</p>`;
