@@ -61,7 +61,7 @@
 		<div class="col-lg-6">
 			<nb-card>
 				<nb-card-header>
-					<h2>{{ dashboardData?.hotTags?.title }}</h2>
+					<h2>{{ dashboardData?.hotTags?.title ?? "熱門名單採用標籤" }}</h2>
 				</nb-card-header>
 				<nb-card-body>
 					<dashboard-echarts-treemap-hot *ngIf="hotTagsData" [data]="hotTagsData"></dashboard-echarts-treemap-hot>
@@ -71,7 +71,7 @@
 		<div class="col-lg-6">
 			<nb-card>
 				<nb-card-header>
-					<h2>{{ dashboardData?.coldTags?.title }}</h2>
+					<h2>{{ dashboardData?.coldTags?.title ?? "冷門名單採用標籤" }}</h2>
 				</nb-card-header>
 				<nb-card-body>
 					<dashboard-echarts-treemap-cool *ngIf="coldTagsData" [data]="coldTagsData"></dashboard-echarts-treemap-cool>
