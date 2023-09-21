@@ -63,7 +63,7 @@ export class DashboardEchartsLineComponent implements AfterViewInit, OnDestroy {
         ],
         yAxis: [
           {
-            type: 'log', // value | log |
+            type: 'value', // value | log |
             axisLine: {
               lineStyle: {
                 color: echarts.axisLineColor,
