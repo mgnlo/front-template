@@ -49,16 +49,16 @@ export class PagesComponent implements OnInit {
 
   initMenu() {
     this.basicMenu = [
-      { title: '登入畫面', icon: 'log-in-outline', link: '/login', home: true },
-      {
-        title: "元件庫", icon: "color-palette-outline",
-        children: [
-          { title: "基本元件", link: "/pages/element" },
-          { title: "表單元件", link: "/pages/element2" },
-          { title: "表格", link: "/pages/table" },
-          { title: "Echarts圖表內容", link: "/pages/charts/echarts" }
-        ]
-      }
+      // { title: '登入畫面', icon: 'log-in-outline', link: '/login', home: true },
+      // {
+      //   title: "元件庫", icon: "color-palette-outline",
+      //   children: [
+      //     { title: "基本元件", link: "/pages/element" },
+      //     { title: "表單元件", link: "/pages/element2" },
+      //     { title: "表格", link: "/pages/table" },
+      //     { title: "Echarts圖表內容", link: "/pages/charts/echarts" }
+      //   ]
+      // }
     ];
 
     for (const [key, val] of Object.entries(ScopeList)) {

@@ -169,11 +169,11 @@ export class ReviewActivityDetailComponent extends BaseComponent implements OnIn
     let conB = Object.keys(groupViewB);
     let keysA = conA.map(con => {
       let groups = groupViewA[con] as TagGroupView[];
-      return groups.map(group => group.tagKey);
+      return groups.map(group => group.tagId);
     });
     let keysB = conB.map(con => {
       let groups = groupViewB[con] as TagGroupView[];
-      return groups.map(group => group.tagKey);
+      return groups.map(group => group.tagId);
     });
     // console.info(keysA, keysB);
     keysA.forEach((keyA, i) => {

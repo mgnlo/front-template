@@ -1,9 +1,9 @@
 <div class="pageTitle">
   <h1>標籤管理</h1>
-  <button *ngIf="isCrud['update']" nbButton [status]="detail?.status === 'reviewing' ? 'basic' : 'primary'" size="tiny" class="iconBtn" (click)="edit()" [disabled]="detail?.status === 'reviewing'">
+  <button *ngIf="isCrud['update']" nbButton [status]="detail?.reviewStatus === 'reviewing' ? 'basic' : 'primary'" size="tiny" class="iconBtn" (click)="edit()" [disabled]="detail?.reviewStatus === 'reviewing'">
       <nb-icon icon="edit-outline"></nb-icon>
   </button>
-  <button *ngIf="isCrud['create']" nbButton [status]="detail?.status === 'reviewing' ? 'basic' : 'primary'" size="tiny" class="iconBtn" (click)="copy()" [disabled]="detail?.status === 'reviewing'">
+  <button *ngIf="isCrud['create']" nbButton [status]="detail?.reviewStatus === 'reviewing' ? 'basic' : 'primary'" size="tiny" class="iconBtn" (click)="copy()" [disabled]="detail?.reviewStatus === 'reviewing'">
       <nb-icon icon="copy-outline"></nb-icon>
   </button>
 </div>
@@ -67,23 +67,29 @@
           </div>
           <div *ngIf="detail?.tagType !== 'document' &&
                (detail?.conditionSettingMethod === 'field' || detail?.conditionSettingMethod === 'normal')">
+            <div class="subTitle" *ngIf="detail?.conditionSettingMethod === 'field'">
+              <p>條件設定</p>
+            </div>
             <div class="row">
-              <div class="textGroup code col-12">
-                  <p class="text_bold">條件設定：</p>
-                  <span *ngIf="detail?.conditionSettingMethod === 'field'">{{detail?.tagConditionSetting?.[0]?.conditionName || detail?.tagConditionSetting?.[0]?.conditionKey}}</span>
-                  <pre *ngIf="detail?.conditionSettingMethod === 'normal'">{{detail?.conditionSettingQuery}}</pre>
+              <div class="textGroup code col-12" *ngIf="detail?.conditionSettingMethod === 'normal'">
+                <p class="text_bold">條件設定：</p>
+                <pre>{{detail?.conditionSettingQuery}}</pre>
+              </div>
+              <div class="textGroup code col-12" *ngIf="detail?.conditionSettingMethod === 'field'">
+                <p class="text_bold">偵測條件：</p>
+                <span>{{detail?.tagConditionSetting?.[0]?.conditionName || detail?.tagConditionSetting?.[0]?.conditionKey}}</span>
               </div>
               <!-- 灰底區塊 -->
               <div class="colorArea col-12" *ngIf="detail?.conditionSettingMethod === 'field'">
                 <div class="row">
-                  <div *ngFor="let tagCondition of detail?.tagConditionSetting">
+                  <ng-container *ngFor="let tagCondition of detail?.tagConditionSetting">
                     <div class="textGroup gather">
                       <p>{{tagCondition?.detectionCondition?.toLowerCase() | enum:'mathSymbol'}}</p>
                       <span>{{tagCondition?.thresholdValue}}</span>
                       <nb-tag *ngIf="tagCondition?.joinValue?.toLowerCase() === 'and'" status="warning" appearance="filled" text="and"></nb-tag>
                       <nb-tag *ngIf="tagCondition?.joinValue?.toLowerCase() === 'or'" status="info" appearance="filled" text="or"></nb-tag>
                     </div>
-                  </div>
+                  </ng-container>
                 </div>
               </div>
             </div>

@@ -24,9 +24,8 @@ import { catchError, filter, tap } from 'rxjs/operators';
   styleUrls: ['./schedule-activity-export-detail.component.scss']
 })
 export class ActivityExportDetailComponent extends BaseComponent implements OnInit {
-  ScheduleActivitySetting: Array<ScheduleActivitySetting> = ScheduleActivitySettingMock;
-  activitySetting: ActivitySetting = ScheduleActivitySettingMock[0].activitySetting[0];
-  schedule_Batch_History: Array<Schedule_Batch_History> = ScheduleActivitySettingMock[0].activitySetting[0].schedule_batch_history;
+  activitySetting: ActivitySetting;
+  schedule_Batch_History: Array<Schedule_Batch_History>
 
   params: any;//路由參數
   sessionKey: string = this.activatedRoute.snapshot.routeConfig.path;
@@ -131,8 +130,11 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
     this.scheduleId = this.activatedRoute.snapshot.params.scheduleId;
     this.referenceId = this.activatedRoute.snapshot.params.referenceId;
 
+    this.loadingService.open();
     if (this.isMock) {
-      this.dataSource.load(this.schedule_Batch_History);
+      this.activitySetting = ScheduleActivitySettingMock[0].activitySetting[0];
+      this.dataSource.load(this.activitySetting.schedule_batch_history);
+      this.loadingService.close();
       return;
     }
 

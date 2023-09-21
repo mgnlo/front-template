@@ -19,6 +19,7 @@ export interface TagSetting {
   filePath: string;
   fileData: string;
   version: string;
+  reviewStatus: string;
   tagConditionSetting: Array<TagConditionSetting>;
   tagReviewHistoryAud: Array<TagReviewHistory>;
 }
@@ -132,9 +133,10 @@ export interface TagDetailView {
   scheduleSettings: string;
   uploadType: string;
   filePath: string;
-  fileName: string
-  fileData: string
-  version: string
+  fileName: string;
+  fileData: string;
+  version: string;
+  reviewStatus: string;
   historyGroupView: { [x: number]: HistoryGroupView };
   tagConditionSetting: Array<TagConditionSetting>;
   tagReviewHistoryAud: Array<TagReviewHistory>;

@@ -30,7 +30,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
          version: "uuid-zzzz",
          tagGroup:1,
          tagName:"近一個月_基金_定期定額手續費-高",
-         tagKey:"tag-123"
+         tagId:"tag-123"
       },
       {
          activityId: "abcdefg123457",
@@ -38,7 +38,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
          version: "uuid-zzzz",
          tagGroup:1,
          tagName:"近三個月_基金_手續費-低",
-         tagKey:"tag-456"
+         tagId:"tag-456"
       },
       {
          activityId: "abcdefg123457",
@@ -46,7 +46,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
          version: "uuid-zzzz",
          tagGroup:2,
          tagName:"近三個月_換匯_交易金額-低",
-         tagKey:"tag-790"
+         tagId:"tag-790"
       }
     ]
   },
@@ -79,7 +79,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
          version: "uuid-zzzz",
          tagGroup:1,
          tagName:"近一個月_基金_定期定額手續費-高",
-         tagKey:"tag-123"
+         tagId:"tag-123"
       },
       {
          activityId:"uuid-b",
@@ -87,7 +87,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
          version: "uuid-zzzz",
          tagGroup:1,
          tagName:"近三個月_基金_手續費-低",
-         tagKey:"tag-457"
+         tagId:"tag-457"
       },
       {
          activityId:"uuid-b",
@@ -95,7 +95,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
          version: "uuid-zzzz",
          tagGroup:2,
          tagName:"近一個月_換匯_交易金額-高",
-         tagKey:"tag-789"
+         tagId:"tag-789"
       }
     ]
   },
@@ -126,7 +126,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
          version: "uuid-zzzz",
          tagGroup:1,
          tagName:"近一個月_基金_定期定額手續費-高",
-         tagKey:"tag-123"
+         tagId:"tag-123"
       },
       {
          activityId:"uuid-b",
@@ -134,7 +134,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
          version: "uuid-zzzz",
          tagGroup:1,
          tagName:"近三個月_基金_手續費-低",
-         tagKey:"tag-456"
+         tagId:"tag-456"
       },
       {
          activityId:"uuid-b",
@@ -142,7 +142,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
          version: "uuid-zzzz",
          tagGroup:2,
          tagName:"近一個月_換匯_交易金額-高",
-         tagKey:"tag-789"
+         tagId:"tag-789"
       },
       {
          activityId:"uuid-b",
@@ -150,7 +150,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
          version: "uuid-zzzz",
          tagGroup:3,
          tagName:"近一個月_換匯_交易金額-高",
-         tagKey:"tag-792"
+         tagId:"tag-792"
       }
     ]
   },
@@ -181,7 +181,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
          version: "uuid-zzzz",
          tagGroup:1,
          tagName:"近一個月_基金_定期定額手續費-高",
-         tagKey:"tag-123"
+         tagId:"tag-123"
       },
       {
          activityId:"uuid-b",
@@ -189,7 +189,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
          version: "uuid-zzzz",
          tagGroup:1,
          tagName:"近三個月_基金_手續費-低",
-         tagKey:"tag-456"
+         tagId:"tag-456"
       }
     ]
   },
@@ -220,7 +220,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
          version: "uuid-zzzz",
          tagGroup:1,
          tagName:"近一個月_基金_定期定額手續費-高",
-         tagKey:"tag-123"
+         tagId:"tag-123"
       },
       {
          activityId:"uuid-b",
@@ -228,7 +228,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
          version: "uuid-zzzz",
          tagGroup:1,
          tagName:"性別-男",
-         tagKey:"tag-456"
+         tagId:"tag-456"
       },
       {
          activityId:"uuid-b",
@@ -236,7 +236,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
          version: "uuid-zzzz",
          tagGroup:2,
          tagName:"近一個月_換匯_交易金額-高",
-         tagKey:"tag-789"
+         tagId:"tag-789"
       }
     ]
   },
@@ -267,7 +267,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
          version: "uuid-zzzz",
          tagGroup:1,
          tagName:"近一個月_基金_定期定額手續費-高",
-         tagKey:"tag-123"
+         tagId:"tag-123"
       },
       {
          activityId:"uuid-b",
@@ -275,7 +275,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
          version: "uuid-zzzz",
          tagGroup:1,
          tagName:"近三個月_基金_手續費-低",
-         tagKey:"tag-456"
+         tagId:"tag-456"
       },
       {
          activityId:"uuid-b",
@@ -283,7 +283,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
          version: "uuid-zzzz",
          tagGroup:2,
          tagName:"近一個月_換匯_交易金額-高",
-         tagKey:"tag-789"
+         tagId:"tag-789"
       }
     ]
   },
@@ -316,7 +316,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
         version: "uuid-zzzz",
         tagGroup:1,
         tagName:"近一個月_基金_定期定額手續費-高",
-        tagKey:"tag-123"
+        tagId:"tag-123"
      },
      {
         activityId: "abcdefg123457",
@@ -324,7 +324,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
         version: "uuid-zzzz",
         tagGroup:1,
         tagName:"近三個月_基金_手續費-低",
-        tagKey:"tag-456"
+        tagId:"tag-456"
      },
      {
         activityId: "abcdefg123457",
@@ -332,7 +332,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
         version: "uuid-zzzz",
         tagGroup:2,
         tagName:"近三個月_換匯_交易金額-低",
-        tagKey:"tag-790"
+        tagId:"tag-790"
      }
    ]
  },
@@ -363,7 +363,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
         version: "uuid-zzzz",
         tagGroup:1,
         tagName:"近一個月_基金_定期定額手續費-高",
-        tagKey:"tag-123"
+        tagId:"tag-123"
      },
      {
         activityId:"uuid-b",
@@ -371,7 +371,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
         version: "uuid-zzzz",
         tagGroup:1,
         tagName:"近三個月_基金_手續費-低",
-        tagKey:"tag-456"
+        tagId:"tag-456"
      },
      {
         activityId:"uuid-b",
@@ -379,7 +379,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
         version: "uuid-zzzz",
         tagGroup:2,
         tagName:"近一個月_換匯_交易金額-高",
-        tagKey:"tag-789"
+        tagId:"tag-789"
      },
      {
         activityId:"uuid-b",
@@ -387,7 +387,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
         version: "uuid-zzzz",
         tagGroup:3,
         tagName:"近一個月_換匯_交易金額-高",
-        tagKey:"tag-792"
+        tagId:"tag-792"
      }
    ]
  },
@@ -418,7 +418,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
         version: "uuid-zzzz",
         tagGroup:1,
         tagName:"近一個月_基金_定期定額手續費-高",
-        tagKey:"tag-123"
+        tagId:"tag-123"
      },
      {
         activityId:"uuid-b",
@@ -426,7 +426,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
         version: "uuid-zzzz",
         tagGroup:1,
         tagName:"近三個月_基金_手續費-低",
-        tagKey:"tag-456"
+        tagId:"tag-456"
      }
    ]
  },
@@ -457,7 +457,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
         version: "uuid-zzzz",
         tagGroup:1,
         tagName:"近一個月_基金_定期定額手續費-高",
-        tagKey:"tag-123"
+        tagId:"tag-123"
      },
      {
         activityId:"uuid-b",
@@ -465,7 +465,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
         version: "uuid-zzzz",
         tagGroup:1,
         tagName:"近三個月_基金_手續費-低",
-        tagKey:"tag-456"
+        tagId:"tag-456"
      },
      {
         activityId:"uuid-b",
@@ -473,7 +473,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
         version: "uuid-zzzz",
         tagGroup:2,
         tagName:"近一個月_換匯_交易金額-高",
-        tagKey:"tag-789"
+        tagId:"tag-789"
      },
      {
         activityId:"uuid-b",
@@ -481,7 +481,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
         version: "uuid-zzzz",
         tagGroup:3,
         tagName:"近一個月_換匯_交易金額-高",
-        tagKey:"tag-792"
+        tagId:"tag-792"
      }
    ]
  },
@@ -512,7 +512,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
         version: "uuid-zzzz",
         tagGroup:1,
         tagName:"近一個月_基金_定期定額手續費-高",
-        tagKey:"tag-123"
+        tagId:"tag-123"
      },
      {
         activityId:"uuid-b",
@@ -520,7 +520,7 @@ export const ReviewActivityListMock: Array<ActivityReviewHistory> = [
         version: "uuid-zzzz",
         tagGroup:1,
         tagName:"近三個月_基金_手續費-低",
-        tagKey:"tag-456"
+        tagId:"tag-456"
      }
    ]
  },

@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivityListCondition, PreviewCustomerReq, TagGroupView } from '@api/models/activity-list.model';
 import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
@@ -8,11 +9,15 @@ import { StorageService } from '@api/services/storage.service';
 import { WarningCode, RestStatus } from '@common/enums/rest-enum';
 import { CustomerListMock } from '@common/mock-data/customer-list-mock';
 import { TagConditionMock } from '@common/mock-data/tag-condition-mock';
+import { CommonUtil } from '@common/utils/common-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
 import { NbDialogRef } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
+import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
 import { TagManageService } from '@pages/tag-manage/tag-manage.service';
-import { catchError, filter, tap } from 'rxjs/operators';
+import { LocalData } from 'ng2-completer';
+import { LocalDataSource } from 'ng2-smart-table';
+import { catchError, filter, finalize, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'ngx-preview',
@@ -21,7 +26,8 @@ import { catchError, filter, tap } from 'rxjs/operators';
 })
 export class PreviewDialogComponent extends BaseComponent implements OnInit {
 
-  @Input() limit: string;
+  @Input() size: string;
+  @Input() conditionList: Array<ActivityListCondition>;
 
   info: string;
   orderByList = new Map<string, string>();
@@ -35,20 +41,21 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
     loginService: LoginService,
     private loadingService: LoadingService,
     private tagManageService: TagManageService,
+    private customerManageService: CustomerManageService,
     private dialogService: DialogService,
     private ref: NbDialogRef<PreviewDialogComponent>,
   ) {
     super(storageService, configService, loginService);
     this.validateForm = new FormGroup({
-      listLimit: new FormControl(null, [Validators.required, ValidatorsUtil.notZero]),
-      orderBy: new FormControl('', Validators.required),
-      sortType: new FormControl('asc', Validators.required),
+      size: new FormControl(null, ValidatorsUtil.listLimitRequired),
+      conditionKey: new FormControl('', Validators.required),
+      orderby: new FormControl('asc', Validators.required),
     });
   }
 
   ngOnInit(): void {
-    this.validateForm.get('listLimit').setValue(this.limit);
-    if(this.isMock){
+    this.validateForm.get('size').setValue(this.size);
+    if (this.isMock) {
       TagConditionMock.forEach(condition => this.orderByList.set(condition.conditionKey, condition.conditionName));
       return;
     }
@@ -115,16 +122,35 @@ export class PreviewDialogComponent extends BaseComponent implements OnInit {
   }
 
   search() {
+    if (this.validateForm.invalid) { return; }
     this.loadingService.open();
-    let resLimit = '';
-    //TODO: 回傳的客戶總數
-    this.info = `名單預計可抓取共` + resLimit + `位名單資料，若有預算上考量請設定名單上限與資料排序方式。`;
+
     if (this.isMock) {
       this.dataSource.load(CustomerListMock);
+      this.info = `名單預計可抓取共` + CustomerListMock.length + `位名單資料，若有預算上考量請設定名單上限與資料排序方式。`;
       this.loadingService.close();
       return;
     }
-    this.loadingService.close();
+
+    let req: PreviewCustomerReq = this.validateForm.getRawValue();
+    let conditionOr: { [x: number]: TagGroupView[] } = CommonUtil.groupBy(this.conditionList, 'tagGroup', false);
+    let conditions: Array<string>[] = Object.keys(conditionOr).map(conditionAnd => {
+      return conditionOr[conditionAnd].map((and: TagGroupView) => and.tagId);
+    });
+    req.activityListCondition = conditions;
+    this.customerManageService.getPreviewCustomerByActivityListCondition(req).pipe(
+      catchError((err) => {
+        this.dialogService.alertAndBackToList(false, err.message);
+        throw new Error(err.message);
+      }),
+      filter(res => res.code === RestStatus.SUCCESS),
+      tap((res) => {
+        this.dataSource = new LocalDataSource();
+        this.dataSource.load(res.result);
+        this.info = `名單預計可抓取共` + res.result.length + `位名單資料，若有預算上考量請設定名單上限與資料排序方式。`;
+      }),
+      finalize(() => this.loadingService.close())
+    ).subscribe();
   }
 
   close() {

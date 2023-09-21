@@ -48,7 +48,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     this.validateForm = new FormGroup({
       activityName: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
       status: new FormControl('disabled', Validators.required),
-      listLimit: new FormControl(null, ValidatorsUtil.number),
+      listLimit: new FormControl(null, [ValidatorsUtil.number, ValidatorsUtil.notZero]),
       filterOptions: new FormControl(false),
       startDate: new FormControl(new Date(), [Validators.required, ValidatorsUtil.dateFmt]),
       endDate: new FormControl(moment(new Date()).add(3, 'months').toDate(), [Validators.required, ValidatorsUtil.dateFmt]),
@@ -96,47 +96,49 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
 
     if (this.isMock) {
       ActivityListMock.forEach(activity => {
-        activity.activityListCondition.forEach(condition => this.categoryList.set(condition.tagKey, condition.tagName));
+        activity.activityListCondition.forEach(condition => this.categoryList.set(condition.tagId, condition.tagName));
       });
-    } else {
-      //L2標籤
-      this.tagManageService.getTagSettingListOption().pipe(
-        catchError((err) => {
+      if (!!this.activityId) {
+        this.loadingService.open();
+        if (this.isMock) {
+          let mockData = ActivityListMock.find(activity => activity.activityId === this.activityId)
+          this.setData(mockData);
           this.loadingService.close();
-          this.dialogService.alertAndBackToList(false, '查詢可選活動名單條件失敗');
-          this.validateForm?.get('activityListCondition')?.setErrors({ 'categoryKeyErrMsg': err.message ? err.message : '查詢可選活動名單條件失敗' });
-          throw new Error(err.message);
-        }),
-        filter(res => res.code === RestStatus.SUCCESS),
-        tap(res => {
-          Object.entries(res.result).forEach(([k, v]) => this.categoryList.set(k, v));
-          this.loadingService.close();
-        })
-      ).subscribe();
-    }
-
-    if (!!this.activityId) {
-      this.loadingService.open();
-
-      if (this.isMock) {
-        let mockData = ActivityListMock.find(activity => activity.activityId === this.activityId)
-        this.setData(mockData);
-        this.loadingService.close();
-        return;
+          return;
+        }
       }
-
-      this.customerManageService.getActivitySettingRow(this.activityId).pipe(
-        catchError(err => {
-          this.dialogService.alertAndBackToList(false, '查無該筆資料，將為您導回客群名單', ['pages', 'customer-manage', 'activity-list']);
-          throw new Error(err.message);
-        }),
-        filter(res => res.code === RestStatus.SUCCESS),
-        tap((res) => {
-          this.setData(res.result);
-          this.loadingService.close();
-        })
-      ).subscribe();
+      return;
     }
+
+    //L2標籤
+    this.tagManageService.getTagSettingListOption().pipe(
+      catchError((err) => {
+        this.loadingService.close();
+        this.dialogService.alertAndBackToList(false, '查詢可選活動名單條件失敗');
+        this.validateForm?.get('activityListCondition')?.setErrors({ 'categoryKeyErrMsg': err.message ? err.message : '查詢可選活動名單條件失敗' });
+        throw new Error(err.message);
+      }),
+      filter(res => res.code === RestStatus.SUCCESS),
+      tap(res => {
+        Object.entries(res.result).forEach(([k, v]) => this.categoryList.set(k, v));
+        this.loadingService.close();
+      })
+    ).subscribe(() => {
+      if (!!this.activityId) {
+        this.loadingService.open();
+        this.customerManageService.getActivitySettingRow(this.activityId).pipe(
+          catchError(err => {
+            this.dialogService.alertAndBackToList(false, '查無該筆資料，將為您導回客群名單', ['pages', 'customer-manage', 'activity-list']);
+            throw new Error(err.message);
+          }),
+          filter(res => res.code === RestStatus.SUCCESS),
+          tap((res) => {
+            this.setData(res.result);
+            this.loadingService.close();
+          })
+        ).subscribe();
+      }
+    });
   }
 
   setData(result: ActivitySetting) {
@@ -159,13 +161,13 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
               let fg = new FormGroup({});
               let condition = groupData[key] as Array<ActivityListCondition>;
               condition.forEach((con, index) => {
-                if (!this.categoryList.get(con.tagKey)) {
-                  // this.categoryList[con.tagKey] = con.tagName //把取回的值塞進活動名單條件下拉選單
+                if (!this.categoryList.get(con.tagId)) {
+                  // this.categoryList[con.tagId] = con.tagName //把取回的值塞進活動名單條件下拉選單
                   this.dialogService.alertAndBackToList(null, `活動名單條件 ${con.tagName} 已不存在，請重新選擇`);
                   fg.setControl("" + index, new FormControl(null, [Validators.required, ValidatorsUtil.isRepeat]));
                   fg.get("" + index).markAsTouched();
                 } else {
-                  fg.setControl("" + index, new FormControl(con.tagKey, [Validators.required, ValidatorsUtil.isRepeat]));
+                  fg.setControl("" + index, new FormControl(con.tagId, [Validators.required, ValidatorsUtil.isRepeat]));
                 }
               });
               this.conditions.push(fg);
@@ -185,7 +187,8 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
 
   preview() {
     this.dialogService.open(PreviewDialogComponent, {
-      limit: this.validateForm.get('listLimit').value
+      size: this.validateForm.get('listLimit').value,
+      conditionList: this.getRequestData().activityListCondition
     });
   }
 
@@ -221,7 +224,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     requestObservable.pipe(
       catchError((err) => {
         const route = this.activityId ? [this.activityId] : [];
-        this.dialogService.alertAndBackToList(false, `${this.actionName}活動失敗`, ['pages', 'customer-manage', 'activity-set', ...route]);
+        this.dialogService.alertAndBackToList(false, `${this.actionName}活動失敗 ${err.message}`, ['pages', 'customer-manage', 'activity-set', ...route]);
         throw new Error(err.message);
       }),
       tap(res => {
@@ -241,11 +244,11 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     reqData.startDate = moment(reqData.startDate).format('YYYY-MM-DD');
     reqData.endDate = moment(reqData.endDate).format('YYYY-MM-DD');
     let conditionId: number = 0;
-    let flatConditions: { conditionId: string, tagGroup: number, tagKey: string, tagName: string }[] = [];
+    let flatConditions: { conditionId: string, tagGroup: number, tagId: string, tagName: string }[] = [];
     this.validateForm.getRawValue().activityListCondition.forEach((condition, i) => {
       Object.keys(condition).forEach((key) => {
         conditionId++;
-        flatConditions.push({ conditionId: `${conditionId}`, tagGroup: i + 1, tagKey: condition[key], tagName: this.categoryList.get(condition[key]) });
+        flatConditions.push({ conditionId: `${conditionId}`, tagGroup: i + 1, tagId: condition[key], tagName: this.categoryList.get(condition[key]) });
       })
     });
     reqData.activityListCondition = flatConditions;
@@ -257,7 +260,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
     let isTouch = formArr.at(+groupIndex).get(controlIndex).touched;
     let isDirty = formArr.at(+groupIndex).get(controlIndex).dirty;
     let isError = formArr.at(+groupIndex).get(controlIndex).errors;
-    return (isTouch || isDirty) && isError? true : false;
+    return (isTouch || isDirty) && isError ? true : false;
   }
 
 }

@@ -1,3 +1,5 @@
+import { TagCondition } from "./tag-manage.model";
+
 export interface ActivitySetting {
   activityId: string;
   activityName: string;
@@ -15,6 +17,7 @@ export interface ActivitySetting {
   batchUpdateTime: string;
   activityListCondition: Array<ActivityListCondition>;
   version: string;
+  reviewStatus: string;
   activityReviewHistoryAud: Array<ActivityReviewHistory>;
 }
 export class ActivityListCondition {
@@ -23,7 +26,7 @@ export class ActivityListCondition {
   version?: string;
   tagGroup: number;
   tagName: string;
-  tagKey: string;
+  tagId: string;
 }
 export class ActivityReviewHistory {
   historyId: string;
@@ -114,6 +117,7 @@ export interface ActivityDetail {
   filterOptions: string;
   listLimit: number;
   status: string;
+  reviewStatus: string;
   startDate: string;
   endDate: string;
   modificationTime: string;
@@ -126,7 +130,7 @@ export interface ActivityDetail {
 //for HTML diaplay
 export interface TagGroupView {
   conditionId: number;
-  tagKey: string;
+  tagId: string;
   tagName: string;
 }
 
@@ -159,4 +163,12 @@ export class ActivitySettingEditReq {
   scheduleSettings: string;
   activityDescription: string;
   activityListCondition: Array<ActivityListCondition>;
+}
+
+export class PreviewCustomerReq {
+  activityListCondition: Array<string[]>;
+  tagSetting: string[];
+  conditionKey: string;
+  orderby: string;
+  size: number;
 }

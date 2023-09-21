@@ -141,6 +141,7 @@ export class ConditionChartLineComponent implements OnInit, AfterViewInit, OnDes
   }
 
   ngOnDestroy(): void {
+    if(!!this.themeSubscription)
     this.themeSubscription.unsubscribe();
   }
 

@@ -7,7 +7,7 @@ import { NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbI
 import { AlertDialogComponent } from './dialog/alert-dialog/alert-dialog.component';
 import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
 import { ReviewDialogComponent } from './dialog/review-dialog/review-dialog.component';
-import { BasicInputComponent } from './form/basic-input/input.component';
+import { BasicInputComponent } from './form/basic-input/basic-input.component';
 import { DateRangeComponent } from './form/date-range/date-range.component';
 import { DropdownComponent } from './form/dropdown/dropdown.component';
 import { RadioComponent } from './form/radio/radio.component';

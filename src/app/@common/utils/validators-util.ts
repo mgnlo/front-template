@@ -1,5 +1,4 @@
-import { AbstractControl, FormGroup, ValidatorFn } from '@angular/forms';
-import { CommonUtil } from './common-util';
+import { AbstractControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { RegExpUtil } from './reg-exp-util';
 import { ValidateUtil } from './validate-util';
 
@@ -121,6 +120,13 @@ export const ValidatorsUtil = {
     const v = ctl.value;
     if (v && (ctl.dirty || ctl.touched) && !/^[\u4e00-\u9fa50-9\-]+$/.test(v)) {
       return { 'address': '地址格式有誤' };
+    }
+    return null;
+  },
+  /** 客群活動名單->預覽名單->名單上限必填*/
+  listLimitRequired: (ctl: AbstractControl) => {
+    if (!ctl.value || +ctl.value <= 0) {
+      return { 'listLimit': '請先於表單輸入名單上限，在進行查詢' };
     }
     return null;
   },
