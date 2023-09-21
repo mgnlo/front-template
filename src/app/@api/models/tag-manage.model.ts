@@ -9,10 +9,13 @@ export interface TagSetting {
   status: string;
   startDate: string;
   endDate: string;
+  createTime: string;
   conditionSettingMethod: string; //條件設定方式
   conditionSettingQuery: string; //條件設定語法
   categoryKey: string;
+  categoryName: string;
   tagTopicKey: string;
+  tagTopicName: string;
   scheduleSettings: string;
   uploadType: string;
   fileName: string;
@@ -20,6 +23,8 @@ export interface TagSetting {
   fileData: string;
   version: string;
   reviewStatus: string;
+  batchTime?: string;
+  batchResult?: string;
   tagConditionSetting: Array<TagConditionSetting>;
   tagReviewHistoryAud: Array<TagReviewHistory>;
 }
@@ -120,6 +125,7 @@ export interface TagDetailView {
   tagType: string;
   department: string;
   owner: string;
+  createTime: string;
   modificationTime: string;
   status: string;
   startDate: string;

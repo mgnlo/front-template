@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ConfigService } from '@api/services/config.service';
 import { LoadingService } from '@api/services/loading.service';
 import { LoginService } from '@api/services/login.service';
@@ -15,20 +15,20 @@ import { catchError, tap } from 'rxjs/operators';
 })
 export class SSOLoginComponent implements OnInit, OnDestroy {
   initProcessMsg = "(模擬 SSO login 流程，待整合串接) 登入授權處理中，請稍候...";
-  lightID: any = "123456789";
+  lightID: string;
   userProfileSubscription: Subscription;
 
   constructor(
     private router: Router,
-    private loadingService: LoadingService,
     private loginService: LoginService,
     private configService: ConfigService,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
     // 自網址上取得 lightID 參數
-    this.lightID = new URLSearchParams(window.location.search).get("lightID");
-    // 目前測試用 lightID : 17071 ~ 170175
+    this.lightID = this.route.snapshot.queryParams['lightID'];
+    // 目前測試用 lightID : 17071 ~ 17075
     this.lightID = "17071";
 
     if(this.configService.getConfig().IS_MOCK){
