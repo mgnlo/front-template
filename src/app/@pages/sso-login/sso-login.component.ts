@@ -35,9 +35,6 @@ export class SSOLoginComponent implements OnInit, OnDestroy {
       this.loginService.userProfileSubject.next(UserProfileMock);
       return;
     }
-  }
-
-  ngAfterContentInit() {
     // 發送電文請求 JWT Token 與 登入者 GroupScope，模擬成功導到 page 頁面
       this.loginService.singleSignOn(this.lightID).pipe(
         catchError((err) => { throw new Error(err.message); }),
