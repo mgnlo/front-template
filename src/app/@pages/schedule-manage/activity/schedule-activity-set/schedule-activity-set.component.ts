@@ -379,7 +379,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
     requestObservable.pipe(
       catchError((err) => {
         const route = this.scheduleId ? [this.changeRouteName, this.scheduleId] : [];
-        this.dialogService.alertAndBackToList(false, `${this.actionName}失敗 ${err}`, ['pages', 'schedule-manage', 'schedule-activity-set', ...route]);
+        this.dialogService.alertAndBackToList(false, `${this.actionName}失敗 ${err.message}`, ['pages', 'schedule-manage', 'schedule-activity-set', ...route]);
         throw new Error(err.message);
       }),
       filter((res) => res.code === RestStatus.SUCCESS),

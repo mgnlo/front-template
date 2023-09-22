@@ -70,7 +70,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
       department: {
         title: '所屬單位',
         type: 'html',
-        class: 'text_center',
+        class: 'text_center min_w150',
         valuePrepareFunction: (cell: string) => {
           return `<p class="text_center">` + (cell ?? "") + `</p>`;
         },
@@ -79,7 +79,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
       owner: {
         title: '負責人',
         type: 'html',
-        class: 'text_center',
+        class: 'text_center min_w150',
         valuePrepareFunction: (cell: string) => {
           return `<p class="text_center">` + (cell ?? "") + `</p>`;
         },
@@ -96,7 +96,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
       during: {
         title: '標籤有效起迄日',
         type: 'html',
-        class: 'text_center',
+        class: 'text_center min_w250',
         valuePrepareFunction: (cell: any, row: TagSetting) => {
           return row.startDate && row.endDate ? `<p class="text_center">${row?.startDate} ~ ${row?.endDate}</p>` : '';
         },
@@ -105,7 +105,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
       status: {
         title: '狀態',
         type: 'html',
-        class: 'text_center',
+        class: 'text_center min_w100',
         valuePrepareFunction: (cell: string, row: TagSetting) => {
           return `<p class="text_center">${(Status[row.reviewStatus] || Status[cell] || '')}</p>`;
         },

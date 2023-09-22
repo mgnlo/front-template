@@ -76,7 +76,7 @@ export class ReviewTagListComponent extends BaseComponent implements OnInit {
       tagType: {
         title: '類型',
         type: 'html',
-        class: 'text_center',
+        class: 'text_center min_w100',
         valuePrepareFunction: (cell: string) => {
           if (!cell) { return '' }
           return `<p class="text_center">` + (TagType[cell] || '') + `</p>`;
@@ -86,7 +86,7 @@ export class ReviewTagListComponent extends BaseComponent implements OnInit {
       department: {
         title: '所屬單位',
         type: 'html',
-        class: 'text_center',
+        class: 'text_center min_w150',
         valuePrepareFunction: (cell: string) => {
           return `<p class="text_center">` + (cell ?? "") + `</p>`;
         },
@@ -95,7 +95,7 @@ export class ReviewTagListComponent extends BaseComponent implements OnInit {
       owner: {
         title: '負責人',
         type: 'html',
-        class: 'text_center',
+        class: 'text_center min_w150',
         valuePrepareFunction: (cell: string) => {
           return `<p class="text_center">` + (cell ?? "") + `</p>`;
         },
@@ -112,7 +112,7 @@ export class ReviewTagListComponent extends BaseComponent implements OnInit {
       modificationTime: {
         title: '標籤有效起迄日',
         type: 'html',
-        class: 'text_center',
+        class: 'text_center min_w250',
         valuePrepareFunction: (cell: any, row: TagSetting) => {
           return row.startDate && row.endDate ? `<p class="text_center">${row?.startDate} ~ ${row?.endDate}</p>` : '';
         },
@@ -121,7 +121,7 @@ export class ReviewTagListComponent extends BaseComponent implements OnInit {
       reviewStatus: {
         title: '狀態',
         type: 'html',
-        class: 'text_center',
+        class: 'text_center min_w100',
         valuePrepareFunction: (cell: string) => {
           if (!cell) { return '' }
           return `<p class="text_center ${(ColumnClass[cell] || '')}">` + (ReviewStatus[cell] || '') + `</p>`;
