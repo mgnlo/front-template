@@ -215,11 +215,13 @@ export class ReviewTagDetailComponent extends BaseComponent implements OnInit {
       return
     }
 
-    this.fileService.downloadFileService(new FileReq({
-      fileDataId: this.detail.fileData,
-      fileName: this.detail?.fileName,
-      uploadType: this.detail?.uploadType
-    }));
+    this.fileService.downloadFileService(
+      'review-tag',
+      new FileReq({
+        fileDataId: this.detail.fileData,
+        fileName: this.detail?.fileName,
+        uploadType: this.detail?.uploadType
+      }));
   }
   //#endregion
 

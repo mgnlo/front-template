@@ -301,7 +301,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       this.validateForm.get('conditionSettingMethod')?.value === 'field') {
       this.beforeSubCategoryVal = tagTopicKeyVal;
       //#region 抓取偵測條件
-      if(this.changeConditionType){
+      if (this.changeConditionType) {
         this.getConditionKeyList(categoryKeyVal, tagTopicKeyVal);
       }
       //#endregion
@@ -709,7 +709,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     formData.append('fileData', file);
 
     this.loadingService.open();
-    this.fileService.uploadFileService(formData).pipe(
+    this.fileService.uploadFileService('tag', formData).pipe(
       catchError((err) => {
         this.dialogService.alertAndBackToList(false, '檔案上傳失敗');
         this.validateForm?.get('fileName')?.setErrors({ uploadFileMsg: err.message ? err.message : '檔案上傳失敗' });

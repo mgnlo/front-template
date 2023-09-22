@@ -65,7 +65,7 @@ export class ApiService {
         break;
       case 'get':
         let httpOptions0 = { params: rqParams, ...this.httpOptions }
-        let httpOptions1 = { params: rqParams, ...this.httpOptions, observe: 'response'}
+        let httpOptions1 = { params: rqParams, ...this.httpOptions, observe: 'response' }
         observable = this.http.get<ResponseModel<T>>(resultUrl, observe ? httpOptions1 : httpOptions0);
         break;
       case 'put':
@@ -75,7 +75,7 @@ export class ApiService {
         observable = this.http.delete<ResponseModel<T>>(resultUrl, { params: rqParams, ...this.httpOptions });
         break;
       case 'upload':
-        observable = this.http.post<ResponseModel<T>>(resultUrl, requestObj);
+        observable = this.http.post<ResponseModel<T>>(resultUrl, requestObj, this.httpOptions);
         break;
     }
 
@@ -115,12 +115,14 @@ export class ApiService {
     return this.doSend('delete', url, null, rqParams);
   }
 
-  doUpload<T>(url: string, requestObj: FormData): Observable<ResponseModel<T>> {
+  doUpload<T>(url: string, scope: string, requestObj: FormData): Observable<ResponseModel<T>> {
+    this.httpOptions.headers["FileType"] = `${scope}.upload`;
     return this.doSend('upload', url, requestObj);
   }
 
-  doGetDownload(url: string, rqParams?: { [key: string]: any }) {
+  doGetDownload(url: string, scope: string, rqParams?: { [key: string]: any }) {
     this.loadingService.open();
+    this.httpOptions.headers["FileType"] = `${scope}.download`;
     if (this._jwtToken) {
       this.httpOptions.headers["Authorization"] = `Bearer ${this._jwtToken}`;
     }

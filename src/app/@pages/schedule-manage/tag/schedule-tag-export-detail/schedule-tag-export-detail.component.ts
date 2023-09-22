@@ -109,17 +109,17 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
             btnStatus: 'success',
             btnIcon: 'cloud-download-outline',
             disabled:
-            (
-              this.loginService.userProfileSubject?.value?.businessUnit?.toLowerCase()
-              !==
-              this.detail?.department?.toLowerCase()
-            )
+              (
+                this.loginService.userProfileSubject?.value?.businessUnit?.toLowerCase()
+                !==
+                this.detail?.department?.toLowerCase()
+              )
           }
           instance.getRow.subscribe((res: Schedule_Batch_History) => {
             instance.isShow = res.batchResult.toLowerCase() === 'success';
           });
           instance.emitter.subscribe((res: Schedule_Batch_History) => {
-            this.scheduleManageService.batchDownload(res.historyId, this.detail.tagName);
+            this.scheduleManageService.batchDownload(res.historyId, 'schedule-tag', this.detail.tagName);
           })
         },
         sort: false,
@@ -141,11 +141,13 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
       return
     }
 
-    this.fileService.downloadFileService(new FileReq({
-      fileDataId: this.detail.fileData,
-      fileName: this.detail?.fileName,
-      uploadType: this.detail?.uploadType
-    }));
+    this.fileService.downloadFileService(
+      'schedule-tag',
+      new FileReq({
+        fileDataId: this.detail.fileData,
+        fileName: this.detail?.fileName,
+        uploadType: this.detail?.uploadType
+      }));
   }
   //#endregion
 
