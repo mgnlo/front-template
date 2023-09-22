@@ -809,7 +809,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     requestObservable.pipe(
       catchError((err) => {
         const route = this.tagId ? [this.changeRouteName, this.tagId] : [];
-        this.dialogService.alertAndBackToList(false, `${this.actionName}失敗`, ['pages', 'tag-manage', 'tag-set', ...route]);
+        this.dialogService.alertAndBackToList(false, `${this.actionName}失敗 ${err.message}`, ['pages', 'tag-manage', 'tag-set', ...route]);
         throw new Error(err.message);
       }),
       filter(res => res.code === RestStatus.SUCCESS),

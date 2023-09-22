@@ -48,7 +48,7 @@ export class ScheduleListComponent extends BaseComponent implements OnInit {
       activityCount: {
         title: '名單數量',
         type: 'html',
-        class: 'text_center w100',
+        class: 'text_center w150',
         valuePrepareFunction: (cell: string, row: ScheduleActivitySetting) => {
           return `<p class="text_center">` + row?.activitySetting.length + `</p>`;
         },
