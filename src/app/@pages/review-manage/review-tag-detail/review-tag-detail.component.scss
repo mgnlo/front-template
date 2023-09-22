@@ -7,3 +7,15 @@
     }
   }
 }
+
+.link-style {
+  color: #26DD84!important;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.disabled-link-style {
+  color: gray!important;
+  text-decoration: none;
+  cursor: not-allowed;
+}

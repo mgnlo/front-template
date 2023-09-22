@@ -105,7 +105,16 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
         width: '3rem',
         renderComponent: ColumnButtonComponent,
         onComponentInitFunction: (instance: ColumnButtonComponent) => {
-          instance.settings = { btnStatus: 'success', btnIcon: 'cloud-download-outline' }
+          instance.settings = {
+            btnStatus: 'success',
+            btnIcon: 'cloud-download-outline',
+            disabled:
+            (
+              this.loginService.userProfileSubject?.value?.businessUnit?.toLowerCase()
+              !==
+              this.detail?.department?.toLowerCase()
+            )
+          }
           instance.getRow.subscribe((res: Schedule_Batch_History) => {
             instance.isShow = res.batchResult.toLowerCase() === 'success';
           });
