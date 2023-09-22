@@ -29,15 +29,12 @@ export class SSOLoginComponent implements OnInit, OnDestroy {
     this.lightID = this.route.snapshot.queryParamMap.get('lightID');
 
     // 目前測試用 lightID : 17071 ~ 17075
-    // this.lightID = "17071";
+    this.lightID = "17071";
     if (this.configService.getConfig().IS_MOCK) {
       this.router.navigate(["pages"]);
       this.loginService.userProfileSubject.next(UserProfileMock);
       return;
     }
-  }
-
-  ngAfterContentInit() {
     // 發送電文請求 JWT Token 與 登入者 GroupScope，模擬成功導到 page 頁面
       this.loginService.singleSignOn(this.lightID).pipe(
         catchError((err) => { throw new Error(err.message); }),
