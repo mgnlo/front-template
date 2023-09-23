@@ -15,11 +15,11 @@ export class FileService {
 
   constructor(private service: ApiService) { }
 
-  uploadFileService(data: any): Observable<ResponseModel<FileResp>> {
-    return this.service.doUpload(this.fileUploadFunc, data);
+  uploadFileService(scope: string, data: any): Observable<ResponseModel<FileResp>> {
+    return this.service.doUpload(this.fileUploadFunc, scope, data);
   }
 
-  downloadFileService(data: FileReq): void {
-    this.service.doGetDownload(this.fileDownloadFunc + data.fileDataId, data);
+  downloadFileService(scope: string, data: FileReq): void {
+    this.service.doGetDownload(this.fileDownloadFunc + data.fileDataId, scope, data);
   }
 }

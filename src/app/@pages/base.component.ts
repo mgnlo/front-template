@@ -6,9 +6,7 @@ import { StorageService } from '@api/services/storage.service';
 import { CommonServerDataSource } from '@common/ng2-smart-table/common-server-data-source';
 import { Paginator } from '@component/table/paginator/paginator.component';
 import { LocalDataSource } from 'ng2-smart-table';
-// import { OAuth2BaseComponent, OAuth2Service } from '@module/oauth2';
 import { Subject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
 import { ScopeList } from './pages.component';
 
 @Injectable()
@@ -47,28 +45,6 @@ export class BaseComponent implements OnDestroy {
 
   ngDoCheck() {
     //this.updatePageInfo();
-  }
-
-  //盡量不要用這個
-  updatePageInfo() {
-    if (!!this.dataSource) {
-      this.dataSource.onChanged().pipe(takeUntil(this.unsubscribe$), filter((val, i) => i === 0)).subscribe((event) => {
-        //get session page
-        if (event.action === 'refresh') {
-          let storage = this.storageService.getSessionVal(this.sessionKey);
-          if (!!storage?.page) {
-            this.dataSource.setPage(storage.page, true);
-          }
-        }
-        this.paginator.totalCount = this.dataSource.count();
-        let page = this.dataSource.getPaging().page;
-        let perPage = this.dataSource.getPaging().perPage;
-        this.paginator.nowPage = page;
-        this.paginator.totalPage = Math.ceil(this.paginator.totalCount / perPage);
-        this.paginator.rowStart = (page - 1) * perPage + 1;
-        this.paginator.rowEnd = this.paginator.rowStart + (perPage - 1);
-      });
-    }
   }
 
   getInvalidControls() {

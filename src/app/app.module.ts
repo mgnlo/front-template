@@ -39,7 +39,7 @@ export function initConfig(configService: ConfigService) {
 }
 
 @NgModule({
-  declarations: [AppComponent, SSOLoginComponent, LoginComponent],
+  declarations: [AppComponent, LoginComponent],
   imports: [
     AppRoutingModule,
     ApiModule,

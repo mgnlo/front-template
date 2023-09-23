@@ -1,22 +1,46 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivateChild, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ConfigService } from '@api/services/config.service';
 import { LoginService } from '@api/services/login.service';
+import { StorageService } from '@api/services/storage.service';
 import { ScopeList } from '@pages/pages.component';
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class CrudGuard implements CanActivateChild {
+export class CrudGuard implements CanActivate, CanActivateChild {
 
-  constructor(private loginService: LoginService) { }
+  constructor(
+    private loginService: LoginService,
+    private router: Router,
+    private storageService: StorageService,
+    private configService: ConfigService,
+  ) { }
 
+  //檢查page
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
+    if (!this.configService.getConfig().IS_MOCK && !this.storageService.getSessionVal("jwtToken")) {
+      this.router.navigate(['']); //非mock環境 且 session裡沒Token 踢回登入頁
+      return false;
+    }
+    return true;
+  }
+
+  //檢查所有page底下的child compoenent
   canActivateChild(
     childRoute: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
   ): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
+    if (!this.configService.getConfig().IS_MOCK && !this.storageService.getSessionVal("jwtToken")) {
+      this.router.navigate(['']); //非mock環境 且 session裡沒Token 踢回登入頁
+      return false;
+    }
     const currentPath = childRoute.routeConfig.path;
     const children = childRoute.routeConfig.children;
     if (currentPath && !children) {
-      let schemaName = currentPath.split('-').length < 3 ?  currentPath.slice(0, currentPath.lastIndexOf('-')) : currentPath.split("-").slice(0, 2).join('-');
+      let schemaName = currentPath.split('-').length < 3 ? currentPath.slice(0, currentPath.lastIndexOf('-')) : currentPath.split("-").slice(0, 2).join('-');
       let schema = Object.keys(ScopeList).find(scope => scope === schemaName);
       if (schema !== undefined) {
         this.loginService.setSchema(schemaName);

@@ -18,6 +18,8 @@ import { BaseComponent } from '@pages/base.component';
 import { TagManageService } from '@pages/tag-manage/tag-manage.service';
 import { catchError, filter, takeUntil, tap } from 'rxjs/operators';
 import { ReviewManageService } from '../review-manage.service';
+import { FileReq } from '@api/models/file.model';
+import { FileService } from '@api/services/file.service';
 
 @Component({
   selector: 'review-tag-detail',
@@ -39,6 +41,7 @@ export class ReviewTagDetailComponent extends BaseComponent implements OnInit {
   historyId: string;
   isCompare: boolean = false;
   historyGroupView: { [x: number]: HistoryGroupView };
+  isfileDownload: boolean = false;
 
   constructor(
     storageService: StorageService,
@@ -50,6 +53,7 @@ export class ReviewTagDetailComponent extends BaseComponent implements OnInit {
     private tableService: Ng2SmartTableService,
     private reviewManageService: ReviewManageService,
     private loadingService: LoadingService,
+    private fileService: FileService,
     private tagManageService: TagManageService,
   ) {
     super(storageService, configService, loginService);
@@ -99,6 +103,12 @@ export class ReviewTagDetailComponent extends BaseComponent implements OnInit {
           this.isHistoryOpen = processedData.isHistoryOpen;
           this.historyGroupView = processedData.detail.historyGroupView;
         }
+        this.isfileDownload =
+          (
+            this.loginService.userProfileSubject?.value?.businessUnit?.toLowerCase()
+            ===
+            this.detail?.department?.toLocaleLowerCase()
+          )
         this.loadingService.close();
       })
     ).subscribe(res => {
@@ -196,6 +206,24 @@ export class ReviewTagDetailComponent extends BaseComponent implements OnInit {
       delete: false,
     },
   };
+
+  //#region 檔案下載
+  onDownloadFile() {
+    // this.detail.fileData = '2058fd0b-9307-428c-b82f-5a23d5530c83';
+    if (CommonUtil.isBlank(this.detail?.fileData)) {
+      this.dialogService.alertAndBackToList(false, '檔案下載失敗(無識別碼)');
+      return
+    }
+
+    this.fileService.downloadFileService(
+      'review-tag',
+      new FileReq({
+        fileDataId: this.detail.fileData,
+        fileName: this.detail?.fileName,
+        uploadType: this.detail?.uploadType
+      }));
+  }
+  //#endregion
 
   viewToggle() {
     this.isBefore = !this.isBefore;

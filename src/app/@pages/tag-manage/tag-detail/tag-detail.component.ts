@@ -32,6 +32,7 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
   tagId: string;
 
   fileName: string = "";
+  isfileDownload: boolean = false;
 
   constructor(
     storageService: StorageService,
@@ -146,6 +147,12 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
           this.isHistoryOpen = processedData.isHistoryOpen;
           this.detail.historyGroupView = processedData.detail?.historyGroupView;
         }
+        this.isfileDownload =
+          (
+            this.loginService.userProfileSubject?.value?.businessUnit?.toLowerCase()
+            ===
+            this.detail?.department?.toLocaleLowerCase()
+          )
       }),
       finalize(() => this.loadingService.close())
     ).subscribe();
@@ -170,11 +177,13 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
       return
     }
 
-    this.fileService.downloadFileService(new FileReq({
-      fileDataId: this.detail.fileData,
-      fileName: this.detail?.fileName,
-      uploadType: this.detail?.uploadType
-    }));
+    this.fileService.downloadFileService(
+      'tag',
+      new FileReq({
+        fileDataId: this.detail.fileData,
+        fileName: this.detail?.fileName,
+        uploadType: this.detail?.uploadType
+      }));
   }
   //#endregion
 
