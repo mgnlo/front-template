@@ -1,26 +1,21 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { Injectable } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { ConfigService } from '@api/services/config.service';
 import { LoginService } from '@api/services/login.service';
 import { StorageService } from '@api/services/storage.service';
 import { CommonServerDataSource } from '@common/ng2-smart-table/common-server-data-source';
 import { Paginator } from '@component/table/paginator/paginator.component';
 import { LocalDataSource } from 'ng2-smart-table';
-import { Subject } from 'rxjs';
 import { ScopeList } from './pages.component';
 
 @Injectable()
-export class BaseComponent implements OnDestroy {
+export class BaseComponent {
 
-  unsubscribe$ = new Subject();
   readonly dateFormat = 'yyyy-MM-dd';
   dataSource: LocalDataSource; //table
   restDataSource: CommonServerDataSource; //rest API table
   paginator: Paginator = { totalCount: 0, nowPage: 1, perPage: 10, totalPage: 1, rowStart: 0, rowEnd: 0 };  //table筆數顯示
-  validateForm: FormGroup;     // 共用表單名稱
-  isSubmit: boolean = false;   // 確認是否送出表單 -> 初始化時須設定為false
-  validationMessages: any;     // 欄位檢核提示訊息 -> 初始化時須各別設定
-  tmpCtrl: AbstractControl;    // 多層次使用
+  validateForm: FormGroup; // 共用表單名稱
   sessionKey: string;
   isMock: boolean = false;
   isCrud: { [action: string]: boolean } = {}; //頁面的CRUD權限
@@ -34,19 +29,7 @@ export class BaseComponent implements OnDestroy {
     console.log('schemaName:', loginService.schemaName, 'isCrud:', this.isCrud)
   }
 
-  ngOnDestroy(): void {
-    this.unsubscribe$.next(undefined);
-    this.unsubscribe$.complete();
-  }
-
-  ngAfterViewInit() {
-
-  }
-
-  ngDoCheck() {
-    //this.updatePageInfo();
-  }
-
+  /** (開發用) 檢查validateForm裡invalid的欄位 */
   getInvalidControls() {
     Object.keys(this.validateForm.controls).filter(ctl => this.validateForm.get(ctl).invalid).forEach(ctl => {
       console.info(ctl + ' is invalid, value:', this.validateForm.get(ctl).errors);
@@ -67,18 +50,6 @@ export class BaseComponent implements OnDestroy {
       this.dataSource?.setPage(storage.page, true);
       this.restDataSource?.setPage(storage.page, true);
     }
-  }
-
-  //檢查檢核
-  findInvalidControls() {
-    const invalid = [];
-    const controls = this.validateForm.controls;
-    for (const name in controls) {
-      if (controls[name].invalid) {
-        invalid.push(name);
-      }
-    }
-    return invalid;
   }
 
 }

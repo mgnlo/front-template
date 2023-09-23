@@ -92,7 +92,6 @@ export class ReviewTagDetailComponent extends BaseComponent implements OnInit {
         this.dialogService.alertAndBackToList(false, `${err.message}，將為您導回標籤審核列表`, ['pages', 'review-manage', 'review-tag-list']);
         throw new Error(err.message);
       }),
-      takeUntil(this.unsubscribe$),
       tap(res => {
         this.newDetail = JSON.parse(JSON.stringify(res.result));
         this.detail = this.newDetail;
@@ -130,7 +129,6 @@ export class ReviewTagDetailComponent extends BaseComponent implements OnInit {
           this.loadingService.close();
           throw new Error(err.message);
         }),
-        takeUntil(this.unsubscribe$),
         tap(res => {
           this.isCompare = !!res.result ? true : false;
           this.oldDetail = JSON.parse(JSON.stringify(res.result));
@@ -260,7 +258,6 @@ export class ReviewTagDetailComponent extends BaseComponent implements OnInit {
           this.dialogService.alertAndBackToList(false, err);
           throw new Error(err.message);
         }),
-        takeUntil(this.unsubscribe$),
         tap(res => this.router.navigate(['pages', 'review-manage', 'review-tag-list']))
       ).subscribe();
     })
