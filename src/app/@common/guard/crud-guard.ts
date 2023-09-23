@@ -16,7 +16,7 @@ export class CrudGuard implements CanActivate, CanActivateChild {
     private configService: ConfigService,
   ) { }
 
-  //檢查page
+  //檢查頁面本身
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
@@ -28,7 +28,7 @@ export class CrudGuard implements CanActivate, CanActivateChild {
     return true;
   }
 
-  //檢查所有page底下的child compoenent
+  //檢查頁面底下的childRoute
   canActivateChild(
     childRoute: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
@@ -40,8 +40,12 @@ export class CrudGuard implements CanActivate, CanActivateChild {
     const currentPath = childRoute.routeConfig.path;
     const children = childRoute.routeConfig.children;
     if (currentPath && !children) {
+      // 拿對應的schemaName
+      // ex: currentPath->review-schedule-list 取 schemaName->review-schedule
+      //     urrentPath->dashboard-room 取 schemaName->dashboard
       let schemaName = currentPath.split('-').length < 3 ? currentPath.slice(0, currentPath.lastIndexOf('-')) : currentPath.split("-").slice(0, 2).join('-');
       let schema = Object.keys(ScopeList).find(scope => scope === schemaName);
+      // 有在ScopeList裡的schema做以下動作
       if (schema !== undefined) {
         this.loginService.setSchema(schemaName);
         if (currentPath.includes('set/:') || state.url.includes('/edit/')) {

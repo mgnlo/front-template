@@ -12,8 +12,8 @@ import { ScopeList } from './pages.component';
 export class BaseComponent {
 
   readonly dateFormat = 'yyyy-MM-dd';
-  dataSource: LocalDataSource; //table
-  restDataSource: CommonServerDataSource; //rest API table
+  dataSource: LocalDataSource; //table (前端做分頁的用這個)
+  restDataSource: CommonServerDataSource; //table (後端有回傳分頁的用這個)
   paginator: Paginator = { totalCount: 0, nowPage: 1, perPage: 10, totalPage: 1, rowStart: 0, rowEnd: 0 };  //table筆數顯示
   validateForm: FormGroup; // 共用表單名稱
   sessionKey: string;
@@ -26,7 +26,7 @@ export class BaseComponent {
     ScopeList[loginService.schemaName].crud.forEach(actionType => {
       this.isCrud[actionType] = loginService.checkUserScope(loginService.schemaName, actionType);
     })
-    console.log('schemaName:', loginService.schemaName, 'isCrud:', this.isCrud)
+    // console.log('schemaName:', loginService.schemaName, 'isCrud:', this.isCrud)
   }
 
   /** (開發用) 檢查validateForm裡invalid的欄位 */
