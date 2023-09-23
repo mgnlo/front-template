@@ -20,6 +20,7 @@ import { catchError, filter, takeUntil, tap } from 'rxjs/operators';
 import { ReviewManageService } from '../review-manage.service';
 import { FileReq } from '@api/models/file.model';
 import { FileService } from '@api/services/file.service';
+import { Scope } from '@common/enums/file-enum';
 
 @Component({
   selector: 'review-tag-detail',
@@ -214,7 +215,7 @@ export class ReviewTagDetailComponent extends BaseComponent implements OnInit {
     }
 
     this.fileService.downloadFileService(
-      'review-tag',
+      Scope.ReviewTag,
       new FileReq({
         fileDataId: this.detail.fileData,
         fileName: this.detail?.fileName,

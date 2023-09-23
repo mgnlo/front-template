@@ -20,6 +20,6 @@ export class FileService {
   }
 
   downloadFileService(scope: string, data: FileReq): void {
-    this.service.doGetDownload(this.fileDownloadFunc + data.fileDataId, scope, data);
+    this.service.doDownload(this.fileDownloadFunc + data.fileDataId, scope, data);
   }
 }

@@ -18,6 +18,7 @@ import { ConfigService } from '@api/services/config.service';
 import { FileService } from '@api/services/file.service';
 import { FileReq } from '@api/models/file.model';
 import { LoginService } from '@api/services/login.service';
+import { Scope } from '@common/enums/file-enum';
 
 @Component({
   selector: 'tag-detail',
@@ -178,7 +179,7 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
     }
 
     this.fileService.downloadFileService(
-      'tag',
+      Scope.Tag,
       new FileReq({
         fileDataId: this.detail.fileData,
         fileName: this.detail?.fileName,
