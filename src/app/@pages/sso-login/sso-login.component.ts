@@ -29,7 +29,7 @@ export class SSOLoginComponent implements OnInit, OnDestroy {
     this.lightID = this.route.snapshot.queryParamMap.get('lightID');
 
     // 目前測試用 lightID : 17071 ~ 17075
-    this.lightID = "17071";
+    // this.lightID = "17071";
     if (this.configService.getConfig().IS_MOCK) {
       this.router.navigate(["pages"]);
       this.loginService.userProfileSubject.next(UserProfileMock);
