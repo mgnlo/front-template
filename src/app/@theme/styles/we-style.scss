@@ -607,6 +607,11 @@ $scrollbar: #BBC1C5;
             border-radius: 0;
         }
     }
+    nb-popover {
+        max-width: 30rem;
+        @media all and (max-width: 768px) { max-width: 70vw; }
+        .primitive-overlay { font-size: $f14; }
+    }
     [nbInput] {
         &.status-basic {
             &:disabled {
@@ -874,6 +879,14 @@ ul {
         font-weight: bold;
         color: $label-color;
         margin-bottom: 0.375rem;
+        &~ nb-icon {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            color: nb-theme(color-primary-500);
+            cursor: pointer;
+        }
+        &:has(~ nb-icon) { max-width: calc(100% - 1.5rem); }
     }
     > div {
         position: relative;
@@ -998,13 +1011,17 @@ ul {
         [nbButton] { margin-bottom: 0; }
     }
     &.essential {
-        > label:before {
-            position: absolute;
-            content: '*';
-            right: -10px;
-            top: 0;
-            font-size: $f12;
-            color: nb-theme(color-danger-500);
+        > label {
+            max-width: calc(100% - 3rem);
+            &:has(~ nb-icon) { max-width: calc(100% - 2.25rem); }
+            &:before {
+                position: absolute;
+                content: '*';
+                right: -10px;
+                top: 0;
+                font-size: $f12;
+                color: nb-theme(color-danger-500);
+            }
         }
     }
     &.automatic, &.disabled {
@@ -1618,6 +1635,15 @@ table {
             margin: 0;
             >[nbButton] { margin: 0 !important; }
         }
+    }
+    [nbButton].btn-disabled {
+        background-color: transparent !important;
+        nb-icon { opacity: 0.3; }
+        &.status-primary { color: nb-theme(color-primary-500) !important; }
+        &.status-info { color: nb-theme(color-info-500) !important; }
+        &.status-danger { color: nb-theme(color-danger-500) !important; }
+        &.status-success { color: nb-theme(color-success-500) !important; }
+        &.status-warning { color: nb-theme(color-warning-500) !important; }
     }
     nb-checkbox {
         display: flex;

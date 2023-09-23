@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core"
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { NbEvaIconsModule } from "@nebular/eva-icons"
-import { NbAccordionModule, NbAutocompleteModule, NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbIconModule, NbInputModule, NbRadioModule, NbSelectModule, NbTabsetModule, NbTagModule, NbTimepickerModule, NbToggleModule } from "@nebular/theme"
+import { NbAccordionModule, NbAutocompleteModule, NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbIconModule, NbInputModule, NbPopoverModule, NbRadioModule, NbSelectModule, NbTabsetModule, NbTagModule, NbTimepickerModule, NbToggleModule } from "@nebular/theme"
 import { FilePickerModule } from "ngx-awesome-uploader";
 import { Element2RoutingModule } from "./element2-routing.module"
 import { Element2Component } from "./element2.component"
@@ -31,7 +31,8 @@ import { NbDateFnsDateModule } from "@nebular/date-fns";
         NbSelectModule,
         NbAutocompleteModule,
         NbAccordionModule,
-        NbToggleModule
+        NbToggleModule,
+        NbPopoverModule
     ],
     declarations: [
         Element2Component,
