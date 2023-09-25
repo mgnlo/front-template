@@ -20,11 +20,6 @@ export class ScheduleManageService {
     return this.service.doGet(this.scheduleFunc + scheduleId + '/activity-setting', rqParams)
   }
 
-  /** 可選的活動下拉選單 API*/
-  getScheduleActivityOptions(): Observable<ResponseModel<Array<ActivitySetting>>> {
-    return this.service.doGet(this.scheduleFunc + 'options');
-  }
-
   createScheduleActivitySetting(data: ScheduleActivitySettingEditReq): Observable<ResponseModel<any>> {
     return this.service.doPost(this.scheduleFunc, data);
   }
