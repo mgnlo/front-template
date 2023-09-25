@@ -609,7 +609,7 @@
                         <p>卡片區塊內小標題 - 欄位提示文字</p>
                     </div>
 
-                    <!-- 欄位提示文字組合 -->
+                    <!-- 欄位提示文字 -->
                     <div class="row">
                         <!-- 提示文字（可視需求加減欄位提示文字） -->
                         <div class="fieldGroup col-12 col-lg-4">
@@ -668,6 +668,23 @@
                                 <nb-icon icon="alert-triangle"></nb-icon>
                                 <p>欄位錯誤訊息</p>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- 欄位提示文字 -->
+                    <div class="row">
+                        <!-- popover提示文字 -->
+                        <div class="fieldGroup col-12 col-lg-4">
+                            <label>輸入欄位</label>
+                            <nb-icon icon="question-mark-circle" nbPopover="說明文字會很長很長很長很長很長很長，很長很長很長很長很長很長很長很長很長很長，很長很長很長很長很長。很長很長很長很長，很長很長很長很長很長很長，很長很長很長很長很長很長很長很長。" nbPopoverPlacement="top"></nb-icon>
+                            <div>
+                                <input nbInput fullWidth status="basic" type="text" placeholder="請輸入" />
+                            </div>
+                           <!-- 欄位錯誤訊息 -->
+                           <div class="note errorText">
+                                <nb-icon icon="alert-triangle"></nb-icon>
+                                <p>欄位錯誤訊息</p>
+                                </div>
                         </div>
                     </div>
                 </nb-tab>
@@ -759,6 +776,19 @@
                             </div>
                             <div>
                                 <button nbButton  fullWidth status="info" size="medium" class="m-0">發送手機驗證碼</button>
+                            </div>
+                            <!-- 欄位錯誤訊息 -->
+                            <div class="note errorText">
+                                <nb-icon icon="alert-triangle"></nb-icon>
+                                <p>欄位錯誤訊息</p>
+                            </div>
+                        </div>
+
+                        <!-- 基礎樣式 -->
+                        <div class="fieldGroup col-12 col-lg-4">
+                            <label>輸入欄位輸</label>
+                            <div>
+                                <input nbInput fullWidth type="text" placeholder="請輸入" />
                             </div>
                             <!-- 欄位錯誤訊息 -->
                             <div class="note errorText">
