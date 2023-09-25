@@ -1,5 +1,6 @@
 <div class="fieldGroup" [ngClass]="{'error': hasError(), 'essential': required}" [formGroup]="form">
   <label>{{title}}</label>
+  <nb-icon *ngIf="popupText" icon="question-mark-circle" [nbPopover]="popupText" nbPopoverPlacement="top"></nb-icon>
   <div>
       <nb-select fullWidth [formControlName]="ctlName" placeholder="請選擇" *ngIf="!!selectList?.options" [status]="hasError() ? 'danger':'basic'">
           <nb-option *ngIf="!required" value="">{{placeholder}}</nb-option>
