@@ -8,6 +8,7 @@ import { LoadingService } from '@api/services/loading.service';
 import { LoginService } from '@api/services/login.service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, StatusResult } from '@common/enums/common-enum';
+import { Scope } from '@common/enums/file-enum';
 import { RestStatus } from '@common/enums/rest-enum';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
@@ -120,7 +121,7 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
             instance.isShow = res.batchResult.toLowerCase() === 'success';
           });
           instance.emitter.subscribe((res: Schedule_Batch_History) => {
-            this.scheduleManageService.batchDownload(res.historyId, 'schedule-activity', this.activitySetting.activityName);
+            this.scheduleManageService.batchDownload(res.historyId, Scope.ScheduleActivity, this.activitySetting.activityName);
           })
         },
         sort: false,

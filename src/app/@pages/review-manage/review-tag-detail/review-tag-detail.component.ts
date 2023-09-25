@@ -20,6 +20,7 @@ import { catchError, filter, takeUntil, tap } from 'rxjs/operators';
 import { ReviewManageService } from '../review-manage.service';
 import { FileReq } from '@api/models/file.model';
 import { FileService } from '@api/services/file.service';
+import { Scope } from '@common/enums/file-enum';
 
 @Component({
   selector: 'review-tag-detail',
@@ -92,7 +93,6 @@ export class ReviewTagDetailComponent extends BaseComponent implements OnInit {
         this.dialogService.alertAndBackToList(false, `${err.message}，將為您導回標籤審核列表`, ['pages', 'review-manage', 'review-tag-list']);
         throw new Error(err.message);
       }),
-      takeUntil(this.unsubscribe$),
       tap(res => {
         this.newDetail = JSON.parse(JSON.stringify(res.result));
         this.detail = this.newDetail;
@@ -130,7 +130,6 @@ export class ReviewTagDetailComponent extends BaseComponent implements OnInit {
           this.loadingService.close();
           throw new Error(err.message);
         }),
-        takeUntil(this.unsubscribe$),
         tap(res => {
           this.isCompare = !!res.result ? true : false;
           this.oldDetail = JSON.parse(JSON.stringify(res.result));
@@ -216,7 +215,7 @@ export class ReviewTagDetailComponent extends BaseComponent implements OnInit {
     }
 
     this.fileService.downloadFileService(
-      'review-tag',
+      Scope.ReviewTag,
       new FileReq({
         fileDataId: this.detail.fileData,
         fileName: this.detail?.fileName,
@@ -260,7 +259,6 @@ export class ReviewTagDetailComponent extends BaseComponent implements OnInit {
           this.dialogService.alertAndBackToList(false, err);
           throw new Error(err.message);
         }),
-        takeUntil(this.unsubscribe$),
         tap(res => this.router.navigate(['pages', 'review-manage', 'review-tag-list']))
       ).subscribe();
     })

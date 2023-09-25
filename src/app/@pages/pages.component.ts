@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivationStart, Router, RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { LoginService } from '@api/services/login.service';
 import { NbMenuItem } from '@nebular/theme';
 
@@ -38,10 +37,8 @@ export const ScopeList: { [schemaName: string]: { crud: string[], menu: NbMenuIt
 })
 export class PagesComponent implements OnInit {
   basicMenu: NbMenuItem[] = [];
-
-  constructor(private loginSerivce: LoginService, private router: Router) { }
-
-  @ViewChild(RouterOutlet) outlet: RouterOutlet;
+  
+  constructor(private loginSerivce: LoginService) { }
 
   ngOnInit(): void {
     this.initMenu();
@@ -61,6 +58,7 @@ export class PagesComponent implements OnInit {
       }
     ];
 
+    //用頁面權限產menu
     for (const [key, val] of Object.entries(ScopeList)) {
       if (!this.loginSerivce.checkUserScope(key)) { continue; } //沒read權限就不塞進menu
       if (!val.parentMenu) {

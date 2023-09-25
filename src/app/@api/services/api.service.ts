@@ -120,7 +120,7 @@ export class ApiService {
     return this.doSend('upload', url, requestObj);
   }
 
-  doGetDownload(url: string, scope: string, rqParams?: { [key: string]: any }) {
+  doDownload(url: string, scope: string, rqParams?: { [key: string]: any }) {
     this.loadingService.open();
     this.httpOptions.headers["FileType"] = `${scope}.download`;
     if (this._jwtToken) {

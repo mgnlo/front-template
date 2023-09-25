@@ -42,7 +42,7 @@ export class ScheduleManageService {
   }
 
   batchDownload(historyId: string, scope: string, batchName: string): void {
-    this.service.doGetDownload(this.batchFunc + historyId + '/download', scope, { fileName: batchName + "_" + historyId, uploadType: '.csv' });
+    this.service.doDownload(this.batchFunc + historyId + '/download', scope, { fileName: batchName + "_" + historyId, uploadType: '.csv' });
   }
 
 }
