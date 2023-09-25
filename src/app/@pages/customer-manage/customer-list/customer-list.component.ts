@@ -102,7 +102,6 @@ export class CustomerListComponent extends BaseComponent implements OnInit {
               customerId: res.customerId
             });
           })
-          instance.settings.disabled = true;
         },
         sort: false,
       },
