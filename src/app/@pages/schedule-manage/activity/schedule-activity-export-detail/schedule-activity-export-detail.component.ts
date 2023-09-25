@@ -1,13 +1,14 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActivitySetting, ScheduleActivitySetting, Schedule_Batch_History } from '@api/models/schedule-activity.model';
+import { ActivitySetting, Schedule_Batch_History } from '@api/models/schedule-activity.model';
 import { ConfigService } from '@api/services/config.service';
 import { DialogService } from '@api/services/dialog.service';
 import { LoadingService } from '@api/services/loading.service';
 import { LoginService } from '@api/services/login.service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, StatusResult } from '@common/enums/common-enum';
+import { Scope } from '@common/enums/file-enum';
 import { RestStatus } from '@common/enums/rest-enum';
 import { ScheduleActivitySettingMock } from '@common/mock-data/schedule-activity-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
@@ -106,12 +107,21 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
         width: '3rem',
         renderComponent: ColumnButtonComponent,
         onComponentInitFunction: (instance: ColumnButtonComponent) => {
-          instance.settings = { btnStatus: 'success', btnIcon: 'cloud-download-outline' }
+          instance.settings = {
+            btnStatus: 'success',
+            btnIcon: 'cloud-download-outline',
+            disabled:
+              (
+                this.loginService.userProfileSubject?.value?.businessUnit?.toLowerCase()
+                !==
+                this.activitySetting?.department?.toLowerCase()
+              )
+          }
           instance.getRow.subscribe((res: Schedule_Batch_History) => {
             instance.isShow = res.batchResult.toLowerCase() === 'success';
           });
           instance.emitter.subscribe((res: Schedule_Batch_History) => {
-            this.scheduleManageService.batchDownload(res.historyId, this.activitySetting.activityName);
+            this.scheduleManageService.batchDownload(res.historyId, Scope.ScheduleActivity, this.activitySetting.activityName);
           })
         },
         sort: false,
@@ -126,6 +136,7 @@ export class ActivityExportDetailComponent extends BaseComponent implements OnIn
   };
 
   ngOnInit(): void {
+    console.info('userProfile', this.loginService.userProfileSubject)
 
     this.scheduleId = this.activatedRoute.snapshot.params.scheduleId;
     this.referenceId = this.activatedRoute.snapshot.params.referenceId;

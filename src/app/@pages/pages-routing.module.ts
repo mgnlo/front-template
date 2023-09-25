@@ -8,6 +8,7 @@ const routes: Routes = [
   {
     path: '',
     component: PagesComponent,
+    canActivate: [CrudGuard],
     children: [
       // {
       //   path: '', redirectTo: 'dashboard',

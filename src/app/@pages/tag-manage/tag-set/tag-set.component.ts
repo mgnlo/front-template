@@ -8,7 +8,7 @@ import { LoadingService } from '@api/services/loading.service';
 import { StorageService } from '@api/services/storage.service';
 import { MathSymbol, Status } from '@common/enums/common-enum';
 import { RestStatus } from '@common/enums/rest-enum';
-import { TagJoinValue, TagSetCondition, TagType } from '@common/enums/tag-enum';
+import { TagJoinValue, TagSetCondition, ConditionSettingMethodEnum, TagType, TagTypeEnum } from '@common/enums/tag-enum';
 import { CommonUtil } from '@common/utils/common-util';
 import { RegExpUtil } from '@common/utils/reg-exp-util';
 import { ValidatorsUtil } from '@common/utils/validators-util';
@@ -301,7 +301,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       this.validateForm.get('conditionSettingMethod')?.value === 'field') {
       this.beforeSubCategoryVal = tagTopicKeyVal;
       //#region 抓取偵測條件
-      if(this.changeConditionType){
+      if (this.changeConditionType) {
         this.getConditionKeyList(categoryKeyVal, tagTopicKeyVal);
       }
       //#endregion
@@ -709,7 +709,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
     formData.append('fileData', file);
 
     this.loadingService.open();
-    this.fileService.uploadFileService(formData).pipe(
+    this.fileService.uploadFileService('tag', formData).pipe(
       catchError((err) => {
         this.dialogService.alertAndBackToList(false, '檔案上傳失敗');
         this.validateForm?.get('fileName')?.setErrors({ uploadFileMsg: err.message ? err.message : '檔案上傳失敗' });
@@ -830,41 +830,43 @@ export class TagSetComponent extends BaseComponent implements OnInit {
 
     if (!formData) return undefined
 
-    let reqData = new TagSettingEditReq({
-      tagId: this.tagId,
-      tagName: formData.tagName,
-      status: formData.status,
-      tagType: formData.tagType,
-      uploadType: (formData.tagType === 'document') ? this.uploadType : null,
-      fileName: (formData.tagType === 'document') ? this.uploadFileName : null,
-      //filePath: formData.filePath,
-      fileData: (formData.tagType === 'document') ? this.fileData : null,
-      conditionSettingMethod: formData.conditionSettingMethod, //條件設定方式
-      startDate: formData.startDate ? moment(formData.startDate).format('YYYY-MM-DD') : null,
-      endDate: formData.endDate ? moment(formData.endDate).format('YYYY-MM-DD') : null,
-      categoryKey: formData.categoryKey,
-      tagTopicKey: formData.tagTopicKey,
-      tagDescription: formData.tagDescription,
-      conditionSettingQuery:
-        (formData.tagType === 'normal' && formData.conditionSettingMethod === 'normal') ?
-          formData.conditionSettingQuery : null, //條件設定語法
-      tagConditionSetting:
-        (formData.tagType === 'normal' && formData.conditionSettingMethod === 'field' && Array.isArray(formData.tagConditionSetting)) ?
-          formData.tagConditionSetting.map((m) => {
-            const id = m['id'];
-            return new TagConditionSetting({
-              tagId: this.tagId,
-              groupId: 1,//因只有一個，固定為1
-              conditionKey: this.filterConditionKeyList.find(item => item.val === formData.conditionKey)?.key,
-              detectionCondition: m['detectionCondition_' + id],
-              thresholdValue: m['thresholdValue_' + id],
-              joinValue: m['joinValue_' + id],
-            });
-          }) : null,
-    });
+    let reqData: TagSettingEditReq = new TagSettingEditReq(formData);
+    reqData.startDate = moment(formData.startDate).format('YYYY-MM-DD');
+    reqData.endDate = moment(formData.endDate).format('YYYY-MM-DD');
+
+    //要判斷的資料全清重塞
+    let cleanList: string[] = ['uploadType', 'fileName', 'fileData', 'conditionSettingMethod', 'conditionSettingQuery', 'tagConditionSetting'];
+    this.needCleanParam(reqData, cleanList);
+    if (formData.tagType === TagTypeEnum.document) {
+      reqData.uploadType = this.uploadType;
+      reqData.fileName = this.uploadFileName;
+      reqData.fileData = this.fileData;
+    } else if (formData.tagType === TagTypeEnum.normal && formData.conditionSettingMethod === ConditionSettingMethodEnum.normal) {
+      reqData.conditionSettingMethod = formData.conditionSettingMethod; //條件設定方式
+      reqData.conditionSettingQuery = formData.conditionSettingQuery; //條件設定
+    } else if (formData.tagType === TagTypeEnum.normal && formData.conditionSettingMethod === ConditionSettingMethodEnum.field) {
+      if (Array.isArray(formData.tagConditionSetting)) {
+        reqData.conditionSettingMethod = formData.conditionSettingMethod; //條件設定方式
+        reqData.tagConditionSetting = formData.tagConditionSetting.map((m) => {
+          const id = m['id'];
+          return new TagConditionSetting({
+            tagId: this.tagId,
+            groupId: 1,//因只有一個，固定為1
+            conditionKey: this.filterConditionKeyList.find(item => item.val === formData.conditionKey)?.key, //偵測條件
+            detectionCondition: m['detectionCondition_' + id], //條件值
+            thresholdValue: m['thresholdValue_' + id], //門檻值
+            joinValue: m['joinValue_' + id], //集合
+          });
+        });
+      }
+    }
 
     console.info('reqData', reqData)
     return reqData;
+  }
+
+  needCleanParam(obj: any, params: string[]) {
+    params.forEach(param => { obj[param] = null });
   }
 
   setData(result: TagSetting) {

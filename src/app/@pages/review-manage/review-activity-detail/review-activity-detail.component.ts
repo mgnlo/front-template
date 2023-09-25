@@ -93,7 +93,6 @@ export class ReviewActivityDetailComponent extends BaseComponent implements OnIn
         this.loadingService.close();
         throw new Error(err.message);
       }),
-      takeUntil(this.unsubscribe$),
       tap(res => {
         this.newDetail = JSON.parse(JSON.stringify(res.result));
         this.newReview = JSON.parse(JSON.stringify(res.result));
@@ -119,7 +118,6 @@ export class ReviewActivityDetailComponent extends BaseComponent implements OnIn
           this.loadingService.close();
           throw new Error(err.message);
         }),
-        takeUntil(this.unsubscribe$),
         tap(res => {
           this.isCompare = !!res.result ? true : false;
           if (this.isCompare) {
@@ -200,7 +198,6 @@ export class ReviewActivityDetailComponent extends BaseComponent implements OnIn
           this.dialogService.alertAndBackToList(false, err);
           throw new Error(err.message);
         }),
-        takeUntil(this.unsubscribe$),
         tap(res => this.router.navigate(['pages', 'review-manage', 'review-activity-list']))
       ).subscribe();
     })

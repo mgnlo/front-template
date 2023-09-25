@@ -11,6 +11,7 @@ import { LoadingService } from '@api/services/loading.service';
 import { LoginService } from '@api/services/login.service';
 import { StorageService } from '@api/services/storage.service';
 import { ColumnClass, StatusResult } from '@common/enums/common-enum';
+import { Scope } from '@common/enums/file-enum';
 import { RestStatus } from '@common/enums/rest-enum';
 import { ScheduleTagSettingMock } from '@common/mock-data/schedule-tag-list-mock';
 import { CommonUtil } from '@common/utils/common-util';
@@ -105,12 +106,21 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
         width: '3rem',
         renderComponent: ColumnButtonComponent,
         onComponentInitFunction: (instance: ColumnButtonComponent) => {
-          instance.settings = { btnStatus: 'success', btnIcon: 'cloud-download-outline' }
+          instance.settings = {
+            btnStatus: 'success',
+            btnIcon: 'cloud-download-outline',
+            disabled:
+              (
+                this.loginService.userProfileSubject?.value?.businessUnit?.toLowerCase()
+                !==
+                this.detail?.department?.toLowerCase()
+              )
+          }
           instance.getRow.subscribe((res: Schedule_Batch_History) => {
             instance.isShow = res.batchResult.toLowerCase() === 'success';
           });
           instance.emitter.subscribe((res: Schedule_Batch_History) => {
-            this.scheduleManageService.batchDownload(res.historyId, this.detail.tagName);
+            this.scheduleManageService.batchDownload(res.historyId, Scope.ScheduleTag, this.detail.tagName);
           })
         },
         sort: false,
@@ -132,11 +142,13 @@ export class ScheduleTagExportDetailComponent extends BaseComponent implements O
       return
     }
 
-    this.fileService.downloadFileService(new FileReq({
-      fileDataId: this.detail.fileData,
-      fileName: this.detail?.fileName,
-      uploadType: this.detail?.uploadType
-    }));
+    this.fileService.downloadFileService(
+      Scope.ScheduleTag,
+      new FileReq({
+        fileDataId: this.detail.fileData,
+        fileName: this.detail?.fileName,
+        uploadType: this.detail?.uploadType
+      }));
   }
   //#endregion
 

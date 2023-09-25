@@ -23,7 +23,7 @@ export class ColumnButtonComponent {
   @Output() getRow = new EventEmitter();
 
   clickable: boolean = true;
-  
+
   ngOnChanges(changes: SimpleChanges): void {
     this.clickable = changes.settings.currentValue?.clickable;
   }

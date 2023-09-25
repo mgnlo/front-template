@@ -18,6 +18,7 @@ import { ConfigService } from '@api/services/config.service';
 import { FileService } from '@api/services/file.service';
 import { FileReq } from '@api/models/file.model';
 import { LoginService } from '@api/services/login.service';
+import { Scope } from '@common/enums/file-enum';
 
 @Component({
   selector: 'tag-detail',
@@ -32,6 +33,7 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
   tagId: string;
 
   fileName: string = "";
+  isfileDownload: boolean = false;
 
   constructor(
     storageService: StorageService,
@@ -146,6 +148,12 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
           this.isHistoryOpen = processedData.isHistoryOpen;
           this.detail.historyGroupView = processedData.detail?.historyGroupView;
         }
+        this.isfileDownload =
+          (
+            this.loginService.userProfileSubject?.value?.businessUnit?.toLowerCase()
+            ===
+            this.detail?.department?.toLocaleLowerCase()
+          )
       }),
       finalize(() => this.loadingService.close())
     ).subscribe();
@@ -170,11 +178,13 @@ export class TagDetailComponent extends BaseComponent implements OnInit {
       return
     }
 
-    this.fileService.downloadFileService(new FileReq({
-      fileDataId: this.detail.fileData,
-      fileName: this.detail?.fileName,
-      uploadType: this.detail?.uploadType
-    }));
+    this.fileService.downloadFileService(
+      Scope.Tag,
+      new FileReq({
+        fileDataId: this.detail.fileData,
+        fileName: this.detail?.fileName,
+        uploadType: this.detail?.uploadType
+      }));
   }
   //#endregion
 
