@@ -8,37 +8,41 @@ import { Observable } from "rxjs";
 @Injectable()
 export class CustomerManageService {
 
-    readonly activityFunc = 'activity-settings/';
-    readonly customerFunc = 'customer/';
+  readonly activityFunc = 'activity-settings/';
+  readonly customerFunc = 'customer/';
 
-    constructor(private service: ApiService) { }
+  constructor(private service: ApiService) { }
 
-    getCustomerRow(customerId): Observable<ResponseModel<Customer>> {
-        return this.service.doGet(this.customerFunc + customerId);
-    }
+  getCustomerRow(customerId): Observable<ResponseModel<Customer>> {
+    return this.service.doGet(this.customerFunc + customerId);
+  }
 
-    getActivitySettingList(): Observable<ResponseModel<ResData<Array<ActivitySetting>>>> {
-        return this.service.doGet(this.activityFunc);
-    }
+  getActivitySettingList(): Observable<ResponseModel<ResData<Array<ActivitySetting>>>> {
+    return this.service.doGet(this.activityFunc);
+  }
 
-    getActivitySettingRow(activityId: string): Observable<ResponseModel<ActivitySetting>> {
-        return this.service.doGet(this.activityFunc + activityId);
-    }
+  getActivitySettingListOption(): Observable<ResponseModel<ResData<Array<ActivitySetting>>>> {
+    return this.service.doGet(this.activityFunc + 'schedule-activity-option');
+  }
 
-    createActivitySetting(data: ActivitySettingEditReq): Observable<ResponseModel<any>> {
-        return this.service.doPost(this.activityFunc, data);
-    }
+  getActivitySettingRow(activityId: string): Observable<ResponseModel<ActivitySetting>> {
+    return this.service.doGet(this.activityFunc + activityId);
+  }
 
-    updateActivitySetting(activityId: string, data: ActivitySettingEditReq): Observable<ResponseModel<any>> {
-        return this.service.doPut(this.activityFunc + activityId, data);
-    }
+  createActivitySetting(data: ActivitySettingEditReq): Observable<ResponseModel<any>> {
+    return this.service.doPost(this.activityFunc, data);
+  }
 
-    getPreviewCustomerByActivityListCondition(data: PreviewCustomerReq): Observable<ResponseModel<any>> {
-        return this.service.doPost(this.activityFunc + 'preview/list-condition', data);
-    }
+  updateActivitySetting(activityId: string, data: ActivitySettingEditReq): Observable<ResponseModel<any>> {
+    return this.service.doPut(this.activityFunc + activityId, data);
+  }
 
-    getPreviewCustomerByTagSetting(data: PreviewCustomerReq): Observable<ResponseModel<any>> {
-        return this.service.doPost(this.activityFunc + 'preview/tag-setting', data);
-    }
+  getPreviewCustomerByActivityListCondition(data: PreviewCustomerReq): Observable<ResponseModel<any>> {
+    return this.service.doPost(this.activityFunc + 'preview/list-condition', data);
+  }
+
+  getPreviewCustomerByTagSetting(data: PreviewCustomerReq): Observable<ResponseModel<any>> {
+    return this.service.doPost(this.activityFunc + 'preview/tag-setting', data);
+  }
 
 }

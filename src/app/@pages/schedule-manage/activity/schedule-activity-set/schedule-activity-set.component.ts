@@ -227,7 +227,7 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
     const route = this.scheduleId ? ['edit', this.scheduleId] : [];
     const routePath = ['pages', 'schedule-manage', 'schedule-activity-set', ...route];
-    this.customerManageService.getActivitySettingList().pipe(
+    this.customerManageService.getActivitySettingListOption().pipe(
       catchError(err => {
         this.handleErrorResponse(err, `查詢名單列表${this.actionName}失敗`, routePath)
         return of(null);
