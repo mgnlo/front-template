@@ -16,7 +16,7 @@ import { ReviewTagListMock } from '@common/mock-data/tag-review-mock';
 import { CommonUtil } from '@common/utils/common-util';
 import { BaseComponent } from '@pages/base.component';
 import { TagManageService } from '@pages/tag-manage/tag-manage.service';
-import { catchError, filter, takeUntil, tap } from 'rxjs/operators';
+import { catchError, filter, tap } from 'rxjs/operators';
 import { ReviewManageService } from '../review-manage.service';
 import { FileReq } from '@api/models/file.model';
 import { FileService } from '@api/services/file.service';
