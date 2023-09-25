@@ -15,6 +15,7 @@
                 <basic-input class="col-12 col-lg-6" title="名單上限" [form]="validateForm" ctlName="listLimit"></basic-input>
                 <div class="fieldGroup col-12 col-lg-6">
                     <label>名單差異過濾</label>
+                    <nb-icon icon="question-mark-circle" [nbPopover]="popupText" nbPopoverPlacement="top"></nb-icon>
                     <div>
                         <nb-checkbox formControlName="filterOptions" status="info">啟用</nb-checkbox>
                     </div>
@@ -63,6 +64,15 @@
                     </div>
                 </div>
             </ng-container>
+            <div class="noteText">
+                <div>
+                    <p>活動名單條件說明：</p>
+                    <ul>
+                        <li>請至少新增一筆條件</li>
+                        <li>說明內容說明內容說明內容說明內容說明內容</li>
+                    </ul>
+                </div>
+            </div>
         </nb-card-body>
     </nb-card>
     <div class="row">

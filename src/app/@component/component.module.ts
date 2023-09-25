@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NbDateFnsDateModule } from '@nebular/date-fns';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
-import { NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbIconModule, NbInputModule, NbRadioModule, NbSelectModule, NbSpinnerModule } from '@nebular/theme';
+import { NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbIconModule, NbInputModule, NbPopoverModule, NbRadioModule, NbSelectModule, NbSpinnerModule, NbToggleModule } from '@nebular/theme';
 import { AlertDialogComponent } from './dialog/alert-dialog/alert-dialog.component';
 import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
 import { ReviewDialogComponent } from './dialog/review-dialog/review-dialog.component';
@@ -49,6 +49,8 @@ export const NB_MODULES = [
   NbCheckboxModule,
   NbDatepickerModule,
   NbDateFnsDateModule.forChild({ format: 'yyyy-MM-dd' }),
+  NbToggleModule,
+  NbPopoverModule,
 ];
 @NgModule({
   declarations: [...COMPONENTS],
