@@ -23,7 +23,7 @@
             <span>{{detail?.status | enum:'status'}}</span>
         </div>
         <div class="textGroup col-12 col-lg-4">
-            <p class="text_bold" [ngClass]="changeClass('executionFrequency') | enum: 'reviewCompareClass'">執行頻率：</p>
+            <p class="text_bold" [ngClass]="changeClass('executionFrequency', 'frequencyTime') | enum: 'reviewCompareClass'">執行頻率：</p>
             <span>{{processExecutionFrequency(detail?.executionFrequency,detail?.frequencyTime)}}</span>
         </div>
       </div>
