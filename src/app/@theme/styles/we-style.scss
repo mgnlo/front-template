@@ -826,7 +826,6 @@ ul {
     }
     p, li {
         font-size: $f14;
-        font-weight: normal;
         &:not(:nth-last-child(1)) { margin-bottom: 0.25rem; }
     }
     ul:last-child { margin-bottom: 0; }
@@ -1636,7 +1635,7 @@ table {
             >[nbButton] { margin: 0 !important; }
         }
     }
-    [nbButton].btn-disabled {
+    [nbButton].appearance-ghost.btn-disabled {
         background-color: transparent !important;
         nb-icon { opacity: 0.3; }
         &.status-primary { color: nb-theme(color-primary-500) !important; }
