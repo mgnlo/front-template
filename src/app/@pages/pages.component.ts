@@ -3,7 +3,7 @@ import { LoginService } from '@api/services/login.service';
 import { NbMenuItem } from '@nebular/theme';
 
 export const ParentMenu: { [parentMenu: string]: NbMenuItem } = {
-  'customer-manage': { title: "用戶管理", icon: "people-outline", children: [] },
+  'customer-manage': { title: "客群管理", icon: "people-outline", children: [] },
   'review-manage': { title: "審核管理", icon: "checkmark-square-outline", children: [] },
   'schedule-manage': { title: "排程管理", icon: "file-text-outline", children: [] },
   'account-manage': { title: "帳號管理", icon: "lock-outline", children: [] }
