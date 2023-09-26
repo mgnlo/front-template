@@ -15,7 +15,6 @@ import { NbDialogRef } from '@nebular/theme';
 import { BaseComponent } from '@pages/base.component';
 import { CustomerManageService } from '@pages/customer-manage/customer-manage.service';
 import { TagManageService } from '@pages/tag-manage/tag-manage.service';
-import { LocalData } from 'ng2-completer';
 import { LocalDataSource } from 'ng2-smart-table';
 import { catchError, filter, finalize, tap } from 'rxjs/operators';
 

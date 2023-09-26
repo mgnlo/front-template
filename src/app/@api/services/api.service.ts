@@ -82,14 +82,13 @@ export class ApiService {
     return observable.pipe(
       timeout(30000),
       catchError((error: HttpErrorResponse) => {
-        let errorMessage = 'An error occurred';
 
-        if (error.status === 403) {
-          // JWT 失效主機發送 403 錯誤，這邊需要導頁回兆豐登入頁，待補(需要確認導頁網址與相關參數)
+        if (error.status.toString() === RestStatus.FORBIDDEN || error.status.toString() === RestStatus.UNAUTHORIZED) {
           this.storageService.removeSessionVal("jwtToken");
+          this.dialogService.alertAndBackToList(false, error.message, ['']);
         }
 
-        return throwError(errorMessage);
+        return throwError(error.message);
       }),
       tap(res => {
         if (res && (res.code || res['body']['code']) !== RestStatus.SUCCESS) {
@@ -136,9 +135,9 @@ export class ApiService {
     }).pipe(
       timeout(30000),
       catchError((err: HttpErrorResponse) => {
-        if (err.status === 403) {
-          // JWT 失效主機發送 403 錯誤，這邊需要導頁回兆豐登入頁，待補(需要確認導頁網址與相關參數)
+        if (err.status.toString() === RestStatus.FORBIDDEN || err.status.toString() === RestStatus.UNAUTHORIZED) {
           this.storageService.removeSessionVal("jwtToken");
+          this.dialogService.alertAndBackToList(false, err.message, ['']);
         }
 
         return throwError(err.message);
