@@ -70,7 +70,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
       department: {
         title: '所屬單位',
         type: 'html',
-        class: 'text_center min_w150',
+        class: 'text_center min_w100',
         valuePrepareFunction: (cell: string) => {
           return `<p class="text_center">` + (cell ?? "") + `</p>`;
         },
@@ -79,7 +79,7 @@ export class TagListComponent extends BaseComponent implements OnInit {
       owner: {
         title: '負責人',
         type: 'html',
-        class: 'text_center min_w150',
+        class: 'text_center min_w100',
         valuePrepareFunction: (cell: string) => {
           return `<p class="text_center">` + (cell ?? "") + `</p>`;
         },
