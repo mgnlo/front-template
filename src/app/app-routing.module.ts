@@ -10,7 +10,8 @@ const routes: Routes = [
     loadChildren: () =>
       import('@pages/pages.module').then((m) => m.PagesModule),
   },
-  { path: 'login', component: LoginComponent },
+  // { path: 'login', component: LoginComponent },
+  { path: 'health-check/status', component: LoginComponent },
 ];
 
 @NgModule({
