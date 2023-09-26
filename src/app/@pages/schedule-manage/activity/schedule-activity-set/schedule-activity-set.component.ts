@@ -227,14 +227,14 @@ export class ScheduleAddComponent extends BaseComponent implements OnInit {
 
     const route = this.scheduleId ? ['edit', this.scheduleId] : [];
     const routePath = ['pages', 'schedule-manage', 'schedule-activity-set', ...route];
-    this.customerManageService.getActivitySettingList().pipe(
+    this.customerManageService.getActivitySettingListOption().pipe(
       catchError(err => {
         this.handleErrorResponse(err, `查詢名單列表${this.actionName}失敗`, routePath)
         return of(null);
       }),
       filter(res => res.code === RestStatus.SUCCESS),
       tap(res => {
-        const activityListSetting: Array<scheduleActivitySetting> = JSON.parse(JSON.stringify(res.result?.content));
+        const activityListSetting: Array<scheduleActivitySetting> = JSON.parse(JSON.stringify(res.result));
         const activitySettingArray = [...this.ActivitySettingArray, ...activityListSetting]
         // console.info('activitySettingArray', activitySettingArray)
         this.activityList = activityListSetting.map(m => ({ key: m.activityId, val: m.activityName }));

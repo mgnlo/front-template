@@ -31,6 +31,7 @@ export class ActivitySetComponent extends BaseComponent implements OnInit {
   activityId: string;
   actionName: string;// 新增/編輯/複製
   categoryList: Map<string, string> = new Map();
+  popupText: string = '每次產出的客群活動名單會比對先前產出之名單，並排除已在先前名單中的客戶資料';
 
   constructor(
     storageService: StorageService,

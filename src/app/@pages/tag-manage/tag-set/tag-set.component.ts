@@ -27,6 +27,7 @@ import { TagCategoryMock, TagSubCategoryMock } from '@common/mock-data/tag-categ
 import { FileResp } from '@api/models/file.model';
 import { TagConditionMock } from '@common/mock-data/tag-condition-mock';
 import { LoginService } from '@api/services/login.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'tag-set',
@@ -118,7 +119,7 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       tagName: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
       status: new FormControl('enabled', Validators.required),
       tagType: new FormControl('normal', Validators.required),
-      conditionSettingMethod: new FormControl('normal', Validators.required),
+      conditionSettingMethod: new FormControl('field', Validators.required),
       fileName: new FormControl(null, [Validators.required, ValidatorsUtil.blank]),
       startDate: new FormControl(new Date(), [ValidatorsUtil.dateFmt, Validators.required]),
       endDate: new FormControl(moment(new Date()).add(3, 'months').toDate(), [ValidatorsUtil.dateFmt, Validators.required]),
@@ -266,12 +267,13 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       this.getTagCategoryList();
       //#endregion
 
-      this.validateForm.get('endDate')?.patchValue(new Date('9999-12-31'));
       //#region 設定欄位
       const formData = this.validateForm.getRawValue();
       this.changeTagType(formData.tagType);
       this.changeConditionSettingMethod(formData.conditionSettingMethod);
       //#endregion
+
+      this.getEndDate(formData.conditionSettingMethod);
     }
   }
 
@@ -308,6 +310,19 @@ export class TagSetComponent extends BaseComponent implements OnInit {
       if (CommonUtil.isBlank(this.validateForm.get('conditionKey')?.value)) return
     }
   }
+
+  //#region 依需求更改迄日
+  getEndDate(conditionSettingMethodVal: string) {
+    if (conditionSettingMethodVal === 'field') {
+      this.validateForm.get('endDate')?.patchValue(new Date('9999-12-31'));
+    } else {
+      const datepipe: DatePipe = new DatePipe('en-US');
+      const today = new Date();
+      const formattedDate = datepipe.transform(today.setDate(today.getDate() + 30), 'yyyy-MM-dd');
+      this.validateForm.get('endDate')?.patchValue(new Date(formattedDate));
+    }
+  }
+  //#endregion
 
   //#region 取得標籤構面List
   getTagCategoryList(): void {
@@ -446,9 +461,14 @@ export class TagSetComponent extends BaseComponent implements OnInit {
         //#endregion
         break;
     }
+
+    //新增才會修改迄日
+    if (!this.tagId) this.getEndDate(key);
+
     setTimeout(() => {
       this.changeConditionType = true;
     }, 0)
+
     this.conditions?.updateValueAndValidity();
   }
   //#endregion

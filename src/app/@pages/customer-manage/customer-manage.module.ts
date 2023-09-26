@@ -9,7 +9,7 @@ import {
   NbAccordionModule,
   NbAutocompleteModule,
   NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbDialogModule, NbIconModule,
-  NbInputModule, NbRadioModule, NbSelectModule, NbSpinnerModule, NbTagModule, NbTreeGridModule
+  NbInputModule, NbPopoverModule, NbRadioModule, NbSelectModule, NbSpinnerModule, NbTagModule, NbToggleModule, NbTreeGridModule
 } from '@nebular/theme';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { ThemeModule } from '../../@theme/theme.module';
@@ -35,6 +35,8 @@ export const NB_MODULES = [
   NbTagModule,
   NbAccordionModule,
   NbAutocompleteModule,
+  NbToggleModule,
+  NbPopoverModule,
 ];
 
 @NgModule({
