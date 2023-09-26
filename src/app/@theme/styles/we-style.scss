@@ -826,7 +826,7 @@ ul {
     }
     p, li {
         font-size: $f14;
-        font-weight: bold;
+        font-weight: normal;
         &:not(:nth-last-child(1)) { margin-bottom: 0.25rem; }
     }
     ul:last-child { margin-bottom: 0; }
