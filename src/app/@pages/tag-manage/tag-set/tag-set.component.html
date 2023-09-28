@@ -162,7 +162,7 @@
 								[ngClass]="isHistoryOpen[hg.key] ? 'closeSubItem' : ''" *ngIf="hg?.value as history;">
 								<div class="mainItem">
 									<h4 (click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">{{history.type}}</h4>
-									<button nbButton ghost status="primary" size="tiny" class="iconBtn"
+									<button nbButton ghost status="info" size="tiny" class="iconBtn"
 										(click)="isHistoryOpen[hg.key] = !isHistoryOpen[hg.key]">
 										<nb-icon icon="arrow-ios-forward"></nb-icon>
 									</button>
