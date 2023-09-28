@@ -5,6 +5,7 @@ import { NbDialogService, NbGlobalPhysicalPosition, NbIconConfig, NbToastrConfig
 import { TextDialogComponent } from "@pages/dialog/textDialog/textDialog";
 import { ConfirmDialogComponent } from "@pages/dialog/confirmDialog/confirmDialog";
 import { StatusDialogComponent } from "@pages/dialog/statusDialog/statusDialog";
+import { TimeoutDialogComponent } from "@pages/dialog/timeoutDialog/timeoutDialog";
 
 @Component({
   selector: "app-page-element",
@@ -75,7 +76,7 @@ export class ElementComponent implements OnInit {
         dialogSize: 'large',
         title: 'Dialog標題',
         content: '文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容文字內容',
-        btnName: '確認',
+        btnName: '確 認',
       }
     });
   }
@@ -103,6 +104,14 @@ export class ElementComponent implements OnInit {
       context: {
         isSuccess: false,
         title: '執行失敗',
+      }
+    });
+  }
+  openTimeoutDialog() {
+    this.dialogService.open(TimeoutDialogComponent, {
+      context: {
+        title: '逾時操作',
+        btnName: '關 閉',
       }
     });
   }

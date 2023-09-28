@@ -9,6 +9,7 @@ import { ElementComponent } from "./element.component";
 import { TextDialogComponent } from "@pages/dialog/textDialog/textDialog";
 import { ConfirmDialogComponent } from "@pages/dialog/confirmDialog/confirmDialog";
 import { StatusDialogComponent } from "@pages/dialog/statusDialog/statusDialog";
+import { TimeoutDialogComponent } from "@pages/dialog/timeoutDialog/timeoutDialog";
 
 @NgModule({
     imports: [
@@ -38,6 +39,7 @@ import { StatusDialogComponent } from "@pages/dialog/statusDialog/statusDialog";
         TextDialogComponent,
         ConfirmDialogComponent,
         StatusDialogComponent,
+        TimeoutDialogComponent
     ]
 })
 export class ElementPageModule { }
