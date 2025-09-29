@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --aot --baseHref=/console-frontend/",
-    "build-ocp": "ng build --aot --baseHref=/", 
+    "build-ocp": "ng build --aot --baseHref=/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~12.1.0",
-    "@angular/cli": "~12.1.0",
+    "@angular/cli": "^12.2.18",
     "@angular/compiler-cli": "~12.1.0",
     "@types/echarts": "^4.9.18",
     "@types/jasmine": "~3.6.0",
